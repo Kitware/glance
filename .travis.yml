@@ -1,0 +1,30 @@
+language: node_js
+os: linux
+dist: trusty
+addons:
+  chrome: stable
+node_js:
+  - '8'
+notifications:
+  email:
+    recipients:
+      - sebastien.jourdain@kitware.com
+      - forrest.li@kitware.com
+      - stephen.aylward@kitware.com
+    on_success: change
+    on_failure: always
+
+cache:
+  directories:
+    - node_modules
+    - Documentation/build-tmp
+
+script:
+  - npm install
+  - npm run build:release
+after_success:
+  - npm run semantic-release
+
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"

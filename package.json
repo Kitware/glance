@@ -1,0 +1,49 @@
+{
+    "name": "pv-web-viewer",
+    "version": "0.0.0-semantically-release",
+    "description": "Web application for Visualizing Scientific and Medical datasets",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/kitware/pv-web-viewer.git"
+    },
+    "license": "BSD-3-Clause",
+    "bugs": {
+        "url": "https://github.com/kitware/pv-web-viewer/issues"
+    },
+    "homepage": "https://github.com/kitware/pv-web-viewer#readme",
+    "main": "./Distribution/pv-web-viewer.js",
+    "dependencies": {
+        "shelljs": "0.7.8",
+        "vtk.js": "5.7.6"
+    },
+    "devDependencies": {
+        "inline-source-cli": "1.2.0",
+        "antd": "2.13.10",
+        "react": "16.1.1",
+        "react-dom": "16.1.1",
+        "eslint-config-prettier": "2.6.0",
+        "eslint-plugin-prettier": "2.3.1",
+        "kw-doc": "1.1.1",
+        "kw-web-suite": "3.1.1",
+        "prettier": "1.7.4"
+    },
+    "scripts": {
+        "validate": "prettier --single-quote --trailing-comma es5 --print-width 100 --list-different \"Sources/**/*.js\"",
+        "reformat": "prettier --single-quote --trailing-comma es5 --print-width 100 --write \"Sources/**/*.js\"",
+        "reformat-only": "prettier --single-quote --trailing-comma es5 --print-width 100 --write",
+        "doc": "kw-doc -c ./Documentation/config.js",
+        "doc:www": "npm t -- --single-run && kw-doc -c ./Documentation/config.js -s",
+        "doc:publish": "kw-doc -c ./Documentation/config.js -mp",
+        "build": "webpack --progress --colors",
+        "build:debug": "webpack --progress --colors --display-modules",
+        "build:release": "npm run build -- -p",
+        "bundle": "inline-source --compress false --root ./Distribution ./Distribution/index.html ./Distribution/ParaViewExplorer.html",
+        "commit": "git cz",
+        "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    },
+    "config": {
+        "commitizen": {
+            "path": "node_modules/cz-conventional-changelog"
+        }
+    }
+}

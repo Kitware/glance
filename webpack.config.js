@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const path = require('path');
 
 const entry = path.join(__dirname, './Sources/index.js');
@@ -16,9 +15,7 @@ module.exports = {
     filename: 'pv-web-viewer.js',
   },
   module: {
-    rules: [
-      { test: entry, loader: 'expose-loader?pvwv' },
-    ].concat(linterRules, explorerRules, vtkRules),
+    rules: [].concat(linterRules, explorerRules, vtkRules),
   },
   resolve: {
     extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx'],
@@ -28,6 +25,18 @@ module.exports = {
     ],
     alias: {
       'pv-explorer': __dirname,
+    },
+  },
+  devServer: {
+    contentBase: outputPath,
+    port: 9999,
+    host: '0.0.0.0',
+    disableHostCheck: true,
+    hot: false,
+    quiet: false,
+    noInfo: false,
+    stats: {
+      colors: true,
     },
   },
 };

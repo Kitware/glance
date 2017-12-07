@@ -1,4 +1,6 @@
 const autoprefixer = require('autoprefixer');
+const variables = require('postcss-variables');
+const style = require('../themes/default.js');
 
 module.exports = [
   {
@@ -13,7 +15,7 @@ module.exports = [
     use: [
       { loader: 'style-loader' },
       { loader: 'css-loader', options: { localIdentName: '[sha512:hash:base32:5]-[name]-[local]', modules: true } },
-      { loader: 'postcss-loader', options: { plugins: () => [autoprefixer('last 3 version', 'ie >= 10')] } },
+      { loader: 'postcss-loader', options: { plugins: () => [variables(style), autoprefixer('last 3 version', 'ie >= 10')] } },
     ],
   },
   {

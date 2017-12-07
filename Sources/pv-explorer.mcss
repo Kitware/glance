@@ -1,0 +1,68 @@
+.toolbar {
+  background-color: $colors.menu;
+  line-height: $sizes.toolbar;
+}
+
+/* Reduce width of menu items */
+.toolbar :global(.ant-menu-item) {
+  padding: 0 $sizes.menuItemPadding;
+}
+
+.fullHeight {
+  height: calc(100vh - $sizes.toolbar);
+}
+
+.sideBar {
+  box-sizing: border-box;
+  height: calc(100vh - $sizes.toolbar);
+  background-color: $colors.menu;
+}
+
+.padding {
+  padding: 0;
+}
+
+.content {
+  composes: fullHeight;
+  background: $colors.content;
+  padding: 24;
+  margin: 0;
+}
+
+.logo {
+  float: left;
+  position: relative;
+  left: -40px;
+  cursor: pointer;
+  margin-right: 200px;
+}
+
+.logo img {
+  height: 60px;
+}
+
+.toolbarIcon {
+  height: $sizes.icons;
+}
+
+.collapseList {
+  background: none;
+  user-select: none;
+}
+
+.collapseList :global(.ant-collapse-item) {
+  background: '#f7f7f7';
+  border-radius: 4;
+  margin-bottom: 24;
+  border: 0;
+  overflow: 'hidden';
+};
+
+.sceneListing {
+
+}
+
+.sceneListing :global(.ant-list-item):hover {
+  background-color: blue;
+}
+

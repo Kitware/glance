@@ -17,15 +17,16 @@
         "vtk.js": "5.7.6"
     },
     "devDependencies": {
-        "inline-source-cli": "1.2.0",
-        "antd": "2.13.10",
-        "react": "16.1.1",
-        "react-dom": "16.1.1",
+        "antd": "3.0.0",
         "eslint-config-prettier": "2.6.0",
         "eslint-plugin-prettier": "2.3.1",
+        "inline-source-cli": "1.2.0",
         "kw-doc": "1.1.1",
         "kw-web-suite": "3.1.1",
-        "prettier": "1.7.4"
+        "postcss-variables": "1.1.1",
+        "prettier": "1.7.4",
+        "react": "16.1.1",
+        "react-dom": "16.1.1"
     },
     "scripts": {
         "validate": "prettier --single-quote --trailing-comma es5 --print-width 100 --list-different \"Sources/**/*.js\"",
@@ -34,6 +35,7 @@
         "doc": "kw-doc -c ./Documentation/config.js",
         "doc:www": "npm t -- --single-run && kw-doc -c ./Documentation/config.js -s",
         "doc:publish": "kw-doc -c ./Documentation/config.js -mp",
+        "start": "webpack-dev-server",
         "build": "webpack --progress --colors",
         "build:debug": "webpack --progress --colors --display-modules",
         "build:release": "npm run build -- -p",

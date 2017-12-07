@@ -14,6 +14,11 @@ module.exports = {
     'no-console': 0,
     'no-plusplus': 0,
     'linebreak-style': 0,
+
+    // tmp for dev
+    'class-method-use-this': 0,
+    'jsx-a11y/no-static-element-interactions': 0,
+    'jsx-a11y/no-noninteractive-element-interactions': 0,
   },
   // plugins: [
   //   'prettier'

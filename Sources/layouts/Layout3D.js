@@ -104,6 +104,12 @@ export default class Layout3D extends React.Component {
   }
 
   processProperties(props) {
+    const { scene: oldScene } = this.props;
+    const { scene: newScene } = props;
+    const oldIds = oldScene.map(item => item.id);
+    const newIdSet = new Set(newScene.map(item => item.id));
+    const removed = oldIds.filter(id => !newIdSet.has(id));
+
     let count = props.scene.length;
     while (count--) {
       const { id, source } = props.scene[count];
@@ -117,6 +123,14 @@ export default class Layout3D extends React.Component {
         this.renderer.addActor(actor);
       }
     }
+
+    for (let i = 0; i < removed.length; ++i) {
+      const id = removed[i];
+      this.renderer.removeActor(this.renderingPipeline[id].actor);
+      delete this.renderingPipeline[id];
+    }
+
+    this.renderWindow.render();
   }
 
   render() {

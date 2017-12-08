@@ -7,7 +7,8 @@ module.exports = {
     },
     colors: {
       menu: '#adadad',
-      content: 'red',
+      content: '#adadad',
+      selected: '#1890ff',
     },
   },
 };

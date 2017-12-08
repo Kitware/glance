@@ -1,11 +1,20 @@
 .toolbar {
   background-color: $colors.menu;
   line-height: $sizes.toolbar;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* Reduce width of menu items */
-.toolbar :global(.ant-menu-item) {
+.toolbar :global(.ant-menu-dark.ant-menu-horizontal) > :global(.ant-menu-item) {
   padding: 0 $sizes.menuItemPadding;
+  background-color: $colors.menu;
+  /*border-color: $colors.menu;*/
+}
+
+.toolbar :global(.ant-menu-dark.ant-menu-horizontal) > :global(.ant-menu-item-selected) {
+  background-color: $colors.selected;
 }
 
 .fullHeight {
@@ -30,11 +39,9 @@
 }
 
 .logo {
-  float: left;
   position: relative;
   left: -40px;
   cursor: pointer;
-  margin-right: 200px;
 }
 
 .logo img {
@@ -43,6 +50,7 @@
 
 .toolbarIcon {
   height: $sizes.icons;
+  cursor: pointer;
 }
 
 .collapseList {

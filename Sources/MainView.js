@@ -5,8 +5,11 @@ import React from 'react';
 
 import { Layout, Menu, Collapse, List } from 'antd';
 
+import FileLoader from './io/FileLoader';
+import Layouts from './layouts';
 import style from './pv-explorer.mcss';
 import icons from './icons';
+
 
 const { Header, Sider, Content } = Layout;
 const Panel = Collapse.Panel;
@@ -25,11 +28,7 @@ export default class MainView extends React.Component {
       layout: 'Layout2D',
       overlayOpacity: 100,
       collapsed: false,
-      scene: [
-        { name: 'Volume 1', active: true },
-        { name: 'Volume 2' },
-        { name: 'Annotation' },
-      ],
+      scene: [],
     };
 
     // Closure for callback
@@ -37,16 +36,11 @@ export default class MainView extends React.Component {
     this.onToggleControl = this.onToggleControl.bind(this);
     this.onOverlayOpacityChange = this.onOverlayOpacityChange.bind(this);
     this.updateActive = this.updateActive.bind(this);
+    this.loadFile = this.loadFile.bind(this);
   }
 
-  onLayoutChange(e) {
-    let el = e.target;
-    while (!el.dataset.name) {
-      el = el.parentNode;
-    }
-    const layout = el.dataset.name;
-    console.log(layout, e.target);
-    this.setState({ layout });
+  onLayoutChange({ item, key, selectedKeys }) {
+    this.setState({ layout: key });
   }
 
   onToggleControl() {
@@ -64,7 +58,23 @@ export default class MainView extends React.Component {
     console.log('onClick', e);
   }
 
+  loadFile() {
+    FileLoader.openFile(['vti', 'vtp'], (file) => {
+      FileLoader.loadFile(file)
+        .then((source) => {
+          const id = this.state.scene.length + 1;
+          const scene = this.state.scene.concat({
+            id,
+            name: file.name,
+            source,
+          });
+          this.setState({ scene });
+        });
+    });
+  }
+
   render() {
+    const Renderer = Layouts[this.state.layout];
     return (
       <Layout>
         <Header className={style.toolbar}>
@@ -78,8 +88,8 @@ export default class MainView extends React.Component {
           <Menu
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={['Layout2D']}
-            className={style.toolbar}
+            defaultSelectedKeys={[this.state.layout]}
+            onSelect={this.onLayoutChange}
           >
             {layouts.map(name => (
               <Menu.Item
@@ -90,6 +100,13 @@ export default class MainView extends React.Component {
               </Menu.Item>
             ))}
           </Menu>
+
+          <img
+            onClick={this.loadFile}
+            alt="action-load"
+            className={style.toolbarIcon}
+            src={icons.ActionLoad}
+          />
         </Header>
         <Layout>
           <Sider
@@ -122,9 +139,9 @@ export default class MainView extends React.Component {
               </Collapse>
             </div>
           </Sider>
-          <Layout className={style.content}>
+          <Layout>
             <Content>
-              Content
+              <Renderer scene={this.state.scene} className={style.content} />
             </Content>
           </Layout>
         </Layout>

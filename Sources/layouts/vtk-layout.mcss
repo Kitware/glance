@@ -1,0 +1,27 @@
+.renderWindow {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.quadRoot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100%;
+}
+
+.splitRow {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.view {
+  flex: 1;
+  min-width: 10px;
+  min-height: 10px;
+}

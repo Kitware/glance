@@ -64,13 +64,20 @@
   margin-bottom: 24;
   border: 0;
   overflow: 'hidden';
-};
-
-.sceneListing {
-
 }
 
-.sceneListing :global(.ant-list-item):hover {
-  background-color: blue;
+.sceneItem {
+  cursor: pointer;
 }
 
+.sceneItem:hover :global(.ant-list-item) {
+  background: cyan;
+}
+
+.sceneItem .active, .sceneItem:active :global(.ant-list-item) {
+  background: #1890ff !important;
+}
+
+.sceneItem .inactive {
+  background: white;
+}

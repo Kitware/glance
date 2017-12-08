@@ -1,7 +1,7 @@
 import 'antd/dist/antd.css';
 
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import { Layout, Menu, Collapse, List } from 'antd';
 
@@ -20,6 +20,25 @@ const layouts = [
   'LayoutSplit',
   'LayoutQuad',
 ];
+
+function ListItem({ item, onClick }) {
+  return (
+    <div onClick={onClick} className={style.sceneItem}>
+      <List.Item
+        className={item.active ? style.active : style.inactive}
+      >{item.name}</List.Item>
+    </div>
+  );
+}
+
+ListItem.propTypes = {
+  item: PropTypes.object.isRequired,
+  onClick: PropTypes.func,
+};
+
+ListItem.defaultProps = {
+  onClick: () => {},
+};
 
 export default class MainView extends React.Component {
   constructor(props) {
@@ -53,9 +72,12 @@ export default class MainView extends React.Component {
     this.setState({ overlayOpacity });
   }
 
-  updateActive(e) {
-    console.log(this);
-    console.log('onClick', e);
+  updateActive(item) {
+    const newScene = this.state.scene.map((obj) => {
+      obj.active = obj.id === item.id;
+      return obj;
+    });
+    this.setState({ scene: newScene });
   }
 
   loadFile() {
@@ -125,12 +147,7 @@ export default class MainView extends React.Component {
                     size="small"
                     bordered
                     dataSource={this.state.scene}
-                    renderItem={item => (
-                      <List.Item
-                        style={{ background: item.active ? '#1890ff' : 'white' }}
-                        onClick={this.updateActive}
-                      >{item.name}</List.Item>
-                    )}
+                    renderItem={item => <ListItem item={item} onClick={() => this.updateActive(item)} />}
                   />
                 </Panel>
                 <Panel header="Edit" key="edit">

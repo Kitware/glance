@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Layout, Menu, Collapse, List } from 'antd';
+import { Layout, Menu, Collapse, List, Icon } from 'antd';
 
 import FileLoader from './io/FileLoader';
 import Layouts from './layouts';
@@ -21,10 +21,22 @@ const layouts = [
   'LayoutQuad',
 ];
 
-function ListItem({ item, onClick }) {
+function ListItem({ item, onClick, onDelete }) {
+  const deleteBtn = (
+    <a
+      onClick={(ev) => {
+        onDelete();
+        ev.stopPropagation();
+      }}
+      style={{ color: 'black' }}
+    >
+      <Icon type="delete" />
+    </a>
+  );
   return (
     <div onClick={onClick} className={style.sceneItem}>
       <List.Item
+        actions={[deleteBtn]}
         className={item.active ? style.active : style.inactive}
       >{item.name}</List.Item>
     </div>
@@ -34,10 +46,12 @@ function ListItem({ item, onClick }) {
 ListItem.propTypes = {
   item: PropTypes.object.isRequired,
   onClick: PropTypes.func,
+  onDelete: PropTypes.func,
 };
 
 ListItem.defaultProps = {
   onClick: () => {},
+  onDelete: () => {},
 };
 
 export default class MainView extends React.Component {
@@ -70,6 +84,10 @@ export default class MainView extends React.Component {
   onOverlayOpacityChange(e) {
     const overlayOpacity = e.target.value;
     this.setState({ overlayOpacity });
+  }
+
+  deleteSceneItem(item) {
+    this.setState({ scene: this.state.scene.filter(obj => obj.id !== item.id) });
   }
 
   updateActive(item) {
@@ -147,7 +165,13 @@ export default class MainView extends React.Component {
                     size="small"
                     bordered
                     dataSource={this.state.scene}
-                    renderItem={item => <ListItem item={item} onClick={() => this.updateActive(item)} />}
+                    renderItem={item => (
+                      <ListItem
+                        item={item}
+                        onClick={() => this.updateActive(item)}
+                        onDelete={() => this.deleteSceneItem(item)}
+                      />
+                    )}
                   />
                 </Panel>
                 <Panel header="Edit" key="edit">

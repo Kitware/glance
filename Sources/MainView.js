@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Layout, Menu, Collapse, List, Icon } from 'antd';
+import { Layout, Menu, Collapse, List, Button, Icon } from 'antd';
 
 import FileLoader from './io/FileLoader';
 import Layouts from './layouts';
@@ -115,6 +115,24 @@ export default class MainView extends React.Component {
 
   render() {
     const Renderer = Layouts[this.state.layout];
+
+    const sceneListHeader = (
+      <div>
+        <span>Scene</span>
+        <Button
+          className={style.quickAddItem}
+          icon="plus"
+          title="Load file into scene"
+          onClick={(ev) => {
+            this.loadFile();
+            // stop prop, and unfocus the button
+            ev.stopPropagation();
+            ev.target.blur();
+          }}
+        />
+      </div>
+    );
+
     return (
       <Layout>
         <Header className={style.toolbar}>
@@ -159,7 +177,7 @@ export default class MainView extends React.Component {
           >
             <div className={style.padding}>
               <Collapse bordered={false} defaultActiveKey={['scene']} className={style.collapseList}>
-                <Panel header="Scene" key="scene">
+                <Panel header={sceneListHeader} key="scene">
                   <List
                     className={style.sceneListing}
                     size="small"

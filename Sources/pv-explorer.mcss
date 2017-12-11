@@ -81,3 +81,11 @@
 .sceneItem .inactive {
   background: white;
 }
+
+.quickAddItem {
+  position: absolute;
+  right: 16px; /* This is the same as the padding on .ant-collapse-content */
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: transparent;
+}

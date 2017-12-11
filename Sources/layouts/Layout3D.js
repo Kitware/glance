@@ -121,6 +121,7 @@ export default class Layout3D extends React.Component {
 
         this.renderingPipeline[id] = { id, source, mapper, actor };
         this.renderer.addActor(actor);
+        this.resetCamera();
       }
     }
 

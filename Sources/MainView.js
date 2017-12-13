@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Layout, Menu, Collapse, List, Button, Icon } from 'antd';
+import { Layout, Menu, Collapse, List, Button } from 'antd';
 
 import FileLoader from './io/FileLoader';
 import Layouts from './layouts';
@@ -21,17 +21,30 @@ const layouts = [
   'LayoutQuad',
 ];
 
-function ListItem({ item, onClick, onDelete }) {
+function ListItem({ item, onClick, onDelete, onToggleVisible }) {
   const deleteBtn = (
-    <a
-      onClick={(ev) => {
-        onDelete();
-        ev.stopPropagation();
-      }}
-      style={{ color: 'black' }}
-    >
-      <Icon type="delete" />
-    </a>
+    <span>
+      <Button
+        onClick={(ev) => {
+          onToggleVisible();
+          ev.stopPropagation();
+          ev.target.blur();
+        }}
+        icon={item.visible ? 'eye' : 'eye-o'}
+        shape="circle"
+        className={style.sceneItemAction}
+      />
+      <Button
+        onClick={(ev) => {
+          onDelete();
+          ev.stopPropagation();
+          ev.target.blur();
+        }}
+        icon="delete"
+        shape="circle"
+        className={style.sceneItemAction}
+      />
+    </span>
   );
   return (
     <div onClick={onClick} className={style.sceneItem}>
@@ -47,11 +60,13 @@ ListItem.propTypes = {
   item: PropTypes.object.isRequired,
   onClick: PropTypes.func,
   onDelete: PropTypes.func,
+  onToggleVisible: PropTypes.func,
 };
 
 ListItem.defaultProps = {
   onClick: () => {},
   onDelete: () => {},
+  onToggleVisible: () => {},
 };
 
 export default class MainView extends React.Component {
@@ -98,6 +113,16 @@ export default class MainView extends React.Component {
     this.setState({ scene: newScene });
   }
 
+  toggleVisibility(item) {
+    const newScene = this.state.scene.map((obj) => {
+      if (obj.id === item.id) {
+        obj.visible = !obj.visible;
+      }
+      return obj;
+    });
+    this.setState({ scene: newScene });
+  }
+
   loadFile() {
     FileLoader.openFile(['vti', 'vtp'], (file) => {
       FileLoader.loadFile(file)
@@ -107,6 +132,7 @@ export default class MainView extends React.Component {
             id,
             name: file.name,
             source,
+            visible: true,
           });
           this.setState({ scene });
         });
@@ -188,6 +214,7 @@ export default class MainView extends React.Component {
                         item={item}
                         onClick={() => this.updateActive(item)}
                         onDelete={() => this.deleteSceneItem(item)}
+                        onToggleVisible={() => this.toggleVisibility(item)}
                       />
                     )}
                   />

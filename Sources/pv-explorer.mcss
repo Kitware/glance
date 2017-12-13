@@ -82,6 +82,11 @@
   background: white;
 }
 
+.sceneItemAction {
+  margin: 0 2px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
 .quickAddItem {
   position: absolute;
   right: 16px; /* This is the same as the padding on .ant-collapse-content */

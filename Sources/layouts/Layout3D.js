@@ -112,7 +112,7 @@ export default class Layout3D extends React.Component {
 
     let count = props.scene.length;
     while (count--) {
-      const { id, source } = props.scene[count];
+      const { id, source, visible } = props.scene[count];
       if (!this.renderingPipeline[id]) {
         const actor = vtkActor.newInstance();
         const mapper = vtkMapper.newInstance();
@@ -123,6 +123,8 @@ export default class Layout3D extends React.Component {
         this.renderer.addActor(actor);
         this.resetCamera();
       }
+
+      this.renderingPipeline[id].actor.setVisibility(visible);
     }
 
     for (let i = 0; i < removed.length; ++i) {

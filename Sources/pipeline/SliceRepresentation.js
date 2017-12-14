@@ -58,7 +58,7 @@ function vtkSliceRepresentation(publicAPI, model) {
 
     model.mapper = vtkImageMapper.newInstance();
     model.actor = vtkImageSlice.newInstance();
-    model.property = model.volume.getProperty();
+    model.property = model.actor.getProperty();
     model.this = publicAPI;
 
     vtkAbstractRepresentation.connectMapper(model.mapper, source);

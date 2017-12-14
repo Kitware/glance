@@ -15,6 +15,14 @@ module.exports = {
     'no-plusplus': 0,
     'linebreak-style': 0,
 
+    // Not for vtk.js
+    // 'import/no-extraneous-dependencies': ["error", { "devDependencies": true }],
+    'import/no-extraneous-dependencies': 0,
+    'import/no-unresolved': 0,
+    'import/extensions': 0,
+    'import/no-named-as-default': 0,
+    'import/no-named-as-default-member': 0,
+
     // tmp for dev
     'class-methods-use-this': 0,
     'jsx-a11y/no-static-element-interactions': 0,

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Layout2D from './Layout2D';
 import Layout3D from './Layout3D';
 import style from './vtk-layout.mcss';
 
@@ -24,20 +25,22 @@ export default class LayoutSplit extends React.Component {
   render() {
     return (
       <div className={`${style.splitRow} ${this.props.className}`}>
-        <div className={style.view} style={{ background: 'red' }} />
         <div className={style.view}>
-          <Layout3D scene={this.props.scene} />
+          <Layout2D pipelineManager={this.props.pipelineManager} />
+        </div>
+        <div className={style.view}>
+          <Layout3D pipelineManager={this.props.pipelineManager} />
         </div>
       </div>);
   }
 }
 
 LayoutSplit.propTypes = {
-  scene: PropTypes.array,
+  pipelineManager: PropTypes.object,
   className: PropTypes.string,
 };
 
 LayoutSplit.defaultProps = {
-  scene: [],
+  pipelineManager: null,
   className: '',
 };

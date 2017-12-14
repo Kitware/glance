@@ -1,24 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import macro                          from 'vtk.js/Sources/macro';
-// import vtkActor                       from 'vtk.js/Sources/Rendering/Core/Actor';
-// import vtkConcentricCylinderSource    from 'vtk.js/Sources/Filters/Sources/ConcentricCylinderSource';
-// import vtkConeSource                  from 'vtk.js/Sources/Filters/Sources/ConeSource';
-// import vtkDataArray                   from 'vtk.js/Sources/Common/Core/DataArray';
-// import vtkGlyph3DMapper               from 'vtk.js/Sources/Rendering/Core/Glyph3DMapper';
-import vtkInteractorStyleManipulator  from 'vtk.js/Sources/Interaction/Style/InteractorStyleManipulator';
-// import vtkMapper                      from 'vtk.js/Sources/Rendering/Core/Mapper';
-import vtkOpenGLRenderWindow          from 'vtk.js/Sources/Rendering/OpenGL/RenderWindow';
-// import vtkPolyData                    from 'vtk.js/Sources/Common/DataModel/PolyData';
-import vtkRenderer                    from 'vtk.js/Sources/Rendering/Core/Renderer';
-import vtkRenderWindow                from 'vtk.js/Sources/Rendering/Core/RenderWindow';
-import vtkRenderWindowInteractor      from 'vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
-import vtkTrackballPan                from 'vtk.js/Sources/Interaction/Manipulators/TrackballPan';
-import vtkTrackballRoll               from 'vtk.js/Sources/Interaction/Manipulators/TrackballRoll';
-import vtkTrackballRotate             from 'vtk.js/Sources/Interaction/Manipulators/TrackballRotate';
-import vtkTrackballZoom               from 'vtk.js/Sources/Interaction/Manipulators/TrackballZoom';
+import { Button } from 'antd';
 
+import vtk2DView from '../pipeline/View2D';
 import style from './vtk-layout.mcss';
 
 export default class Layout2D extends React.Component {
@@ -26,83 +11,78 @@ export default class Layout2D extends React.Component {
     super(props);
 
     // Setup vtk.js objects
-    this.renderWindow = vtkRenderWindow.newInstance();
-    this.renderer = vtkRenderer.newInstance({ background: [0, 0, 0] });
-    this.renderWindow.addRenderer(this.renderer);
+    this.view = vtk2DView.newInstance();
+    this.view.updateOrientation(props.axis, props.orientation, props.viewUp);
+    props.pipelineManager.registerView(this.view);
 
-    this.openglRenderWindow = vtkOpenGLRenderWindow.newInstance();
-    this.renderWindow.addView(this.openglRenderWindow);
-
-    this.interactor = vtkRenderWindowInteractor.newInstance();
-    this.interactor.setView(this.openglRenderWindow);
-
-    this.interactorStyle = vtkInteractorStyleManipulator.newInstance();
-    this.interactor.setInteractorStyle(this.interactorStyle);
-
-    this.interactorStyle.removeAllManipulators();
-    // Rotate
-    this.interactorStyle.addManipulator(vtkTrackballRotate.newInstance());
-    // Pan
-    this.interactorStyle.addManipulator(vtkTrackballPan.newInstance({ shift: true }));
-    // Zoom
-    this.interactorStyle.addManipulator(vtkTrackballZoom.newInstance({ control: true }));
-    this.interactorStyle.addManipulator(vtkTrackballZoom.newInstance({ alt: true }));
-    // Roll
-    this.interactorStyle.addManipulator(vtkTrackballRoll.newInstance({ shift: true, control: true }));
-    this.interactorStyle.addManipulator(vtkTrackballRoll.newInstance({ shift: true, alt: true }));
-
-    // Closure for callback
-    this.resetCamera = this.resetCamera.bind(this);
-    this.resize = this.resize.bind(this);
+    // Bind callbacks
+    this.updateOrientation = this.updateOrientation.bind(this);
   }
 
   componentDidMount() {
-    this.openglRenderWindow.setContainer(this.container);
-    this.interactor.initialize();
-    this.interactor.bindEvents(this.container);
+    this.view.setContainer(this.container);
 
-    this.resetCamera();
-    this.resize();
-    window.addEventListener('resize', this.resize);
+    this.view.resetCamera();
+    this.view.resize();
+    window.addEventListener('resize', this.view.resize);
   }
 
   componentWillUnmount() {
-    // this.clearPipeline();
-    window.removeEventListener('resize', this.resize);
-    this.interactor.unbindEvents(this.container);
-    this.openglRenderWindow.setContainer(null);
+    window.removeEventListener('resize', this.view.resize);
+    this.view.setContainer(null);
+    this.props.pipelineManager.unregisterView(this.view);
   }
 
-  resize() {
-    if (this.container) {
-      const dims = this.container.getBoundingClientRect();
-      this.openglRenderWindow.setSize(Math.floor(dims.width), Math.floor(dims.height));
-      this.renderWindow.render();
-    }
-  }
-
-  resetCamera() {
-    this.renderer.resetCamera();
-    this.interactorStyle.setCenterOfRotation(this.renderer.getActiveCamera().getFocalPoint());
-    this.renderer.resetCameraClippingRange();
-    this.renderWindow.render();
+  updateOrientation(e) {
+    const state = this.props.orientations[Number(e.target.dataset.index)];
+    this.view.updateOrientation(state.axis, state.orientation, state.viewUp);
+    this.view.resetCamera();
+    this.view.renderLater();
+    console.log(state);
   }
 
   render() {
     return (
-      <div
-        className={`${style.renderWindow} ${this.props.className}`}
-        ref={((c) => { this.container = c; })}
-      />);
+      <div className={style.renderWindowContainer}>
+        <div className={style.renderWindowToolbar}>
+          <label className={style.renderWindowTitle}>
+            {this.props.title}
+          </label>
+          <section className={style.renderWindowActions}>
+            {this.props.orientations.map((o, i) =>
+              <div key={o.label} className={style.button} data-index={i} onClick={this.updateOrientation}>{o.label}</div>)
+            }
+            <Button size="small" icon="scan" onClick={this.view.resetCamera} />
+          </section>
+        </div>
+        <div
+          className={`${style.renderWindow} ${this.props.className}`}
+          ref={((c) => { this.container = c; })}
+        />
+      </div>);
   }
 }
 
 Layout2D.propTypes = {
-  scene: PropTypes.array,
+  pipelineManager: PropTypes.object,
+  title: PropTypes.string,
   className: PropTypes.string,
+  axis: PropTypes.number,
+  orientation: PropTypes.number,
+  viewUp: PropTypes.array,
+  orientations: PropTypes.array,
 };
 
 Layout2D.defaultProps = {
-  scene: [],
+  title: 'View 2D',
+  pipelineManager: null,
   className: '',
+  axis: 2,
+  orientation: 1,
+  viewUp: [0, 1, 0],
+  orientations: [
+    { label: 'X', axis: 0, orientation: 1, viewUp: [0, 1, 0] },
+    { label: 'Y', axis: 1, orientation: 1, viewUp: [1, 0, 0] },
+    { label: 'Z', axis: 2, orientation: 1, viewUp: [0, 1, 0] },
+  ],
 };

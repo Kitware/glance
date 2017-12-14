@@ -9,7 +9,8 @@ import FileLoader from './io/FileLoader';
 import Layouts from './layouts';
 import style from './pv-explorer.mcss';
 import icons from './icons';
-
+import vtkPipelineManager from './pipeline/PipelineManager';
+import vtkSource from './pipeline/Source';
 
 const { Header, Sider, Content } = Layout;
 const Panel = Collapse.Panel;
@@ -76,8 +77,9 @@ export default class MainView extends React.Component {
       layout: 'Layout2D',
       overlayOpacity: 100,
       collapsed: false,
-      scene: [],
     };
+
+    this.pipelineManager = vtkPipelineManager.newInstance();
 
     // Closure for callback
     this.onLayoutChange = this.onLayoutChange.bind(this);
@@ -94,6 +96,8 @@ export default class MainView extends React.Component {
   onToggleControl() {
     const collapsed = !this.state.collapsed;
     this.setState({ collapsed });
+    setTimeout(this.pipelineManager.resizeViews, 0);
+    setTimeout(this.pipelineManager.resizeViews, 500);
   }
 
   onOverlayOpacityChange(e) {
@@ -102,39 +106,53 @@ export default class MainView extends React.Component {
   }
 
   deleteSceneItem(item) {
-    this.setState({ scene: this.state.scene.filter(obj => obj.id !== item.id) });
+    // FIXME...
+    console.log(item);
+    this.forceUpdate();
+
+    // this.setState({ scene: this.state.scene.filter(obj => obj.id !== item.id) });
   }
 
   updateActive(item) {
-    const newScene = this.state.scene.map((obj) => {
-      obj.active = obj.id === item.id;
-      return obj;
-    });
-    this.setState({ scene: newScene });
+    // FIXME
+    console.log(item);
+    this.forceUpdate();
+
+    // const newScene = this.state.scene.map((obj) => {
+    //   obj.active = obj.id === item.id;
+    //   return obj;
+    // });
+    // this.setState({ scene: newScene });
   }
 
   toggleVisibility(item) {
-    const newScene = this.state.scene.map((obj) => {
-      if (obj.id === item.id) {
-        obj.visible = !obj.visible;
-      }
-      return obj;
-    });
-    this.setState({ scene: newScene });
+    // FIXME
+    console.log(item);
+    this.forceUpdate();
+
+    // const newScene = this.state.scene.map((obj) => {
+    //   if (obj.id === item.id) {
+    //     obj.visible = !obj.visible;
+    //   }
+    //   return obj;
+    // });
+    // this.setState({ scene: newScene });
   }
 
   loadFile() {
     FileLoader.openFile(['vti', 'vtp'], (file) => {
       FileLoader.loadFile(file)
-        .then((source) => {
-          const id = this.state.scene.length + 1;
-          const scene = this.state.scene.concat({
-            id,
-            name: file.name,
-            source,
-            visible: true,
-          });
-          this.setState({ scene });
+        .then((reader) => {
+          const source = vtkSource.newInstance();
+          source.setInput(reader);
+          this.pipelineManager.addSource(source);
+          this.pipelineManager.addSourceToViews(source.getId());
+
+          if (this.pipelineManager.getNumberOfSources() === 1) {
+            this.pipelineManager.resetCameraViews();
+          }
+
+          this.forceUpdate();
         });
     });
   }
@@ -208,7 +226,7 @@ export default class MainView extends React.Component {
                     className={style.sceneListing}
                     size="small"
                     bordered
-                    dataSource={this.state.scene}
+                    dataSource={this.pipelineManager.listSources()}
                     renderItem={item => (
                       <ListItem
                         item={item}
@@ -227,7 +245,7 @@ export default class MainView extends React.Component {
           </Sider>
           <Layout>
             <Content>
-              <Renderer scene={this.state.scene} className={style.content} />
+              <Renderer pipelineManager={this.pipelineManager} className={style.content} />
             </Content>
           </Layout>
         </Layout>

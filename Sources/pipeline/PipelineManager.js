@@ -40,13 +40,18 @@ function vtkPipelineManager(publicAPI, model) {
 
   // Active API ---------------------------------------------------------------
 
-  publicAPI.setActiveSource = (id) => {
-    model.activeSource = id;
+  publicAPI.setActiveSourceId = (id) => {
+    model.activeSourceId = id;
   };
 
-  publicAPI.setActiveView = (id) => {
-    model.activeView = id;
+  publicAPI.setActiveViewId = (id) => {
+    model.activeViewId = id;
   };
+
+
+  publicAPI.getActiveSource = () => model.scene.pipeline[model.activeSourceId];
+
+  publicAPI.getActiveView = () => model.scene.views[model.activeViewId];
 
   // Source API ---------------------------------------------------------------
 
@@ -83,6 +88,9 @@ function vtkPipelineManager(publicAPI, model) {
       }
       representation.delete();
     }
+
+    // Remove source
+    delete model.scene.pipeline[id];
   };
 
   publicAPI.listSources = () => {
@@ -94,11 +102,12 @@ function vtkPipelineManager(publicAPI, model) {
       const source = model.scene.pipeline[id].source;
       const name = source.getName();
       const type = source.getType();
-      const active = (model.activeSource === id);
-      const view = model.scene.views[model.activeView];
+      const active = (model.activeSourceId === id);
+      const view = model.scene.views[model.activeViewId];
       const visible = view.isVisible(id);
-      list.push({ id, name, type, active, visible });
+      list.push({ id, name, type, active, visible, parent: '0' });
     }
+    return list;
   };
 
   publicAPI.addSourceToViews = (sourceId) => {
@@ -106,6 +115,17 @@ function vtkPipelineManager(publicAPI, model) {
     let count = views.length;
     while (count--) {
       const view = views[count];
+      const representation = publicAPI.getRepresentation(sourceId, view);
+      view.addRepresentation(representation);
+      view.renderLater();
+    }
+  };
+
+  publicAPI.addSourcesToView = (view) => {
+    const ids = Object.keys(model.scene.pipeline);
+    let count = ids.length;
+    while (count--) {
+      const sourceId = ids[count];
       const representation = publicAPI.getRepresentation(sourceId, view);
       view.addRepresentation(representation);
       view.renderLater();
@@ -143,8 +163,9 @@ function vtkPipelineManager(publicAPI, model) {
     if (!view) {
       return;
     }
+
     model.scene.views[view.getId()] = view;
-    model.activeView = view.getId();
+    model.activeViewId = view.getId();
 
     // Add representation to new view
     const sourceIds = Object.keys(model.scene.pipeline);
@@ -232,7 +253,7 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Object methods
   macro.obj(publicAPI, model);
-  macro.get(publicAPI, model, ['scene', 'activeView', 'activeSource']);
+  macro.get(publicAPI, model, ['scene', 'activeViewId', 'activeSourceId']);
 
   // Object specific methods
   vtkPipelineManager(publicAPI, model);

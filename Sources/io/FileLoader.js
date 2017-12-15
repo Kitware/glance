@@ -1,6 +1,5 @@
 import vtkXMLPolyDataReader  from 'vtk.js/Sources/IO/XML/XMLPolyDataReader';
 import vtkXMLImageDataReader from 'vtk.js/Sources/IO/XML/XMLImageDataReader';
-import BinaryHelper          from 'vtk.js/Sources/IO/Core/BinaryHelper';
 
 // ----------------------------------------------------------------------------
 
@@ -47,10 +46,7 @@ function loadFile(file) {
       const reader = vtkReader.newInstance();
       const io = new FileReader();
       io.onload = function onLoad(e) {
-        const prefixRegex = /^\s*<AppendedData\s+encoding="raw">\s*_/m;
-        const suffixRegex = /\n\s*<\/AppendedData>/m;
-        const result = BinaryHelper.extractBinary(io.result, prefixRegex, suffixRegex);
-        reader.parse(result.text, result.binaryBuffer);
+        reader.parseArrayBuffer(io.result);
         resolve(reader);
       };
       io.readAsArrayBuffer(file);

@@ -1,9 +1,10 @@
 import 'antd/dist/antd.css';
 
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
-import { Layout, Menu, Collapse, List, Button } from 'antd';
+import GitTreeWidget from 'paraviewweb/src/React/Widgets/GitTreeWidget';
+import { Layout, Menu, Collapse, Button } from 'antd';
 
 import FileLoader from './io/FileLoader';
 import Layouts from './layouts';
@@ -22,59 +23,13 @@ const layouts = [
   'LayoutQuad',
 ];
 
-function ListItem({ item, onClick, onDelete, onToggleVisible }) {
-  const deleteBtn = (
-    <span>
-      <Button
-        onClick={(ev) => {
-          onToggleVisible();
-          ev.stopPropagation();
-          ev.target.blur();
-        }}
-        icon={item.visible ? 'eye' : 'eye-o'}
-        shape="circle"
-        className={style.sceneItemAction}
-      />
-      <Button
-        onClick={(ev) => {
-          onDelete();
-          ev.stopPropagation();
-          ev.target.blur();
-        }}
-        icon="delete"
-        shape="circle"
-        className={style.sceneItemAction}
-      />
-    </span>
-  );
-  return (
-    <div onClick={onClick} className={style.sceneItem}>
-      <List.Item
-        actions={[deleteBtn]}
-        className={item.active ? style.active : style.inactive}
-      >{item.name}</List.Item>
-    </div>
-  );
-}
-
-ListItem.propTypes = {
-  item: PropTypes.object.isRequired,
-  onClick: PropTypes.func,
-  onDelete: PropTypes.func,
-  onToggleVisible: PropTypes.func,
-};
-
-ListItem.defaultProps = {
-  onClick: () => {},
-  onDelete: () => {},
-  onToggleVisible: () => {},
-};
+const WIDTH = 300;
 
 export default class MainView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      layout: 'Layout2D',
+      layout: 'Layout3D',
       overlayOpacity: 100,
       collapsed: false,
     };
@@ -85,8 +40,9 @@ export default class MainView extends React.Component {
     this.onLayoutChange = this.onLayoutChange.bind(this);
     this.onToggleControl = this.onToggleControl.bind(this);
     this.onOverlayOpacityChange = this.onOverlayOpacityChange.bind(this);
-    this.updateActive = this.updateActive.bind(this);
     this.loadFile = this.loadFile.bind(this);
+
+    this.onGitChange = this.onGitChange.bind(this);
   }
 
   onLayoutChange({ item, key, selectedKeys }) {
@@ -105,38 +61,19 @@ export default class MainView extends React.Component {
     this.setState({ overlayOpacity });
   }
 
-  deleteSceneItem(item) {
-    // FIXME...
-    console.log(item);
+  onGitChange(e) {
+    if (e.type === 'visibility') {
+      const { id, visible } = e.changeSet[0];
+      const view = this.pipelineManager.getActiveView();
+      const rep = this.pipelineManager.getRepresentation(id, view);
+      rep.updateProperties({ actor: { visibility: visible } });
+    } else if (e.type === 'delete') {
+      const sourceId = Number(e.changeSet[0].id);
+      this.pipelineManager.removeSource(sourceId);
+    }
+    this.pipelineManager.renderLaterViews();
     this.forceUpdate();
-
-    // this.setState({ scene: this.state.scene.filter(obj => obj.id !== item.id) });
-  }
-
-  updateActive(item) {
-    // FIXME
-    console.log(item);
-    this.forceUpdate();
-
-    // const newScene = this.state.scene.map((obj) => {
-    //   obj.active = obj.id === item.id;
-    //   return obj;
-    // });
-    // this.setState({ scene: newScene });
-  }
-
-  toggleVisibility(item) {
-    // FIXME
-    console.log(item);
-    this.forceUpdate();
-
-    // const newScene = this.state.scene.map((obj) => {
-    //   if (obj.id === item.id) {
-    //     obj.visible = !obj.visible;
-    //   }
-    //   return obj;
-    // });
-    // this.setState({ scene: newScene });
+    console.log('onGitChange', e);
   }
 
   loadFile() {
@@ -145,6 +82,7 @@ export default class MainView extends React.Component {
         .then((reader) => {
           const source = vtkSource.newInstance();
           source.setInput(reader);
+          source.setName(file.name);
           this.pipelineManager.addSource(source);
           this.pipelineManager.addSourceToViews(source.getId());
 
@@ -159,7 +97,6 @@ export default class MainView extends React.Component {
 
   render() {
     const Renderer = Layouts[this.state.layout];
-
     const sceneListHeader = (
       <div>
         <span>Scene</span>
@@ -213,7 +150,7 @@ export default class MainView extends React.Component {
         <Layout>
           <Sider
             className={style.sideBar}
-            width={250}
+            width={WIDTH}
             collapsedWidth={0}
             trigger={null}
             collapsible
@@ -222,19 +159,11 @@ export default class MainView extends React.Component {
             <div className={style.padding}>
               <Collapse bordered={false} defaultActiveKey={['scene']} className={style.collapseList}>
                 <Panel header={sceneListHeader} key="scene">
-                  <List
-                    className={style.sceneListing}
-                    size="small"
-                    bordered
-                    dataSource={this.pipelineManager.listSources()}
-                    renderItem={item => (
-                      <ListItem
-                        item={item}
-                        onClick={() => this.updateActive(item)}
-                        onDelete={() => this.deleteSceneItem(item)}
-                        onToggleVisible={() => this.toggleVisibility(item)}
-                      />
-                    )}
+                  <GitTreeWidget
+                    nodes={this.pipelineManager.listSources()}
+                    onChange={this.onGitChange}
+                    width={WIDTH - 32}
+                    enableDelete
                   />
                 </Panel>
                 <Panel header="Edit" key="edit">

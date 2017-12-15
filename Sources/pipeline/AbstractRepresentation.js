@@ -26,7 +26,7 @@ function vtkAbstractRepresentation(publicAPI, model) {
 
   publicAPI.getInputDataSet = () => model.input.getDataset();
 
-  publicAPI.isSourceRepresentation = id => (model.input.getId() === id);
+  publicAPI.isSourceRepresentation = id => (model.input.getId() === Number(id));
 
   publicAPI.isVisible = () => {
     if (model.actors.length) {

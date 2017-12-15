@@ -36,9 +36,9 @@ export default class Layout2D extends React.Component {
   updateOrientation(e) {
     const state = this.props.orientations[Number(e.target.dataset.index)];
     this.view.updateOrientation(state.axis, state.orientation, state.viewUp);
+    this.props.pipelineManager.addSourcesToView(this.view);
     this.view.resetCamera();
     this.view.renderLater();
-    console.log(state);
   }
 
   render() {

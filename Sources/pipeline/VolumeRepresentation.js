@@ -5,6 +5,8 @@ import vtkPiecewiseFunction     from 'vtk.js/Sources/Common/DataModel/PiecewiseF
 import vtkVolume                from 'vtk.js/Sources/Rendering/Core/Volume';
 import vtkVolumeMapper          from 'vtk.js/Sources/Rendering/Core/VolumeMapper';
 
+import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
+
 import vtkAbstractRepresentation from './AbstractRepresentation';
 
 const REPRESENTATION_STATE = {
@@ -18,6 +20,20 @@ const REPRESENTATION_STATE = {
 function updateConfiguration(dataset, { lookupTable, piecewiseFunction, mapper, property }) {
   const dataArray = dataset.getPointData().getScalars() || dataset.getPointData().getArrays()[0];
   const dataRange = dataArray.getRange();
+
+  // FIXME ---- start ---------------------------------------------------------
+  const preset = vtkColorMaps.getPresetByName('erdc_rainbow_bright');
+  lookupTable.applyColorMap(preset);
+  lookupTable.setMappingRange(...dataRange);
+  lookupTable.updateRange();
+
+  const midpoint = 0.5;
+  const sharpness = 0;
+  const nodes = [{ x: dataRange[0], y: 0, midpoint, sharpness }, { x: dataRange[1], y: 1, midpoint, sharpness }];
+  piecewiseFunction.removeAllPoints();
+  piecewiseFunction.set({ nodes }, true);
+  piecewiseFunction.sortAndUpdateRange();
+  // FIXME ---- end -----------------------------------------------------------
 
   // Configuration
   const sampleDistance = 0.7 * Math.sqrt(dataset.getSpacing().map(v => v * v).reduce((a, b) => a + b, 0));

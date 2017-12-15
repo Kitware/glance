@@ -7,6 +7,7 @@ const outputPath = path.join(__dirname, './Distribution');
 const linterRules = require('./Utilities/rules/linter.js');
 const explorerRules = require('./Utilities/rules/explorer.js');
 const vtkRules = require('./Utilities/rules/vtkjs.js');
+const pvwRules = require('./Utilities/rules/paraviewweb.js');
 
 module.exports = {
   entry,
@@ -15,7 +16,7 @@ module.exports = {
     filename: 'pv-web-viewer.js',
   },
   module: {
-    rules: [].concat(linterRules, explorerRules, vtkRules),
+    rules: [].concat(linterRules, explorerRules, vtkRules, pvwRules),
   },
   resolve: {
     extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx'],
@@ -25,6 +26,7 @@ module.exports = {
     ],
     alias: {
       'pv-explorer': __dirname,
+      PVWStyle: path.resolve('./node_modules/paraviewweb/style'),
     },
   },
   devServer: {

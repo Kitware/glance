@@ -27,6 +27,14 @@ const REPRESENTATION_STATE = {
   },
 };
 
+function sum(a, b) {
+  return a + b;
+}
+
+function mean(array) {
+  return array.reduce(sum, 0) / array.length;
+}
+
 function updateDomains(dataset, { properties, slicingMode }) {
   const dataArray = dataset.getPointData().getScalars() || dataset.getPointData().getArrays()[0];
   const dataRange = dataArray.getRange();
@@ -36,6 +44,16 @@ function updateDomains(dataset, { properties, slicingMode }) {
   properties.sliceIndex.domain.range = [extent[axisIndex * 2], extent[(axisIndex * 2) + 1]];
   properties.colorWindow.domain.range = [0, dataRange[1] - dataRange[0]];
   properties.colorLevel.domain.range = [0, 0.5 * (dataRange[1] + dataRange[0])];
+
+  return {
+    this: {
+      sliceIndex: Math.floor(mean(properties.sliceIndex.domain.range)),
+    },
+    property: {
+      colorWindow: mean(properties.colorWindow.domain.range),
+      colorLevel: mean(properties.colorLevel.domain.range),
+    },
+  };
 }
 
 // ----------------------------------------------------------------------------
@@ -62,7 +80,8 @@ function vtkSliceRepresentation(publicAPI, model) {
     model.this = publicAPI;
 
     vtkAbstractRepresentation.connectMapper(model.mapper, source);
-    updateDomains(publicAPI.getInputDataSet(), model);
+    const state = updateDomains(publicAPI.getInputDataSet(), model);
+    publicAPI.updateProperties(state);
 
     // connect rendering pipeline
     model.actor.setMapper(model.mapper);

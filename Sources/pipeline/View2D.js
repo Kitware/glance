@@ -12,6 +12,7 @@ function vtk2DView(publicAPI, model) {
   // Representation mapping
   publicAPI.getRepresentationType = (sourceType) => {
     if (sourceType === 'Volume') {
+      console.log('ask Representation', `Slice${'XYZ'[model.axis]}`);
       return `Slice${'XYZ'[model.axis]}`;
     }
     if (sourceType === 'Geometry') {
@@ -28,6 +29,11 @@ function vtk2DView(publicAPI, model) {
     position[model.axis] += model.orientation;
     model.camera.setPosition(...position);
     model.camera.setViewUp(...viewUp);
+
+    let count = model.representations.length;
+    while (count--) {
+      publicAPI.removeRepresentation(model.representations[count]);
+    }
   };
 
   publicAPI.updateOrientation(model.axis, model.orientation, model.viewUp);

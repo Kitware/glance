@@ -2,33 +2,52 @@ import macro                      from 'vtk.js/Sources/macro';
 import vtkActor                   from 'vtk.js/Sources/Rendering/Core/Actor';
 import vtkMapper                  from 'vtk.js/Sources/Rendering/Core/Mapper';
 
+import helper from './helper';
 import vtkAbstractRepresentation  from './AbstractRepresentation';
 
-const REPRESENTATION_STATE = {
-  visibility: {
-    label: 'Visibility',
-    domain: { type: 'boolean' },
-    value: { actor: 'visibility' },
-  },
-  opacity: {
-    label: 'Opacity',
-    domain: { type: 'range', range: [0, 1] },
-    value: { property: 'opacity' },
-  },
+const PROPERTIES_STATE = {
   representation: {
-    label: 'Representation',
-    domain: {
-      type: 'list',
-      list: [
-        { label: 'Surface with edge', state: { property: { edgeVisibility: true, representation: 2 } } },
-        { label: 'Surface', state: { property: { edgeVisibility: false, representation: 2 } } },
-        { label: 'Wireframe', state: { property: { edgeVisibility: false, representation: 1 } } },
-        { label: 'Points', state: { property: { edgeVisibility: false, representation: 0 } } },
-      ],
-    },
-    value: { this: 'representation' },
+    'Surface with edges': { property: { edgeVisibility: true, representation: 2 } },
+    Surface: { property: { edgeVisibility: false, representation: 2 } },
+    Wireframe: { property: { edgeVisibility: false, representation: 1 } },
+    Points: { property: { edgeVisibility: false, representation: 0 } },
   },
 };
+
+const PROPERTIES_DEFAULT = {
+  representation: 'Surface',
+};
+
+const PROPERTIES_UI = [
+  {
+    widget: 'list-1',
+    name: 'Representation',
+    doc: 'Choose the type for the representation',
+    values: [
+      'Surface with edges',
+      'Surface',
+      'Wireframe',
+      'Points',
+    ],
+    type: 'str',
+    advanced: 0,
+    size: 1,
+    valueMapping: { modelKey: 'this', property: 'representation' },
+  }, {
+    widget: 'slider',
+    type: 'double',
+    domain: { min: 0, max: 1, step: 0.01 },
+    valueMapping: { modelKey: 'property', property: 'opacity' },
+  }, {
+    name: 'Visibility',
+    doc: 'Toggle visibility',
+    widget: 'checkbox',
+    type: 'boolean',
+    advanced: 1,
+    size: 1,
+    valueMapping: { modelKey: 'actor', property: 'visibility' },
+  },
+];
 
 // ----------------------------------------------------------------------------
 // vtkGeometryRepresentation methods
@@ -40,8 +59,8 @@ function vtkGeometryRepresentation(publicAPI, model) {
   const superSetInput = publicAPI.setInput;
 
   // Inspectable object
+  model.ui = PROPERTIES_UI;
   model.this = publicAPI;
-  model.properties = REPRESENTATION_STATE;
 
   // API ----------------------------------------------------------------------
 
@@ -57,16 +76,6 @@ function vtkGeometryRepresentation(publicAPI, model) {
     // connect rendering pipeline
     model.actor.setMapper(model.mapper);
     model.actors.push(model.actor);
-  };
-
-  // --------------------------------------------------------------------------
-
-  publicAPI.setRepresentation = (name) => {
-    const data = REPRESENTATION_STATE.representation.domain.find(i => i.label === name);
-    if (data) {
-      model.representation = name;
-      publicAPI.updateProperties(data.state);
-    }
   };
 }
 
@@ -85,10 +94,7 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Object methods
   vtkAbstractRepresentation.extend(publicAPI, model);
-  macro.get(publicAPI, model, [
-    'representation',
-    'properties',
-  ]);
+  helper.stateProperties(publicAPI, model, PROPERTIES_STATE, PROPERTIES_DEFAULT);
 
   // Object specific methods
   vtkGeometryRepresentation(publicAPI, model);

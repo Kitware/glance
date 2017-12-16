@@ -4,7 +4,9 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 
 import GitTreeWidget from 'paraviewweb/src/React/Widgets/GitTreeWidget';
-import { Layout, Menu, Collapse, Button } from 'antd';
+import ProxyEditorWidget from 'paraviewweb/src/React/Widgets/ProxyEditorWidget';
+
+import { Layout, Menu } from 'antd';
 
 import FileLoader from './io/FileLoader';
 import Layouts from './layouts';
@@ -14,7 +16,6 @@ import vtkPipelineManager from './pipeline/PipelineManager';
 import vtkSource from './pipeline/Source';
 
 const { Header, Sider, Content } = Layout;
-const Panel = Collapse.Panel;
 
 const layouts = [
   'Layout2D',
@@ -35,6 +36,9 @@ export default class MainView extends React.Component {
     };
 
     this.pipelineManager = vtkPipelineManager.newInstance();
+    this.pipelineManager.onModified(() => {
+      setTimeout(this.forceUpdate, 0);
+    });
 
     // Closure for callback
     this.onLayoutChange = this.onLayoutChange.bind(this);
@@ -43,10 +47,11 @@ export default class MainView extends React.Component {
     this.loadFile = this.loadFile.bind(this);
 
     this.onGitChange = this.onGitChange.bind(this);
+    this.forceUpdate = this.forceUpdate.bind(this);
   }
 
   onLayoutChange({ item, key, selectedKeys }) {
-    this.setState({ layout: key });
+    this.setState({ layout: key }, this.forceUpdate);
   }
 
   onToggleControl() {
@@ -65,11 +70,13 @@ export default class MainView extends React.Component {
     if (e.type === 'visibility') {
       const { id, visible } = e.changeSet[0];
       const view = this.pipelineManager.getActiveView();
-      const rep = this.pipelineManager.getRepresentation(id, view);
+      const rep = this.pipelineManager.getRepresentation(Number(id), view);
       rep.updateProperties({ actor: { visibility: visible } });
     } else if (e.type === 'delete') {
       const sourceId = Number(e.changeSet[0].id);
       this.pipelineManager.removeSource(sourceId);
+    } else if (e.type === 'active') {
+      this.pipelineManager.setActiveSourceId(Number(e.changeSet[0].id));
     }
     this.pipelineManager.renderLaterViews();
     this.forceUpdate();
@@ -97,23 +104,6 @@ export default class MainView extends React.Component {
 
   render() {
     const Renderer = Layouts[this.state.layout];
-    const sceneListHeader = (
-      <div>
-        <span>Scene</span>
-        <Button
-          className={style.quickAddItem}
-          icon="plus"
-          title="Load file into scene"
-          onClick={(ev) => {
-            this.loadFile();
-            // stop prop, and unfocus the button
-            ev.stopPropagation();
-            ev.target.blur();
-          }}
-        />
-      </div>
-    );
-
     return (
       <Layout>
         <Header className={style.toolbar}>
@@ -156,21 +146,17 @@ export default class MainView extends React.Component {
             collapsible
             collapsed={this.state.collapsed}
           >
-            <div className={style.padding}>
-              <Collapse bordered={false} defaultActiveKey={['scene']} className={style.collapseList}>
-                <Panel header={sceneListHeader} key="scene">
-                  <GitTreeWidget
-                    nodes={this.pipelineManager.listSources()}
-                    onChange={this.onGitChange}
-                    width={WIDTH - 32}
-                    enableDelete
-                  />
-                </Panel>
-                <Panel header="Edit" key="edit">
-                  <p>b</p>
-                </Panel>
-              </Collapse>
-            </div>
+            <GitTreeWidget
+              nodes={this.pipelineManager.listSources()}
+              onChange={this.onGitChange}
+              width={WIDTH - 32}
+              enableDelete
+            />
+            <ProxyEditorWidget
+              sections={this.pipelineManager.getSections()}
+              onCollapseChange={this.pipelineManager.updateCollapseState}
+              onApply={this.onGitChange}
+            />
           </Sider>
           <Layout>
             <Content>

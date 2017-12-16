@@ -13,7 +13,9 @@ export default class Layout2D extends React.Component {
     // Setup vtk.js objects
     this.view = vtk2DView.newInstance();
     this.view.updateOrientation(props.axis, props.orientation, props.viewUp);
-    props.pipelineManager.registerView(this.view);
+    this.subscription = this.view.getInteractor().onAnimation(() => {
+      this.props.pipelineManager.setActiveViewId(this.view.getId());
+    });
 
     // Bind callbacks
     this.updateOrientation = this.updateOrientation.bind(this);
@@ -25,9 +27,14 @@ export default class Layout2D extends React.Component {
     this.view.resetCamera();
     this.view.resize();
     window.addEventListener('resize', this.view.resize);
+    this.props.pipelineManager.registerView(this.view);
   }
 
   componentWillUnmount() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.subscription = null;
+    }
     window.removeEventListener('resize', this.view.resize);
     this.view.setContainer(null);
     this.props.pipelineManager.unregisterView(this.view);
@@ -43,7 +50,7 @@ export default class Layout2D extends React.Component {
 
   render() {
     return (
-      <div className={style.renderWindowContainer}>
+      <div className={this.props.pipelineManager.getActiveViewId() === this.view.getId() ? style.activeRenderWindowContainer : style.renderWindowContainer}>
         <div className={style.renderWindowToolbar}>
           <label className={style.renderWindowTitle}>
             {this.props.title}

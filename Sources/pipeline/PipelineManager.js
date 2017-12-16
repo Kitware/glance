@@ -7,6 +7,16 @@ import vtkSliceRepresentation from './SliceRepresentation';
 // Global methods
 // ----------------------------------------------------------------------------
 
+const PIPELINE_OBJECTS = {};
+
+function registerObject(obj) {
+  PIPELINE_OBJECTS[obj.getId()] = obj;
+}
+
+function unregisterObject(obj) {
+  delete PIPELINE_OBJECTS[obj.getId()];
+}
+
 function createRepresentation(type) {
   switch (type) {
     case 'Volume':
@@ -41,11 +51,17 @@ function vtkPipelineManager(publicAPI, model) {
   // Active API ---------------------------------------------------------------
 
   publicAPI.setActiveSourceId = (id) => {
-    model.activeSourceId = id;
+    if (id !== model.activeSourceId) {
+      model.activeSourceId = id;
+      publicAPI.modified();
+    }
   };
 
   publicAPI.setActiveViewId = (id) => {
-    model.activeViewId = id;
+    if (id !== model.activeViewId) {
+      model.activeViewId = id;
+      publicAPI.modified();
+    }
   };
 
 
@@ -59,6 +75,10 @@ function vtkPipelineManager(publicAPI, model) {
     if (model.scene.pipeline[source.getId()]) {
       return source.getId();
     }
+
+    // Register object globaly
+    registerObject(source);
+
     const representations = {};
     model.scene.pipeline[source.getId()] = {
       source,
@@ -73,7 +93,8 @@ function vtkPipelineManager(publicAPI, model) {
       return;
     }
 
-    const { representations } = model.scene.pipeline[id];
+    const { source, representations } = model.scene.pipeline[id];
+    unregisterObject(source);
 
     // Remove representation from any available view
     const respresentationTypes = Object.keys(representations);
@@ -81,6 +102,8 @@ function vtkPipelineManager(publicAPI, model) {
     let count = respresentationTypes.length;
     while (count--) {
       const representation = representations[respresentationTypes[count]];
+      unregisterObject(representation);
+
       let vCount = viewIds.length;
       while (vCount--) {
         const view = model.scene.views[viewIds[vCount]];
@@ -152,6 +175,7 @@ function vtkPipelineManager(publicAPI, model) {
       const representation = createRepresentation(representationType);
       representation.setInput(source);
       representations[representationType] = representation;
+      registerObject(representation);
     }
 
     return representations[representationType];
@@ -165,7 +189,14 @@ function vtkPipelineManager(publicAPI, model) {
     }
 
     model.scene.views[view.getId()] = view;
-    model.activeViewId = view.getId();
+    registerObject(view);
+
+    if (!publicAPI.getActiveView()) {
+      model.activeViewId = view.getId();
+      console.log('register and activate');
+    } else {
+      console.log('register but skip');
+    }
 
     // Add representation to new view
     const sourceIds = Object.keys(model.scene.pipeline);
@@ -186,6 +217,8 @@ function vtkPipelineManager(publicAPI, model) {
       return;
     }
 
+    console.log('unregister', view.getId());
+
     // Remove representations from view
     const ids = Object.keys(model.scene.pipeline);
     let count = ids.length;
@@ -201,6 +234,7 @@ function vtkPipelineManager(publicAPI, model) {
     }
 
     // Remove view from list
+    unregisterObject(view);
     delete model.scene.views[view.getId()];
 
     // Update view list
@@ -236,6 +270,36 @@ function vtkPipelineManager(publicAPI, model) {
     while (count--) {
       model.views[count].resetCamera();
     }
+  };
+
+  // --------------------------------------------------------------------------
+  // UI Handling
+  // --------------------------------------------------------------------------
+
+  publicAPI.updateCollapseState = (name, isOpen, collapseType) => {
+    console.log('toggle', name, isOpen, collapseType);
+  };
+
+  publicAPI.getSections = () => {
+    const sections = [];
+    const item = publicAPI.getActiveSource();
+    if (!item) {
+      return [];
+    }
+    const view = publicAPI.getActiveView();
+    if (item.source) {
+      sections.push(item.source.getPropertySection());
+    }
+    if (item.source && view) {
+      const representation = publicAPI.getRepresentation(item.source.getId(), view);
+      if (representation) {
+        sections.push(representation.getPropertySection());
+      }
+    }
+    if (view) {
+      sections.push(view.getPropertySection());
+    }
+    return sections;
   };
 }
 

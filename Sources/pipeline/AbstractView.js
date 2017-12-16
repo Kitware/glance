@@ -9,17 +9,8 @@ import vtkTrackballRoll               from 'vtk.js/Sources/Interaction/Manipulat
 import vtkTrackballRotate             from 'vtk.js/Sources/Interaction/Manipulators/TrackballRotate';
 import vtkTrackballZoom               from 'vtk.js/Sources/Interaction/Manipulators/TrackballZoom';
 
+import helper from './helper';
 import vtkPipelineObject from './PipelineObject';
-
-// ----------------------------------------------------------------------------
-// Global methods
-// ----------------------------------------------------------------------------
-
-let instanceId = 1;
-
-function getNextId() {
-  return instanceId++;
-}
 
 // ----------------------------------------------------------------------------
 // vtkView methods
@@ -28,7 +19,7 @@ function getNextId() {
 function vtkView(publicAPI, model) {
   // Set our className
   model.classHierarchy.push('vtkView');
-  model.id = getNextId();
+  model.ui = [];
 
   // Setup --------------------------------------------------------------------
   model.renderWindow = vtkRenderWindow.newInstance();
@@ -155,6 +146,7 @@ function vtkView(publicAPI, model) {
 
 const DEFAULT_VALUES = {
   representations: [],
+  sectionName: 'view',
 };
 
 // ----------------------------------------------------------------------------
@@ -164,7 +156,6 @@ function extend(publicAPI, model, initialValues = {}) {
 
   vtkPipelineObject.extend(publicAPI, model);
   macro.get(publicAPI, model, [
-    'id',
     'representations',
     'renderer',
     'renderWindow',
@@ -176,6 +167,9 @@ function extend(publicAPI, model, initialValues = {}) {
     'useParallelRendering',
     'camera',
   ]);
+
+  // FIXME
+  helper.stateProperties(publicAPI, model, {}, {});
 
   // Object specific methods
   vtkView(publicAPI, model);

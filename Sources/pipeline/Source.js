@@ -1,16 +1,7 @@
 import macro from 'vtk.js/Sources/macro';
 
+import helper from './helper';
 import vtkPipelineObject from './PipelineObject';
-
-// ----------------------------------------------------------------------------
-// Global methods
-// ----------------------------------------------------------------------------
-
-let instanceId = 1;
-
-function getNextId() {
-  return instanceId++;
-}
 
 // ----------------------------------------------------------------------------
 
@@ -33,7 +24,7 @@ function getDatasetType(ds) {
 function vtkSource(publicAPI, model) {
   // Set our className
   model.classHierarchy.push('vtkSource');
-  model.id = getNextId();
+  model.ui = [];
 
   // Inspectable object
   model.this = publicAPI;
@@ -59,6 +50,7 @@ function vtkSource(publicAPI, model) {
 const DEFAULT_VALUES = {
   name: 'Default source',
   type: 'Geometry',
+  sectionName: 'source',
 };
 
 // ----------------------------------------------------------------------------
@@ -68,7 +60,6 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   vtkPipelineObject.extend(publicAPI, model);
   macro.get(publicAPI, model, [
-    'id',
     'name',
     'properties',
     'type',
@@ -78,6 +69,9 @@ export function extend(publicAPI, model, initialValues = {}) {
   macro.set(publicAPI, model, [
     'name',
   ]);
+
+  // FIXME
+  helper.stateProperties(publicAPI, model, {}, {});
 
   // Object specific methods
   vtkSource(publicAPI, model);

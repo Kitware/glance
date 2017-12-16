@@ -46,6 +46,7 @@ function vtkAbstractRepresentation(publicAPI, model) {
 const DEFAULT_VALUES = {
   actors: [],
   volumes: [],
+  sectionName: 'representation',
 };
 
 // ----------------------------------------------------------------------------

@@ -34,6 +34,10 @@
   overflow: hidden;
 }
 
+.activeRenderWindowContainer {
+  composes: renderWindowContainer;
+}
+
 .renderWindowToolbar {
   flex: none;
   height: 30px;
@@ -42,8 +46,11 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 10px;
-  border: 1px solid white;
   background-color: white;
+}
+
+.activeRenderWindowContainer .renderWindowToolbar {
+  background-color: #99f;
 }
 
 .renderWindow {
@@ -68,8 +75,9 @@
   display: inline-block;
   border: 1px solid #d9d9d9;
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: 4px;
   width: 25px;
   height: 25px;
   margin-right: 5px;
+  background: white;
 }

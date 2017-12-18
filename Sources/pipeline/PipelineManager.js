@@ -17,6 +17,10 @@ function unregisterObject(obj) {
   delete PIPELINE_OBJECTS[obj.getId()];
 }
 
+function getObject(id) {
+  return PIPELINE_OBJECTS[Number(id)];
+}
+
 function createRepresentation(type) {
   switch (type) {
     case 'Volume':
@@ -125,10 +129,9 @@ function vtkPipelineManager(publicAPI, model) {
       const source = model.scene.pipeline[id].source;
       const name = source.getName();
       const type = source.getType();
-      const active = (model.activeSourceId === id);
       const view = model.scene.views[model.activeViewId];
       const visible = view.isVisible(id);
-      list.push({ id, name, type, active, visible, parent: '0' });
+      list.push({ id, name, type, visible, parent: '0' });
     }
     return list;
   };
@@ -301,6 +304,32 @@ function vtkPipelineManager(publicAPI, model) {
     }
     return sections;
   };
+
+  publicAPI.applyChanges = (changeSet) => {
+    const groupBy = {};
+    const keys = Object.keys(changeSet);
+    let count = keys.length;
+    while (count--) {
+      const key = keys[count];
+      const [id, prop] = key.split(':');
+      if (!groupBy[id]) {
+        groupBy[id] = {};
+      }
+      groupBy[id].this = { [prop]: changeSet[key] };
+    }
+
+    // Apply changes
+    const objIds = Object.keys(groupBy);
+    count = objIds.length;
+    while (count--) {
+      const id = objIds[count];
+      const obj = getObject(id);
+      if (obj) {
+        obj.updateProperties(groupBy[id]);
+      }
+    }
+    publicAPI.renderLaterViews();
+  };
 }
 
 // ----------------------------------------------------------------------------
@@ -329,4 +358,4 @@ export const newInstance = macro.newInstance(extend, 'vtkPipelineManager');
 
 // ----------------------------------------------------------------------------
 
-export default { newInstance, extend };
+export default { newInstance, extend, getObject };

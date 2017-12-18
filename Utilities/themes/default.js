@@ -6,7 +6,7 @@ module.exports = {
       menuItemPadding: '10px',
     },
     colors: {
-      menu: '#adadad',
+      menu: '#eee',
       content: '#adadad',
       selected: '#1890ff',
     },

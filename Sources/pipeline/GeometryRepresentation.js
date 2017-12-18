@@ -21,7 +21,8 @@ const PROPERTIES_DEFAULT = {
 const PROPERTIES_UI = [
   {
     widget: 'list-1',
-    name: 'Representation',
+    label: 'Representation',
+    name: 'representation',
     doc: 'Choose the type for the representation',
     values: [
       'Surface with edges',
@@ -34,7 +35,10 @@ const PROPERTIES_UI = [
     size: 1,
     valueMapping: { modelKey: 'this', property: 'representation' },
   }, {
+    label: 'Opactity',
+    name: 'opacity',
     widget: 'slider',
+    propType: 'slider',
     type: 'double',
     domain: { min: 0, max: 1, step: 0.01 },
     valueMapping: { modelKey: 'property', property: 'opacity' },

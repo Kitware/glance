@@ -47,6 +47,7 @@ export default class MainView extends React.Component {
     this.loadFile = this.loadFile.bind(this);
 
     this.onGitChange = this.onGitChange.bind(this);
+    this.onApply = this.onApply.bind(this);
     this.forceUpdate = this.forceUpdate.bind(this);
   }
 
@@ -71,7 +72,7 @@ export default class MainView extends React.Component {
       const { id, visible } = e.changeSet[0];
       const view = this.pipelineManager.getActiveView();
       const rep = this.pipelineManager.getRepresentation(Number(id), view);
-      rep.updateProperties({ actor: { visibility: visible } });
+      rep.setVisibility(visible);
     } else if (e.type === 'delete') {
       const sourceId = Number(e.changeSet[0].id);
       this.pipelineManager.removeSource(sourceId);
@@ -80,7 +81,10 @@ export default class MainView extends React.Component {
     }
     this.pipelineManager.renderLaterViews();
     this.forceUpdate();
-    console.log('onGitChange', e);
+  }
+
+  onApply(e) {
+    this.pipelineManager.applyChanges(e);
   }
 
   loadFile() {
@@ -104,6 +108,7 @@ export default class MainView extends React.Component {
 
   render() {
     const Renderer = Layouts[this.state.layout];
+    const actives = this.pipelineManager.getActiveSourceId() ? [`${this.pipelineManager.getActiveSourceId()}`] : [];
     return (
       <Layout>
         <Header className={style.toolbar}>
@@ -146,16 +151,19 @@ export default class MainView extends React.Component {
             collapsible
             collapsed={this.state.collapsed}
           >
-            <GitTreeWidget
-              nodes={this.pipelineManager.listSources()}
-              onChange={this.onGitChange}
-              width={WIDTH - 32}
-              enableDelete
-            />
+            <div className={style.pipeline}>
+              <GitTreeWidget
+                nodes={this.pipelineManager.listSources()}
+                actives={actives}
+                onChange={this.onGitChange}
+                width={WIDTH}
+                enableDelete
+              />
+            </div>
             <ProxyEditorWidget
               sections={this.pipelineManager.getSections()}
               onCollapseChange={this.pipelineManager.updateCollapseState}
-              onApply={this.onGitChange}
+              onApply={this.onApply}
             />
           </Sider>
           <Layout>

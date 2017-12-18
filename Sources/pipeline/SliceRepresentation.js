@@ -66,6 +66,7 @@ function vtkSliceRepresentation(publicAPI, model) {
   const superSetInput = publicAPI.setInput;
 
   // Inspectable object
+  model.ui = {};
   model.this = publicAPI;
   model.properties = REPRESENTATION_STATE;
 

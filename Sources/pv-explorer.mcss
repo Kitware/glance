@@ -66,35 +66,11 @@
   overflow: 'hidden';
 }
 
-.sceneItem {
-  cursor: pointer;
-}
-
-.sceneItem:hover :global(.ant-list-item) {
-  background: cyan;
-}
-
-.sceneItem .active, .sceneItem:active :global(.ant-list-item) {
-  background: #1890ff !important;
-}
-
-.sceneItem :global(.ant-list-item-action) {
-  margin-left: 0;
-}
-
-.sceneItem .inactive {
-  background: white;
-}
-
-.sceneItemAction {
-  margin: 0 2px;
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.quickAddItem {
-  position: absolute;
-  right: 16px; /* This is the same as the padding on .ant-collapse-content */
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 0.4);
+.pipeline {
+  min-height: 20%;
+  padding-top: 20px;
+  margin: 0 auto;
+  max-height: 45%;
+  overflow: auto;
+  border-top: 1px solid #ccc;
 }

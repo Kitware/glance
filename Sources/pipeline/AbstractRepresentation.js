@@ -37,6 +37,17 @@ function vtkAbstractRepresentation(publicAPI, model) {
     }
     return false;
   };
+
+  publicAPI.setVisibility = (visible) => {
+    let count = model.actors.length;
+    while (count--) {
+      model.actors[count].setVisibility(visible);
+    }
+    count = model.volumes.length;
+    while (count--) {
+      model.volumes[count].setVisibility(visible);
+    }
+  };
 }
 
 // ----------------------------------------------------------------------------

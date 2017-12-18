@@ -18,7 +18,7 @@
         "font-awesome": "4.5.0",
         "monologue.js": "0.3.5",
         "mout": "1.0.0",
-        "paraviewweb": "3.0.0"
+        "paraviewweb": "2.5.22"
     },
     "devDependencies": {
         "antd": "3.0.0",
@@ -27,6 +27,7 @@
         "inline-source-cli": "1.2.0",
         "kw-doc": "1.1.1",
         "kw-web-suite": "3.1.1",
+        "lodash": "^4.17.4",
         "postcss-variables": "1.1.1",
         "prettier": "1.7.4",
         "react": "16.1.1",

@@ -13,7 +13,7 @@ export default class Layout3D extends React.Component {
     // Setup vtk.js objects
     this.view = vtk3DView.newInstance();
     this.subscription = this.view.getInteractor().onAnimation(() => {
-      this.props.pipelineManager.setActiveViewId(this.view.getId());
+      this.props.pipelineManager.setActiveViewId(this.view.getProxyId());
     });
   }
 
@@ -38,7 +38,13 @@ export default class Layout3D extends React.Component {
 
   render() {
     return (
-      <div className={this.props.pipelineManager.getActiveViewId() === this.view.getId() ? style.activeRenderWindowContainer : style.renderWindowContainer}>
+      <div
+        className={
+          this.props.pipelineManager.getActiveViewId() === this.view.getProxyId()
+          ? style.activeRenderWindowContainer
+          : style.renderWindowContainer
+        }
+      >
         <div className={style.renderWindowToolbar}>
           <label className={style.renderWindowTitle}>
             {this.props.title}

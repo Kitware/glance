@@ -71,13 +71,13 @@ export default class MainView extends React.Component {
     if (e.type === 'visibility') {
       const { id, visible } = e.changeSet[0];
       const view = this.pipelineManager.getActiveView();
-      const rep = this.pipelineManager.getRepresentation(Number(id), view);
+      const rep = this.pipelineManager.getRepresentation(id, view);
       rep.setVisibility(visible);
     } else if (e.type === 'delete') {
-      const sourceId = Number(e.changeSet[0].id);
+      const sourceId = (e.changeSet[0].id);
       this.pipelineManager.removeSource(sourceId);
     } else if (e.type === 'active') {
-      this.pipelineManager.setActiveSourceId(Number(e.changeSet[0].id));
+      this.pipelineManager.setActiveSourceId(e.changeSet[0].id);
     }
     this.pipelineManager.renderLaterViews();
     this.forceUpdate();
@@ -95,7 +95,7 @@ export default class MainView extends React.Component {
           source.setInput(reader);
           source.setName(file.name);
           this.pipelineManager.addSource(source);
-          this.pipelineManager.addSourceToViews(source.getId());
+          this.pipelineManager.addSourceToViews(source.getProxyId());
 
           if (this.pipelineManager.getNumberOfSources() === 1) {
             this.pipelineManager.resetCameraViews();

@@ -4,55 +4,85 @@ import vtkImageMapper           from 'vtk.js/Sources/Rendering/Core/ImageMapper'
 
 import vtkAbstractRepresentation from './AbstractRepresentation';
 
-const REPRESENTATION_STATE = {
-  visibility: {
+const PROPERTIES_UI = [
+  {
+    name: 'visibility',
     label: 'Visibility',
-    domain: { type: 'boolean' },
-    value: { actor: 'visibility' },
-  },
-  colorWindow: {
+    doc: 'Toggle visibility',
+    widget: 'checkbox',
+    type: 'boolean',
+    advanced: 1,
+    size: 1,
+  }, {
     label: 'Color Window',
-    domain: { type: 'range', range: [0, 255] },
-    value: { property: 'colorWindow' },
-  },
-  colorLevel: {
+    name: 'colorWindow',
+    widget: 'slider',
+    type: 'integer',
+    size: 1,
+    domain: { min: 0, max: 255, step: 1 },
+  }, {
     label: 'Color Level',
-    domain: { type: 'range', range: [0, 255] },
-    value: { property: 'colorLevel' },
+    name: 'colorLevel',
+    widget: 'slider',
+    type: 'integer',
+    size: 1,
+    domain: { min: 0, max: 255, step: 1 },
+  }, {
+    label: 'Slice',
+    name: 'sliceIndex',
+    widget: 'slider',
+    type: 'integer',
+    size: 1,
+    domain: { min: 0, max: 255, step: 1 },
   },
-  sliceIndex: {
-    label: 'Slice index',
-    domain: { type: 'range', range: [0, 255] },
-    value: { this: 'sliceIndex' },
-  },
-};
+];
 
 function sum(a, b) {
   return a + b;
 }
 
-function mean(array) {
+function mean(...array) {
   return array.reduce(sum, 0) / array.length;
 }
 
-function updateDomains(dataset, { properties, slicingMode }) {
+function updateDomains(dataset, { slicingMode }, updateProp) {
   const dataArray = dataset.getPointData().getScalars() || dataset.getPointData().getArrays()[0];
   const dataRange = dataArray.getRange();
   const extent = dataset.getExtent();
   const axisIndex = 'XYZ'.indexOf(slicingMode);
 
-  properties.sliceIndex.domain.range = [extent[axisIndex * 2], extent[(axisIndex * 2) + 1]];
-  properties.colorWindow.domain.range = [0, dataRange[1] - dataRange[0]];
-  properties.colorLevel.domain.range = [0, 0.5 * (dataRange[1] + dataRange[0])];
+  const propToUpdate = {
+    sliceIndex: {
+      domain: {
+        min: extent[axisIndex * 2],
+        max: extent[(axisIndex * 2) + 1],
+        step: 1,
+      },
+    },
+    colorWindow: {
+      domain: {
+        min: 0,
+        max: dataRange[1] - dataRange[0],
+        step: 1,
+      },
+    },
+    colorLevel: {
+      domain: {
+        min: dataRange[0],
+        max: dataRange[1],
+        step: 1,
+      },
+    },
+  };
+
+  updateProp('sliceIndex', propToUpdate.sliceIndex);
+  updateProp('colorWindow', propToUpdate.colorWindow);
+  updateProp('colorLevel', propToUpdate.colorLevel);
 
   return {
-    this: {
-      sliceIndex: Math.floor(mean(properties.sliceIndex.domain.range)),
-    },
-    property: {
-      colorWindow: mean(properties.colorWindow.domain.range),
-      colorLevel: mean(properties.colorLevel.domain.range),
-    },
+    sliceIndex: Math.floor(mean(propToUpdate.sliceIndex.domain.min, propToUpdate.sliceIndex.domain.max)),
+    colorWindow: propToUpdate.colorWindow.domain.max,
+    colorLevel: Math.floor(mean(propToUpdate.colorLevel.domain.min, propToUpdate.colorWindow.domain.max)),
   };
 }
 
@@ -65,24 +95,18 @@ function vtkSliceRepresentation(publicAPI, model) {
   model.classHierarchy.push('vtkSliceRepresentation');
   const superSetInput = publicAPI.setInput;
 
-  // Inspectable object
-  model.ui = {};
-  model.this = publicAPI;
-  model.properties = REPRESENTATION_STATE;
+  model.mapper = vtkImageMapper.newInstance();
+  model.actor = vtkImageSlice.newInstance();
+  model.property = model.actor.getProperty();
 
   // API ----------------------------------------------------------------------
 
   publicAPI.setInput = (source) => {
     superSetInput(source);
 
-    model.mapper = vtkImageMapper.newInstance();
-    model.actor = vtkImageSlice.newInstance();
-    model.property = model.actor.getProperty();
-    model.this = publicAPI;
-
     vtkAbstractRepresentation.connectMapper(model.mapper, source);
-    const state = updateDomains(publicAPI.getInputDataSet(), model);
-    publicAPI.updateProperties(state);
+    const state = updateDomains(publicAPI.getInputDataSet(), model, publicAPI.updateProxyProperty);
+    publicAPI.set(state);
 
     // connect rendering pipeline
     model.actor.setMapper(model.mapper);
@@ -118,6 +142,14 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Object specific methods
   vtkSliceRepresentation(publicAPI, model);
+
+  // Proxyfy
+  macro.proxy(publicAPI, model, 'Representation', PROPERTIES_UI);
+  macro.proxyPropertyMapping(publicAPI, model, {
+    visibility: { modelKey: 'actor', property: 'visibility' },
+    colorWindow: { modelKey: 'property', property: 'colorWindow' },
+    colorLevel: { modelKey: 'property', property: 'colorLevel' },
+  });
 }
 
 // ----------------------------------------------------------------------------

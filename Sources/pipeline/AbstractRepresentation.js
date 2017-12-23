@@ -1,5 +1,4 @@
 import macro from 'vtk.js/Sources/macro';
-import vtkPipelineObject from './PipelineObject';
 
 // ----------------------------------------------------------------------------
 
@@ -26,7 +25,7 @@ function vtkAbstractRepresentation(publicAPI, model) {
 
   publicAPI.getInputDataSet = () => model.input.getDataset();
 
-  publicAPI.isSourceRepresentation = id => (model.input.getId() === Number(id));
+  publicAPI.isSourceRepresentation = id => (model.input.getProxyId() === id);
 
   publicAPI.isVisible = () => {
     if (model.actors.length) {
@@ -65,7 +64,7 @@ const DEFAULT_VALUES = {
 function extend(publicAPI, model, initialValues = {}) {
   Object.assign(model, DEFAULT_VALUES, initialValues);
 
-  vtkPipelineObject.extend(publicAPI, model);
+  macro.obj(publicAPI, model);
   macro.get(publicAPI, model, [
     'input',
     'actors',

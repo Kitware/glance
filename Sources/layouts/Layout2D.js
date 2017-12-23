@@ -14,7 +14,7 @@ export default class Layout2D extends React.Component {
     this.view = vtk2DView.newInstance();
     this.view.updateOrientation(props.axis, props.orientation, props.viewUp);
     this.subscription = this.view.getInteractor().onAnimation(() => {
-      this.props.pipelineManager.setActiveViewId(this.view.getId());
+      this.props.pipelineManager.setActiveViewId(this.view.getProxyId());
     });
 
     // Bind callbacks
@@ -50,7 +50,12 @@ export default class Layout2D extends React.Component {
 
   render() {
     return (
-      <div className={this.props.pipelineManager.getActiveViewId() === this.view.getId() ? style.activeRenderWindowContainer : style.renderWindowContainer}>
+      <div
+        className={
+          this.props.pipelineManager.getActiveViewId() === this.view.getProxyId()
+          ? style.activeRenderWindowContainer
+          : style.renderWindowContainer}
+      >
         <div className={style.renderWindowToolbar}>
           <label className={style.renderWindowTitle}>
             {this.props.title}

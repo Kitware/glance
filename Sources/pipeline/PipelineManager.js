@@ -10,15 +10,15 @@ import vtkSliceRepresentation from './SliceRepresentation';
 const PIPELINE_OBJECTS = {};
 
 function registerObject(obj) {
-  PIPELINE_OBJECTS[obj.getId()] = obj;
+  PIPELINE_OBJECTS[obj.getProxyId()] = obj;
 }
 
 function unregisterObject(obj) {
-  delete PIPELINE_OBJECTS[obj.getId()];
+  delete PIPELINE_OBJECTS[obj.getProxyId()];
 }
 
 function getObject(id) {
-  return PIPELINE_OBJECTS[Number(id)];
+  return PIPELINE_OBJECTS[id];
 }
 
 function createRepresentation(type) {
@@ -76,20 +76,20 @@ function vtkPipelineManager(publicAPI, model) {
   // Source API ---------------------------------------------------------------
 
   publicAPI.addSource = (source) => {
-    if (model.scene.pipeline[source.getId()]) {
-      return source.getId();
+    if (model.scene.pipeline[source.getProxyId()]) {
+      return source.getProxyId();
     }
 
     // Register object globaly
     registerObject(source);
 
     const representations = {};
-    model.scene.pipeline[source.getId()] = {
+    model.scene.pipeline[source.getProxyId()] = {
       source,
       representations,
     };
 
-    return source.getId();
+    return source.getProxyId();
   };
 
   publicAPI.removeSource = (id) => {
@@ -191,11 +191,11 @@ function vtkPipelineManager(publicAPI, model) {
       return;
     }
 
-    model.scene.views[view.getId()] = view;
+    model.scene.views[view.getProxyId()] = view;
     registerObject(view);
 
     if (!publicAPI.getActiveView()) {
-      model.activeViewId = view.getId();
+      model.activeViewId = view.getProxyId();
       console.log('register and activate');
     } else {
       console.log('register but skip');
@@ -220,7 +220,7 @@ function vtkPipelineManager(publicAPI, model) {
       return;
     }
 
-    console.log('unregister', view.getId());
+    console.log('unregister', view.getProxyId());
 
     // Remove representations from view
     const ids = Object.keys(model.scene.pipeline);
@@ -238,7 +238,7 @@ function vtkPipelineManager(publicAPI, model) {
 
     // Remove view from list
     unregisterObject(view);
-    delete model.scene.views[view.getId()];
+    delete model.scene.views[view.getProxyId()];
 
     // Update view list
     model.views = publicAPI.listViews();
@@ -279,8 +279,9 @@ function vtkPipelineManager(publicAPI, model) {
   // UI Handling
   // --------------------------------------------------------------------------
 
+  model.collapseState = {};
   publicAPI.updateCollapseState = (name, isOpen, collapseType) => {
-    console.log('toggle', name, isOpen, collapseType);
+    model.collapseState[name] = isOpen;
   };
 
   publicAPI.getSections = () => {
@@ -291,16 +292,19 @@ function vtkPipelineManager(publicAPI, model) {
     }
     const view = publicAPI.getActiveView();
     if (item.source) {
-      sections.push(item.source.getPropertySection());
+      const section = item.source.getProxySection();
+      sections.push(Object.assign(section, { collapsed: model.collapseState[section.name] }));
     }
     if (item.source && view) {
-      const representation = publicAPI.getRepresentation(item.source.getId(), view);
+      const representation = publicAPI.getRepresentation(item.source.getProxyId(), view);
       if (representation) {
-        sections.push(representation.getPropertySection());
+        const section = representation.getProxySection();
+        sections.push(Object.assign(section, { collapsed: model.collapseState[section.name] }));
       }
     }
     if (view) {
-      sections.push(view.getPropertySection());
+      const section = view.getProxySection();
+      sections.push(Object.assign(section, { collapsed: model.collapseState[section.name] }));
     }
     return sections;
   };
@@ -315,7 +319,7 @@ function vtkPipelineManager(publicAPI, model) {
       if (!groupBy[id]) {
         groupBy[id] = {};
       }
-      groupBy[id].this = { [prop]: changeSet[key] };
+      groupBy[id][prop] = changeSet[key];
     }
 
     // Apply changes
@@ -325,10 +329,11 @@ function vtkPipelineManager(publicAPI, model) {
       const id = objIds[count];
       const obj = getObject(id);
       if (obj) {
-        obj.updateProperties(groupBy[id]);
+        obj.set(groupBy[id]);
       }
     }
     publicAPI.renderLaterViews();
+    publicAPI.modified();
   };
 }
 

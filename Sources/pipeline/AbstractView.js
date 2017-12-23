@@ -9,9 +9,6 @@ import vtkTrackballRoll               from 'vtk.js/Sources/Interaction/Manipulat
 import vtkTrackballRotate             from 'vtk.js/Sources/Interaction/Manipulators/TrackballRotate';
 import vtkTrackballZoom               from 'vtk.js/Sources/Interaction/Manipulators/TrackballZoom';
 
-import helper from './helper';
-import vtkPipelineObject from './PipelineObject';
-
 // ----------------------------------------------------------------------------
 // vtkView methods
 // ----------------------------------------------------------------------------
@@ -154,7 +151,7 @@ const DEFAULT_VALUES = {
 function extend(publicAPI, model, initialValues = {}) {
   Object.assign(model, DEFAULT_VALUES, initialValues);
 
-  vtkPipelineObject.extend(publicAPI, model);
+  macro.obj(publicAPI, model);
   macro.get(publicAPI, model, [
     'representations',
     'renderer',
@@ -167,9 +164,6 @@ function extend(publicAPI, model, initialValues = {}) {
     'useParallelRendering',
     'camera',
   ]);
-
-  // FIXME
-  helper.stateProperties(publicAPI, model, {}, {});
 
   // Object specific methods
   vtkView(publicAPI, model);

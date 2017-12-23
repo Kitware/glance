@@ -29,6 +29,8 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Object specific methods
   vtk3DView(publicAPI, model);
+
+  macro.proxy(publicAPI, model, 'View 3D');
 }
 // ----------------------------------------------------------------------------
 

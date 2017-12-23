@@ -1,8 +1,5 @@
 import macro from 'vtk.js/Sources/macro';
 
-import helper from './helper';
-import vtkPipelineObject from './PipelineObject';
-
 // ----------------------------------------------------------------------------
 
 function getDatasetType(ds) {
@@ -58,7 +55,7 @@ const DEFAULT_VALUES = {
 export function extend(publicAPI, model, initialValues = {}) {
   Object.assign(model, DEFAULT_VALUES, initialValues);
 
-  vtkPipelineObject.extend(publicAPI, model);
+  macro.obj(publicAPI, model);
   macro.get(publicAPI, model, [
     'name',
     'properties',
@@ -70,11 +67,10 @@ export function extend(publicAPI, model, initialValues = {}) {
     'name',
   ]);
 
-  // FIXME
-  helper.stateProperties(publicAPI, model, {}, {});
-
   // Object specific methods
   vtkSource(publicAPI, model);
+
+  macro.proxy(publicAPI, model, 'Source');
 }
 
 // ----------------------------------------------------------------------------

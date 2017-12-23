@@ -60,6 +60,8 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Object specific methods
   vtk2DView(publicAPI, model);
+
+  macro.proxy(publicAPI, model, 'View 2D');
 }
 // ----------------------------------------------------------------------------
 

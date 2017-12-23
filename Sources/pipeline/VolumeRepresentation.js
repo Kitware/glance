@@ -124,6 +124,7 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Object specific methods
   vtkVolumeRepresentation(publicAPI, model);
+  macro.proxy(publicAPI, model, 'Volume Representation');
 }
 
 // ----------------------------------------------------------------------------

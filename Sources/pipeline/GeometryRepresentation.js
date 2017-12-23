@@ -2,7 +2,6 @@ import macro                      from 'vtk.js/Sources/macro';
 import vtkActor                   from 'vtk.js/Sources/Rendering/Core/Actor';
 import vtkMapper                  from 'vtk.js/Sources/Rendering/Core/Mapper';
 
-import helper from './helper';
 import vtkAbstractRepresentation  from './AbstractRepresentation';
 
 const PROPERTIES_STATE = {
@@ -33,23 +32,22 @@ const PROPERTIES_UI = [
     type: 'str',
     advanced: 0,
     size: 1,
-    valueMapping: { modelKey: 'this', property: 'representation' },
   }, {
     label: 'Opactity',
     name: 'opacity',
     widget: 'slider',
     propType: 'slider',
     type: 'double',
+    size: 1,
     domain: { min: 0, max: 1, step: 0.01 },
-    valueMapping: { modelKey: 'property', property: 'opacity' },
   }, {
-    name: 'Visibility',
+    name: 'visibility',
+    label: 'Visibility',
     doc: 'Toggle visibility',
     widget: 'checkbox',
     type: 'boolean',
     advanced: 1,
     size: 1,
-    valueMapping: { modelKey: 'actor', property: 'visibility' },
   },
 ];
 
@@ -62,19 +60,15 @@ function vtkGeometryRepresentation(publicAPI, model) {
   model.classHierarchy.push('vtkGeometryRepresentation');
   const superSetInput = publicAPI.setInput;
 
-  // Inspectable object
-  model.ui = PROPERTIES_UI;
-  model.this = publicAPI;
+  // Internals
+  model.mapper = vtkMapper.newInstance();
+  model.actor = vtkActor.newInstance();
+  model.property = model.actor.getProperty();
 
   // API ----------------------------------------------------------------------
 
   publicAPI.setInput = (source) => {
     superSetInput(source);
-
-    model.mapper = vtkMapper.newInstance();
-    model.actor = vtkActor.newInstance();
-    model.property = model.actor.getProperty();
-
     vtkAbstractRepresentation.connectMapper(model.mapper, source);
 
     // connect rendering pipeline
@@ -98,10 +92,17 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Object methods
   vtkAbstractRepresentation.extend(publicAPI, model);
-  helper.stateProperties(publicAPI, model, PROPERTIES_STATE, PROPERTIES_DEFAULT);
 
   // Object specific methods
   vtkGeometryRepresentation(publicAPI, model);
+
+  // Proxyfy
+  macro.proxy(publicAPI, model, 'Representation', PROPERTIES_UI);
+  macro.proxyPropertyState(publicAPI, model, PROPERTIES_STATE, PROPERTIES_DEFAULT);
+  macro.proxyPropertyMapping(publicAPI, model, {
+    opacity: { modelKey: 'property', property: 'opacity' },
+    visibility: { modelKey: 'actor', property: 'visibility' },
+  });
 }
 
 // ----------------------------------------------------------------------------

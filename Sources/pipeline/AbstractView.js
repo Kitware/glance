@@ -20,7 +20,7 @@ function vtkView(publicAPI, model) {
 
   // Setup --------------------------------------------------------------------
   model.renderWindow = vtkRenderWindow.newInstance();
-  model.renderer = vtkRenderer.newInstance({ background: [0, 0, 0] });
+  model.renderer = vtkRenderer.newInstance({ background: [0.3, 0.3, 0.3] });
   model.renderWindow.addRenderer(model.renderer);
 
   model.openglRenderWindow = vtkOpenGLRenderWindow.newInstance();

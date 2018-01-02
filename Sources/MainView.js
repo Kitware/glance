@@ -164,6 +164,7 @@ export default class MainView extends React.Component {
               sections={this.pipelineManager.getSections()}
               onCollapseChange={this.pipelineManager.updateCollapseState}
               onApply={this.onApply}
+              autoApply
             />
           </Sider>
           <Layout>

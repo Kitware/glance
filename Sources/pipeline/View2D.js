@@ -12,7 +12,6 @@ function vtk2DView(publicAPI, model) {
   // Representation mapping
   publicAPI.getRepresentationType = (sourceType) => {
     if (sourceType === 'Volume') {
-      console.log('ask Representation', `Slice${'XYZ'[model.axis]}`);
       return `Slice${'XYZ'[model.axis]}`;
     }
     if (sourceType === 'Geometry') {

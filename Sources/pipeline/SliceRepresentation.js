@@ -63,14 +63,14 @@ function updateDomains(dataset, { slicingMode }, updateProp) {
       domain: {
         min: 0,
         max: dataRange[1] - dataRange[0],
-        step: 1,
+        step: 'any',
       },
     },
     colorLevel: {
       domain: {
         min: dataRange[0],
         max: dataRange[1],
-        step: 1,
+        step: 'any',
       },
     },
   };
@@ -111,11 +111,17 @@ function vtkSliceRepresentation(publicAPI, model) {
     // connect rendering pipeline
     model.actor.setMapper(model.mapper);
     model.actors.push(model.actor);
+
+    // Create a link handler on source
+    source.getPropertyLink(`Slice${model.slicingMode}`).bind(publicAPI, 'sliceIndex');
+    source.getPropertyLink('ColorWindow').bind(publicAPI, 'colorWindow');
+    source.getPropertyLink('ColorLevel').bind(publicAPI, 'colorLevel');
   };
 
   publicAPI.setSliceIndex = (index) => {
     model.mapper[`set${model.slicingMode}SliceIndex`](index);
     model.sliceIndex = index;
+    publicAPI.modified();
   };
 }
 

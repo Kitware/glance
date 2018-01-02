@@ -196,9 +196,6 @@ function vtkPipelineManager(publicAPI, model) {
 
     if (!publicAPI.getActiveView()) {
       model.activeViewId = view.getProxyId();
-      console.log('register and activate');
-    } else {
-      console.log('register but skip');
     }
 
     // Add representation to new view
@@ -220,7 +217,7 @@ function vtkPipelineManager(publicAPI, model) {
       return;
     }
 
-    console.log('unregister', view.getProxyId());
+    console.log('unregisterView');
 
     // Remove representations from view
     const ids = Object.keys(model.scene.pipeline);

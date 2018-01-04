@@ -267,8 +267,7 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Object methods
   vtkAbstractRepresentation.extend(publicAPI, model);
-  macro.get(publicAPI, model, [
-    'properties',
+  macro.setGet(publicAPI, model, [
     'lookupTable',
     'piecewiseFunction',
   ]);

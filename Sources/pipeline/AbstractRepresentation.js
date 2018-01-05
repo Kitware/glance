@@ -25,7 +25,7 @@ function vtkAbstractRepresentation(publicAPI, model) {
 
   publicAPI.getInputDataSet = () => model.input.getDataset();
 
-  publicAPI.isSourceRepresentation = id => (model.input.getProxyId() === id);
+  publicAPI.isSourceRepresentation = (id) => model.input.getProxyId() === id;
 
   publicAPI.isVisible = () => {
     if (model.actors.length) {
@@ -65,11 +65,7 @@ function extend(publicAPI, model, initialValues = {}) {
   Object.assign(model, DEFAULT_VALUES, initialValues);
 
   macro.obj(publicAPI, model);
-  macro.get(publicAPI, model, [
-    'input',
-    'actors',
-    'volumes',
-  ]);
+  macro.get(publicAPI, model, ['input', 'actors', 'volumes']);
 
   // Object specific methods
   vtkAbstractRepresentation(publicAPI, model);

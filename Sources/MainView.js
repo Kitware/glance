@@ -17,12 +17,7 @@ import vtkSource from './pipeline/Source';
 
 const { Header, Sider, Content } = Layout;
 
-const layouts = [
-  'Layout2D',
-  'Layout3D',
-  'LayoutSplit',
-  'LayoutQuad',
-];
+const layouts = ['Layout2D', 'Layout3D', 'LayoutSplit', 'LayoutQuad'];
 
 const WIDTH = 300;
 
@@ -74,7 +69,7 @@ export default class MainView extends React.Component {
       const rep = this.pipelineManager.getRepresentation(id, view);
       rep.setVisibility(visible);
     } else if (e.type === 'delete') {
-      const sourceId = (e.changeSet[0].id);
+      const sourceId = e.changeSet[0].id;
       this.pipelineManager.removeSource(sourceId);
     } else if (e.type === 'active') {
       this.pipelineManager.setActiveSourceId(e.changeSet[0].id);
@@ -89,34 +84,32 @@ export default class MainView extends React.Component {
 
   loadFile() {
     FileLoader.openFile(['vti', 'vtp'], (file) => {
-      FileLoader.loadFile(file)
-        .then((reader) => {
-          const source = vtkSource.newInstance();
-          source.setInput(reader);
-          source.setName(file.name);
-          this.pipelineManager.addSource(source);
-          this.pipelineManager.addSourceToViews(source.getProxyId());
+      FileLoader.loadFile(file).then((reader) => {
+        const source = vtkSource.newInstance();
+        source.setInput(reader);
+        source.setName(file.name);
+        this.pipelineManager.addSource(source);
+        this.pipelineManager.addSourceToViews(source.getProxyId());
 
-          if (this.pipelineManager.getNumberOfSources() === 1) {
-            this.pipelineManager.resetCameraViews();
-          }
+        if (this.pipelineManager.getNumberOfSources() === 1) {
+          this.pipelineManager.resetCameraViews();
+        }
 
-          this.forceUpdate();
-        });
+        this.forceUpdate();
+      });
     });
   }
 
   render() {
     const Renderer = Layouts[this.state.layout];
-    const actives = this.pipelineManager.getActiveSourceId() ? [`${this.pipelineManager.getActiveSourceId()}`] : [];
+    const actives = this.pipelineManager.getActiveSourceId()
+      ? [`${this.pipelineManager.getActiveSourceId()}`]
+      : [];
     return (
       <Layout>
         <Header className={style.toolbar}>
           <div className={style.logo} onClick={this.onToggleControl}>
-            <img
-              alt="logo"
-              src={icons.Logo}
-            />
+            <img alt="logo" src={icons.Logo} />
           </div>
 
           <Menu
@@ -125,12 +118,13 @@ export default class MainView extends React.Component {
             defaultSelectedKeys={[this.state.layout]}
             onSelect={this.onLayoutChange}
           >
-            {layouts.map(name => (
-              <Menu.Item
-                key={name}
-                data-name={name}
-              >
-                <img alt={name} className={style.toolbarIcon} src={icons[name]} />
+            {layouts.map((name) => (
+              <Menu.Item key={name} data-name={name}>
+                <img
+                  alt={name}
+                  className={style.toolbarIcon}
+                  src={icons[name]}
+                />
               </Menu.Item>
             ))}
           </Menu>
@@ -169,20 +163,21 @@ export default class MainView extends React.Component {
           </Sider>
           <Layout>
             <Content>
-              <Renderer pipelineManager={this.pipelineManager} className={style.content} />
+              <Renderer
+                pipelineManager={this.pipelineManager}
+                className={style.content}
+              />
             </Content>
           </Layout>
         </Layout>
-      </Layout>);
+      </Layout>
+    );
   }
 }
 
+MainView.propTypes = {};
 
-MainView.propTypes = {
-};
-
-MainView.defaultProps = {
-};
+MainView.defaultProps = {};
 
 /*
  <img

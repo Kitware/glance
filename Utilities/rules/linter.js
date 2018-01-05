@@ -1,4 +1,5 @@
 const path = require('path');
+
 const eslintrcPath = path.join(__dirname, '../../.eslintrc.js');
 
 module.exports = [

@@ -1,12 +1,14 @@
-import macro                      from 'vtk.js/Sources/macro';
-import vtkActor                   from 'vtk.js/Sources/Rendering/Core/Actor';
-import vtkMapper                  from 'vtk.js/Sources/Rendering/Core/Mapper';
+import macro from 'vtk.js/Sources/macro';
+import vtkActor from 'vtk.js/Sources/Rendering/Core/Actor';
+import vtkMapper from 'vtk.js/Sources/Rendering/Core/Mapper';
 
-import vtkAbstractRepresentation  from './AbstractRepresentation';
+import vtkAbstractRepresentation from './AbstractRepresentation';
 
 const PROPERTIES_STATE = {
   representation: {
-    'Surface with edges': { property: { edgeVisibility: true, representation: 2 } },
+    'Surface with edges': {
+      property: { edgeVisibility: true, representation: 2 },
+    },
     Surface: { property: { edgeVisibility: false, representation: 2 } },
     Wireframe: { property: { edgeVisibility: false, representation: 1 } },
     Points: { property: { edgeVisibility: false, representation: 0 } },
@@ -23,16 +25,12 @@ const PROPERTIES_UI = [
     label: 'Representation',
     name: 'representation',
     doc: 'Choose the type for the representation',
-    values: [
-      'Surface with edges',
-      'Surface',
-      'Wireframe',
-      'Points',
-    ],
+    values: ['Surface with edges', 'Surface', 'Wireframe', 'Points'],
     type: 'str',
     advanced: 0,
     size: 1,
-  }, {
+  },
+  {
     label: 'Opactity',
     name: 'opacity',
     widget: 'slider',
@@ -40,7 +38,8 @@ const PROPERTIES_UI = [
     type: 'double',
     size: 1,
     domain: { min: 0, max: 1, step: 0.01 },
-  }, {
+  },
+  {
     name: 'visibility',
     label: 'Visibility',
     doc: 'Toggle visibility',
@@ -98,7 +97,12 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Proxyfy
   macro.proxy(publicAPI, model, 'Representation', PROPERTIES_UI);
-  macro.proxyPropertyState(publicAPI, model, PROPERTIES_STATE, PROPERTIES_DEFAULT);
+  macro.proxyPropertyState(
+    publicAPI,
+    model,
+    PROPERTIES_STATE,
+    PROPERTIES_DEFAULT
+  );
   macro.proxyPropertyMapping(publicAPI, model, {
     opacity: { modelKey: 'property', property: 'opacity' },
     visibility: { modelKey: 'actor', property: 'visibility' },
@@ -107,7 +111,10 @@ export function extend(publicAPI, model, initialValues = {}) {
 
 // ----------------------------------------------------------------------------
 
-export const newInstance = macro.newInstance(extend, 'vtkGeometryRepresentation');
+export const newInstance = macro.newInstance(
+  extend,
+  'vtkGeometryRepresentation'
+);
 
 // ----------------------------------------------------------------------------
 

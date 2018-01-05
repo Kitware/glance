@@ -53,26 +53,36 @@ export default class Layout2D extends React.Component {
     return (
       <div
         className={
-          this.props.pipelineManager.getActiveViewId() === this.view.getProxyId()
-          ? style.activeRenderWindowContainer
-          : style.renderWindowContainer}
+          this.props.pipelineManager.getActiveViewId() ===
+          this.view.getProxyId()
+            ? style.activeRenderWindowContainer
+            : style.renderWindowContainer
+        }
       >
         <div className={style.renderWindowToolbar}>
-          <label className={style.renderWindowTitle}>
-            {this.props.title}
-          </label>
+          <label className={style.renderWindowTitle}>{this.props.title}</label>
           <section className={style.renderWindowActions}>
-            {this.props.orientations.map((o, i) =>
-              <div key={o.label} className={style.button} data-index={i} onClick={this.updateOrientation}>{o.label}</div>)
-            }
+            {this.props.orientations.map((o, i) => (
+              <div
+                key={o.label}
+                className={style.button}
+                data-index={i}
+                onClick={this.updateOrientation}
+              >
+                {o.label}
+              </div>
+            ))}
             <Button size="small" icon="scan" onClick={this.view.resetCamera} />
           </section>
         </div>
         <div
           className={`${style.renderWindow} ${this.props.className}`}
-          ref={((c) => { this.container = c; })}
+          ref={(c) => {
+            this.container = c;
+          }}
         />
-      </div>);
+      </div>
+    );
   }
 }
 

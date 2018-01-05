@@ -7,15 +7,11 @@ module.exports = [
   {
     test: /\.js$/,
     include: /node_modules(\/|\\)vtk\.js(\/|\\)/,
-    use: [
-      { loader: 'babel-loader', options: { presets: ['es2015'] } },
-    ],
+    use: [{ loader: 'babel-loader', options: { presets: ['env', 'react'] } }],
   },
   {
     test: /\.svg$/,
     include: /node_modules(\/|\\)vtk\.js(\/|\\)/,
-    use: [
-      { loader: 'raw-loader' },
-    ],
+    use: [{ loader: 'raw-loader' }],
   },
 ];

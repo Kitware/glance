@@ -1,13 +1,13 @@
-import macro                          from 'vtk.js/Sources/macro';
-import vtkInteractorStyleManipulator  from 'vtk.js/Sources/Interaction/Style/InteractorStyleManipulator';
-import vtkOpenGLRenderWindow          from 'vtk.js/Sources/Rendering/OpenGL/RenderWindow';
-import vtkRenderer                    from 'vtk.js/Sources/Rendering/Core/Renderer';
-import vtkRenderWindow                from 'vtk.js/Sources/Rendering/Core/RenderWindow';
-import vtkRenderWindowInteractor      from 'vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
-import vtkTrackballPan                from 'vtk.js/Sources/Interaction/Manipulators/TrackballPan';
-import vtkTrackballRoll               from 'vtk.js/Sources/Interaction/Manipulators/TrackballRoll';
-import vtkTrackballRotate             from 'vtk.js/Sources/Interaction/Manipulators/TrackballRotate';
-import vtkTrackballZoom               from 'vtk.js/Sources/Interaction/Manipulators/TrackballZoom';
+import macro from 'vtk.js/Sources/macro';
+import vtkInteractorStyleManipulator from 'vtk.js/Sources/Interaction/Style/InteractorStyleManipulator';
+import vtkOpenGLRenderWindow from 'vtk.js/Sources/Rendering/OpenGL/RenderWindow';
+import vtkRenderer from 'vtk.js/Sources/Rendering/Core/Renderer';
+import vtkRenderWindow from 'vtk.js/Sources/Rendering/Core/RenderWindow';
+import vtkRenderWindowInteractor from 'vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
+import vtkTrackballPan from 'vtk.js/Sources/Interaction/Manipulators/TrackballPan';
+import vtkTrackballRoll from 'vtk.js/Sources/Interaction/Manipulators/TrackballRoll';
+import vtkTrackballRotate from 'vtk.js/Sources/Interaction/Manipulators/TrackballRotate';
+import vtkTrackballZoom from 'vtk.js/Sources/Interaction/Manipulators/TrackballZoom';
 
 // ----------------------------------------------------------------------------
 // vtkView methods
@@ -36,19 +36,39 @@ function vtkView(publicAPI, model) {
   model.interactorStyle3D.addManipulator(vtkTrackballRotate.newInstance());
   // Pan
   model.interactorStyle2D.addManipulator(vtkTrackballPan.newInstance());
-  model.interactorStyle2D.addManipulator(vtkTrackballPan.newInstance({ shift: true }));
-  model.interactorStyle3D.addManipulator(vtkTrackballPan.newInstance({ shift: true }));
+  model.interactorStyle2D.addManipulator(
+    vtkTrackballPan.newInstance({ shift: true })
+  );
+  model.interactorStyle3D.addManipulator(
+    vtkTrackballPan.newInstance({ shift: true })
+  );
   // Zoom
-  model.interactorStyle2D.addManipulator(vtkTrackballZoom.newInstance({ control: true }));
-  model.interactorStyle2D.addManipulator(vtkTrackballZoom.newInstance({ alt: true }));
-  model.interactorStyle3D.addManipulator(vtkTrackballZoom.newInstance({ control: true }));
-  model.interactorStyle3D.addManipulator(vtkTrackballZoom.newInstance({ alt: true }));
+  model.interactorStyle2D.addManipulator(
+    vtkTrackballZoom.newInstance({ control: true })
+  );
+  model.interactorStyle2D.addManipulator(
+    vtkTrackballZoom.newInstance({ alt: true })
+  );
+  model.interactorStyle3D.addManipulator(
+    vtkTrackballZoom.newInstance({ control: true })
+  );
+  model.interactorStyle3D.addManipulator(
+    vtkTrackballZoom.newInstance({ alt: true })
+  );
   // Roll
-  model.interactorStyle3D.addManipulator(vtkTrackballRoll.newInstance({ shift: true, control: true }));
-  model.interactorStyle3D.addManipulator(vtkTrackballRoll.newInstance({ shift: true, alt: true }));
+  model.interactorStyle3D.addManipulator(
+    vtkTrackballRoll.newInstance({ shift: true, control: true })
+  );
+  model.interactorStyle3D.addManipulator(
+    vtkTrackballRoll.newInstance({ shift: true, alt: true })
+  );
 
   // Setup interaction
-  model.interactor.setInteractorStyle(model.useParallelRendering ? model.interactorStyle2D : model.interactorStyle3D);
+  model.interactor.setInteractorStyle(
+    model.useParallelRendering
+      ? model.interactorStyle2D
+      : model.interactorStyle3D
+  );
   model.camera = model.renderer.getActiveCamera();
   model.camera.setParallelProjection(!!model.useParallelRendering);
 
@@ -74,7 +94,10 @@ function vtkView(publicAPI, model) {
   publicAPI.resize = () => {
     if (model.container) {
       const dims = model.container.getBoundingClientRect();
-      model.openglRenderWindow.setSize(Math.max(10, Math.floor(dims.width)), Math.max(10, Math.floor(dims.height)));
+      model.openglRenderWindow.setSize(
+        Math.max(10, Math.floor(dims.width)),
+        Math.max(10, Math.floor(dims.height))
+      );
       publicAPI.renderLater();
     }
   };
@@ -105,17 +128,20 @@ function vtkView(publicAPI, model) {
       return;
     }
     if (model.representations.indexOf(representation) !== -1) {
-      model.representations = model.representations.filter(r => r !== representation);
+      model.representations = model.representations.filter(
+        (r) => r !== representation
+      );
       representation.getActors().forEach(model.renderer.removeActor);
       representation.getVolumes().forEach(model.renderer.removeVolume);
     }
   };
 
-
   // --------------------------------------------------------------------------
 
   publicAPI.isVisible = (sourceId) => {
-    const rep = model.representations.find(r => r.isSourceRepresentation(sourceId));
+    const rep = model.representations.find((r) =>
+      r.isSourceRepresentation(sourceId)
+    );
     if (rep) {
       return rep.isVisible();
     }

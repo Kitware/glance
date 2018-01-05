@@ -1,4 +1,4 @@
-import vtkXMLPolyDataReader  from 'vtk.js/Sources/IO/XML/XMLPolyDataReader';
+import vtkXMLPolyDataReader from 'vtk.js/Sources/IO/XML/XMLPolyDataReader';
 import vtkXMLImageDataReader from 'vtk.js/Sources/IO/XML/XMLImageDataReader';
 
 // ----------------------------------------------------------------------------
@@ -10,7 +10,10 @@ const READER_MAPPING = {
 
 function getReader(file) {
   const { name } = file;
-  const ext = name.split('.').pop().toLowerCase();
+  const ext = name
+    .split('.')
+    .pop()
+    .toLowerCase();
   return READER_MAPPING[ext];
 }
 
@@ -33,7 +36,10 @@ HIDDEN_FILE_ELEMENT.addEventListener('change', handleFile);
 
 function openFile(extensions, onFileCallback) {
   fileCallback = onFileCallback;
-  HIDDEN_FILE_ELEMENT.setAttribute('accept', extensions.map(t => `.${t}`).join(','));
+  HIDDEN_FILE_ELEMENT.setAttribute(
+    'accept',
+    extensions.map((t) => `.${t}`).join(',')
+  );
   HIDDEN_FILE_ELEMENT.click();
 }
 

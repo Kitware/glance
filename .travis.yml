@@ -1,10 +1,13 @@
 language: node_js
 os: linux
 dist: trusty
+
 addons:
   chrome: stable
+
 node_js:
   - '8'
+
 notifications:
   email:
     recipients:
@@ -19,9 +22,14 @@ cache:
     - node_modules
     - Documentation/build-tmp
 
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libgif-dev
+
 script:
   - npm install
   - npm run build:release
+
 after_success:
   - npm run semantic-release
 

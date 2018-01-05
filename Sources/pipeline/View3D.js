@@ -1,4 +1,4 @@
-import macro        from 'vtk.js/Sources/macro';
+import macro from 'vtk.js/Sources/macro';
 import AbstractView from './AbstractView';
 
 // ----------------------------------------------------------------------------
@@ -10,15 +10,14 @@ function vtk3DView(publicAPI, model) {
   model.classHierarchy.push('vtk3DView');
 
   // Representation mapping
-  publicAPI.getRepresentationType = (sourceType => sourceType);
+  publicAPI.getRepresentationType = (sourceType) => sourceType;
 }
 
 // ----------------------------------------------------------------------------
 // Object factory
 // ----------------------------------------------------------------------------
 
-const DEFAULT_VALUES = {
-};
+const DEFAULT_VALUES = {};
 
 // ----------------------------------------------------------------------------
 

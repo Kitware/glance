@@ -63,9 +63,7 @@ export function extend(publicAPI, model, initialValues = {}) {
     'dataset',
     'source',
   ]);
-  macro.set(publicAPI, model, [
-    'name',
-  ]);
+  macro.set(publicAPI, model, ['name']);
 
   // Object specific methods
   vtkSource(publicAPI, model);

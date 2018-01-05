@@ -1,6 +1,6 @@
-import macro                    from 'vtk.js/Sources/macro';
-import vtkImageSlice            from 'vtk.js/Sources/Rendering/Core/ImageSlice';
-import vtkImageMapper           from 'vtk.js/Sources/Rendering/Core/ImageMapper';
+import macro from 'vtk.js/Sources/macro';
+import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
+import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
 
 import vtkAbstractRepresentation from './AbstractRepresentation';
 
@@ -13,21 +13,24 @@ const PROPERTIES_UI = [
     type: 'boolean',
     advanced: 1,
     size: 1,
-  }, {
+  },
+  {
     label: 'Color Window',
     name: 'colorWindow',
     widget: 'slider',
     type: 'integer',
     size: 1,
     domain: { min: 0, max: 255, step: 1 },
-  }, {
+  },
+  {
     label: 'Color Level',
     name: 'colorLevel',
     widget: 'slider',
     type: 'integer',
     size: 1,
     domain: { min: 0, max: 255, step: 1 },
-  }, {
+  },
+  {
     label: 'Slice',
     name: 'sliceIndex',
     widget: 'slider',
@@ -46,7 +49,9 @@ function mean(...array) {
 }
 
 function updateDomains(dataset, { slicingMode }, updateProp) {
-  const dataArray = dataset.getPointData().getScalars() || dataset.getPointData().getArrays()[0];
+  const dataArray =
+    dataset.getPointData().getScalars() ||
+    dataset.getPointData().getArrays()[0];
   const dataRange = dataArray.getRange();
   const extent = dataset.getExtent();
   const axisIndex = 'XYZ'.indexOf(slicingMode);
@@ -55,7 +60,7 @@ function updateDomains(dataset, { slicingMode }, updateProp) {
     sliceIndex: {
       domain: {
         min: extent[axisIndex * 2],
-        max: extent[(axisIndex * 2) + 1],
+        max: extent[axisIndex * 2 + 1],
         step: 1,
       },
     },
@@ -80,9 +85,19 @@ function updateDomains(dataset, { slicingMode }, updateProp) {
   updateProp('colorLevel', propToUpdate.colorLevel);
 
   return {
-    sliceIndex: Math.floor(mean(propToUpdate.sliceIndex.domain.min, propToUpdate.sliceIndex.domain.max)),
+    sliceIndex: Math.floor(
+      mean(
+        propToUpdate.sliceIndex.domain.min,
+        propToUpdate.sliceIndex.domain.max
+      )
+    ),
     colorWindow: propToUpdate.colorWindow.domain.max,
-    colorLevel: Math.floor(mean(propToUpdate.colorLevel.domain.min, propToUpdate.colorWindow.domain.max)),
+    colorLevel: Math.floor(
+      mean(
+        propToUpdate.colorLevel.domain.min,
+        propToUpdate.colorWindow.domain.max
+      )
+    ),
   };
 }
 
@@ -105,7 +120,11 @@ function vtkSliceRepresentation(publicAPI, model) {
     superSetInput(source);
 
     vtkAbstractRepresentation.connectMapper(model.mapper, source);
-    const state = updateDomains(publicAPI.getInputDataSet(), model, publicAPI.updateProxyProperty);
+    const state = updateDomains(
+      publicAPI.getInputDataSet(),
+      model,
+      publicAPI.updateProxyProperty
+    );
     publicAPI.set(state);
 
     // connect rendering pipeline
@@ -113,7 +132,9 @@ function vtkSliceRepresentation(publicAPI, model) {
     model.actors.push(model.actor);
 
     // Create a link handler on source
-    source.getPropertyLink(`Slice${model.slicingMode}`).bind(publicAPI, 'sliceIndex');
+    source
+      .getPropertyLink(`Slice${model.slicingMode}`)
+      .bind(publicAPI, 'sliceIndex');
     source.getPropertyLink('ColorWindow').bind(publicAPI, 'colorWindow');
     source.getPropertyLink('ColorLevel').bind(publicAPI, 'colorLevel');
   };
@@ -141,10 +162,7 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Object methods
   vtkAbstractRepresentation.extend(publicAPI, model);
-  macro.get(publicAPI, model, [
-    'properties',
-    'sliceIndex',
-  ]);
+  macro.get(publicAPI, model, ['properties', 'sliceIndex']);
 
   // Object specific methods
   vtkSliceRepresentation(publicAPI, model);

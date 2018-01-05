@@ -68,7 +68,6 @@ function vtkPipelineManager(publicAPI, model) {
     }
   };
 
-
   publicAPI.getActiveSource = () => model.scene.pipeline[model.activeSourceId];
 
   publicAPI.getActiveView = () => model.scene.views[model.activeViewId];
@@ -290,18 +289,29 @@ function vtkPipelineManager(publicAPI, model) {
     const view = publicAPI.getActiveView();
     if (item.source) {
       const section = item.source.getProxySection();
-      sections.push(Object.assign(section, { collapsed: model.collapseState[section.name] }));
+      sections.push(
+        Object.assign(section, { collapsed: model.collapseState[section.name] })
+      );
     }
     if (item.source && view) {
-      const representation = publicAPI.getRepresentation(item.source.getProxyId(), view);
+      const representation = publicAPI.getRepresentation(
+        item.source.getProxyId(),
+        view
+      );
       if (representation) {
         const section = representation.getProxySection();
-        sections.push(Object.assign(section, { collapsed: model.collapseState[section.name] }));
+        sections.push(
+          Object.assign(section, {
+            collapsed: model.collapseState[section.name],
+          })
+        );
       }
     }
     if (view) {
       const section = view.getProxySection();
-      sections.push(Object.assign(section, { collapsed: model.collapseState[section.name] }));
+      sections.push(
+        Object.assign(section, { collapsed: model.collapseState[section.name] })
+      );
     }
     return sections;
   };
@@ -338,8 +348,7 @@ function vtkPipelineManager(publicAPI, model) {
 // Object factory
 // ----------------------------------------------------------------------------
 
-const DEFAULT_VALUES = {
-};
+const DEFAULT_VALUES = {};
 
 // ----------------------------------------------------------------------------
 

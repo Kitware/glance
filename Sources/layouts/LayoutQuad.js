@@ -27,17 +27,39 @@ export default class LayoutQuad extends React.Component {
       <div className={`${style.quadRoot} ${this.props.className}`}>
         <div className={style.splitRow}>
           <div className={style.view}>
-            <Layout2D title="-Z+X" orientations={[]} axis={1} orientation={1} viewUp={[1, 0, 0]} pipelineManager={this.props.pipelineManager} />
+            <Layout2D
+              title="-Z+X"
+              orientations={[]}
+              axis={1}
+              orientation={1}
+              viewUp={[1, 0, 0]}
+              pipelineManager={this.props.pipelineManager}
+            />
           </div>
           <div className={style.view}>
             <Layout3D pipelineManager={this.props.pipelineManager} />
           </div>
         </div>
         <div className={style.splitRow}>
-          <Layout2D title="-Z+Y" orientations={[]} axis={0} orientation={1} viewUp={[0, 1, 0]} pipelineManager={this.props.pipelineManager} />
-          <Layout2D title="+X+Y" orientations={[]} axis={2} orientation={1} viewUp={[0, 1, 0]} pipelineManager={this.props.pipelineManager} />
+          <Layout2D
+            title="-Z+Y"
+            orientations={[]}
+            axis={0}
+            orientation={1}
+            viewUp={[0, 1, 0]}
+            pipelineManager={this.props.pipelineManager}
+          />
+          <Layout2D
+            title="+X+Y"
+            orientations={[]}
+            axis={2}
+            orientation={1}
+            viewUp={[0, 1, 0]}
+            pipelineManager={this.props.pipelineManager}
+          />
         </div>
-      </div>);
+      </div>
+    );
   }
 }
 

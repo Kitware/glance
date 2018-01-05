@@ -1,11 +1,11 @@
-import macro                    from 'vtk.js/Sources/macro';
-import vtkBoundingBox           from 'vtk.js/Sources/Common/DataModel/BoundingBox';
+import macro from 'vtk.js/Sources/macro';
+import vtkBoundingBox from 'vtk.js/Sources/Common/DataModel/BoundingBox';
 import vtkColorTransferFunction from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction';
-import vtkPiecewiseFunction     from 'vtk.js/Sources/Common/DataModel/PiecewiseFunction';
-import vtkVolume                from 'vtk.js/Sources/Rendering/Core/Volume';
-import vtkVolumeMapper          from 'vtk.js/Sources/Rendering/Core/VolumeMapper';
-import vtkImageSlice            from 'vtk.js/Sources/Rendering/Core/ImageSlice';
-import vtkImageMapper           from 'vtk.js/Sources/Rendering/Core/ImageMapper';
+import vtkPiecewiseFunction from 'vtk.js/Sources/Common/DataModel/PiecewiseFunction';
+import vtkVolume from 'vtk.js/Sources/Rendering/Core/Volume';
+import vtkVolumeMapper from 'vtk.js/Sources/Rendering/Core/VolumeMapper';
+import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
+import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
 
 import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
 
@@ -20,7 +20,8 @@ const PROPERTIES_UI = [
     type: 'boolean',
     advanced: 1,
     size: 1,
-  }, {
+  },
+  {
     name: 'sliceVisibility',
     label: 'Slices Visibility',
     doc: 'Toggle visibility of the Slices',
@@ -28,35 +29,40 @@ const PROPERTIES_UI = [
     type: 'boolean',
     advanced: 1,
     size: 1,
-  }, {
+  },
+  {
     label: 'Color Window',
     name: 'colorWindow',
     widget: 'slider',
     type: 'integer',
     size: 1,
     domain: { min: 0, max: 255, step: 1 },
-  }, {
+  },
+  {
     label: 'Color Level',
     name: 'colorLevel',
     widget: 'slider',
     type: 'integer',
     size: 1,
     domain: { min: 0, max: 255, step: 1 },
-  }, {
+  },
+  {
     label: 'SliceX',
     name: 'xSliceIndex',
     widget: 'slider',
     type: 'integer',
     size: 1,
     domain: { min: 0, max: 255, step: 1 },
-  }, {
+  },
+  {
     label: 'SliceY',
     name: 'ySliceIndex',
     widget: 'slider',
     type: 'integer',
     size: 1,
     domain: { min: 0, max: 255, step: 1 },
-  }, {
+  },
+  {
     label: 'SliceZ',
     name: 'zSliceIndex',
     widget: 'slider',
@@ -75,7 +81,9 @@ function mean(...array) {
 }
 
 function updateDomains(dataset, updateProp) {
-  const dataArray = dataset.getPointData().getScalars() || dataset.getPointData().getArrays()[0];
+  const dataArray =
+    dataset.getPointData().getScalars() ||
+    dataset.getPointData().getArrays()[0];
   const dataRange = dataArray.getRange();
   const extent = dataset.getExtent();
 
@@ -124,17 +132,41 @@ function updateDomains(dataset, updateProp) {
   updateProp('colorLevel', propToUpdate.colorLevel);
 
   return {
-    xSliceIndex: Math.floor(mean(propToUpdate.xSliceIndex.domain.min, propToUpdate.xSliceIndex.domain.max)),
-    ySliceIndex: Math.floor(mean(propToUpdate.ySliceIndex.domain.min, propToUpdate.ySliceIndex.domain.max)),
-    zSliceIndex: Math.floor(mean(propToUpdate.zSliceIndex.domain.min, propToUpdate.zSliceIndex.domain.max)),
+    xSliceIndex: Math.floor(
+      mean(
+        propToUpdate.xSliceIndex.domain.min,
+        propToUpdate.xSliceIndex.domain.max
+      )
+    ),
+    ySliceIndex: Math.floor(
+      mean(
+        propToUpdate.ySliceIndex.domain.min,
+        propToUpdate.ySliceIndex.domain.max
+      )
+    ),
+    zSliceIndex: Math.floor(
+      mean(
+        propToUpdate.zSliceIndex.domain.min,
+        propToUpdate.zSliceIndex.domain.max
+      )
+    ),
     colorWindow: propToUpdate.colorWindow.domain.max,
-    colorLevel: Math.floor(mean(propToUpdate.colorLevel.domain.min, propToUpdate.colorWindow.domain.max)),
+    colorLevel: Math.floor(
+      mean(
+        propToUpdate.colorLevel.domain.min,
+        propToUpdate.colorWindow.domain.max
+      )
+    ),
   };
 }
 
-
-function updateConfiguration(dataset, { lookupTable, piecewiseFunction, mapper, property }) {
-  const dataArray = dataset.getPointData().getScalars() || dataset.getPointData().getArrays()[0];
+function updateConfiguration(
+  dataset,
+  { lookupTable, piecewiseFunction, mapper, property }
+) {
+  const dataArray =
+    dataset.getPointData().getScalars() ||
+    dataset.getPointData().getArrays()[0];
   const dataRange = dataArray.getRange();
 
   // FIXME ---- start ---------------------------------------------------------
@@ -145,14 +177,24 @@ function updateConfiguration(dataset, { lookupTable, piecewiseFunction, mapper, 
 
   const midpoint = 0.5;
   const sharpness = 0;
-  const nodes = [{ x: dataRange[0], y: 0, midpoint, sharpness }, { x: dataRange[1], y: 1, midpoint, sharpness }];
+  const nodes = [
+    { x: dataRange[0], y: 0, midpoint, sharpness },
+    { x: dataRange[1], y: 1, midpoint, sharpness },
+  ];
   piecewiseFunction.removeAllPoints();
   piecewiseFunction.set({ nodes }, true);
   piecewiseFunction.sortAndUpdateRange();
   // FIXME ---- end -----------------------------------------------------------
 
   // Configuration
-  const sampleDistance = 0.7 * Math.sqrt(dataset.getSpacing().map(v => v * v).reduce((a, b) => a + b, 0));
+  const sampleDistance =
+    0.7 *
+    Math.sqrt(
+      dataset
+        .getSpacing()
+        .map((v) => v * v)
+        .reduce((a, b) => a + b, 0)
+    );
   mapper.setSampleDistance(sampleDistance);
   property.setRGBTransferFunction(0, lookupTable);
   property.setScalarOpacity(0, piecewiseFunction);
@@ -161,7 +203,11 @@ function updateConfiguration(dataset, { lookupTable, piecewiseFunction, mapper, 
 
   // For better looking volume rendering
   // - distance in world coordinates a scalar opacity of 1.0
-  property.setScalarOpacityUnitDistance(0, vtkBoundingBox.getDiagonalLength(dataset.getBounds()) / Math.max(...dataset.getDimensions()));
+  property.setScalarOpacityUnitDistance(
+    0,
+    vtkBoundingBox.getDiagonalLength(dataset.getBounds()) /
+      Math.max(...dataset.getDimensions())
+  );
   // - control how we emphasize surface boundaries
   //  => max should be around the average gradient magnitude for the
   //     volume or maybe average plus one std dev of the gradient magnitude
@@ -169,7 +215,10 @@ function updateConfiguration(dataset, { lookupTable, piecewiseFunction, mapper, 
   //     pixel gradient)
   //  => max hack: (dataRange[1] - dataRange[0]) * 0.05
   property.setGradientOpacityMinimumValue(0, 0);
-  property.setGradientOpacityMaximumValue(0, (dataRange[1] - dataRange[0]) * 0.05);
+  property.setGradientOpacityMaximumValue(
+    0,
+    (dataRange[1] - dataRange[0]) * 0.05
+  );
   // - Use shading based on gradient
   property.setShade(true);
   property.setUseGradientOpacity(0, true);
@@ -201,12 +250,18 @@ function vtkVolumeRepresentation(publicAPI, model) {
   model.property = model.volume.getProperty();
 
   // Slices
-  model.mapperX = vtkImageMapper.newInstance({ currentSlicingMode: vtkImageMapper.SlicingMode.X });
+  model.mapperX = vtkImageMapper.newInstance({
+    currentSlicingMode: vtkImageMapper.SlicingMode.X,
+  });
   model.actorX = vtkImageSlice.newInstance();
   model.propertySlices = model.actorX.getProperty();
-  model.mapperY = vtkImageMapper.newInstance({ currentSlicingMode: vtkImageMapper.SlicingMode.Y });
+  model.mapperY = vtkImageMapper.newInstance({
+    currentSlicingMode: vtkImageMapper.SlicingMode.Y,
+  });
   model.actorY = vtkImageSlice.newInstance({ property: model.propertySlices });
-  model.mapperZ = vtkImageMapper.newInstance({ currentSlicingMode: vtkImageMapper.SlicingMode.Z });
+  model.mapperZ = vtkImageMapper.newInstance({
+    currentSlicingMode: vtkImageMapper.SlicingMode.Z,
+  });
   model.actorZ = vtkImageSlice.newInstance({ property: model.propertySlices });
 
   // API ----------------------------------------------------------------------
@@ -218,7 +273,10 @@ function vtkVolumeRepresentation(publicAPI, model) {
     updateConfiguration(publicAPI.getInputDataSet(), model);
 
     // Update domains
-    const state = updateDomains(publicAPI.getInputDataSet(), publicAPI.updateProxyProperty);
+    const state = updateDomains(
+      publicAPI.getInputDataSet(),
+      publicAPI.updateProxyProperty
+    );
     publicAPI.set(state);
 
     // connect rendering pipeline
@@ -249,7 +307,11 @@ function vtkVolumeRepresentation(publicAPI, model) {
   publicAPI.setVolumeVisibility = model.volume.setVisibility;
   publicAPI.getVolumeVisibility = model.volume.getVisibility;
 
-  publicAPI.setSliceVisibility = macro.chain(model.actorX.setVisibility, model.actorY.setVisibility, model.actorZ.setVisibility);
+  publicAPI.setSliceVisibility = macro.chain(
+    model.actorX.setVisibility,
+    model.actorY.setVisibility,
+    model.actorZ.setVisibility
+  );
   publicAPI.getSliceVisibility = model.actorX.getVisibility;
 }
 
@@ -257,8 +319,7 @@ function vtkVolumeRepresentation(publicAPI, model) {
 // Object factory
 // ----------------------------------------------------------------------------
 
-const DEFAULT_VALUES = {
-};
+const DEFAULT_VALUES = {};
 
 // ----------------------------------------------------------------------------
 
@@ -267,10 +328,7 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Object methods
   vtkAbstractRepresentation.extend(publicAPI, model);
-  macro.setGet(publicAPI, model, [
-    'lookupTable',
-    'piecewiseFunction',
-  ]);
+  macro.setGet(publicAPI, model, ['lookupTable', 'piecewiseFunction']);
 
   // Object specific methods
   vtkVolumeRepresentation(publicAPI, model);

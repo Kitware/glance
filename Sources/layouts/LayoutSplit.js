@@ -31,7 +31,8 @@ export default class LayoutSplit extends React.Component {
         <div className={style.view}>
           <Layout3D pipelineManager={this.props.pipelineManager} />
         </div>
-      </div>);
+      </div>
+    );
   }
 }
 

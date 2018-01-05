@@ -1,5 +1,6 @@
 const path = require('path');
 
+const plugins = [];
 const entry = path.join(__dirname, './Sources/index.js');
 const sourcePath = path.join(__dirname, './Sources');
 const outputPath = path.join(__dirname, './Distribution');
@@ -9,7 +10,11 @@ const explorerRules = require('./Utilities/rules/explorer.js');
 const vtkRules = require('./Utilities/rules/vtkjs.js');
 const pvwRules = require('./Utilities/rules/paraviewweb.js');
 
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// plugins.push(new BundleAnalyzerPlugin());
+
 module.exports = {
+  plugins,
   entry,
   output: {
     path: outputPath,
@@ -19,11 +24,7 @@ module.exports = {
     rules: [].concat(linterRules, explorerRules, vtkRules, pvwRules),
   },
   resolve: {
-    extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx'],
-    modules: [
-      path.resolve(__dirname, 'node_modules'),
-      sourcePath,
-    ],
+    modules: [path.resolve(__dirname, 'node_modules'), sourcePath],
     alias: {
       'pv-explorer': __dirname,
       PVWStyle: path.resolve('./node_modules/paraviewweb/style'),

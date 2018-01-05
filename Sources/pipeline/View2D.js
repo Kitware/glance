@@ -1,4 +1,6 @@
 import macro from 'vtk.js/Sources/macro';
+import vtkMatrixBuilder from 'vtk.js/Sources/Common/Core/MatrixBuilder';
+
 import AbstractView from './AbstractView';
 
 // ----------------------------------------------------------------------------
@@ -33,6 +35,28 @@ function vtk2DView(publicAPI, model) {
     while (count--) {
       publicAPI.removeRepresentation(model.representations[count]);
     }
+  };
+
+  publicAPI.rotate = (angle) => {
+    const { viewUp, focalPoint, position } = model.camera.get(
+      'viewUp',
+      'focalPoint',
+      'position'
+    );
+    const axis = [
+      focalPoint[0] - position[0],
+      focalPoint[1] - position[1],
+      focalPoint[2] - position[2],
+    ];
+
+    vtkMatrixBuilder
+      .buildFromDegree()
+      .rotate(Number.isNaN(angle) ? 90 : angle, axis)
+      .apply(viewUp);
+
+    model.camera.setViewUp(...viewUp);
+    model.camera.modified();
+    model.renderWindow.render();
   };
 
   publicAPI.updateOrientation(model.axis, model.orientation, model.viewUp);

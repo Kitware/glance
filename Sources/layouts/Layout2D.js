@@ -19,6 +19,7 @@ export default class Layout2D extends React.Component {
 
     // Bind callbacks
     this.updateOrientation = this.updateOrientation.bind(this);
+    this.rotate = this.rotate.bind(this);
   }
 
   componentDidMount() {
@@ -28,6 +29,7 @@ export default class Layout2D extends React.Component {
     this.view.resize();
     window.addEventListener('resize', this.view.resize);
     this.props.pipelineManager.registerView(this.view);
+    this.view.resetCamera();
   }
 
   componentWillUnmount() {
@@ -47,6 +49,10 @@ export default class Layout2D extends React.Component {
     this.props.pipelineManager.modified();
     this.view.resetCamera();
     this.view.renderLater();
+  }
+
+  rotate() {
+    this.view.rotate(90);
   }
 
   render() {
@@ -72,6 +78,12 @@ export default class Layout2D extends React.Component {
                 {o.label}
               </div>
             ))}
+            <Button
+              size="small"
+              icon="compass"
+              onClick={this.rotate}
+              style={{ marginRight: '5px' }}
+            />
             <Button size="small" icon="scan" onClick={this.view.resetCamera} />
           </section>
         </div>

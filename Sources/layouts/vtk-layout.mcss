@@ -55,6 +55,7 @@
 
 .renderWindow {
   flex: 1;
+  overflow: hidden;
 }
 
 .renderWindowTitle {

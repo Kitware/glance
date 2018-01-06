@@ -57,6 +57,7 @@ function vtkPipelineManager(publicAPI, model) {
   publicAPI.setActiveSourceId = (id) => {
     if (id !== model.activeSourceId) {
       model.activeSourceId = id;
+      publicAPI.invokeActiveSourceChange(id);
       publicAPI.modified();
     }
   };
@@ -358,6 +359,7 @@ export function extend(publicAPI, model, initialValues = {}) {
   // Object methods
   macro.obj(publicAPI, model);
   macro.get(publicAPI, model, ['scene', 'activeViewId', 'activeSourceId']);
+  macro.event(publicAPI, model, 'activeSourceChange');
 
   // Object specific methods
   vtkPipelineManager(publicAPI, model);

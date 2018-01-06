@@ -144,6 +144,19 @@ function vtkSliceRepresentation(publicAPI, model) {
     model.sliceIndex = index;
     publicAPI.modified();
   };
+
+  publicAPI.getSliceIndexValues = () => {
+    const values = [];
+    const extent = publicAPI.getInputDataSet().getExtent();
+    const axisIndex = 'XYZ'.indexOf(model.slicingMode);
+    const endValue = extent[axisIndex * 2 + 1];
+    let currentValue = extent[axisIndex * 2];
+    while (currentValue <= endValue) {
+      values.push(currentValue);
+      currentValue++;
+    }
+    return values;
+  };
 }
 
 // ----------------------------------------------------------------------------

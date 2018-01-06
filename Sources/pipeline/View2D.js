@@ -80,6 +80,7 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   AbstractView.extend(publicAPI, model, initialValues);
   macro.set(publicAPI, model, ['orientation']);
+  macro.get(publicAPI, model, ['axis']);
 
   // Object specific methods
   vtk2DView(publicAPI, model);

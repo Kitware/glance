@@ -58,6 +58,12 @@
   overflow: hidden;
 }
 
+.sideBar {
+  flex: none;
+  width: 20px;
+  min-height: 10px;
+}
+
 .renderWindowTitle {
   flex: none;
   font-weight: bold;

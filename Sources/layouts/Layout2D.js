@@ -24,47 +24,6 @@ export default class Layout2D extends React.Component {
         this.props.pipelineManager.setActiveViewId(this.view.getProxyId());
       })
     );
-    this.subscriptions.push(
-      this.props.pipelineManager.onActiveSourceChange((sourceId) => {
-        const newRep = this.props.pipelineManager.getRepresentation(
-          sourceId,
-          this.view
-        );
-        if (
-          this.repSubscription &&
-          this.activeRepresentation &&
-          this.activeRepresentation !== newRep
-        ) {
-          console.log('un sub');
-          this.repSubscription.unsubscribe();
-          this.repSubscription = null;
-        }
-        if (newRep) {
-          console.log('subs');
-          this.repSubscription = newRep.onModified(() => {
-            console.log('rep changed...');
-            if (this.activeRepresentation) {
-              console.log(
-                'set value',
-                this.activeRepresentation.getSliceIndex()
-              );
-              this.slider.setValue(
-                Number(this.activeRepresentation.getSliceIndex())
-              );
-            }
-          });
-        }
-        this.activeRepresentation = newRep;
-        if (this.activeRepresentation) {
-          this.slider.setValues(
-            this.activeRepresentation.getSliceIndexValues()
-          );
-          this.slider.setValue(
-            Number(this.activeRepresentation.getSliceIndex())
-          );
-        }
-      })
-    );
 
     // Slider
     this.slider = vtkSlider.newInstance();
@@ -79,6 +38,14 @@ export default class Layout2D extends React.Component {
     // Bind callbacks
     this.updateOrientation = this.updateOrientation.bind(this);
     this.rotate = this.rotate.bind(this);
+    this.onActiveSourceChange = this.onActiveSourceChange.bind(this);
+
+    // Subscribe bind function
+    this.subscriptions.push(
+      this.props.pipelineManager.onActiveSourceChange(this.onActiveSourceChange)
+    );
+
+    this.onActiveSourceChange();
   }
 
   componentDidMount() {
@@ -105,6 +72,37 @@ export default class Layout2D extends React.Component {
     this.props.pipelineManager.unregisterView(this.view);
   }
 
+  onActiveSourceChange() {
+    const activeSource = this.props.pipelineManager.getActiveSource();
+    const sourceId = activeSource ? activeSource.source.getProxyId() : -1;
+    const newRep = this.props.pipelineManager.getRepresentation(
+      sourceId,
+      this.view
+    );
+    if (
+      this.repSubscription &&
+      this.activeRepresentation &&
+      this.activeRepresentation !== newRep
+    ) {
+      this.repSubscription.unsubscribe();
+      this.repSubscription = null;
+    }
+    if (newRep) {
+      this.repSubscription = newRep.onModified(() => {
+        if (this.activeRepresentation) {
+          this.slider.setValue(
+            Number(this.activeRepresentation.getSliceIndex())
+          );
+        }
+      });
+    }
+    this.activeRepresentation = newRep;
+    if (this.activeRepresentation) {
+      this.slider.setValues(this.activeRepresentation.getSliceIndexValues());
+      this.slider.setValue(Number(this.activeRepresentation.getSliceIndex()));
+    }
+  }
+
   updateOrientation(e) {
     const state = this.props.orientations[Number(e.target.dataset.index)];
     this.view.updateOrientation(state.axis, state.orientation, state.viewUp);
@@ -112,6 +110,7 @@ export default class Layout2D extends React.Component {
     this.props.pipelineManager.modified();
     this.view.resetCamera();
     this.view.renderLater();
+    this.onActiveSourceChange();
   }
 
   rotate() {

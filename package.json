@@ -22,9 +22,8 @@
     },
     "devDependencies": {
         "antd": "3.0.0",
-        "inline-source-cli": "1.2.0",
         "kw-doc": "1.1.1",
-        "kw-web-suite": "5.0.0",
+        "kw-web-suite": "5.0.1",
         "lodash": "^4.17.4",
         "postcss-variables": "1.1.1",
         "react": "16.1.1",
@@ -42,9 +41,9 @@
         "start": "webpack-dev-server",
         "build": "webpack --progress --colors",
         "build:debug": "webpack --progress --colors --display-modules",
-        "build:release": "npm run build -- -p",
+        "build:release": "webpack --progress --colors --env.release",
         "server": "http-server ./Distribution -p 9998",
-        "bundle": "inline-source --compress false --root ./Distribution ./Distribution/index.html ./Distribution/ParaViewExplorer.html",
+        "bundle": "inline-source --compress false --root ./Distribution ./Distribution/index.html ./Distribution/ParaViewGlance.html",
         "commit": "git cz",
         "semantic-release": "semantic-release pre && npm publish && semantic-release post"
     },

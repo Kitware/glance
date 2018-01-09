@@ -1,4 +1,5 @@
 const path = require('path');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const plugins = [];
 const entry = path.join(__dirname, './Sources/index.js');
@@ -13,33 +14,48 @@ const pvwRules = require('./Utilities/rules/paraviewweb.js');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // plugins.push(new BundleAnalyzerPlugin());
 
-module.exports = {
-  plugins,
-  entry,
-  output: {
-    path: outputPath,
-    filename: 'pv-web-viewer.js',
-  },
-  module: {
-    rules: [].concat(linterRules, explorerRules, vtkRules, pvwRules),
-  },
-  resolve: {
-    modules: [path.resolve(__dirname, 'node_modules'), sourcePath],
-    alias: {
-      'pv-explorer': __dirname,
-      PVWStyle: path.resolve('./node_modules/paraviewweb/style'),
+module.exports = (env) => {
+  if (env && env.release) {
+    plugins.push(
+      new UglifyJSPlugin({
+        uglifyOptions: {
+          beautify: false,
+          ecma: 6,
+          compress: true,
+          comments: false,
+        },
+      })
+    );
+  }
+
+  return {
+    plugins,
+    entry,
+    output: {
+      path: outputPath,
+      filename: 'pv-web-viewer.js',
     },
-  },
-  devServer: {
-    contentBase: outputPath,
-    port: 9999,
-    host: '0.0.0.0',
-    disableHostCheck: true,
-    hot: false,
-    quiet: false,
-    noInfo: false,
-    stats: {
-      colors: true,
+    module: {
+      rules: [].concat(linterRules, explorerRules, vtkRules, pvwRules),
     },
-  },
+    resolve: {
+      modules: [path.resolve(__dirname, 'node_modules'), sourcePath],
+      alias: {
+        'pv-explorer': __dirname,
+        PVWStyle: path.resolve('./node_modules/paraviewweb/style'),
+      },
+    },
+    devServer: {
+      contentBase: outputPath,
+      port: 9999,
+      host: '0.0.0.0',
+      disableHostCheck: true,
+      hot: false,
+      quiet: false,
+      noInfo: false,
+      stats: {
+        colors: true,
+      },
+    },
+  };
 };

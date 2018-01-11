@@ -97,7 +97,7 @@ export default class Layout2D extends React.Component {
       });
     }
     this.activeRepresentation = newRep;
-    if (this.activeRepresentation) {
+    if (this.activeRepresentation && this.activeRepresentation.getSliceIndex) {
       this.slider.setValues(this.activeRepresentation.getSliceIndexValues());
       this.slider.setValue(Number(this.activeRepresentation.getSliceIndex()));
     }
@@ -154,7 +154,11 @@ export default class Layout2D extends React.Component {
             className={style.sideBar}
             style={{
               background: COLOR_BY_AXIS[this.view.getAxis()],
-              visibility: this.activeRepresentation ? 'visible' : 'hidden',
+              visibility:
+                this.activeRepresentation &&
+                this.activeRepresentation.getSliceIndex
+                  ? 'visible'
+                  : 'hidden',
             }}
             ref={(c) => {
               this.sliderContainer = c;

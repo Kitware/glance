@@ -1,13 +1,9 @@
 import macro from 'vtk.js/Sources/macro';
 import vtkBoundingBox from 'vtk.js/Sources/Common/DataModel/BoundingBox';
-import vtkColorTransferFunction from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction';
-import vtkPiecewiseFunction from 'vtk.js/Sources/Common/DataModel/PiecewiseFunction';
 import vtkVolume from 'vtk.js/Sources/Rendering/Core/Volume';
 import vtkVolumeMapper from 'vtk.js/Sources/Rendering/Core/VolumeMapper';
 import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
 import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
-
-import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
 
 import vtkAbstractRepresentation from './AbstractRepresentation';
 
@@ -80,10 +76,7 @@ function mean(...array) {
   return array.reduce(sum, 0) / array.length;
 }
 
-function updateDomains(dataset, updateProp) {
-  const dataArray =
-    dataset.getPointData().getScalars() ||
-    dataset.getPointData().getArrays()[0];
+function updateDomains(dataset, dataArray, updateProp) {
   const dataRange = dataArray.getRange();
   const extent = dataset.getExtent();
 
@@ -162,28 +155,10 @@ function updateDomains(dataset, updateProp) {
 
 function updateConfiguration(
   dataset,
+  dataArray,
   { lookupTable, piecewiseFunction, mapper, property }
 ) {
-  const dataArray =
-    dataset.getPointData().getScalars() ||
-    dataset.getPointData().getArrays()[0];
   const dataRange = dataArray.getRange();
-
-  // FIXME ---- start ---------------------------------------------------------
-  const preset = vtkColorMaps.getPresetByName('erdc_rainbow_bright');
-  lookupTable.applyColorMap(preset);
-  lookupTable.setMappingRange(...dataRange);
-  lookupTable.updateRange();
-
-  const midpoint = 0.5;
-  const sharpness = 0;
-  const nodes = [
-    { x: dataRange[0], y: 0, midpoint, sharpness },
-    { x: dataRange[1], y: 1, midpoint, sharpness },
-  ];
-  piecewiseFunction.removeAllPoints();
-  piecewiseFunction.set({ nodes }, true);
-  piecewiseFunction.sortAndUpdateRange();
   // FIXME ---- end -----------------------------------------------------------
 
   // Configuration
@@ -240,10 +215,6 @@ function vtkVolumeRepresentation(publicAPI, model) {
   model.classHierarchy.push('vtkVolumeRepresentation');
   const superSetInput = publicAPI.setInput;
 
-  // FIXME
-  model.lookupTable = vtkColorTransferFunction.newInstance();
-  model.piecewiseFunction = vtkPiecewiseFunction.newInstance();
-
   // Volume
   model.mapper = vtkVolumeMapper.newInstance();
   model.volume = vtkVolume.newInstance();
@@ -270,11 +241,37 @@ function vtkVolumeRepresentation(publicAPI, model) {
     superSetInput(source);
 
     vtkAbstractRepresentation.connectMapper(model.mapper, source);
-    updateConfiguration(publicAPI.getInputDataSet(), model);
+
+    const dataArrayToUse = publicAPI.getSelectedDataArray();
+    const dataRange = dataArrayToUse.array.getRange();
+    model.pipelineManager.setDataRange(dataArrayToUse.name, dataRange);
+    model.lookupTable = model.pipelineManager.getLookupTableData(
+      dataArrayToUse.name
+    ).lookupTable;
+    model.piecewiseFunction = model.pipelineManager.getPiecewiseData(
+      dataArrayToUse.name
+    ).piecewiseFunction;
+
+    // Define a default gaussian
+    const position = 0.5;
+    const height = 1;
+    const width = 0.5;
+    const xBias = 0;
+    const yBias = 0;
+    model.pipelineManager.setGaussians(dataArrayToUse.name, [
+      { position, height, width, xBias, yBias },
+    ]);
+
+    updateConfiguration(
+      publicAPI.getInputDataSet(),
+      publicAPI.getSelectedDataArray().array,
+      model
+    );
 
     // Update domains
     const state = updateDomains(
       publicAPI.getInputDataSet(),
+      publicAPI.getSelectedDataArray().array,
       publicAPI.updateProxyProperty
     );
     publicAPI.set(state);

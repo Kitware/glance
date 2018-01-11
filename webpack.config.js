@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
@@ -23,6 +24,13 @@ module.exports = (env) => {
           ecma: 6,
           compress: true,
           comments: false,
+        },
+      })
+    );
+    plugins.push(
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: JSON.stringify('production'),
         },
       })
     );

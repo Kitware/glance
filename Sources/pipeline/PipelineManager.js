@@ -1,4 +1,8 @@
 import macro from 'vtk.js/Sources/macro';
+import vtkColorTransferFunction from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction';
+import vtkPiecewiseFunction from 'vtk.js/Sources/Common/DataModel/PiecewiseFunction';
+import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
+
 import vtkGeometryRepresentation from './GeometryRepresentation';
 import vtkVolumeRepresentation from './VolumeRepresentation';
 import vtkSliceRepresentation from './SliceRepresentation';
@@ -8,6 +12,7 @@ import vtkSliceRepresentation from './SliceRepresentation';
 // ----------------------------------------------------------------------------
 
 const PIPELINE_OBJECTS = {};
+const DEFAULT_COLOR_MAP = 'erdc_rainbow_bright'; // 'Cool to Warm';
 
 function registerObject(obj) {
   PIPELINE_OBJECTS[obj.getProxyId()] = obj;
@@ -50,6 +55,9 @@ function vtkPipelineManager(publicAPI, model) {
   model.scene = {
     pipeline: {},
     views: {},
+    lookupTables: {},
+    piecewiseFunctions: {},
+    ranges: {},
   };
 
   // Active API ---------------------------------------------------------------
@@ -72,6 +80,15 @@ function vtkPipelineManager(publicAPI, model) {
   publicAPI.getActiveSource = () => model.scene.pipeline[model.activeSourceId];
 
   publicAPI.getActiveView = () => model.scene.views[model.activeViewId];
+
+  publicAPI.getActiveRepresentation = () => {
+    const item = publicAPI.getActiveSource();
+    const view = publicAPI.getActiveView();
+    if (view && item) {
+      return publicAPI.getRepresentation(item.source.getProxyId(), view);
+    }
+    return null;
+  };
 
   // Source API ---------------------------------------------------------------
 
@@ -176,6 +193,7 @@ function vtkPipelineManager(publicAPI, model) {
     // Create representation type if does not exist
     if (!representations[representationType]) {
       const representation = createRepresentation(representationType);
+      representation.setPipelineManager(publicAPI);
       representation.setInput(source);
       representations[representationType] = representation;
       registerObject(representation);
@@ -216,8 +234,6 @@ function vtkPipelineManager(publicAPI, model) {
     if (!view) {
       return;
     }
-
-    console.log('unregisterView');
 
     // Remove representations from view
     const ids = Object.keys(model.scene.pipeline);
@@ -270,6 +286,97 @@ function vtkPipelineManager(publicAPI, model) {
     while (count--) {
       model.views[count].resetCamera();
     }
+  };
+
+  // --------------------------------------------------------------------------
+  // Color Management
+  // --------------------------------------------------------------------------
+
+  publicAPI.getDataRange = (arrayName) =>
+    model.scene.ranges[arrayName] || [0, 1];
+
+  // --------------------------------------------------------------------------
+
+  publicAPI.setDataRange = (arrayName, newRange) => {
+    model.scene.ranges[arrayName] = newRange;
+    const { lookupTable } = publicAPI.getLookupTableData(arrayName);
+    lookupTable.setMappingRange(newRange[0], newRange[1]);
+    lookupTable.updateRange();
+
+    // What about the piecewise function...
+    // FIXME ?
+  };
+
+  // --------------------------------------------------------------------------
+
+  publicAPI.getLookupTableData = (arrayName) => {
+    let lut = model.scene.lookupTables[arrayName];
+    if (!lut) {
+      const lookupTable = vtkColorTransferFunction.newInstance();
+      const presetName = DEFAULT_COLOR_MAP;
+      lut = { presetName, lookupTable };
+      model.scene.lookupTables[arrayName] = lut;
+
+      // Apply default preset map
+      publicAPI.applyPreset(presetName, arrayName);
+    }
+    return lut;
+  };
+
+  // --------------------------------------------------------------------------
+
+  publicAPI.getPiecewiseData = (arrayName) => {
+    let pwf = model.scene.piecewiseFunctions[arrayName];
+    if (!pwf) {
+      const dataRange = publicAPI.getDataRange(arrayName);
+      const piecewiseFunction = vtkPiecewiseFunction.newInstance();
+      const midpoint = 0.5;
+      const sharpness = 0;
+      const nodes = [
+        { x: dataRange[0], y: 0, midpoint, sharpness },
+        { x: dataRange[1], y: 1, midpoint, sharpness },
+      ];
+      piecewiseFunction.removeAllPoints();
+      piecewiseFunction.set({ nodes }, true);
+      piecewiseFunction.sortAndUpdateRange();
+      const gaussians = [];
+
+      pwf = { piecewiseFunction, gaussians };
+      model.scene.piecewiseFunctions[arrayName] = pwf;
+    }
+    return pwf;
+  };
+
+  // --------------------------------------------------------------------------
+
+  publicAPI.setGaussians = (arrayName, gaussians) => {
+    console.log('setGaussians', arrayName, gaussians.length);
+    if (arrayName) {
+      publicAPI.getPiecewiseData(arrayName).gaussians = gaussians;
+    }
+  };
+
+  // --------------------------------------------------------------------------
+
+  publicAPI.getGaussians = (arrayName) => {
+    console.log(
+      'getGaussians',
+      arrayName,
+      model.scene.piecewiseFunctions[arrayName].gaussians
+    );
+    return model.scene.piecewiseFunctions[arrayName].gaussians;
+  };
+
+  // --------------------------------------------------------------------------
+
+  publicAPI.applyPreset = (presetName, arrayName) => {
+    const { lookupTable } = publicAPI.getLookupTableData(arrayName);
+    const preset = vtkColorMaps.getPresetByName(presetName);
+    const dataRange = publicAPI.getDataRange(arrayName);
+
+    lookupTable.applyColorMap(preset);
+    lookupTable.setMappingRange(dataRange[0], dataRange[1]);
+    lookupTable.updateRange();
   };
 
   // --------------------------------------------------------------------------

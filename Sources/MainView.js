@@ -14,6 +14,7 @@ import style from './pv-explorer.mcss';
 import icons from './icons';
 import vtkPipelineManager from './pipeline/PipelineManager';
 import vtkSource from './pipeline/Source';
+import ColorBy from './widgets/ColorBy';
 
 const { Header, Sider, Content } = Layout;
 
@@ -159,7 +160,9 @@ export default class MainView extends React.Component {
               onCollapseChange={this.pipelineManager.updateCollapseState}
               onApply={this.onApply}
               autoApply
-            />
+            >
+              <ColorBy pipelineManager={this.pipelineManager} />
+            </ProxyEditorWidget>
           </Sider>
           <Layout>
             <Content>
@@ -178,32 +181,3 @@ export default class MainView extends React.Component {
 MainView.propTypes = {};
 
 MainView.defaultProps = {};
-
-/*
- <img
-            alt="action-load"
-            height="30"
-            src={icons.ActionLoad}
-            className={style.button}
-          />
-
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={this.state.overlayOpacity}
-            onChange={this.onOverlayOpacityChange}
-          />
-          <img
-            alt="ActionResetWindowLevel"
-            height="30"
-            src={icons.ActionResetWindowLevel}
-            className={style.button}
-          />
-          <img
-            alt="ActionResetCamera"
-            height="30"
-            src={icons.ActionResetCamera}
-            className={style.button}
-          />
-          */

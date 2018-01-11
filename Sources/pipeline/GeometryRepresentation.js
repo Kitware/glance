@@ -59,8 +59,16 @@ function vtkGeometryRepresentation(publicAPI, model) {
   model.classHierarchy.push('vtkGeometryRepresentation');
   const superSetInput = publicAPI.setInput;
 
+  // parent methods
+  model.selectedArray = null; // Default use solid color
+  const setSelectedDataArrayParent = publicAPI.setSelectedDataArray;
+
   // Internals
-  model.mapper = vtkMapper.newInstance();
+  model.mapper = vtkMapper.newInstance({
+    interpolateScalarsBeforeMapping: true,
+    useLookupTableScalarRange: true,
+    scalarVisibility: false,
+  });
   model.actor = vtkActor.newInstance();
   model.property = model.actor.getProperty();
 
@@ -73,6 +81,41 @@ function vtkGeometryRepresentation(publicAPI, model) {
     // connect rendering pipeline
     model.actor.setMapper(model.mapper);
     model.actors.push(model.actor);
+  };
+
+  publicAPI.setSelectedDataArray = (location, name) => {
+    setSelectedDataArrayParent(location, name);
+
+    let colorMode = vtkMapper.ColorMode.DEFAULT;
+    let scalarMode = vtkMapper.ScalarMode.DEFAULT;
+    const colorByArrayName = name;
+    const interpolateScalarsBeforeMapping = location === 'pointData';
+    const scalarVisibility = location.length > 0;
+
+    if (scalarVisibility) {
+      const activeArray = model.selectedArray.array;
+      const newDataRange = activeArray.getRange();
+      // dataRange[0] = newDataRange[0];
+      // dataRange[1] = newDataRange[1];
+      colorMode = vtkMapper.ColorMode.MAP_SCALARS;
+      scalarMode =
+        location === 'pointData'
+          ? vtkMapper.ScalarMode.USE_POINT_FIELD_DATA
+          : vtkMapper.ScalarMode.USE_CELL_FIELD_DATA;
+
+      // FIXME handle lookupTable
+      model.pipelineManager.setDataRange(name, newDataRange);
+      const { lookupTable } = model.pipelineManager.getLookupTableData(name);
+      model.mapper.setLookupTable(lookupTable);
+    }
+
+    model.mapper.set({
+      colorByArrayName,
+      colorMode,
+      interpolateScalarsBeforeMapping,
+      scalarMode,
+      scalarVisibility,
+    });
   };
 }
 

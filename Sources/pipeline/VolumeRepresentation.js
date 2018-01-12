@@ -27,6 +27,30 @@ const PROPERTIES_UI = [
     size: 1,
   },
   {
+    name: 'useShadow',
+    label: 'Use shadow',
+    doc: 'Toggle shadow for volume rendering',
+    widget: 'checkbox',
+    type: 'boolean',
+    size: 1,
+  },
+  {
+    label: 'Sample distance',
+    name: 'sampleDistance',
+    widget: 'slider',
+    type: 'double',
+    size: 1,
+    domain: { min: 0, max: 1, step: 0.01 },
+  },
+  {
+    label: 'Edge Gradient',
+    name: 'edgeGradient',
+    widget: 'slider',
+    type: 'double',
+    size: 1,
+    domain: { min: 0, max: 1, step: 0.01 },
+  },
+  {
     label: 'Color Window',
     name: 'colorWindow',
     widget: 'slider',
@@ -159,18 +183,8 @@ function updateConfiguration(
   { lookupTable, piecewiseFunction, mapper, property }
 ) {
   const dataRange = dataArray.getRange();
-  // FIXME ---- end -----------------------------------------------------------
 
   // Configuration
-  const sampleDistance =
-    0.7 *
-    Math.sqrt(
-      dataset
-        .getSpacing()
-        .map((v) => v * v)
-        .reduce((a, b) => a + b, 0)
-    );
-  mapper.setSampleDistance(sampleDistance);
   property.setRGBTransferFunction(0, lookupTable);
   property.setScalarOpacity(0, piecewiseFunction);
   // actor.getProperty().setInterpolationTypeToFastLinear();
@@ -264,6 +278,8 @@ function vtkVolumeRepresentation(publicAPI, model) {
       publicAPI.getSelectedDataArray().array,
       model
     );
+    publicAPI.setSampleDistance();
+    publicAPI.setEdgeGradient();
 
     // Update domains
     const state = updateDomains(
@@ -307,13 +323,63 @@ function vtkVolumeRepresentation(publicAPI, model) {
     model.actorZ.setVisibility
   );
   publicAPI.getSliceVisibility = model.actorX.getVisibility;
+
+  publicAPI.setSampleDistance = (distance = 0.4) => {
+    if (model.sampleDistance !== distance) {
+      model.sampleDistance = distance;
+      const sourceDS = publicAPI.getInputDataSet();
+      const sampleDistance =
+        0.7 *
+        Math.sqrt(
+          sourceDS
+            .getSpacing()
+            .map((v) => v * v)
+            .reduce((a, b) => a + b, 0)
+        );
+      model.mapper.setSampleDistance(
+        sampleDistance * 2 ** (distance * 3.0 - 1.5)
+      );
+
+      publicAPI.modified();
+    }
+  };
+
+  publicAPI.setEdgeGradient = (edgeGradient = 0.2) => {
+    if (model.edgeGradient !== edgeGradient) {
+      model.edgeGradient = edgeGradient;
+      if (edgeGradient === 0) {
+        model.volume.getProperty().setUseGradientOpacity(0, false);
+      } else {
+        const dataArray = publicAPI.getSelectedDataArray().array;
+        const dataRange = dataArray.getRange();
+        model.volume.getProperty().setUseGradientOpacity(0, true);
+        const minV = Math.max(0.0, edgeGradient - 0.3) / 0.7;
+        model.volume
+          .getProperty()
+          .setGradientOpacityMinimumValue(
+            0,
+            (dataRange[1] - dataRange[0]) * 0.2 * minV * minV
+          );
+        model.volume
+          .getProperty()
+          .setGradientOpacityMaximumValue(
+            0,
+            (dataRange[1] - dataRange[0]) * 1.0 * edgeGradient * edgeGradient
+          );
+      }
+      publicAPI.modified();
+    }
+  };
 }
 
 // ----------------------------------------------------------------------------
 // Object factory
 // ----------------------------------------------------------------------------
 
-const DEFAULT_VALUES = {};
+const DEFAULT_VALUES = {
+  sampleDistance: -1,
+  edgeGradient: -1,
+};
 
 // ----------------------------------------------------------------------------
 
@@ -323,6 +389,7 @@ export function extend(publicAPI, model, initialValues = {}) {
   // Object methods
   vtkAbstractRepresentation.extend(publicAPI, model);
   macro.setGet(publicAPI, model, ['lookupTable', 'piecewiseFunction']);
+  macro.get(publicAPI, model, ['sampleDistance', 'edgeGradient']);
 
   // Object specific methods
   vtkVolumeRepresentation(publicAPI, model);
@@ -333,6 +400,7 @@ export function extend(publicAPI, model, initialValues = {}) {
     zSliceIndex: { modelKey: 'mapperZ', property: 'zSlice' },
     colorWindow: { modelKey: 'propertySlices', property: 'colorWindow' },
     colorLevel: { modelKey: 'propertySlices', property: 'colorLevel' },
+    useShadow: { modelKey: 'property', property: 'shade' },
   });
 }
 

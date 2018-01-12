@@ -46,6 +46,7 @@ function openFile(extensions, onFileCallback) {
 // ----------------------------------------------------------------------------
 
 function loadFile(file) {
+  HIDDEN_FILE_ELEMENT.value = null;
   return new Promise((resolve, reject) => {
     const vtkReader = getReader(file);
     if (vtkReader) {

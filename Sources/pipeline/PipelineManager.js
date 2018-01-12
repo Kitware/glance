@@ -1,7 +1,8 @@
 import macro from 'vtk.js/Sources/macro';
+import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
 import vtkColorTransferFunction from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction';
 import vtkPiecewiseFunction from 'vtk.js/Sources/Common/DataModel/PiecewiseFunction';
-import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
+import vtkPiecewiseGaussianWidget from 'vtk.js/Sources/Interaction/Widgets/PiecewiseGaussianWidget';
 
 import vtkGeometryRepresentation from './GeometryRepresentation';
 import vtkVolumeRepresentation from './VolumeRepresentation';
@@ -308,8 +309,13 @@ function vtkPipelineManager(publicAPI, model) {
     lookupTable.setMappingRange(newRange[0], newRange[1]);
     lookupTable.updateRange();
 
-    // What about the piecewise function...
-    // FIXME ?
+    const pwfData = publicAPI.getPiecewiseData(arrayName);
+    vtkPiecewiseGaussianWidget.applyGaussianToPiecewiseFunction(
+      pwfData.gaussians,
+      255,
+      newRange,
+      pwfData.piecewiseFunction
+    );
   };
 
   // --------------------------------------------------------------------------
@@ -334,19 +340,8 @@ function vtkPipelineManager(publicAPI, model) {
   publicAPI.getPiecewiseData = (arrayName) => {
     let pwf = model.scene.piecewiseFunctions[arrayName];
     if (!pwf) {
-      const dataRange = publicAPI.getDataRange(arrayName);
       const piecewiseFunction = vtkPiecewiseFunction.newInstance();
-      const midpoint = 0.5;
-      const sharpness = 0;
-      const nodes = [
-        { x: dataRange[0], y: 0, midpoint, sharpness },
-        { x: dataRange[1], y: 1, midpoint, sharpness },
-      ];
-      piecewiseFunction.removeAllPoints();
-      piecewiseFunction.set({ nodes }, true);
-      piecewiseFunction.sortAndUpdateRange();
       const gaussians = [];
-
       pwf = { piecewiseFunction, gaussians };
       model.scene.piecewiseFunctions[arrayName] = pwf;
     }
@@ -355,9 +350,18 @@ function vtkPipelineManager(publicAPI, model) {
 
   // --------------------------------------------------------------------------
 
-  publicAPI.setGaussians = (arrayName, gaussians) => {
+  publicAPI.setGaussians = (arrayName, gaussians, updatePiecewise = false) => {
     if (arrayName) {
-      publicAPI.getPiecewiseData(arrayName).gaussians = gaussians;
+      const pwfData = publicAPI.getPiecewiseData(arrayName);
+      pwfData.gaussians = gaussians;
+      if (updatePiecewise) {
+        vtkPiecewiseGaussianWidget.applyGaussianToPiecewiseFunction(
+          gaussians,
+          255,
+          publicAPI.getDataRange(arrayName),
+          pwfData.piecewiseFunction
+        );
+      }
     }
   };
 

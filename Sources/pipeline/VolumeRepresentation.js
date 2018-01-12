@@ -253,14 +253,11 @@ function vtkVolumeRepresentation(publicAPI, model) {
     ).piecewiseFunction;
 
     // Define a default gaussian
-    const position = 0.5;
-    const height = 1;
-    const width = 0.5;
-    const xBias = 0;
-    const yBias = 0;
-    model.pipelineManager.setGaussians(dataArrayToUse.name, [
-      { position, height, width, xBias, yBias },
-    ]);
+    model.pipelineManager.setGaussians(
+      dataArrayToUse.name,
+      [{ position: 0.5, height: 1, width: 0.5, xBias: 0.5, yBias: 0.5 }],
+      true
+    );
 
     updateConfiguration(
       publicAPI.getInputDataSet(),

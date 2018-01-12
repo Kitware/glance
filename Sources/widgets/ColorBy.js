@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
 import vtkPiecewiseGaussianWidget from 'vtk.js/Sources/Interaction/Widgets/PiecewiseGaussianWidget';
+import vtkScalarsToColors from 'vtk.js/Sources/Common/Core/ScalarsToColors';
 
 import { Menu, Dropdown } from 'antd';
 
@@ -89,6 +90,7 @@ export default class ColorBy extends React.Component {
     this.subscriptions = [];
 
     // Closure for callback
+    this.onComponentChange = this.onComponentChange.bind(this);
     this.onDataArrayChange = this.onDataArrayChange.bind(this);
     this.onOpacityChange = this.onOpacityChange.bind(this);
     this.onPresetChange = this.onPresetChange.bind(this);
@@ -132,6 +134,26 @@ export default class ColorBy extends React.Component {
 
     this.piecewiseWidget.unbindMouseListeners();
     this.piecewiseWidget.setContainer(null);
+  }
+
+  onComponentChange(e) {
+    if (this.lookupTable) {
+      const rangeIndex = Number(e.target.value);
+      console.log('onComponentChange', rangeIndex);
+      if (rangeIndex < 0) {
+        this.lookupTable.setVectorModeToMagnitude();
+      } else {
+        this.lookupTable.setVectorModeToComponent();
+        this.lookupTable.setVectorComponent(rangeIndex);
+      }
+      if (this.state.selectedArray && this.state.selectedArray.array) {
+        const { array } = this.state.selectedArray;
+        const dataRange = array.getRange(rangeIndex);
+        console.log('dataRange', array.getName(), rangeIndex, dataRange);
+        this.props.pipelineManager.setDataRange(array.getName(), dataRange);
+        this.forceUpdate();
+      }
+    }
   }
 
   onRepresentationChange() {
@@ -253,6 +275,29 @@ export default class ColorBy extends React.Component {
         selected={this.state.presetName}
       />
     );
+    const componentLabels = ['Magnitude'];
+    let componentValue = '-1';
+    if (
+      this.state.selectedArray.array &&
+      this.state.selectedArray.array.getNumberOfComponents() > 1
+    ) {
+      for (
+        let i = 0,
+          size = this.state.selectedArray.array.getNumberOfComponents();
+        i < size;
+        i++
+      ) {
+        componentLabels.push(`Component ${i + 1}`);
+      }
+      if (
+        this.lookupTable &&
+        this.lookupTable.getVectorMode() ===
+          vtkScalarsToColors.VectorMode.COMPONENT
+      ) {
+        componentValue = this.lookupTable.getVectorComponent();
+      }
+    }
+
     return (
       <div
         className={this.activeRepresentation ? style.container : style.hidden}
@@ -275,6 +320,22 @@ export default class ColorBy extends React.Component {
                 value={`${array.location}:${array.name}`}
               >
                 {array.name}
+              </option>
+            ))}
+          </select>
+        </section>
+        <section
+          className={componentLabels.length > 1 ? style.row : style.hidden}
+        >
+          <label className={style.label}>Component</label>
+          <select
+            className={style.colorBy}
+            value={componentValue}
+            onChange={this.onComponentChange}
+          >
+            {componentLabels.map((v, i) => (
+              <option key={`${i - 1}`} value={`${i - 1}`}>
+                {v}
               </option>
             ))}
           </select>

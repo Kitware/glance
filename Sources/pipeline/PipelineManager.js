@@ -135,6 +135,11 @@ function vtkPipelineManager(publicAPI, model) {
 
     // Remove source
     delete model.scene.pipeline[id];
+
+    // Update active if it was
+    if (id === model.activeSourceId) {
+      publicAPI.setActiveSourceId(-1);
+    }
   };
 
   publicAPI.listSources = () => {
@@ -313,6 +318,7 @@ function vtkPipelineManager(publicAPI, model) {
     let lut = model.scene.lookupTables[arrayName];
     if (!lut) {
       const lookupTable = vtkColorTransferFunction.newInstance();
+      lookupTable.setVectorModeToMagnitude();
       const presetName = DEFAULT_COLOR_MAP;
       lut = { presetName, lookupTable };
       model.scene.lookupTables[arrayName] = lut;

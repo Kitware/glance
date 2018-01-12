@@ -370,13 +370,16 @@ function vtkPipelineManager(publicAPI, model) {
   // --------------------------------------------------------------------------
 
   publicAPI.applyPreset = (presetName, arrayName) => {
-    const { lookupTable } = publicAPI.getLookupTableData(arrayName);
+    const lutData = publicAPI.getLookupTableData(arrayName);
+    const { lookupTable } = lutData;
     const preset = vtkColorMaps.getPresetByName(presetName);
     const dataRange = publicAPI.getDataRange(arrayName);
 
     lookupTable.applyColorMap(preset);
     lookupTable.setMappingRange(dataRange[0], dataRange[1]);
     lookupTable.updateRange();
+
+    lutData.presetName = presetName;
   };
 
   // --------------------------------------------------------------------------

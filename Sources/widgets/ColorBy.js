@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
 import vtkPiecewiseGaussianWidget from 'vtk.js/Sources/Interaction/Widgets/PiecewiseGaussianWidget';
+
+import { Menu, Dropdown } from 'antd';
 
 import style from './ColorBy.mcss';
 
@@ -24,6 +27,35 @@ function getLookupTableImage(lut, min, max, width) {
   ctx.putImageData(pixelsArea, 0, 0);
   return WORKING_CANVAS.toDataURL('image/jpg');
 }
+
+function PresetMenu(props) {
+  return (
+    <Menu
+      onClick={props.onClick}
+      selectedKeys={[props.selected]}
+      style={{
+        overflowY: 'auto',
+        maxHeight: '170px',
+        marginLeft: '2px',
+        borderRadius: '5px',
+        width: '296px',
+      }}
+    >
+      {vtkColorMaps.rgbPresetNames.map((name) => (
+        <Menu.Item key={name}>{name}</Menu.Item>
+      ))}
+    </Menu>
+  );
+}
+
+PresetMenu.propTypes = {
+  onClick: PropTypes.func,
+  selected: PropTypes.string,
+};
+PresetMenu.defaultProps = {
+  onClick: () => {},
+  selected: '',
+};
 
 export default class ColorBy extends React.Component {
   constructor(props) {
@@ -59,6 +91,7 @@ export default class ColorBy extends React.Component {
     // Closure for callback
     this.onDataArrayChange = this.onDataArrayChange.bind(this);
     this.onOpacityChange = this.onOpacityChange.bind(this);
+    this.onPresetChange = this.onPresetChange.bind(this);
     this.onRepresentationChange = this.onRepresentationChange.bind(this);
     this.updateColorMap = this.updateColorMap.bind(this);
   }
@@ -143,6 +176,7 @@ export default class ColorBy extends React.Component {
           this.props.pipelineManager.renderLaterViews();
         })
       );
+      this.setState({ presetName: lutData.presetName });
 
       // Update Widget
       this.piecewiseWidget.setGaussians(piecewiseData.gaussians);
@@ -183,6 +217,18 @@ export default class ColorBy extends React.Component {
     }
   }
 
+  onPresetChange({ key: presetName }) {
+    console.log(presetName);
+    this.setState({ presetName });
+    if (this.state.selectedArray.name) {
+      this.props.pipelineManager.applyPreset(
+        presetName,
+        this.state.selectedArray.name
+      );
+      this.updateColorMap();
+    }
+  }
+
   updateColorMap() {
     if (this.lookupTable) {
       const range = this.lookupTable.getMappingRange();
@@ -202,6 +248,12 @@ export default class ColorBy extends React.Component {
     const arrayRange = this.lookupTable
       ? this.lookupTable.getMappingRange()
       : [0, 1];
+    const menu = (
+      <PresetMenu
+        onClick={this.onPresetChange}
+        selected={this.state.presetName}
+      />
+    );
     return (
       <div
         className={this.activeRepresentation ? style.container : style.hidden}
@@ -228,11 +280,13 @@ export default class ColorBy extends React.Component {
             ))}
           </select>
         </section>
-        <img
-          alt="Color Legend"
-          src={this.state.colorMap}
-          className={this.state.colorMap ? style.colorMap : style.hidden}
-        />
+        <Dropdown overlay={menu} trigger={['click']} placement="bottomLeft">
+          <img
+            alt="Color Legend"
+            src={this.state.colorMap}
+            className={this.state.colorMap ? style.colorMap : style.hidden}
+          />
+        </Dropdown>
         <section
           className={this.state.colorMap ? style.colorMapRange : style.hidden}
         >

@@ -12,7 +12,7 @@ import vtkSliceRepresentation from './SliceRepresentation';
 // ----------------------------------------------------------------------------
 
 const PIPELINE_OBJECTS = {};
-const DEFAULT_COLOR_MAP = 'erdc_rainbow_bright'; // 'Cool to Warm';
+const DEFAULT_COLOR_MAP = 'Cool to Warm'; // 'erdc_rainbow_bright'; //
 
 function registerObject(obj) {
   PIPELINE_OBJECTS[obj.getProxyId()] = obj;
@@ -350,7 +350,6 @@ function vtkPipelineManager(publicAPI, model) {
   // --------------------------------------------------------------------------
 
   publicAPI.setGaussians = (arrayName, gaussians) => {
-    console.log('setGaussians', arrayName, gaussians.length);
     if (arrayName) {
       publicAPI.getPiecewiseData(arrayName).gaussians = gaussians;
     }
@@ -358,14 +357,8 @@ function vtkPipelineManager(publicAPI, model) {
 
   // --------------------------------------------------------------------------
 
-  publicAPI.getGaussians = (arrayName) => {
-    console.log(
-      'getGaussians',
-      arrayName,
-      model.scene.piecewiseFunctions[arrayName].gaussians
-    );
-    return model.scene.piecewiseFunctions[arrayName].gaussians;
-  };
+  publicAPI.getGaussians = (arrayName) =>
+    model.scene.piecewiseFunctions[arrayName].gaussians;
 
   // --------------------------------------------------------------------------
 
@@ -400,9 +393,13 @@ function vtkPipelineManager(publicAPI, model) {
     const view = publicAPI.getActiveView();
     if (item.source) {
       const section = item.source.getProxySection();
-      sections.push(
-        Object.assign(section, { collapsed: model.collapseState[section.name] })
-      );
+      if (section.ui.length) {
+        sections.push(
+          Object.assign(section, {
+            collapsed: model.collapseState[section.name],
+          })
+        );
+      }
     }
     if (item.source && view) {
       const representation = publicAPI.getRepresentation(
@@ -411,18 +408,24 @@ function vtkPipelineManager(publicAPI, model) {
       );
       if (representation) {
         const section = representation.getProxySection();
+        if (section.ui.length) {
+          sections.push(
+            Object.assign(section, {
+              collapsed: model.collapseState[section.name],
+            })
+          );
+        }
+      }
+    }
+    if (view) {
+      const section = view.getProxySection();
+      if (section.ui.length) {
         sections.push(
           Object.assign(section, {
             collapsed: model.collapseState[section.name],
           })
         );
       }
-    }
-    if (view) {
-      const section = view.getProxySection();
-      sections.push(
-        Object.assign(section, { collapsed: model.collapseState[section.name] })
-      );
     }
     return sections;
   };

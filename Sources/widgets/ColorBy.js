@@ -218,7 +218,6 @@ export default class ColorBy extends React.Component {
   }
 
   onPresetChange({ key: presetName }) {
-    console.log(presetName);
     this.setState({ presetName });
     if (this.state.selectedArray.name) {
       this.props.pipelineManager.applyPreset(

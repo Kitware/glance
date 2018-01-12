@@ -38,11 +38,12 @@ const PROPERTIES_UI = [
     type: 'double',
     size: 1,
     domain: { min: 0, max: 1, step: 0.01 },
+    doc: 'Adjust object opactity',
   },
   {
     name: 'visibility',
     label: 'Visibility',
-    doc: 'Toggle visibility',
+    doc: 'Toggle object visibility',
     widget: 'checkbox',
     type: 'boolean',
     advanced: 1,

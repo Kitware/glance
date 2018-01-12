@@ -31,7 +31,7 @@ const PROPERTIES_UI = [
     size: 1,
   },
   {
-    label: 'Opactity',
+    label: 'Opacity',
     name: 'opacity',
     widget: 'slider',
     propType: 'slider',
@@ -39,6 +39,15 @@ const PROPERTIES_UI = [
     size: 1,
     domain: { min: 0, max: 1, step: 0.01 },
     doc: 'Adjust object opactity',
+  },
+  {
+    label: 'Interpolate Scalar before mapping',
+    name: 'interpolateScalarsBeforeMapping',
+    widget: 'checkbox',
+    type: 'boolean',
+    advanced: 1,
+    size: 1,
+    doc: 'Enable smooth color interpolation',
   },
   {
     name: 'visibility',
@@ -150,6 +159,10 @@ export function extend(publicAPI, model, initialValues = {}) {
   macro.proxyPropertyMapping(publicAPI, model, {
     opacity: { modelKey: 'property', property: 'opacity' },
     visibility: { modelKey: 'actor', property: 'visibility' },
+    interpolateScalarsBeforeMapping: {
+      modelKey: 'mapper',
+      property: 'interpolateScalarsBeforeMapping',
+    },
   });
 }
 

@@ -18,77 +18,100 @@ const PROPERTIES_UI = [
     size: 1,
   },
   {
-    name: 'sliceVisibility',
-    label: 'Slices Visibility',
-    doc: 'Toggle visibility of the Slices',
-    widget: 'checkbox',
-    type: 'boolean',
-    advanced: 1,
-    size: 1,
+    widget: 'PropertyGroup', // 'ProxyEditorPropertyWidget',
+    label: 'Shadow and Edge',
+    name: 'groupShadowEdge',
+    type: null,
+    children: [
+      {
+        name: 'useShadow',
+        label: 'Use shadow',
+        doc: 'Toggle shadow for volume rendering',
+        widget: 'checkbox',
+        type: 'boolean',
+        size: 1,
+      },
+      {
+        label: 'Sample distance',
+        name: 'sampleDistance',
+        widget: 'slider',
+        type: 'double',
+        size: 1,
+        domain: { min: 0, max: 1, step: 0.01 },
+      },
+      {
+        label: 'Edge Gradient',
+        name: 'edgeGradient',
+        widget: 'slider',
+        type: 'double',
+        size: 1,
+        domain: { min: 0, max: 1, step: 0.01 },
+      },
+    ],
   },
   {
-    name: 'useShadow',
-    label: 'Use shadow',
-    doc: 'Toggle shadow for volume rendering',
-    widget: 'checkbox',
-    type: 'boolean',
-    size: 1,
+    widget: 'PropertyGroup', // 'ProxyEditorPropertyWidget',
+    label: 'Window setup',
+    name: 'groupWindow',
+    type: null,
+    children: [
+      {
+        label: 'Color Window',
+        name: 'colorWindow',
+        widget: 'slider',
+        type: 'integer',
+        size: 1,
+        domain: { min: 0, max: 255, step: 1 },
+      },
+      {
+        label: 'Color Level',
+        name: 'colorLevel',
+        widget: 'slider',
+        type: 'integer',
+        size: 1,
+        domain: { min: 0, max: 255, step: 1 },
+      },
+    ],
   },
   {
-    label: 'Sample distance',
-    name: 'sampleDistance',
-    widget: 'slider',
-    type: 'double',
-    size: 1,
-    domain: { min: 0, max: 1, step: 0.01 },
-  },
-  {
-    label: 'Edge Gradient',
-    name: 'edgeGradient',
-    widget: 'slider',
-    type: 'double',
-    size: 1,
-    domain: { min: 0, max: 1, step: 0.01 },
-  },
-  {
-    label: 'Color Window',
-    name: 'colorWindow',
-    widget: 'slider',
-    type: 'integer',
-    size: 1,
-    domain: { min: 0, max: 255, step: 1 },
-  },
-  {
-    label: 'Color Level',
-    name: 'colorLevel',
-    widget: 'slider',
-    type: 'integer',
-    size: 1,
-    domain: { min: 0, max: 255, step: 1 },
-  },
-  {
-    label: 'SliceX',
-    name: 'xSliceIndex',
-    widget: 'slider',
-    type: 'integer',
-    size: 1,
-    domain: { min: 0, max: 255, step: 1 },
-  },
-  {
-    label: 'SliceY',
-    name: 'ySliceIndex',
-    widget: 'slider',
-    type: 'integer',
-    size: 1,
-    domain: { min: 0, max: 255, step: 1 },
-  },
-  {
-    label: 'SliceZ',
-    name: 'zSliceIndex',
-    widget: 'slider',
-    type: 'integer',
-    size: 1,
-    domain: { min: 0, max: 255, step: 1 },
+    widget: 'PropertyGroup', // 'ProxyEditorPropertyWidget',
+    label: 'Slices',
+    name: 'groupSlices',
+    type: null,
+    children: [
+      {
+        name: 'sliceVisibility',
+        label: 'Slices Visibility',
+        doc: 'Toggle visibility of the Slices',
+        widget: 'checkbox',
+        type: 'boolean',
+        size: 1,
+      },
+      {
+        label: 'SliceX',
+        name: 'xSliceIndex',
+        widget: 'slider',
+        type: 'integer',
+        size: 1,
+        domain: { min: 0, max: 255, step: 1 },
+      },
+      {
+        label: 'SliceY',
+        name: 'ySliceIndex',
+        widget: 'slider',
+        type: 'integer',
+        size: 1,
+        domain: { min: 0, max: 255, step: 1 },
+      },
+      {
+        label: 'SliceZ',
+        name: 'zSliceIndex',
+        widget: 'slider',
+        type: 'integer',
+        size: 1,
+        domain: { min: 0, max: 255, step: 1 },
+      },
+    ],
   },
 ];
 
@@ -238,16 +261,22 @@ function vtkVolumeRepresentation(publicAPI, model) {
   model.mapperX = vtkImageMapper.newInstance({
     currentSlicingMode: vtkImageMapper.SlicingMode.X,
   });
-  model.actorX = vtkImageSlice.newInstance();
+  model.actorX = vtkImageSlice.newInstance({ visibility: false });
   model.propertySlices = model.actorX.getProperty();
   model.mapperY = vtkImageMapper.newInstance({
     currentSlicingMode: vtkImageMapper.SlicingMode.Y,
   });
-  model.actorY = vtkImageSlice.newInstance({ property: model.propertySlices });
+  model.actorY = vtkImageSlice.newInstance({
+    visibility: false,
+    property: model.propertySlices,
+  });
   model.mapperZ = vtkImageMapper.newInstance({
     currentSlicingMode: vtkImageMapper.SlicingMode.Z,
   });
-  model.actorZ = vtkImageSlice.newInstance({ property: model.propertySlices });
+  model.actorZ = vtkImageSlice.newInstance({
+    visibility: false,
+    property: model.propertySlices,
+  });
 
   // API ----------------------------------------------------------------------
 

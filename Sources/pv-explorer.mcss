@@ -25,6 +25,7 @@
   box-sizing: border-box;
   height: calc(100vh - $sizes.toolbar);
   background-color: $colors.menu;
+  overflow: hidden;
 }
 
 .padding {
@@ -67,10 +68,26 @@
 }
 
 .pipeline {
-  min-height: 20%;
-  padding-top: 20px;
-  margin: 0 auto;
-  max-height: 45%;
+  min-height: 30px;
+}
+
+.leftPaneContent {
+  max-height: calc(100vh - 105px);
   overflow: auto;
-  border-top: 1px solid #ccc;
+  position: relative;
+  top: -10px;
+}
+
+.compactTabs {
+  position: relative;
+  top: -5px;
+}
+
+.compactTabs :global(.ant-tabs-nav) :global(.ant-tabs-tab)  {
+  margin-right: 0;
+}
+
+.workspace {
+  overflow: hidden;
+  height: calc(100vh - 64px);
 }

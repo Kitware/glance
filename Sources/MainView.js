@@ -3,20 +3,18 @@ import 'antd/dist/antd.css';
 import React from 'react';
 // import PropTypes from 'prop-types';
 
-import GitTreeWidget from 'paraviewweb/src/React/Widgets/GitTreeWidget';
-import ProxyEditorWidget from 'paraviewweb/src/React/Widgets/ProxyEditorWidget';
+import { Layout, Menu, Tabs, Icon } from 'antd';
 
-import { Layout, Menu } from 'antd';
-
-import FileLoader from './io/FileLoader';
 import Layouts from './layouts';
 import style from './pv-explorer.mcss';
 import icons from './icons';
 import vtkPipelineManager from './pipeline/PipelineManager';
-import vtkSource from './pipeline/Source';
-import ColorBy from './widgets/ColorBy';
+
+import PipelineEditor from './controls/PipelineEditor';
+import FileLoader from './controls/FileLoader';
 
 const { Header, Sider, Content } = Layout;
+const { TabPane } = Tabs;
 
 const layouts = ['Layout2D', 'Layout3D', 'LayoutSplit', 'LayoutQuad'];
 
@@ -29,6 +27,7 @@ export default class MainView extends React.Component {
       layout: 'Layout3D',
       overlayOpacity: 100,
       collapsed: false,
+      tab: 'files',
     };
 
     this.pipelineManager = vtkPipelineManager.newInstance();
@@ -39,12 +38,19 @@ export default class MainView extends React.Component {
     // Closure for callback
     this.onLayoutChange = this.onLayoutChange.bind(this);
     this.onToggleControl = this.onToggleControl.bind(this);
-    this.onOverlayOpacityChange = this.onOverlayOpacityChange.bind(this);
-    this.loadFile = this.loadFile.bind(this);
+    this.onTabChange = this.onTabChange.bind(this);
 
     this.onGitChange = this.onGitChange.bind(this);
     this.onApply = this.onApply.bind(this);
     this.forceUpdate = this.forceUpdate.bind(this);
+  }
+
+  componentDidUpdate() {
+    this.pipelineManager.resizeViews();
+  }
+
+  onTabChange(tab) {
+    this.setState({ tab });
   }
 
   onLayoutChange({ item, key, selectedKeys }) {
@@ -53,14 +59,9 @@ export default class MainView extends React.Component {
 
   onToggleControl() {
     const collapsed = !this.state.collapsed;
-    this.setState({ collapsed });
-    setTimeout(this.pipelineManager.resizeViews, 0);
+    this.setState({ collapsed }, this.pipelineManager.resizeViews);
     setTimeout(this.pipelineManager.resizeViews, 500);
-  }
-
-  onOverlayOpacityChange(e) {
-    const overlayOpacity = e.target.value;
-    this.setState({ overlayOpacity });
+    setTimeout(this.forceUpdate, 500);
   }
 
   onGitChange(e) {
@@ -81,24 +82,6 @@ export default class MainView extends React.Component {
 
   onApply(e) {
     this.pipelineManager.applyChanges(e);
-  }
-
-  loadFile() {
-    FileLoader.openFile(['vti', 'vtp'], (file) => {
-      FileLoader.loadFile(file).then((reader) => {
-        const source = vtkSource.newInstance();
-        source.setInput(reader);
-        source.setName(file.name);
-        this.pipelineManager.addSource(source);
-        this.pipelineManager.addSourceToViews(source.getProxyId());
-
-        if (this.pipelineManager.getNumberOfSources() === 1) {
-          this.pipelineManager.resetCameraViews();
-        }
-
-        this.forceUpdate();
-      });
-    });
   }
 
   render() {
@@ -130,12 +113,7 @@ export default class MainView extends React.Component {
             ))}
           </Menu>
 
-          <img
-            onClick={this.loadFile}
-            alt="action-load"
-            className={style.toolbarIcon}
-            src={icons.ActionLoad}
-          />
+          <div />
         </Header>
         <Layout>
           <Sider
@@ -146,26 +124,49 @@ export default class MainView extends React.Component {
             collapsible
             collapsed={this.state.collapsed}
           >
-            <div className={style.pipeline}>
-              <GitTreeWidget
-                nodes={this.pipelineManager.listSources()}
-                actives={actives}
-                onChange={this.onGitChange}
-                width={WIDTH}
-                enableDelete
-              />
-            </div>
-            <ProxyEditorWidget
-              sections={this.pipelineManager.getSections()}
-              onCollapseChange={this.pipelineManager.updateCollapseState}
-              onApply={this.onApply}
-              autoApply
+            <Tabs
+              activeKey={this.state.tab}
+              size="small"
+              className={style.compactTabs}
+              onChange={this.onTabChange}
             >
-              <ColorBy pipelineManager={this.pipelineManager} />
-            </ProxyEditorWidget>
+              <TabPane
+                tab={<Icon type="share-alt" style={{ marginRight: '0' }} />}
+                key="pipeline"
+                forceRender
+              >
+                <PipelineEditor
+                  pipelineManager={this.pipelineManager}
+                  actives={actives}
+                  onGitChange={this.onGitChange}
+                  onApply={this.onApply}
+                />
+              </TabPane>
+              <TabPane
+                tab={<Icon type="edit" style={{ marginRight: '0' }} />}
+                key="annotations"
+              >
+                Annotations
+              </TabPane>
+              <TabPane
+                tab={<Icon type="file-text" style={{ marginRight: '0' }} />}
+                key="files"
+              >
+                <FileLoader
+                  pipelineManager={this.pipelineManager}
+                  updateTab={this.onTabChange}
+                />
+              </TabPane>
+              <TabPane
+                tab={<Icon type="info" style={{ marginRight: '0' }} />}
+                key="informations"
+              >
+                Informations
+              </TabPane>
+            </Tabs>
           </Sider>
           <Layout>
-            <Content>
+            <Content className={style.workspace}>
               <Renderer
                 pipelineManager={this.pipelineManager}
                 className={style.content}

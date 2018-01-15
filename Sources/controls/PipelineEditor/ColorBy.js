@@ -41,6 +41,7 @@ function PresetMenu(props) {
         borderRadius: '5px',
         width: '296px',
       }}
+      className={style.presetMenu}
     >
       {vtkColorMaps.rgbPresetNames.map((name) => (
         <Menu.Item key={name}>{name}</Menu.Item>

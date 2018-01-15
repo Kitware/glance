@@ -3,10 +3,11 @@ import vtkXMLImageDataReader from 'vtk.js/Sources/IO/XML/XMLImageDataReader';
 
 // ----------------------------------------------------------------------------
 
-const READER_MAPPING = {
-  vtp: vtkXMLPolyDataReader,
-  vti: vtkXMLImageDataReader,
-};
+const READER_MAPPING = {};
+
+function registerReader(extension, name, vtkReader, readMethod, parseMethod) {
+  READER_MAPPING[extension] = { name, vtkReader, readMethod, parseMethod };
+}
 
 function getReader(file) {
   const { name } = file;
@@ -15,6 +16,17 @@ function getReader(file) {
     .pop()
     .toLowerCase();
   return READER_MAPPING[ext];
+}
+
+function listReaders() {
+  return Object.keys(READER_MAPPING).map((ext) => ({
+    name: READER_MAPPING[ext].name,
+    ext,
+  }));
+}
+
+function listSupportedExtensions() {
+  return Object.keys(READER_MAPPING);
 }
 
 // ----------------------------------------------------------------------------
@@ -48,15 +60,16 @@ function openFile(extensions, onFileCallback) {
 function loadFile(file) {
   HIDDEN_FILE_ELEMENT.value = null;
   return new Promise((resolve, reject) => {
-    const vtkReader = getReader(file);
-    if (vtkReader) {
+    const readerMapping = getReader(file);
+    if (readerMapping) {
+      const { vtkReader, readMethod, parseMethod } = readerMapping;
       const reader = vtkReader.newInstance();
       const io = new FileReader();
       io.onload = function onLoad(e) {
-        reader.parseArrayBuffer(io.result);
+        reader[parseMethod](io.result);
         resolve(reader);
       };
-      io.readAsArrayBuffer(file);
+      io[readMethod](file);
     } else {
       reject();
     }
@@ -64,8 +77,31 @@ function loadFile(file) {
 }
 
 // ----------------------------------------------------------------------------
+// Register default readers
+// ----------------------------------------------------------------------------
+
+registerReader(
+  'vtp',
+  'Polydata Reader',
+  vtkXMLPolyDataReader,
+  'readAsArrayBuffer',
+  'parseArrayBuffer'
+);
+
+registerReader(
+  'vti',
+  'ImageData Reader',
+  vtkXMLImageDataReader,
+  'readAsArrayBuffer',
+  'parseArrayBuffer'
+);
+
+// ----------------------------------------------------------------------------
 
 export default {
   openFile,
   loadFile,
+  registerReader,
+  listReaders,
+  listSupportedExtensions,
 };

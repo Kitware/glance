@@ -107,6 +107,10 @@ function vtkPipelineManager(publicAPI, model) {
       representations,
     };
 
+    if (!publicAPI.getActiveSource()) {
+      publicAPI.setActiveSourceId(source.getProxyId());
+    }
+
     return source.getProxyId();
   };
 

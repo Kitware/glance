@@ -1,0 +1,27 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0 5px;
+}
+
+.button {
+  flex: 1;
+}
+
+.hidden {
+  display: none;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.label {
+  font-weight: bold;
+}

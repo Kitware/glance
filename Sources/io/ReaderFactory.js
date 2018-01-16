@@ -1,8 +1,3 @@
-import vtkXMLPolyDataReader from 'vtk.js/Sources/IO/XML/XMLPolyDataReader';
-import vtkXMLImageDataReader from 'vtk.js/Sources/IO/XML/XMLImageDataReader';
-
-// ----------------------------------------------------------------------------
-
 const READER_MAPPING = {};
 
 function registerReader(extension, name, vtkReader, readMethod, parseMethod) {
@@ -75,26 +70,6 @@ function loadFile(file) {
     }
   });
 }
-
-// ----------------------------------------------------------------------------
-// Register default readers
-// ----------------------------------------------------------------------------
-
-registerReader(
-  'vtp',
-  'Polydata Reader',
-  vtkXMLPolyDataReader,
-  'readAsArrayBuffer',
-  'parseArrayBuffer'
-);
-
-registerReader(
-  'vti',
-  'ImageData Reader',
-  vtkXMLImageDataReader,
-  'readAsArrayBuffer',
-  'parseArrayBuffer'
-);
 
 // ----------------------------------------------------------------------------
 

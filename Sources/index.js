@@ -3,6 +3,9 @@ import 'font-awesome/css/font-awesome.css';
 
 import ReactDOM from 'react-dom';
 import React from 'react';
+
+import './io/ParaViewGlanceReaders';
+
 import MainView from './MainView';
 
 const mountNode = document.querySelector('.root-container');

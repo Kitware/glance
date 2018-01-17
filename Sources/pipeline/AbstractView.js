@@ -44,16 +44,16 @@ function vtkView(publicAPI, model) {
   );
   // Zoom
   model.interactorStyle2D.addManipulator(
-    vtkTrackballZoom.newInstance({ control: true })
+    vtkTrackballZoom.newInstance({ control: true, pinch: true })
   );
   model.interactorStyle2D.addManipulator(
-    vtkTrackballZoom.newInstance({ alt: true })
+    vtkTrackballZoom.newInstance({ alt: true, pinch: true })
   );
   model.interactorStyle3D.addManipulator(
-    vtkTrackballZoom.newInstance({ control: true })
+    vtkTrackballZoom.newInstance({ control: true, pinch: true })
   );
   model.interactorStyle3D.addManipulator(
-    vtkTrackballZoom.newInstance({ alt: true })
+    vtkTrackballZoom.newInstance({ alt: true, pinch: true })
   );
   // Roll
   model.interactorStyle3D.addManipulator(

@@ -89,7 +89,10 @@ export default class Layout2D extends React.Component {
     }
     if (newRep) {
       this.repSubscription = newRep.onModified(() => {
-        if (this.activeRepresentation) {
+        if (
+          this.activeRepresentation &&
+          this.activeRepresentation.getSliceIndex
+        ) {
           this.slider.setValue(
             Number(this.activeRepresentation.getSliceIndex())
           );

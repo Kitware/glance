@@ -106,7 +106,7 @@ export function extend(publicAPI, model, initialValues = {}) {
       size: 3,
       doc: 'RGB mapping of the background color with values between 0 and 1.0',
       domain: {
-        palette: Palettes.extended.concat('#ffffff00'),
+        palette: Palettes.extended.concat('fff', '000', '#ffffff00'),
       },
     },
   ]);

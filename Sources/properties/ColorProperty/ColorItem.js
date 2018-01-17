@@ -41,5 +41,6 @@ ColorItem.defaultProps = {
     flex: 'none',
     textAlign: 'center',
     lineHeight: '20px',
+    borderRadius: '50%',
   },
 };

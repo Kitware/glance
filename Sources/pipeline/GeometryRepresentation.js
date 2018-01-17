@@ -2,6 +2,7 @@ import macro from 'vtk.js/Sources/macro';
 import vtkActor from 'vtk.js/Sources/Rendering/Core/Actor';
 import vtkMapper from 'vtk.js/Sources/Rendering/Core/Mapper';
 
+import Palettes from '../Palettes';
 import vtkAbstractRepresentation from './AbstractRepresentation';
 
 const PROPERTIES_STATE = {
@@ -57,6 +58,16 @@ const PROPERTIES_UI = [
     type: 'boolean',
     advanced: 1,
     size: 1,
+  },
+  {
+    label: 'Solid Color',
+    name: 'color',
+    propType: 'Color',
+    type: 'double',
+    size: 3,
+    domain: {
+      palette: Palettes.extended.concat(Palettes.spectral, Palettes.basic),
+    },
   },
 ];
 
@@ -159,6 +170,7 @@ export function extend(publicAPI, model, initialValues = {}) {
   macro.proxyPropertyMapping(publicAPI, model, {
     opacity: { modelKey: 'property', property: 'opacity' },
     visibility: { modelKey: 'actor', property: 'visibility' },
+    color: { modelKey: 'property', property: 'diffuseColor' },
     interpolateScalarsBeforeMapping: {
       modelKey: 'mapper',
       property: 'interpolateScalarsBeforeMapping',

@@ -33,9 +33,7 @@
 }
 
 .content {
-  composes: fullHeight;
-  background: $colors.content;
-  padding: 24;
+  padding: 0;
   margin: 0;
 }
 

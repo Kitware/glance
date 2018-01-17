@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 
 import './io/ParaViewGlanceReaders';
+import './properties';
 
 import MainView from './MainView';
 

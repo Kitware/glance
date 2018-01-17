@@ -1,4 +1,5 @@
 import macro from 'vtk.js/Sources/macro';
+import vtkCornerAnnotation from 'vtk.js/Sources/Interaction/UI/CornerAnnotation';
 import vtkInteractorStyleManipulator from 'vtk.js/Sources/Interaction/Style/InteractorStyleManipulator';
 import vtkOpenGLRenderWindow from 'vtk.js/Sources/Rendering/OpenGL/RenderWindow';
 import vtkRenderer from 'vtk.js/Sources/Rendering/Core/Renderer';
@@ -31,6 +32,8 @@ function vtkView(publicAPI, model) {
 
   model.interactorStyle3D = vtkInteractorStyleManipulator.newInstance();
   model.interactorStyle2D = vtkInteractorStyleManipulator.newInstance();
+
+  model.cornerAnnotation = vtkCornerAnnotation.newInstance();
 
   // Rotate
   model.interactorStyle3D.addManipulator(vtkTrackballRotate.newInstance());
@@ -78,12 +81,14 @@ function vtkView(publicAPI, model) {
     if (model.container) {
       model.interactor.unbindEvents(model.container);
       model.openglRenderWindow.setContainer(null);
+      model.cornerAnnotation.setContainer(null);
     }
 
     model.container = container;
 
     if (container) {
       model.openglRenderWindow.setContainer(container);
+      model.cornerAnnotation.setContainer(container);
       model.interactor.initialize();
       model.interactor.bindEvents(container);
     }
@@ -161,6 +166,18 @@ function vtkView(publicAPI, model) {
   // --------------------------------------------------------------------------
 
   publicAPI.captureImage = () => model.renderWindow.captureImages()[0];
+
+  // --------------------------------------------------------------------------
+
+  publicAPI.setCornerAnnotation = (corner, templateString) => {
+    model.cornerAnnotation.updateTemplates({
+      [corner]: (meta) =>
+        vtkCornerAnnotation.applyTemplate(templateString, meta),
+    });
+  };
+
+  publicAPI.updateCornerAnnotation = (meta) =>
+    model.cornerAnnotation.updateMetadata(meta);
 }
 
 // ----------------------------------------------------------------------------
@@ -189,10 +206,15 @@ function extend(publicAPI, model, initialValues = {}) {
     'container',
     'useParallelRendering',
     'camera',
+    'cornerAnnotation',
   ]);
 
   // Object specific methods
   vtkView(publicAPI, model);
+
+  macro.proxyPropertyMapping(publicAPI, model, {
+    background: { modelKey: 'renderer', property: 'background' },
+  });
 }
 
 // ----------------------------------------------------------------------------

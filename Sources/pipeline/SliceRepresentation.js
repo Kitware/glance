@@ -48,13 +48,12 @@ function mean(...array) {
   return array.reduce(sum, 0) / array.length;
 }
 
-function updateDomains(dataset, { slicingMode }, updateProp) {
-  const dataArray =
-    dataset.getPointData().getScalars() ||
-    dataset.getPointData().getArrays()[0];
+function updateDomains(dataset, dataArray, { slicingMode }, updateProp) {
   const dataRange = dataArray.getRange();
   const extent = dataset.getExtent();
   const axisIndex = 'XYZ'.indexOf(slicingMode);
+
+  console.log('updateDomains', axisIndex, slicingMode);
 
   const propToUpdate = {
     sliceIndex: {
@@ -79,6 +78,8 @@ function updateDomains(dataset, { slicingMode }, updateProp) {
       },
     },
   };
+
+  console.log(propToUpdate);
 
   updateProp('sliceIndex', propToUpdate.sliceIndex);
   updateProp('colorWindow', propToUpdate.colorWindow);
@@ -122,6 +123,7 @@ function vtkSliceRepresentation(publicAPI, model) {
     vtkAbstractRepresentation.connectMapper(model.mapper, source);
     const state = updateDomains(
       publicAPI.getInputDataSet(),
+      publicAPI.getSelectedDataArray().array,
       model,
       publicAPI.updateProxyProperty
     );

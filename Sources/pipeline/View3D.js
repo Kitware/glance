@@ -1,6 +1,8 @@
 import macro from 'vtk.js/Sources/macro';
 import AbstractView from './AbstractView';
 
+import Palettes from '../Palettes';
+
 // ----------------------------------------------------------------------------
 // vtk3DView methods
 // ----------------------------------------------------------------------------
@@ -29,7 +31,19 @@ export function extend(publicAPI, model, initialValues = {}) {
   // Object specific methods
   vtk3DView(publicAPI, model);
 
-  macro.proxy(publicAPI, model, 'View 3D');
+  macro.proxy(publicAPI, model, 'View 3D', [
+    {
+      label: 'Background Color',
+      name: 'background',
+      propType: 'Color',
+      type: 'double',
+      size: 3,
+      doc: 'RGB mapping of the background color with values between 0 and 1.0',
+      domain: {
+        palette: Palettes.spectral.concat('#ffffff00'),
+      },
+    },
+  ]);
 }
 // ----------------------------------------------------------------------------
 

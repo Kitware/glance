@@ -96,6 +96,18 @@ export default class Layout2D extends React.Component {
           this.slider.setValue(
             Number(this.activeRepresentation.getSliceIndex())
           );
+          this.view.updateCornerAnnotation({
+            sliceIndex: this.activeRepresentation.getSliceIndex(),
+          });
+        }
+        if (
+          this.activeRepresentation &&
+          this.activeRepresentation.getColorWindow
+        ) {
+          this.view.updateCornerAnnotation({
+            colorWindow: this.activeRepresentation.getColorWindow(),
+            colorLevel: this.activeRepresentation.getColorLevel(),
+          });
         }
       });
     }
@@ -103,6 +115,15 @@ export default class Layout2D extends React.Component {
     if (this.activeRepresentation && this.activeRepresentation.getSliceIndex) {
       this.slider.setValues(this.activeRepresentation.getSliceIndexValues());
       this.slider.setValue(Number(this.activeRepresentation.getSliceIndex()));
+      this.view.updateCornerAnnotation({
+        sliceIndex: this.activeRepresentation.getSliceIndex(),
+      });
+    }
+    if (this.activeRepresentation && this.activeRepresentation.getColorWindow) {
+      this.view.updateCornerAnnotation({
+        colorWindow: this.activeRepresentation.getColorWindow(),
+        colorLevel: this.activeRepresentation.getColorLevel(),
+      });
     }
   }
 

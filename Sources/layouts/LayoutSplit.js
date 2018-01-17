@@ -7,12 +7,14 @@ import style from './vtk-layout.mcss';
 
 export default function LayoutSplit(props) {
   return (
-    <div className={`${style.splitRow} ${props.className}`}>
-      <div className={style.view}>
-        <Layout2D pipelineManager={props.pipelineManager} />
-      </div>
-      <div className={style.view}>
-        <Layout3D pipelineManager={props.pipelineManager} />
+    <div className={`${style.quadRoot} ${props.className}`}>
+      <div className={`${style.splitRow} ${props.className}`}>
+        <div className={style.view}>
+          <Layout2D pipelineManager={props.pipelineManager} />
+        </div>
+        <div className={style.view}>
+          <Layout3D pipelineManager={props.pipelineManager} />
+        </div>
       </div>
     </div>
   );

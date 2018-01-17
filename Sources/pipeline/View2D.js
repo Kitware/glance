@@ -2,6 +2,7 @@ import macro from 'vtk.js/Sources/macro';
 import vtkMatrixBuilder from 'vtk.js/Sources/Common/Core/MatrixBuilder';
 
 import AbstractView from './AbstractView';
+import Palettes from '../Palettes';
 
 // ----------------------------------------------------------------------------
 // vtk2DView methods
@@ -35,6 +36,8 @@ function vtk2DView(publicAPI, model) {
     while (count--) {
       publicAPI.removeRepresentation(model.representations[count]);
     }
+
+    publicAPI.updateCornerAnnotation({ axis: 'XYZ'[axisIndex] });
   };
 
   publicAPI.rotate = (angle) => {
@@ -60,6 +63,15 @@ function vtk2DView(publicAPI, model) {
   };
 
   publicAPI.updateOrientation(model.axis, model.orientation, model.viewUp);
+
+  // Setup default corner annotation
+  /* eslint-disable no-template-curly-in-string */
+  publicAPI.setCornerAnnotation(
+    'nw',
+    'Orientation ${axis}<br>Slice ${sliceIndex}'
+  );
+  publicAPI.setCornerAnnotation('se', 'CW ${colorWindow}<br>CL ${colorLevel}');
+  /* eslint-enable no-template-curly-in-string */
 }
 
 // ----------------------------------------------------------------------------
@@ -85,7 +97,19 @@ export function extend(publicAPI, model, initialValues = {}) {
   // Object specific methods
   vtk2DView(publicAPI, model);
 
-  macro.proxy(publicAPI, model, 'View 2D');
+  macro.proxy(publicAPI, model, 'View 2D', [
+    {
+      label: 'Background Color',
+      name: 'background',
+      propType: 'Color',
+      type: 'double',
+      size: 3,
+      doc: 'RGB mapping of the background color with values between 0 and 1.0',
+      domain: {
+        palette: Palettes.extended.concat('#ffffff00'),
+      },
+    },
+  ]);
 }
 // ----------------------------------------------------------------------------
 

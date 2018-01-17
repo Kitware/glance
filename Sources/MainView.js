@@ -10,8 +10,9 @@ import style from './pv-explorer.mcss';
 import icons from './icons';
 import vtkPipelineManager from './pipeline/PipelineManager';
 
-import PipelineEditor from './controls/PipelineEditor';
 import FileLoader from './controls/FileLoader';
+import Informations from './controls/Informations';
+import PipelineEditor from './controls/PipelineEditor';
 
 const { Header, Sider, Content } = Layout;
 const { TabPane } = Tabs;
@@ -161,7 +162,7 @@ export default class MainView extends React.Component {
                 tab={<Icon type="info" style={{ marginRight: '0' }} />}
                 key="informations"
               >
-                Informations
+                <Informations pipelineManager={this.pipelineManager} />
               </TabPane>
             </Tabs>
           </Sider>

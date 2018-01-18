@@ -99,6 +99,16 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   macro.proxy(publicAPI, model, 'View 2D', [
     {
+      label: 'Annotation opacity',
+      name: 'annotationOpacity',
+      widget: 'slider',
+      type: 'double',
+      size: 1,
+      doc: 'Control opaity of annotation overlay',
+      domain: { min: 0, max: 1, step: 0.01 },
+      advanced: true,
+    },
+    {
       label: 'Background Color',
       name: 'background',
       propType: 'Color',

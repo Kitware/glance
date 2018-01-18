@@ -17,7 +17,6 @@ import vtkTrackballZoom from 'vtk.js/Sources/Interaction/Manipulators/TrackballZ
 function vtkView(publicAPI, model) {
   // Set our className
   model.classHierarchy.push('vtkView');
-  model.ui = [];
 
   // Setup --------------------------------------------------------------------
   model.renderWindow = vtkRenderWindow.newInstance();
@@ -178,6 +177,27 @@ function vtkView(publicAPI, model) {
 
   publicAPI.updateCornerAnnotation = (meta) =>
     model.cornerAnnotation.updateMetadata(meta);
+
+  publicAPI.setAnnotationOpacity = (opacity) => {
+    if (model.annotationOpacity !== Number(opacity)) {
+      model.annotationOpacity = Number(opacity);
+      model.cornerAnnotation.getAnnotationContainer().style.opacity = opacity;
+      publicAPI.modified();
+    }
+  };
+
+  function updateAnnotationColor() {
+    const [r, g, b] = model.renderer.getBackground();
+    model.cornerAnnotation.getAnnotationContainer().style.color =
+      r + g + b > 1.5 ? 'black' : 'white';
+  }
+  updateAnnotationColor();
+
+  publicAPI.setBackground = macro.chain(
+    model.renderer.setBackground,
+    updateAnnotationColor
+  );
+  publicAPI.getBackground = model.renderer.getBackground;
 }
 
 // ----------------------------------------------------------------------------
@@ -187,6 +207,7 @@ function vtkView(publicAPI, model) {
 const DEFAULT_VALUES = {
   representations: [],
   sectionName: 'view',
+  annotationOpacity: 1,
 };
 
 // ----------------------------------------------------------------------------
@@ -207,14 +228,11 @@ function extend(publicAPI, model, initialValues = {}) {
     'useParallelRendering',
     'camera',
     'cornerAnnotation',
+    'annotationOpacity',
   ]);
 
   // Object specific methods
   vtkView(publicAPI, model);
-
-  macro.proxyPropertyMapping(publicAPI, model, {
-    background: { modelKey: 'renderer', property: 'background' },
-  });
 }
 
 // ----------------------------------------------------------------------------

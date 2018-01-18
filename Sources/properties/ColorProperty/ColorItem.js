@@ -42,5 +42,6 @@ ColorItem.defaultProps = {
     textAlign: 'center',
     lineHeight: '20px',
     borderRadius: '50%',
+    cursor: 'pointer',
   },
 };

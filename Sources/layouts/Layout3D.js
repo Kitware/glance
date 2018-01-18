@@ -15,6 +15,8 @@ export default class Layout3D extends React.Component {
     this.subscription = this.view.getInteractor().onAnimation(() => {
       this.props.pipelineManager.setActiveViewId(this.view.getProxyId());
     });
+
+    this.toggleOrientationMarker = this.toggleOrientationMarker.bind(this);
   }
 
   componentDidMount() {
@@ -38,6 +40,12 @@ export default class Layout3D extends React.Component {
     this.props.pipelineManager.unregisterView(this.view);
   }
 
+  toggleOrientationMarker() {
+    const orientationAxes = !this.view.getOrientationAxes();
+    this.view.setOrientationAxes(orientationAxes);
+    this.view.renderLater();
+  }
+
   render() {
     return (
       <div
@@ -49,8 +57,18 @@ export default class Layout3D extends React.Component {
         }
       >
         <div className={style.renderWindowToolbar}>
+          <Button
+            size="small"
+            icon="camera-o"
+            onClick={this.view.openCaptureImage}
+          />
           <label className={style.renderWindowTitle}>{this.props.title}</label>
           <section className={style.renderWindowActions}>
+            <Button
+              size="small"
+              icon="global"
+              onClick={this.toggleOrientationMarker}
+            />
             <Button size="small" icon="scan" onClick={this.view.resetCamera} />
           </section>
         </div>

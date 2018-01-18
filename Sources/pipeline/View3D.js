@@ -43,6 +43,15 @@ export function extend(publicAPI, model, initialValues = {}) {
         palette: Palettes.spectral.concat('fff', '000', '#ffffff00'),
       },
     },
+    {
+      label: 'Orientation Axes',
+      name: 'orientationAxes',
+      widget: 'checkbox',
+      type: 'boolean',
+      advanced: 1,
+      size: 1,
+      doc: 'Toggle orientation axes visibility',
+    },
   ]);
 }
 // ----------------------------------------------------------------------------

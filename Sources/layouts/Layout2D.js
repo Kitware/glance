@@ -36,9 +36,10 @@ export default class Layout2D extends React.Component {
     });
 
     // Bind callbacks
-    this.updateOrientation = this.updateOrientation.bind(this);
-    this.rotate = this.rotate.bind(this);
     this.onActiveSourceChange = this.onActiveSourceChange.bind(this);
+    this.rotate = this.rotate.bind(this);
+    this.toggleOrientationMarker = this.toggleOrientationMarker.bind(this);
+    this.updateOrientation = this.updateOrientation.bind(this);
 
     // Subscribe bind function
     this.subscriptions.push(
@@ -141,6 +142,12 @@ export default class Layout2D extends React.Component {
     this.view.rotate(90);
   }
 
+  toggleOrientationMarker() {
+    const orientationAxes = !this.view.getOrientationAxes();
+    this.view.setOrientationAxes(orientationAxes);
+    this.view.renderLater();
+  }
+
   render() {
     return (
       <div
@@ -152,6 +159,11 @@ export default class Layout2D extends React.Component {
         }
       >
         <div className={style.renderWindowToolbar}>
+          <Button
+            size="small"
+            icon="camera-o"
+            onClick={this.view.openCaptureImage}
+          />
           <label className={style.renderWindowTitle}>{this.props.title}</label>
           <section className={style.renderWindowActions}>
             {this.props.orientations.map((o, i) => (
@@ -164,6 +176,11 @@ export default class Layout2D extends React.Component {
                 {o.label}
               </div>
             ))}
+            <Button
+              size="small"
+              icon="global"
+              onClick={this.toggleOrientationMarker}
+            />
             <Button
               size="small"
               icon="compass"

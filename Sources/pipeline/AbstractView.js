@@ -1,7 +1,9 @@
 import macro from 'vtk.js/Sources/macro';
+import vtkAnnotatedCubeActor from 'vtk.js/Sources/Rendering/Core/AnnotatedCubeActor';
 import vtkCornerAnnotation from 'vtk.js/Sources/Interaction/UI/CornerAnnotation';
 import vtkInteractorStyleManipulator from 'vtk.js/Sources/Interaction/Style/InteractorStyleManipulator';
 import vtkOpenGLRenderWindow from 'vtk.js/Sources/Rendering/OpenGL/RenderWindow';
+import vtkOrientationMarkerWidget from 'vtk.js/Sources/Interaction/Widgets/OrientationMarkerWidget';
 import vtkRenderer from 'vtk.js/Sources/Rendering/Core/Renderer';
 import vtkRenderWindow from 'vtk.js/Sources/Rendering/Core/RenderWindow';
 import vtkRenderWindowInteractor from 'vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
@@ -73,6 +75,49 @@ function vtkView(publicAPI, model) {
   );
   model.camera = model.renderer.getActiveCamera();
   model.camera.setParallelProjection(!!model.useParallelRendering);
+
+  // Orientation a cube setup -------------------------------------------------
+
+  model.orientationAxes = vtkAnnotatedCubeActor.newInstance();
+  model.orientationAxes.setDefaultStyle({
+    fontStyle: 'bold',
+    fontFamily: 'Arial',
+    fontColor: 'black',
+    fontSizeScale: (res) => res / 2,
+    faceColor: 'white',
+    edgeThickness: 0.1,
+    edgeColor: 'black',
+    resolution: 400,
+  });
+
+  model.orientationAxes.setXMinusFaceProperty({
+    text: 'X-',
+    faceColor: 'yellow',
+  });
+  model.orientationAxes.setXPlusFaceProperty({
+    text: 'X+',
+    faceColor: 'yellow',
+  });
+  model.orientationAxes.setYMinusFaceProperty({ text: 'Y-', faceColor: 'red' });
+  model.orientationAxes.setYPlusFaceProperty({ text: 'Y+', faceColor: 'red' });
+  model.orientationAxes.setZMinusFaceProperty({
+    text: 'Z-',
+    faceColor: '#008000',
+  });
+  model.orientationAxes.setZPlusFaceProperty({
+    text: 'Z+',
+    faceColor: '#008000',
+  });
+
+  model.orientationWidget = vtkOrientationMarkerWidget.newInstance({
+    actor: model.orientationAxes,
+    interactor: model.renderWindow.getInteractor(),
+  });
+  model.orientationWidget.setEnabled(true);
+  model.orientationWidget.setViewportCorner(
+    vtkOrientationMarkerWidget.Corners.BOTTOM_LEFT
+  );
+  model.orientationWidget.setViewportSize(0.1);
 
   // API ----------------------------------------------------------------------
 
@@ -166,6 +211,15 @@ function vtkView(publicAPI, model) {
 
   publicAPI.captureImage = () => model.renderWindow.captureImages()[0];
 
+  publicAPI.openCaptureImage = (target = '_blank') => {
+    const image = new Image();
+    image.src = publicAPI.captureImage();
+    const w = window.open('', target);
+    w.document.write(image.outerHTML);
+    w.document.title = 'vtk.js Image Capture';
+    window.focus();
+  };
+
   // --------------------------------------------------------------------------
 
   publicAPI.setCornerAnnotation = (corner, templateString) => {
@@ -233,6 +287,10 @@ function extend(publicAPI, model, initialValues = {}) {
 
   // Object specific methods
   vtkView(publicAPI, model);
+
+  macro.proxyPropertyMapping(publicAPI, model, {
+    orientationAxes: { modelKey: 'orientationWidget', property: 'enabled' },
+  });
 }
 
 // ----------------------------------------------------------------------------

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { Button, Icon } from 'antd';
 
-import vtkSource from '../../pipeline/Source';
 import ReaderFactory from '../../io/ReaderFactory';
 import RawReader from './RawReader';
 import style from './FileLoader.mcss';
@@ -27,15 +26,14 @@ export default class FileLoader extends React.Component {
       (file) => {
         ReaderFactory.loadFile(file).then(
           (reader) => {
-            const source = vtkSource.newInstance();
-            source.setInput(reader);
-            source.setName(file.name);
-            this.props.pipelineManager.addSource(source);
-            this.props.pipelineManager.addSourceToViews(source.getProxyId());
-
-            if (this.props.pipelineManager.getNumberOfSources() === 1) {
-              this.props.pipelineManager.resetCameraViews();
-            }
+            const source = this.props.proxyManager.createProxy(
+              'Sources',
+              'TrivialProducer',
+              { name: file.name }
+            );
+            source.setInputAlgorithm(reader);
+            this.props.proxyManager.createRepresentationInAllViews(source);
+            this.props.proxyManager.renderAllViews();
             this.setState({ file: null });
             this.props.updateTab('pipeline');
           },
@@ -53,23 +51,20 @@ export default class FileLoader extends React.Component {
       this.setState({ file: null });
       return;
     }
-    const source = vtkSource.newInstance();
-    source.setDataset(ds);
-    source.setName(this.state.file.name);
+    const source = this.props.proxyManager.createProxy(
+      'Sources',
+      'TrivialProducer',
+      { name: this.state.file.name }
+    );
+    source.setInputData(ds);
 
-    this.props.pipelineManager.addSource(source);
-    this.props.pipelineManager.addSourceToViews(source.getProxyId());
-
-    if (this.props.pipelineManager.getNumberOfSources() === 1) {
-      this.props.pipelineManager.resetCameraViews();
-    }
+    this.props.proxyManager.createRepresentationInAllViews(source);
+    this.props.proxyManager.renderAllViews();
     this.setState({ file: null });
     this.props.updateTab('pipeline');
   }
 
   updateReader(e) {
-    const ext = e.target.value;
-    console.log('use reader', ext);
     this.setState({ file: null });
   }
 
@@ -88,11 +83,11 @@ export default class FileLoader extends React.Component {
 }
 
 FileLoader.propTypes = {
-  pipelineManager: PropTypes.object,
+  proxyManager: PropTypes.object,
   updateTab: PropTypes.func,
 };
 
 FileLoader.defaultProps = {
-  pipelineManager: null,
+  proxyManager: null,
   updateTab: () => {},
 };

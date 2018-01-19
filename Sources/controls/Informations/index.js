@@ -7,12 +7,9 @@ import FieldData from './FieldData';
 
 import style from './Informations.mcss';
 
-const NO_ACTIVE_SOURCE = { source: null };
-
 export default function Informations(props) {
   const output = [];
-  const { source } =
-    props.pipelineManager.getActiveSource() || NO_ACTIVE_SOURCE;
+  const source = props.proxyManager.getActiveSource();
   const dataset = source ? source.getDataset() : null;
 
   if (source) {
@@ -44,9 +41,9 @@ export default function Informations(props) {
 }
 
 Informations.propTypes = {
-  pipelineManager: PropTypes.object,
+  proxyManager: PropTypes.object,
 };
 
 Informations.defaultProps = {
-  pipelineManager: null,
+  proxyManager: null,
 };

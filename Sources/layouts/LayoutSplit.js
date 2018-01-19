@@ -10,10 +10,10 @@ export default function LayoutSplit(props) {
     <div className={`${style.quadRoot} ${props.className}`}>
       <div className={`${style.splitRow} ${props.className}`}>
         <div className={style.view}>
-          <Layout2D pipelineManager={props.pipelineManager} />
+          <Layout2D proxyManager={props.proxyManager} />
         </div>
         <div className={style.view}>
-          <Layout3D pipelineManager={props.pipelineManager} />
+          <Layout3D proxyManager={props.proxyManager} />
         </div>
       </div>
     </div>
@@ -21,11 +21,11 @@ export default function LayoutSplit(props) {
 }
 
 LayoutSplit.propTypes = {
-  pipelineManager: PropTypes.object,
+  proxyManager: PropTypes.object,
   className: PropTypes.string,
 };
 
 LayoutSplit.defaultProps = {
-  pipelineManager: null,
+  proxyManager: null,
   className: '',
 };

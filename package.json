@@ -14,7 +14,7 @@
     "main": "./Distribution/pv-web-viewer.js",
     "dependencies": {
         "shelljs": "0.7.8",
-        "vtk.js": "5.14.0",
+        "vtk.js": "5.15.0",
         "font-awesome": "4.5.0",
         "monologue.js": "0.3.5",
         "mout": "1.0.0",
@@ -39,7 +39,7 @@
         "doc": "kw-doc -c ./Documentation/config.js",
         "doc:www": "npm t -- --single-run && kw-doc -c ./Documentation/config.js -s",
         "doc:publish": "kw-doc -c ./Documentation/config.js -mp",
-        "deploy": "gh-pages -d Distribution --rep https://${GH_TOKEN}@github.com/Kitware/pv-web-viewer.git",
+        "deploy": "gh-pages -d Distribution --repo https://${GH_TOKEN}@github.com/Kitware/pv-web-viewer.git",
         "start": "webpack-dev-server",
         "build": "webpack --progress --colors",
         "build:debug": "webpack --progress --colors --display-modules",

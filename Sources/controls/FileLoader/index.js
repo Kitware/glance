@@ -21,25 +21,34 @@ export default class FileLoader extends React.Component {
   }
 
   loadFile() {
-    ReaderFactory.openFile(
+    ReaderFactory.openFiles(
       ['raw'].concat(ReaderFactory.listSupportedExtensions()),
-      (file) => {
-        ReaderFactory.loadFile(file).then(
-          ({ reader, sourceType }) => {
-            const source = this.props.proxyManager.createProxy(
-              'Sources',
-              'TrivialProducer',
-              { name: file.name }
-            );
-            source.setInputAlgorithm(reader, sourceType);
-            this.props.proxyManager.createRepresentationInAllViews(source);
-            this.props.proxyManager.renderAllViews();
+      (files) => {
+        ReaderFactory.loadFiles(files).then(
+          (readers) => {
+            for (let i = 0; i < readers.length; i++) {
+              const { reader, sourceType, name } = readers[i];
+              if (reader) {
+                const source = this.props.proxyManager.createProxy(
+                  'Sources',
+                  'TrivialProducer',
+                  { name }
+                );
+                source.setInputAlgorithm(reader, sourceType);
+                this.props.proxyManager.createRepresentationInAllViews(source);
+                this.props.proxyManager.renderAllViews();
+              }
+            }
             this.setState({ file: null });
             this.props.updateTab('pipeline');
           },
           () => {
             // No reader found
-            this.setState({ file });
+            if (files.length === 1) {
+              this.setState({ file: files[0] });
+            } else {
+              this.setState({ file: null });
+            }
           }
         );
       }

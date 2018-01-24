@@ -39,23 +39,24 @@ function listSupportedExtensions() {
 
 // ----------------------------------------------------------------------------
 
-let fileCallback = null;
+let filesCallback = null;
 
 function handleFile(e) {
-  if (fileCallback) {
-    fileCallback(e.target.files[0]);
+  if (filesCallback) {
+    filesCallback(e.target.files);
   }
-  fileCallback = null;
+  filesCallback = null;
 }
 
 const HIDDEN_FILE_ELEMENT = document.createElement('input');
 HIDDEN_FILE_ELEMENT.setAttribute('type', 'file');
+HIDDEN_FILE_ELEMENT.setAttribute('multiple', 'multiple');
 HIDDEN_FILE_ELEMENT.addEventListener('change', handleFile);
 
 // ----------------------------------------------------------------------------
 
-function openFile(extensions, onFileCallback) {
-  fileCallback = onFileCallback;
+function openFiles(extensions, onFilesCallback) {
+  filesCallback = onFilesCallback;
   HIDDEN_FILE_ELEMENT.setAttribute(
     'accept',
     extensions.map((t) => `.${t}`).join(',')
@@ -65,8 +66,7 @@ function openFile(extensions, onFileCallback) {
 
 // ----------------------------------------------------------------------------
 
-function loadFile(file) {
-  HIDDEN_FILE_ELEMENT.value = null;
+function readFile(file) {
   return new Promise((resolve, reject) => {
     const readerMapping = getReader(file);
     if (readerMapping) {
@@ -75,7 +75,7 @@ function loadFile(file) {
       const io = new FileReader();
       io.onload = function onLoad(e) {
         reader[parseMethod](io.result);
-        resolve({ reader, sourceType });
+        resolve({ reader, sourceType, name: file.name });
       };
       io[readMethod](file);
     } else {
@@ -86,9 +86,20 @@ function loadFile(file) {
 
 // ----------------------------------------------------------------------------
 
+function loadFiles(files) {
+  const promises = [];
+  for (let i = 0; i < files.length; i++) {
+    promises.push(readFile(files[i]));
+  }
+  HIDDEN_FILE_ELEMENT.value = null;
+  return Promise.all(promises);
+}
+
+// ----------------------------------------------------------------------------
+
 export default {
-  openFile,
-  loadFile,
+  openFiles,
+  loadFiles,
   registerReader,
   listReaders,
   listSupportedExtensions,

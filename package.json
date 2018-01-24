@@ -29,7 +29,8 @@
         "react": "16.1.1",
         "react-dom": "16.1.1",
         "webpack-bundle-analyzer": "2.9.1",
-        "http-server": "0.10.0"
+        "http-server": "0.10.0",
+        "gh-pages": "1.1.0"
     },
     "scripts": {
         "validate": "prettier --config ./prettier.config.js --list-different \"Sources/**/*.js\"",
@@ -38,6 +39,7 @@
         "doc": "kw-doc -c ./Documentation/config.js",
         "doc:www": "npm t -- --single-run && kw-doc -c ./Documentation/config.js -s",
         "doc:publish": "kw-doc -c ./Documentation/config.js -mp",
+        "deploy": "gh-pages -d Distribution",
         "start": "webpack-dev-server",
         "build": "webpack --progress --colors",
         "build:debug": "webpack --progress --colors --display-modules",

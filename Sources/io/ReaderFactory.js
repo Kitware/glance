@@ -1,7 +1,20 @@
 const READER_MAPPING = {};
 
-function registerReader(extension, name, vtkReader, readMethod, parseMethod) {
-  READER_MAPPING[extension] = { name, vtkReader, readMethod, parseMethod };
+function registerReader(
+  extension,
+  name,
+  vtkReader,
+  readMethod,
+  parseMethod,
+  sourceType
+) {
+  READER_MAPPING[extension] = {
+    name,
+    vtkReader,
+    readMethod,
+    parseMethod,
+    sourceType,
+  };
 }
 
 function getReader(file) {
@@ -57,12 +70,12 @@ function loadFile(file) {
   return new Promise((resolve, reject) => {
     const readerMapping = getReader(file);
     if (readerMapping) {
-      const { vtkReader, readMethod, parseMethod } = readerMapping;
+      const { vtkReader, readMethod, parseMethod, sourceType } = readerMapping;
       const reader = vtkReader.newInstance();
       const io = new FileReader();
       io.onload = function onLoad(e) {
         reader[parseMethod](io.result);
-        resolve(reader);
+        resolve({ reader, sourceType });
       };
       io[readMethod](file);
     } else {

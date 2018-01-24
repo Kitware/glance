@@ -25,3 +25,9 @@
 .label {
   font-weight: bold;
 }
+
+.supportedFiles {
+  text-align: center;
+  font-style: italic;
+  font-size: 75%;
+}

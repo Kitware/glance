@@ -1,8 +1,9 @@
 import vtk2DView from 'vtk.js/Sources/Proxy/Core/View2DProxy';
 import vtkGeometryRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/GeometryRepresentationProxy';
-import vtkProxySource from 'vtk.js/Sources/Proxy/Core/SourceProxy';
 import vtkLookupTableProxy from 'vtk.js/Sources/Proxy/Core/LookupTableProxy';
+import vtkMoleculeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/MoleculeRepresentationProxy';
 import vtkPiecewiseFunctionProxy from 'vtk.js/Sources/Proxy/Core/PiecewiseFunctionProxy';
+import vtkProxySource from 'vtk.js/Sources/Proxy/Core/SourceProxy';
 import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/SliceRepresentationProxy';
 import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
 import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
@@ -279,6 +280,52 @@ export default {
           ],
         },
       },
+      Molecule: {
+        class: vtkMoleculeRepresentationProxy,
+        options: {
+          ui: [
+            {
+              label: 'Tolerance',
+              name: 'tolerance',
+              widget: 'slider',
+              type: 'double',
+              size: 1,
+              domain: { min: 0, max: 1, step: 0.01 },
+            },
+            {
+              label: 'Atomic Radius Scale Factor',
+              name: 'atomicRadiusScaleFactor',
+              widget: 'slider',
+              type: 'double',
+              size: 1,
+              domain: { min: 0, max: 1, step: 0.01 },
+            },
+            {
+              label: 'Bond Radius',
+              name: 'bondRadius',
+              widget: 'slider',
+              type: 'double',
+              size: 1,
+              domain: { min: 0, max: 1, step: 0.01 },
+            },
+            {
+              label: 'Delta Bond Factor',
+              name: 'deltaBondFactor',
+              widget: 'slider',
+              type: 'double',
+              size: 1,
+              domain: { min: 0, max: 1, step: 0.01 },
+            },
+            {
+              label: 'Hide Elements',
+              name: 'hideElements',
+              propType: 'cell',
+              type: 'str',
+              size: 1,
+            },
+          ],
+        },
+      },
     },
     Views: {
       View3D: {
@@ -343,10 +390,12 @@ export default {
     View3D: {
       vtkPolyData: { name: 'Geometry' },
       vtkImageData: { name: 'Volume' },
+      vtkMolecule: { name: 'Molecule' },
     },
     View2D: {
       vtkPolyData: { name: 'Geometry' },
       vtkImageData: { name: 'Slice' },
+      vtkMolecule: { name: 'Molecule' },
     },
   },
 };

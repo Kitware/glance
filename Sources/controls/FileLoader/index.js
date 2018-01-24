@@ -25,13 +25,13 @@ export default class FileLoader extends React.Component {
       ['raw'].concat(ReaderFactory.listSupportedExtensions()),
       (file) => {
         ReaderFactory.loadFile(file).then(
-          (reader) => {
+          ({ reader, sourceType }) => {
             const source = this.props.proxyManager.createProxy(
               'Sources',
               'TrivialProducer',
               { name: file.name }
             );
-            source.setInputAlgorithm(reader);
+            source.setInputAlgorithm(reader, sourceType);
             this.props.proxyManager.createRepresentationInAllViews(source);
             this.props.proxyManager.renderAllViews();
             this.setState({ file: null });
@@ -74,6 +74,11 @@ export default class FileLoader extends React.Component {
         <Button onClick={this.loadFile}>
           <Icon type="upload" /> Load local file
         </Button>
+        <label className={style.supportedFiles}>
+          {ReaderFactory.listSupportedExtensions()
+            .map((ext) => `*.${ext}`)
+            .join(', ')}
+        </label>
         {this.state.file ? (
           <RawReader file={this.state.file} addDataset={this.addDataset} />
         ) : null}

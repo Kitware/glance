@@ -4,16 +4,36 @@ import PropTypes from 'prop-types';
 import GitTreeWidget from 'paraviewweb/src/React/Widgets/GitTreeWidget';
 import ProxyEditorWidget from 'paraviewweb/src/React/Widgets/ProxyEditorWidget';
 
-import ColorBy from './ColorBy';
-
 import style from '../../pv-explorer.mcss';
+
+function convertSourcesToPipelineItems(sources) {
+  return sources.map((source) => {
+    const view = source.getProxyManager().getActiveView();
+    const visible = view
+      ? source
+          .getProxyManager()
+          .getRepresentation(source, view)
+          .isVisible()
+      : false;
+    const parent = source.getInputProxy()
+      ? source.getInputProxy().getProxyId()
+      : '0';
+    return {
+      name: source.getName(),
+      type: source.getType(),
+      id: source.getProxyId(),
+      parent,
+      visible,
+    };
+  });
+}
 
 export default function PipelineEditor(props) {
   return (
     <div className={style.leftPaneContent}>
       <div className={style.pipeline}>
         <GitTreeWidget
-          nodes={props.pipelineManager.listSources()}
+          nodes={convertSourcesToPipelineItems(props.proxyManager.getSources())}
           actives={props.actives}
           onChange={props.onGitChange}
           width={props.width}
@@ -21,19 +41,17 @@ export default function PipelineEditor(props) {
         />
       </div>
       <ProxyEditorWidget
-        sections={props.pipelineManager.getSections()}
-        onCollapseChange={props.pipelineManager.updateCollapseState}
+        sections={props.proxyManager.getSections()}
+        onCollapseChange={props.proxyManager.updateCollapseState}
         onApply={props.onApply}
         autoApply
-      >
-        <ColorBy pipelineManager={props.pipelineManager} />
-      </ProxyEditorWidget>
+      />
     </div>
   );
 }
 
 PipelineEditor.propTypes = {
-  pipelineManager: PropTypes.object,
+  proxyManager: PropTypes.object,
   actives: PropTypes.array,
   width: PropTypes.number,
   onGitChange: PropTypes.func,
@@ -41,7 +59,7 @@ PipelineEditor.propTypes = {
 };
 
 PipelineEditor.defaultProps = {
-  pipelineManager: null,
+  proxyManager: null,
   actives: [],
   width: 300,
   onGitChange: () => {},

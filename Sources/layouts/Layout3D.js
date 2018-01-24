@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { Button } from 'antd';
 
-import vtk3DView from '../pipeline/View3D';
 import style from './vtk-layout.mcss';
 
 export default class Layout3D extends React.Component {
@@ -11,12 +10,13 @@ export default class Layout3D extends React.Component {
     super(props);
 
     // Setup vtk.js objects
-    this.view = vtk3DView.newInstance();
-    this.subscription = this.view.getInteractor().onAnimation(() => {
-      this.props.pipelineManager.setActiveViewId(this.view.getProxyId());
-    });
+    this.view = props.proxyManager.createProxy('Views', 'View3D');
+    // this.subscription = this.view.getInteractor().onAnimation(() => {
+    //   this.props.proxyManager.setActiveView(this.view);
+    // });
 
     this.toggleOrientationMarker = this.toggleOrientationMarker.bind(this);
+    this.activateView = this.activateView.bind(this);
   }
 
   componentDidMount() {
@@ -25,7 +25,6 @@ export default class Layout3D extends React.Component {
     this.view.resetCamera();
     this.view.resize();
     window.addEventListener('resize', this.view.resize);
-    this.props.pipelineManager.registerView(this.view);
 
     this.view.resetCamera();
   }
@@ -37,7 +36,7 @@ export default class Layout3D extends React.Component {
     }
     window.removeEventListener('resize', this.view.resize);
     this.view.setContainer(null);
-    this.props.pipelineManager.unregisterView(this.view);
+    this.props.proxyManager.deleteProxy(this.view);
   }
 
   toggleOrientationMarker() {
@@ -46,15 +45,19 @@ export default class Layout3D extends React.Component {
     this.view.renderLater();
   }
 
+  activateView() {
+    this.props.proxyManager.setActiveView(this.view);
+  }
+
   render() {
     return (
       <div
         className={
-          this.props.pipelineManager.getActiveViewId() ===
-          this.view.getProxyId()
+          this.props.proxyManager.getActiveView() === this.view
             ? style.activeRenderWindowContainer
             : style.renderWindowContainer
         }
+        onClick={this.activateView}
       >
         <div className={style.renderWindowToolbar}>
           <Button
@@ -85,12 +88,12 @@ export default class Layout3D extends React.Component {
 
 Layout3D.propTypes = {
   title: PropTypes.string,
-  pipelineManager: PropTypes.object,
+  proxyManager: PropTypes.object,
   className: PropTypes.string,
 };
 
 Layout3D.defaultProps = {
   title: 'View 3D',
-  pipelineManager: null,
+  proxyManager: null,
   className: '',
 };

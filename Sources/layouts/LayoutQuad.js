@@ -16,11 +16,11 @@ export default function LayoutQuad(props) {
             axis={1}
             orientation={1}
             viewUp={[1, 0, 0]}
-            pipelineManager={props.pipelineManager}
+            proxyManager={props.proxyManager}
           />
         </div>
         <div className={style.view}>
-          <Layout3D pipelineManager={props.pipelineManager} />
+          <Layout3D proxyManager={props.proxyManager} />
         </div>
       </div>
       <div className={style.splitRow}>
@@ -30,7 +30,7 @@ export default function LayoutQuad(props) {
           axis={0}
           orientation={1}
           viewUp={[0, 1, 0]}
-          pipelineManager={props.pipelineManager}
+          proxyManager={props.proxyManager}
         />
         <Layout2D
           title="+X+Y"
@@ -38,7 +38,7 @@ export default function LayoutQuad(props) {
           axis={2}
           orientation={1}
           viewUp={[0, 1, 0]}
-          pipelineManager={props.pipelineManager}
+          proxyManager={props.proxyManager}
         />
       </div>
     </div>
@@ -46,11 +46,11 @@ export default function LayoutQuad(props) {
 }
 
 LayoutQuad.propTypes = {
-  pipelineManager: PropTypes.object,
+  proxyManager: PropTypes.object,
   className: PropTypes.string,
 };
 
 LayoutQuad.defaultProps = {
-  pipelineManager: null,
+  proxyManager: null,
   className: '',
 };

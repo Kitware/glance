@@ -31,7 +31,8 @@ script:
   - npm run build:release
   - git config --global user.name "Travis CI"
   - git config --global user.email "sebastien.jourdain@kitware.com"
-  - npm run doc:publish
+  - export GIT_PUBLISH_URL=https://${GH_TOKEN}@github.com/Kitware/pv-web-viewer.git
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then npm run doc:publish; fi
 
 after_success:
   - npm run semantic-release

@@ -70,8 +70,9 @@
 }
 
 .leftPaneContent {
+  height: calc(100vh - 105px);
   max-height: calc(100vh - 105px);
-  overflow: auto;
+  overflow: hidden;
   position: relative;
   top: -10px;
 }

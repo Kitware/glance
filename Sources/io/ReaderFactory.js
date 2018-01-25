@@ -61,6 +61,7 @@ function openFiles(extensions, onFilesCallback) {
     'accept',
     extensions.map((t) => `.${t}`).join(',')
   );
+  HIDDEN_FILE_ELEMENT.value = null;
   HIDDEN_FILE_ELEMENT.click();
 }
 
@@ -91,7 +92,6 @@ function loadFiles(files) {
   for (let i = 0; i < files.length; i++) {
     promises.push(readFile(files[i]));
   }
-  HIDDEN_FILE_ELEMENT.value = null;
   return Promise.all(promises);
 }
 

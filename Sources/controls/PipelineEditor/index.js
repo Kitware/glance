@@ -61,7 +61,7 @@ PipelineEditor.propTypes = {
 PipelineEditor.defaultProps = {
   proxyManager: null,
   actives: [],
-  width: 300,
+  width: 290,
   onGitChange: () => {},
   onApply: () => {},
 };

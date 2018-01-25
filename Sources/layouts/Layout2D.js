@@ -105,8 +105,8 @@ export default class Layout2D extends React.Component {
           this.activeRepresentation.getColorWindow
         ) {
           this.view.updateCornerAnnotation({
-            colorWindow: this.activeRepresentation.getColorWindow(),
-            colorLevel: this.activeRepresentation.getColorLevel(),
+            colorWindow: Math.round(this.activeRepresentation.getColorWindow()),
+            colorLevel: Math.round(this.activeRepresentation.getColorLevel()),
           });
         }
       });
@@ -120,8 +120,8 @@ export default class Layout2D extends React.Component {
     }
     if (this.activeRepresentation && this.activeRepresentation.getColorWindow) {
       this.view.updateCornerAnnotation({
-        colorWindow: this.activeRepresentation.getColorWindow(),
-        colorLevel: this.activeRepresentation.getColorLevel(),
+        colorWindow: Math.round(this.activeRepresentation.getColorWindow()),
+        colorLevel: Math.round(this.activeRepresentation.getColorLevel()),
       });
     }
   }

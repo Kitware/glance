@@ -14,7 +14,7 @@
     "main": "./Distribution/pv-web-viewer.js",
     "dependencies": {
         "shelljs": "0.7.8",
-        "vtk.js": "5.15.2",
+        "vtk.js": "5.15.4",
         "font-awesome": "4.5.0",
         "monologue.js": "0.3.5",
         "mout": "1.0.0",
@@ -29,17 +29,15 @@
         "react": "16.1.1",
         "react-dom": "16.1.1",
         "webpack-bundle-analyzer": "2.9.1",
-        "http-server": "0.10.0",
-        "gh-pages": "1.1.0"
+        "http-server": "0.10.0"
     },
     "scripts": {
         "validate": "prettier --config ./prettier.config.js --list-different \"Sources/**/*.js\"",
         "reformat": "prettier --config ./prettier.config.js --write \"Sources/**/*.js\"",
         "reformat-only": "prettier --single-quote --trailing-comma es5 --print-width 80 --arrow-parens always --write",
         "doc": "kw-doc -c ./Documentation/config.js",
-        "doc:www": "npm t -- --single-run && kw-doc -c ./Documentation/config.js -s",
+        "doc:www": "kw-doc -c ./Documentation/config.js -s",
         "doc:publish": "kw-doc -c ./Documentation/config.js -mp",
-        "deploy": "gh-pages -d Distribution --repo https://${GH_TOKEN}@github.com/Kitware/pv-web-viewer.git",
         "start": "webpack-dev-server",
         "build": "webpack --progress --colors",
         "build:debug": "webpack --progress --colors --display-modules",

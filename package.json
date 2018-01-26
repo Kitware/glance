@@ -1,5 +1,5 @@
 {
-    "name": "pv-web-viewer",
+    "name": "paraview-glance",
     "version": "0.0.0-semantically-release",
     "description": "Web application for Visualizing Scientific and Medical datasets",
     "repository": {

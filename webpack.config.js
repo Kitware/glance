@@ -42,6 +42,7 @@ module.exports = (env) => {
     output: {
       path: outputPath,
       filename: 'glance.js',
+      libraryTarget: 'umd',
     },
     module: {
       rules: [{ test: entry, loader: 'expose-loader?Glance' }].concat(

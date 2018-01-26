@@ -18,11 +18,6 @@ export default class Layout2D extends React.Component {
     this.view = props.proxyManager.createProxy('Views', 'View2D');
     this.view.updateOrientation(props.axis, props.orientation, props.viewUp);
     this.subscriptions = [];
-    // this.subscriptions.push(
-    //   this.view.getInteractor().onAnimation(() => {
-    //     this.props.proxyManager.setActiveView(this.view);
-    //   })
-    // );
 
     // Slider
     this.slider = vtkSlider.newInstance();

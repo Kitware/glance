@@ -1,4 +1,15 @@
+import vtkHttpDataAccessHelper from 'vtk.js/Sources/IO/Core/DataAccessHelper/HttpDataAccessHelper';
+
 const READER_MAPPING = {};
+
+const FETCH_DATA = {
+  readAsArrayBuffer(url) {
+    return vtkHttpDataAccessHelper.fetchBinary(url);
+  },
+  readAsText(url) {
+    return vtkHttpDataAccessHelper.fetchText({}, url);
+  },
+};
 
 function registerReader(
   extension,
@@ -17,8 +28,7 @@ function registerReader(
   };
 }
 
-function getReader(file) {
-  const { name } = file;
+function getReader({ name }) {
   const ext = name
     .split('.')
     .pop()
@@ -97,7 +107,26 @@ function loadFiles(files) {
 
 // ----------------------------------------------------------------------------
 
+function downloadDataset(fileName, url) {
+  return new Promise((resolve, reject) => {
+    const readerMapping = getReader({ name: fileName });
+    if (readerMapping) {
+      const { vtkReader, readMethod, parseMethod, sourceType } = readerMapping;
+      const reader = vtkReader.newInstance();
+      FETCH_DATA[readMethod](url).then((rawData) => {
+        reader[parseMethod](rawData);
+        resolve({ reader, sourceType, name: fileName });
+      });
+    } else {
+      throw new Error(`No reader found for ${fileName}`);
+    }
+  });
+}
+
+// ----------------------------------------------------------------------------
+
 export default {
+  downloadDataset,
   openFiles,
   loadFiles,
   registerReader,

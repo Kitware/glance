@@ -8,7 +8,7 @@ const sourcePath = path.join(__dirname, './Sources');
 const outputPath = path.join(__dirname, './Distribution');
 
 const linterRules = require('./Utilities/rules/linter.js');
-const explorerRules = require('./Utilities/rules/explorer.js');
+const glanceRules = require('./Utilities/rules/glance.js');
 const vtkRules = require('./Utilities/rules/vtkjs.js');
 const pvwRules = require('./Utilities/rules/paraviewweb.js');
 
@@ -41,10 +41,15 @@ module.exports = (env) => {
     entry,
     output: {
       path: outputPath,
-      filename: 'pv-web-viewer.js',
+      filename: 'glance.js',
     },
     module: {
-      rules: [].concat(linterRules, explorerRules, vtkRules, pvwRules),
+      rules: [{ test: entry, loader: 'expose-loader?Glance' }].concat(
+        linterRules,
+        glanceRules,
+        vtkRules,
+        pvwRules
+      ),
     },
     resolve: {
       modules: [path.resolve(__dirname, 'node_modules'), sourcePath],

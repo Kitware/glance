@@ -29,12 +29,17 @@ export default function Informations(props) {
       output.push(<PolyData key="ds" dataset={dataset} />);
     }
 
-    output.push(
-      <FieldData key="pd" field={dataset.getPointData()} name="Point Data" />
-    );
-    output.push(
-      <FieldData key="cd" field={dataset.getCellData()} name="Cell Data" />
-    );
+    if (dataset.getPointData) {
+      output.push(
+        <FieldData key="pd" field={dataset.getPointData()} name="Point Data" />
+      );
+    }
+
+    if (dataset.getCellData) {
+      output.push(
+        <FieldData key="cd" field={dataset.getCellData()} name="Cell Data" />
+      );
+    }
   }
 
   return output;

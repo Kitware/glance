@@ -11,7 +11,7 @@
         "url": "https://github.com/kitware/pv-web-viewer/issues"
     },
     "homepage": "https://github.com/kitware/pv-web-viewer#readme",
-    "main": "./Distribution/pv-web-viewer.js",
+    "main": "./Distribution/glance.js",
     "dependencies": {
         "shelljs": "0.7.8",
         "vtk.js": "5.15.4",
@@ -45,7 +45,7 @@
         "server": "http-server ./Distribution -p 9998",
         "bundle": "inline-source --compress false --root ./Distribution ./Distribution/index.html ./Distribution/ParaViewGlance.html",
         "commit": "git cz",
-        "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+        "semantic-release": "semantic-release"
     },
     "config": {
         "commitizen": {

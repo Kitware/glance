@@ -1,17 +1,14 @@
 import 'antd/dist/antd.css';
 
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 import { Layout, Menu, Tabs, Icon } from 'antd';
-
-import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
 import Layouts from './layouts';
 import style from './pv-explorer.mcss';
 import icons from './icons';
 
-import proxyConfiguration from './config/glanceProxyConfig';
 import FileLoader from './controls/FileLoader';
 import Informations from './controls/Informations';
 import PipelineEditor from './controls/PipelineEditor';
@@ -33,8 +30,7 @@ export default class MainView extends React.Component {
       tab: 'files',
     };
 
-    this.proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
-    this.proxyManager.onModified(() => {
+    this.props.proxyManager.onModified(() => {
       setTimeout(this.forceUpdate, 0);
     });
 
@@ -49,7 +45,7 @@ export default class MainView extends React.Component {
   }
 
   componentDidUpdate() {
-    this.proxyManager.resizeAllViews();
+    this.props.proxyManager.resizeAllViews();
   }
 
   onTabChange(tab) {
@@ -59,41 +55,41 @@ export default class MainView extends React.Component {
   onLayoutChange({ item, key, selectedKeys }) {
     this.setState({ layout: key }, () => {
       this.forceUpdate();
-      this.proxyManager.createRepresentationInAllViews();
+      this.props.proxyManager.createRepresentationInAllViews();
     });
   }
 
   onToggleControl() {
     const collapsed = !this.state.collapsed;
-    this.setState({ collapsed }, this.proxyManager.resizeAllViews);
-    setTimeout(this.proxyManager.resizeAllViews, 500);
+    this.setState({ collapsed }, this.props.proxyManager.resizeAllViews);
+    setTimeout(this.props.proxyManager.resizeAllViews, 500);
     setTimeout(this.forceUpdate, 500);
   }
 
   onGitChange(e) {
     const { id } = e.changeSet[0];
-    const source = this.proxyManager.getProxyById(id);
+    const source = this.props.proxyManager.getProxyById(id);
     if (e.type === 'visibility') {
       const { visible } = e.changeSet[0];
-      const view = this.proxyManager.getActiveView();
-      const rep = this.proxyManager.getRepresentation(source, view);
+      const view = this.props.proxyManager.getActiveView();
+      const rep = this.props.proxyManager.getRepresentation(source, view);
       rep.setVisibility(visible);
     } else if (e.type === 'delete') {
-      this.proxyManager.deleteProxy(source);
+      this.props.proxyManager.deleteProxy(source);
     } else if (e.type === 'active') {
-      this.proxyManager.setActiveSource(source);
+      this.props.proxyManager.setActiveSource(source);
     }
-    this.proxyManager.renderAllViews();
+    this.props.proxyManager.renderAllViews();
     this.forceUpdate();
   }
 
   onApply(e) {
-    this.proxyManager.applyChanges(e);
+    this.props.proxyManager.applyChanges(e);
   }
 
   render() {
     const Renderer = Layouts[this.state.layout];
-    const activeSource = this.proxyManager.getActiveSource();
+    const activeSource = this.props.proxyManager.getActiveSource();
     const actives = activeSource ? [activeSource.getProxyId()] : [];
     return (
       <Layout>
@@ -141,7 +137,7 @@ export default class MainView extends React.Component {
                 forceRender
               >
                 <PipelineEditor
-                  proxyManager={this.proxyManager}
+                  proxyManager={this.props.proxyManager}
                   actives={actives}
                   onGitChange={this.onGitChange}
                   onApply={this.onApply}
@@ -158,7 +154,7 @@ export default class MainView extends React.Component {
                 key="files"
               >
                 <FileLoader
-                  proxyManager={this.proxyManager}
+                  proxyManager={this.props.proxyManager}
                   updateTab={this.onTabChange}
                 />
               </TabPane>
@@ -166,14 +162,14 @@ export default class MainView extends React.Component {
                 tab={<Icon type="info" style={{ marginRight: '0' }} />}
                 key="informations"
               >
-                <Informations proxyManager={this.proxyManager} />
+                <Informations proxyManager={this.props.proxyManager} />
               </TabPane>
             </Tabs>
           </Sider>
           <Layout>
             <Content className={style.workspace}>
               <Renderer
-                proxyManager={this.proxyManager}
+                proxyManager={this.props.proxyManager}
                 className={style.content}
               />
             </Content>
@@ -184,6 +180,8 @@ export default class MainView extends React.Component {
   }
 }
 
-MainView.propTypes = {};
+MainView.propTypes = {
+  proxyManager: PropTypes.object.isRequired,
+};
 
 MainView.defaultProps = {};

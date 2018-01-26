@@ -15,6 +15,8 @@ import defaultConfig from './config/glanceProxyConfig';
 import MainView from './MainView';
 import ReaderFactory from './io/ReaderFactory';
 
+export const { registerReader } = ReaderFactory;
+
 export function createViewer(container, proxyConfiguration = defaultConfig) {
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
   const mainView = ReactDOM.render(

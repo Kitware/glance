@@ -27,14 +27,19 @@ export default class FileLoader extends React.Component {
         ReaderFactory.loadFiles(files).then(
           (readers) => {
             for (let i = 0; i < readers.length; i++) {
-              const { reader, sourceType, name } = readers[i];
+              const { reader, sourceType, name, dataset } = readers[i];
               if (reader) {
                 const source = this.props.proxyManager.createProxy(
                   'Sources',
                   'TrivialProducer',
                   { name }
                 );
-                source.setInputAlgorithm(reader, sourceType);
+                if (dataset) {
+                  source.setInputData(dataset, sourceType);
+                } else {
+                  source.setInputAlgorithm(reader, sourceType);
+                }
+
                 this.props.proxyManager.createRepresentationInAllViews(source);
                 this.props.proxyManager.renderAllViews();
               }

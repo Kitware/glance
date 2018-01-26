@@ -85,8 +85,10 @@ function readFile(file) {
       const reader = vtkReader.newInstance();
       const io = new FileReader();
       io.onload = function onLoad(e) {
-        reader[parseMethod](io.result);
-        resolve({ reader, sourceType, name: file.name });
+        const ds = reader[parseMethod](io.result);
+        Promise.resolve(ds).then((dataset) => {
+          resolve({ dataset, reader, sourceType, name: file.name });
+        });
       };
       io[readMethod](file);
     } else {

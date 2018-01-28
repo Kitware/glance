@@ -35,10 +35,17 @@ export function createViewer(container, proxyConfiguration = defaultConfig) {
     proxyManager.renderAllViews();
   }
 
+  function progressCallback(event) {
+    const progressPercent = Math.round(100 * event.loaded / event.total);
+    mainView.setState({ progressPercent });
+  }
+
   function openRemoteDataset(name, url, type) {
-    ReaderFactory.downloadDataset(name, url)
+    mainView.setState({ showProgress: true });
+    ReaderFactory.downloadDataset(name, url, progressCallback)
       .then(({ reader, sourceType }) => {
         addDataSet(name, reader.getOutputData(), type || sourceType);
+        mainView.setState({ showProgress: false });
       })
       .catch(console.error);
   }

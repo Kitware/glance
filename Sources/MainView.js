@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Progress } from 'antd';
 
 import Layouts from './layouts';
 import style from './pv-explorer.mcss';
@@ -25,6 +25,8 @@ export default class MainView extends React.Component {
       overlayOpacity: 100,
       collapsed: false,
       tab: 'files',
+      showProgress: false,
+      progressPercent: 0,
     };
 
     // Closure for callback
@@ -49,6 +51,12 @@ export default class MainView extends React.Component {
 
   render() {
     const Renderer = Layouts[this.state.layout];
+    let progress = null;
+
+    if (this.state.showProgress) {
+      progress = <Progress percent={this.state.progressPercent} />;
+    }
+
     return (
       <Layout>
         <Header className={style.toolbar}>

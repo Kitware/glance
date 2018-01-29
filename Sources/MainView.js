@@ -79,8 +79,7 @@ export default class MainView extends React.Component {
               </Menu.Item>
             ))}
           </Menu>
-
-          <div />
+          <div className={style.progressContainer}>{progress}</div>
         </Header>
         <Layout>
           <Sider

@@ -90,3 +90,7 @@
   overflow: hidden;
   height: calc(100vh - 64px);
 }
+
+.progressContainer {
+  width: 300px;
+}

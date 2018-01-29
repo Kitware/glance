@@ -3,18 +3,15 @@ import 'antd/dist/antd.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Layout, Menu, Tabs, Icon } from 'antd';
+import { Layout, Menu } from 'antd';
 
 import Layouts from './layouts';
 import style from './pv-explorer.mcss';
 import icons from './icons';
 
-import FileLoader from './controls/FileLoader';
-import Informations from './controls/Informations';
-import PipelineEditor from './controls/PipelineEditor';
+import Controls from './controls';
 
 const { Header, Sider, Content } = Layout;
-const { TabPane } = Tabs;
 
 const layouts = ['Layout2D', 'Layout3D', 'LayoutSplit', 'LayoutQuad'];
 
@@ -30,26 +27,10 @@ export default class MainView extends React.Component {
       tab: 'files',
     };
 
-    this.props.proxyManager.onModified(() => {
-      setTimeout(this.forceUpdate, 0);
-    });
-
     // Closure for callback
     this.onLayoutChange = this.onLayoutChange.bind(this);
     this.onToggleControl = this.onToggleControl.bind(this);
-    this.onTabChange = this.onTabChange.bind(this);
-
-    this.onGitChange = this.onGitChange.bind(this);
-    this.onApply = this.onApply.bind(this);
     this.forceUpdate = this.forceUpdate.bind(this);
-  }
-
-  componentDidUpdate() {
-    this.props.proxyManager.resizeAllViews();
-  }
-
-  onTabChange(tab) {
-    this.setState({ tab });
   }
 
   onLayoutChange({ item, key, selectedKeys }) {
@@ -66,31 +47,8 @@ export default class MainView extends React.Component {
     setTimeout(this.forceUpdate, 500);
   }
 
-  onGitChange(e) {
-    const { id } = e.changeSet[0];
-    const source = this.props.proxyManager.getProxyById(id);
-    if (e.type === 'visibility') {
-      const { visible } = e.changeSet[0];
-      const view = this.props.proxyManager.getActiveView();
-      const rep = this.props.proxyManager.getRepresentation(source, view);
-      rep.setVisibility(visible);
-    } else if (e.type === 'delete') {
-      this.props.proxyManager.deleteProxy(source);
-    } else if (e.type === 'active') {
-      this.props.proxyManager.setActiveSource(source);
-    }
-    this.props.proxyManager.renderAllViews();
-    this.forceUpdate();
-  }
-
-  onApply(e) {
-    this.props.proxyManager.applyChanges(e);
-  }
-
   render() {
     const Renderer = Layouts[this.state.layout];
-    const activeSource = this.props.proxyManager.getActiveSource();
-    const actives = activeSource ? [activeSource.getProxyId()] : [];
     return (
       <Layout>
         <Header className={style.toolbar}>
@@ -125,46 +83,12 @@ export default class MainView extends React.Component {
             collapsible
             collapsed={this.state.collapsed}
           >
-            <Tabs
-              activeKey={this.state.tab}
-              size="small"
-              className={style.compactTabs}
-              onChange={this.onTabChange}
-            >
-              <TabPane
-                tab={<Icon type="share-alt" style={{ marginRight: '0' }} />}
-                key="pipeline"
-                forceRender
-              >
-                <PipelineEditor
-                  proxyManager={this.props.proxyManager}
-                  actives={actives}
-                  onGitChange={this.onGitChange}
-                  onApply={this.onApply}
-                />
-              </TabPane>
-              <TabPane
-                tab={<Icon type="edit" style={{ marginRight: '0' }} />}
-                key="annotations"
-              >
-                Annotations
-              </TabPane>
-              <TabPane
-                tab={<Icon type="file-text" style={{ marginRight: '0' }} />}
-                key="files"
-              >
-                <FileLoader
-                  proxyManager={this.props.proxyManager}
-                  updateTab={this.onTabChange}
-                />
-              </TabPane>
-              <TabPane
-                tab={<Icon type="info" style={{ marginRight: '0' }} />}
-                key="informations"
-              >
-                <Informations proxyManager={this.props.proxyManager} />
-              </TabPane>
-            </Tabs>
+            <Controls
+              ref={(c) => {
+                this.controls = c;
+              }}
+              proxyManager={this.props.proxyManager}
+            />
           </Sider>
           <Layout>
             <Content className={style.workspace}>

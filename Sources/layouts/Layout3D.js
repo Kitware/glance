@@ -27,6 +27,8 @@ export default class Layout3D extends React.Component {
     window.addEventListener('resize', this.view.resize);
 
     this.view.resetCamera();
+
+    setTimeout(this.view.resize, 500);
   }
 
   componentWillUnmount() {

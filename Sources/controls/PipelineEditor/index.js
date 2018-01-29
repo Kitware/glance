@@ -1,67 +1,54 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import GitTreeWidget from 'paraviewweb/src/React/Widgets/GitTreeWidget';
-import ProxyEditorWidget from 'paraviewweb/src/React/Widgets/ProxyEditorWidget';
+import StatelessPipelineEditor from './Stateless';
 
-import style from '../../pv-explorer.mcss';
+export default class PipelineEditor extends React.Component {
+  constructor(props) {
+    super(props);
 
-function convertSourcesToPipelineItems(sources) {
-  return sources.map((source) => {
-    const view = source.getProxyManager().getActiveView();
-    const visible = view
-      ? source
-          .getProxyManager()
-          .getRepresentation(source, view)
-          .isVisible()
-      : false;
-    const parent = source.getInputProxy()
-      ? source.getInputProxy().getProxyId()
-      : '0';
-    return {
-      name: source.getName(),
-      type: source.getType(),
-      id: source.getProxyId(),
-      parent,
-      visible,
-    };
-  });
-}
+    // Closure for callback
+    this.onGitChange = this.onGitChange.bind(this);
+    this.onApply = this.onApply.bind(this);
+  }
 
-export default function PipelineEditor(props) {
-  return (
-    <div className={style.leftPaneContent}>
-      <div className={style.pipeline}>
-        <GitTreeWidget
-          nodes={convertSourcesToPipelineItems(props.proxyManager.getSources())}
-          actives={props.actives}
-          onChange={props.onGitChange}
-          width={props.width}
-          enableDelete
-        />
-      </div>
-      <ProxyEditorWidget
-        sections={props.proxyManager.getSections()}
-        onCollapseChange={props.proxyManager.updateCollapseState}
-        onApply={props.onApply}
-        autoApply
+  onGitChange(e) {
+    const { id } = e.changeSet[0];
+    const source = this.props.proxyManager.getProxyById(id);
+    if (e.type === 'visibility') {
+      const { visible } = e.changeSet[0];
+      const view = this.props.proxyManager.getActiveView();
+      const rep = this.props.proxyManager.getRepresentation(source, view);
+      rep.setVisibility(visible);
+    } else if (e.type === 'delete') {
+      this.props.proxyManager.deleteProxy(source);
+    } else if (e.type === 'active') {
+      this.props.proxyManager.setActiveSource(source);
+    }
+    this.props.proxyManager.renderAllViews();
+    this.forceUpdate();
+  }
+
+  onApply(e) {
+    this.props.proxyManager.applyChanges(e);
+  }
+
+  render() {
+    const activeSource = this.props.proxyManager.getActiveSource();
+    const actives = activeSource ? [activeSource.getProxyId()] : [];
+    return (
+      <StatelessPipelineEditor
+        proxyManager={this.props.proxyManager}
+        actives={actives}
+        onGitChange={this.onGitChange}
+        onApply={this.onApply}
       />
-    </div>
-  );
+    );
+  }
 }
 
 PipelineEditor.propTypes = {
-  proxyManager: PropTypes.object,
-  actives: PropTypes.array,
-  width: PropTypes.number,
-  onGitChange: PropTypes.func,
-  onApply: PropTypes.func,
+  proxyManager: PropTypes.object.isRequired,
 };
 
-PipelineEditor.defaultProps = {
-  proxyManager: null,
-  actives: [],
-  width: 290,
-  onGitChange: () => {},
-  onApply: () => {},
-};
+PipelineEditor.defaultProps = {};

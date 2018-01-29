@@ -52,6 +52,8 @@ export default class Layout2D extends React.Component {
     this.view.resize();
     window.addEventListener('resize', this.view.resize);
     this.view.resetCamera();
+
+    setTimeout(this.view.resize, 500);
   }
 
   componentWillUnmount() {

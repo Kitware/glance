@@ -13,9 +13,11 @@ import './properties';
 
 import defaultConfig from './config/glanceProxyConfig';
 import MainView from './MainView';
+import * as Controls from './controls';
 import ReaderFactory from './io/ReaderFactory';
 
 export const { registerReader } = ReaderFactory;
+export const { registerControlTab, unregisterControlTab } = Controls;
 
 export function createViewer(container, proxyConfiguration = defaultConfig) {
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
@@ -46,7 +48,7 @@ export function createViewer(container, proxyConfiguration = defaultConfig) {
   }
 
   function updateTab(tabName = 'pipeline') {
-    mainView.onTabChange(tabName);
+    mainView.controls.changeTabTo(tabName);
   }
 
   function processURLArgs() {

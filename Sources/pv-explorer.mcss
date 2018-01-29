@@ -92,5 +92,7 @@
 }
 
 .progressContainer {
-  width: 300px;
+  flex: none;
+  position: relative;
+  left: 40px;
 }

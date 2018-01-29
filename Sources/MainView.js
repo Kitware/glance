@@ -54,7 +54,13 @@ export default class MainView extends React.Component {
     let progress = null;
 
     if (this.state.showProgress) {
-      progress = <Progress percent={this.state.progressPercent} />;
+      progress = (
+        <Progress
+          type="circle"
+          width={50}
+          percent={this.state.progressPercent}
+        />
+      );
     }
 
     return (

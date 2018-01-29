@@ -56,7 +56,7 @@ export function createViewer(container, proxyConfiguration = defaultConfig) {
       type,
       collapse,
       tab,
-    } = vtkURLExtract.extractURLParameters(false);
+    } = vtkURLExtract.extractURLParameters();
     if (name && url) {
       openRemoteDataset(name, url, type);
       updateTab(tab);

@@ -3,11 +3,11 @@ import vtkHttpDataAccessHelper from 'vtk.js/Sources/IO/Core/DataAccessHelper/Htt
 const READER_MAPPING = {};
 
 const FETCH_DATA = {
-  readAsArrayBuffer(url) {
-    return vtkHttpDataAccessHelper.fetchBinary(url);
+  readAsArrayBuffer(url, progressCallback) {
+    return vtkHttpDataAccessHelper.fetchBinary(url, { progressCallback });
   },
-  readAsText(url) {
-    return vtkHttpDataAccessHelper.fetchText({}, url);
+  readAsText(url, progressCallback) {
+    return vtkHttpDataAccessHelper.fetchText({}, url, { progressCallback });
   },
 };
 
@@ -109,13 +109,13 @@ function loadFiles(files) {
 
 // ----------------------------------------------------------------------------
 
-function downloadDataset(fileName, url) {
+function downloadDataset(fileName, url, progressCallback) {
   return new Promise((resolve, reject) => {
     const readerMapping = getReader({ name: fileName });
     if (readerMapping) {
       const { vtkReader, readMethod, parseMethod, sourceType } = readerMapping;
       const reader = vtkReader.newInstance();
-      FETCH_DATA[readMethod](url).then((rawData) => {
+      FETCH_DATA[readMethod](url, progressCallback).then((rawData) => {
         reader[parseMethod](rawData);
         resolve({ reader, sourceType, name: fileName });
       });

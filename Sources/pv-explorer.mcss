@@ -90,3 +90,9 @@
   overflow: hidden;
   height: calc(100vh - 64px);
 }
+
+.progressContainer {
+  flex: none;
+  position: relative;
+  left: 40px;
+}

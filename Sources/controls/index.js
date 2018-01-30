@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Tabs, Icon } from 'antd';
 
 import FileLoader from './FileLoader';
+import Filters from './Filters';
 import Informations from './Informations';
 import PipelineEditor from './PipelineEditor';
 
@@ -53,6 +54,7 @@ export function getDefaultActiveTab() {
 
 registerControlTab('pipeline', PipelineEditor, 10, 'share-alt');
 registerControlTab('files', FileLoader, 5, 'file-text', true); // Default active one
+registerControlTab('filters', Filters, 6, 'plus');
 registerControlTab('informations', Informations, 0, 'info');
 
 // ----------------------------------------------------------------------------

@@ -54,6 +54,7 @@ export default class ExecuteProperty extends React.Component {
       <Button
         style={{ width: 'calc(100% - 20px)', margin: '0 10px' }}
         onClick={this.onClick}
+        disabled={this.props.data.value[0] === false ? 'disabled' : ''}
       >
         {this.state.ui.label}
       </Button>

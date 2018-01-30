@@ -364,6 +364,12 @@ export default {
               size: 1,
               doc: 'Toggle orientation axes visibility',
             },
+            // {
+            //   label: 'ResetCamera',
+            //   name: 'resetCamera',
+            //   propType: 'ExecuteProperty',
+            //   size: 1,
+            // },
           ],
         },
       },

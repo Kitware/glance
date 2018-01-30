@@ -34,7 +34,7 @@ export default class FileLoader extends React.Component {
                   'TrivialProducer',
                   { name }
                 );
-                if (dataset) {
+                if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
                   source.setInputData(dataset, sourceType);
                 } else {
                   source.setInputAlgorithm(reader, sourceType);

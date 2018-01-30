@@ -11,9 +11,9 @@ export default class Layout3D extends React.Component {
 
     // Setup vtk.js objects
     this.view = props.proxyManager.createProxy('Views', 'View3D');
-    // this.subscription = this.view.getInteractor().onAnimation(() => {
-    //   this.props.proxyManager.setActiveView(this.view);
-    // });
+    this.subscription = this.props.proxyManager.onActiveViewChange(() =>
+      this.forceUpdate()
+    );
 
     this.toggleOrientationMarker = this.toggleOrientationMarker.bind(this);
     this.activateView = this.activateView.bind(this);

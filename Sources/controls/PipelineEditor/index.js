@@ -10,7 +10,18 @@ export default class PipelineEditor extends React.Component {
     // Closure for callback
     this.onGitChange = this.onGitChange.bind(this);
     this.onApply = this.onApply.bind(this);
-    this.forceUpdate = this.forceUpdate.bind(this);
+    this.flush = () => this.forceUpdate();
+
+    this.subscriptions = [
+      props.proxyManager.onActiveSourceChange(this.flush),
+      props.proxyManager.onActiveViewChange(this.flush),
+    ];
+  }
+
+  componentWillUnmount() {
+    while (this.subscriptions.length) {
+      this.subscriptions.pop().unsubscribe();
+    }
   }
 
   onGitChange(e) {
@@ -27,12 +38,12 @@ export default class PipelineEditor extends React.Component {
       this.props.proxyManager.setActiveSource(source);
     }
     this.props.proxyManager.renderAllViews();
-    setTimeout(this.forceUpdate, 0);
+    setTimeout(this.flush, 0);
   }
 
   onApply(e) {
     this.props.proxyManager.applyChanges(e);
-    setTimeout(this.forceUpdate, 0);
+    setTimeout(this.flush, 0);
   }
 
   render() {

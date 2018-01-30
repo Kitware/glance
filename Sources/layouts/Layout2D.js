@@ -35,11 +35,13 @@ export default class Layout2D extends React.Component {
     this.toggleOrientationMarker = this.toggleOrientationMarker.bind(this);
     this.updateOrientation = this.updateOrientation.bind(this);
     this.activateView = this.activateView.bind(this);
+    this.flush = () => this.forceUpdate();
 
     // Subscribe bind function
-    this.subscriptions.push(
-      this.props.proxyManager.onActiveSourceChange(this.onActiveSourceChange)
-    );
+    this.subscriptions = [
+      this.props.proxyManager.onActiveSourceChange(this.onActiveSourceChange),
+      this.props.proxyManager.onActiveViewChange(this.flush),
+    ];
 
     this.onActiveSourceChange();
   }

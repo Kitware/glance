@@ -9,12 +9,8 @@ import style from '../../pv-explorer.mcss';
 function convertSourcesToPipelineItems(sources) {
   return sources.map((source) => {
     const view = source.getProxyManager().getActiveView();
-    const visible = view
-      ? source
-          .getProxyManager()
-          .getRepresentation(source, view)
-          .isVisible()
-      : false;
+    const rep = source.getProxyManager().getRepresentation(source, view);
+    const visible = view && rep ? rep.isVisible() : false;
     const parent = source.getInputProxy()
       ? source.getInputProxy().getProxyId()
       : '0';

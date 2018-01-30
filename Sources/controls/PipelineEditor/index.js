@@ -10,6 +10,7 @@ export default class PipelineEditor extends React.Component {
     // Closure for callback
     this.onGitChange = this.onGitChange.bind(this);
     this.onApply = this.onApply.bind(this);
+    this.forceUpdate = this.forceUpdate.bind(this);
   }
 
   onGitChange(e) {
@@ -26,11 +27,12 @@ export default class PipelineEditor extends React.Component {
       this.props.proxyManager.setActiveSource(source);
     }
     this.props.proxyManager.renderAllViews();
-    this.forceUpdate();
+    setTimeout(this.forceUpdate, 0);
   }
 
   onApply(e) {
     this.props.proxyManager.applyChanges(e);
+    setTimeout(this.forceUpdate, 0);
   }
 
   render() {

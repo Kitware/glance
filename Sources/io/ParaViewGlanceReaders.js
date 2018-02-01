@@ -15,7 +15,8 @@ ReaderFactory.registerReader(
   'Polydata Reader',
   vtkXMLPolyDataReader,
   'readAsArrayBuffer',
-  'parseArrayBuffer'
+  'parseArrayBuffer',
+  'vtkPolyData'
 );
 
 ReaderFactory.registerReader(
@@ -23,7 +24,8 @@ ReaderFactory.registerReader(
   'ImageData Reader',
   vtkXMLImageDataReader,
   'readAsArrayBuffer',
-  'parseArrayBuffer'
+  'parseArrayBuffer',
+  'vtkImageData'
 );
 
 ReaderFactory.registerReader(
@@ -31,7 +33,8 @@ ReaderFactory.registerReader(
   'STL Binary Reader',
   vtkSTLReader,
   'readAsArrayBuffer',
-  'parseBinary'
+  'parseBinary',
+  'vtkPolyData'
 );
 
 ReaderFactory.registerReader(
@@ -39,7 +42,8 @@ ReaderFactory.registerReader(
   'OBJ Reader',
   vtkOBJReader,
   'readAsText',
-  'parse'
+  'parse',
+  'vtkPolyData'
 );
 
 ReaderFactory.registerReader(

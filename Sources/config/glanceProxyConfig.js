@@ -44,7 +44,7 @@ export default {
               return;
             }
             const [min, max] = arrayToProcess.getRange();
-            const step = (max - min) / 100;
+            const step = Math.min(1, (max - min) / 500);
             self.updateProxyProperty('contourValue', {
               domain: { min, max, step },
             });

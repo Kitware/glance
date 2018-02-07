@@ -16,7 +16,13 @@ import MainView from './MainView';
 import * as Controls from './controls';
 import ReaderFactory from './io/ReaderFactory';
 
-export const { registerReader } = ReaderFactory;
+export const {
+  registerReader,
+  listReaders,
+  listSupportedExtensions,
+  openFiles,
+  loadFiles,
+} = ReaderFactory;
 export const { registerControlTab, unregisterControlTab } = Controls;
 
 export function createViewer(container, proxyConfiguration = defaultConfig) {

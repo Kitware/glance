@@ -7,25 +7,6 @@ import ReaderFactory from '../../io/ReaderFactory';
 import RawReader from './RawReader';
 import style from './FileLoader.mcss';
 
-export function registerReadersToProxyManager(readers, proxyManager) {
-  for (let i = 0; i < readers.length; i++) {
-    const { reader, sourceType, name, dataset } = readers[i];
-    if (reader) {
-      const source = proxyManager.createProxy('Sources', 'TrivialProducer', {
-        name,
-      });
-      if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
-        source.setInputData(dataset, sourceType);
-      } else {
-        source.setInputAlgorithm(reader, sourceType);
-      }
-
-      proxyManager.createRepresentationInAllViews(source);
-      proxyManager.renderAllViews();
-    }
-  }
-}
-
 export default class FileLoader extends React.Component {
   constructor(props) {
     super(props);
@@ -45,7 +26,10 @@ export default class FileLoader extends React.Component {
       (files) => {
         ReaderFactory.loadFiles(files)
           .then((readers) => {
-            registerReadersToProxyManager(readers, this.props.proxyManager);
+            ReaderFactory.registerReadersToProxyManager(
+              readers,
+              this.props.proxyManager
+            );
             this.setState({ file: null });
             this.props.updateTab('pipeline');
           })

@@ -10,43 +10,43 @@ import ReaderFactory from './ReaderFactory';
 // Register default readers
 // ----------------------------------------------------------------------------
 
-ReaderFactory.registerReader(
-  'vtp',
-  'Polydata Reader',
-  vtkXMLPolyDataReader,
-  'readAsArrayBuffer',
-  'parseArrayBuffer'
-);
+ReaderFactory.registerReader({
+  extension: 'vtp',
+  name: 'Polydata Reader',
+  vtkReader: vtkXMLPolyDataReader,
+  readMethod: 'readAsArrayBuffer',
+  parseMethod: 'parseArrayBuffer',
+});
 
-ReaderFactory.registerReader(
-  'vti',
-  'ImageData Reader',
-  vtkXMLImageDataReader,
-  'readAsArrayBuffer',
-  'parseArrayBuffer'
-);
+ReaderFactory.registerReader({
+  extension: 'vti',
+  name: 'ImageData Reader',
+  vtkReader: vtkXMLImageDataReader,
+  readMethod: 'readAsArrayBuffer',
+  parseMethod: 'parseArrayBuffer',
+});
 
-ReaderFactory.registerReader(
-  'stl',
-  'STL Binary Reader',
-  vtkSTLReader,
-  'readAsArrayBuffer',
-  'parseBinary'
-);
+ReaderFactory.registerReader({
+  extension: 'stl',
+  name: 'STL Binary Reader',
+  vtkReader: vtkSTLReader,
+  readMethod: 'readAsArrayBuffer',
+  parseMethod: 'parseBinary',
+});
 
-ReaderFactory.registerReader(
-  'obj',
-  'OBJ Reader',
-  vtkOBJReader,
-  'readAsText',
-  'parse'
-);
+ReaderFactory.registerReader({
+  extension: 'obj',
+  name: 'OBJ Reader',
+  vtkReader: vtkOBJReader,
+  readMethod: 'readAsText',
+  parseMethod: 'parse',
+});
 
-ReaderFactory.registerReader(
-  'pdb',
-  'PDB Reader',
-  vtkPDBReader,
-  'readAsText',
-  'parseText',
-  'vtkMolecule'
-);
+ReaderFactory.registerReader({
+  extension: 'pdb',
+  name: 'PDB Reader',
+  vtkReader: vtkPDBReader,
+  readMethod: 'readAsText',
+  parseMethod: 'parseText',
+  sourceType: 'vtkMolecule',
+});

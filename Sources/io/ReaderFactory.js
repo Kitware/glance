@@ -11,14 +11,14 @@ const FETCH_DATA = {
   },
 };
 
-function registerReader(
+function registerReader({
   extension,
   name,
   vtkReader,
   readMethod,
   parseMethod,
-  sourceType
-) {
+  sourceType,
+}) {
   READER_MAPPING[extension] = {
     name,
     vtkReader,

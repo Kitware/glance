@@ -138,6 +138,27 @@ function downloadDataset(fileName, url, progressCallback) {
 
 // ----------------------------------------------------------------------------
 
+function registerReadersToProxyManager(readers, proxyManager) {
+  for (let i = 0; i < readers.length; i++) {
+    const { reader, sourceType, name, dataset } = readers[i];
+    if (reader) {
+      const source = proxyManager.createProxy('Sources', 'TrivialProducer', {
+        name,
+      });
+      if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
+        source.setInputData(dataset, sourceType);
+      } else {
+        source.setInputAlgorithm(reader, sourceType);
+      }
+
+      proxyManager.createRepresentationInAllViews(source);
+      proxyManager.renderAllViews();
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+
 export default {
   downloadDataset,
   openFiles,
@@ -145,4 +166,5 @@ export default {
   registerReader,
   listReaders,
   listSupportedExtensions,
+  registerReadersToProxyManager,
 };

@@ -16,7 +16,15 @@ import MainView from './MainView';
 import * as Controls from './controls';
 import ReaderFactory from './io/ReaderFactory';
 
-export const { registerReader } = ReaderFactory;
+import { registerReadersToProxyManager } from './controls/FileLoader';
+
+export const {
+  registerReader,
+  listReaders,
+  listSupportedExtensions,
+  openFiles,
+  loadFiles,
+} = ReaderFactory;
 export const { registerControlTab, unregisterControlTab } = Controls;
 
 export function createViewer(container, proxyConfiguration = defaultConfig) {
@@ -48,6 +56,12 @@ export function createViewer(container, proxyConfiguration = defaultConfig) {
         mainView.setState({ showProgress: false });
       })
       .catch(console.error);
+  }
+
+  function loadAndViewFiles(files) {
+    return ReaderFactory.loadFiles(files).then((readers) =>
+      registerReadersToProxyManager(readers, proxyManager)
+    );
   }
 
   function toggleControl() {
@@ -82,6 +96,7 @@ export function createViewer(container, proxyConfiguration = defaultConfig) {
   return {
     addDataSet,
     openRemoteDataset,
+    loadAndViewFiles,
     processURLArgs,
     unbind,
     toggleControl,

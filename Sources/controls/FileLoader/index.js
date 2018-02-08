@@ -24,38 +24,23 @@ export default class FileLoader extends React.Component {
     ReaderFactory.openFiles(
       ['raw'].concat(ReaderFactory.listSupportedExtensions()),
       (files) => {
-        ReaderFactory.loadFiles(files).then(
-          (readers) => {
-            for (let i = 0; i < readers.length; i++) {
-              const { reader, sourceType, name, dataset } = readers[i];
-              if (reader) {
-                const source = this.props.proxyManager.createProxy(
-                  'Sources',
-                  'TrivialProducer',
-                  { name }
-                );
-                if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
-                  source.setInputData(dataset, sourceType);
-                } else {
-                  source.setInputAlgorithm(reader, sourceType);
-                }
-
-                this.props.proxyManager.createRepresentationInAllViews(source);
-                this.props.proxyManager.renderAllViews();
-              }
-            }
+        ReaderFactory.loadFiles(files)
+          .then((readers) => {
+            ReaderFactory.registerReadersToProxyManager(
+              readers,
+              this.props.proxyManager
+            );
             this.setState({ file: null });
             this.props.updateTab('pipeline');
-          },
-          () => {
+          })
+          .catch(() => {
             // No reader found
             if (files.length === 1) {
               this.setState({ file: files[0] });
             } else {
               this.setState({ file: null });
             }
-          }
-        );
+          });
       }
     );
   }

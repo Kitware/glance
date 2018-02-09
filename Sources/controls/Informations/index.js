@@ -4,13 +4,31 @@ import PropTypes from 'prop-types';
 import ImageData from './ImageData';
 import PolyData from './PolyData';
 import FieldData from './FieldData';
+import FPSMonitor from './FPSMonitor';
+import VRControls from './VRControls';
 
 import style from './Informations.mcss';
 
+const hasVR = !!navigator.getVRDisplays;
+
 export default function Informations(props) {
-  const output = [];
+  const output = [
+    <label className={style.title} key="title-perf">
+      Performance monitor
+    </label>,
+    <FPSMonitor key="fps" proxyManager={props.proxyManager} />,
+  ];
   const source = props.proxyManager.getActiveSource();
   const dataset = source ? source.getDataset() : null;
+
+  if (hasVR) {
+    output.push(
+      <label className={style.title} key="title-vr">
+        Virtual Reality Controls
+      </label>
+    );
+    output.push(<VRControls key="vr" proxyManager={props.proxyManager} />);
+  }
 
   if (source) {
     output.push(
@@ -42,7 +60,7 @@ export default function Informations(props) {
     }
   }
 
-  return output;
+  return <div className={style.informationTab}>{output}</div>;
 }
 
 Informations.propTypes = {

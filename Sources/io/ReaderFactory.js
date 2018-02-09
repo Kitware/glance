@@ -19,12 +19,13 @@ function registerReader({
   parseMethod,
   fileNameMethod,
   sourceType,
+  binary,
 }) {
   READER_MAPPING[extension] = {
     name,
     vtkReader,
-    readMethod,
-    parseMethod,
+    readMethod: readMethod || binary ? 'readAsArrayBuffer' : 'readAsText',
+    parseMethod: parseMethod || binary ? 'parseAsArrayBuffer' : 'parseAsText',
     fileNameMethod,
     sourceType,
   };

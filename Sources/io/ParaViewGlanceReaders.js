@@ -14,39 +14,34 @@ ReaderFactory.registerReader({
   extension: 'vtp',
   name: 'Polydata Reader',
   vtkReader: vtkXMLPolyDataReader,
-  readMethod: 'readAsArrayBuffer',
-  parseMethod: 'parseArrayBuffer',
+  binary: true,
 });
 
 ReaderFactory.registerReader({
   extension: 'vti',
   name: 'ImageData Reader',
   vtkReader: vtkXMLImageDataReader,
-  readMethod: 'readAsArrayBuffer',
-  parseMethod: 'parseArrayBuffer',
+  binary: true,
 });
 
 ReaderFactory.registerReader({
   extension: 'stl',
   name: 'STL Binary Reader',
   vtkReader: vtkSTLReader,
-  readMethod: 'readAsArrayBuffer',
-  parseMethod: 'parseBinary',
+  binary: true,
 });
 
 ReaderFactory.registerReader({
   extension: 'obj',
   name: 'OBJ Reader',
   vtkReader: vtkOBJReader,
-  readMethod: 'readAsText',
-  parseMethod: 'parse',
+  binary: false,
 });
 
 ReaderFactory.registerReader({
   extension: 'pdb',
   name: 'PDB Reader',
   vtkReader: vtkPDBReader,
-  readMethod: 'readAsText',
-  parseMethod: 'parseText',
+  binary: false,
   sourceType: 'vtkMolecule',
 });

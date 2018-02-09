@@ -1,3 +1,8 @@
+.informationTab {
+  max-height: calc(100vh - 60px - 55px);
+  overflow: auto;
+}
+
 .section {
   display: flex;
   direction: row;
@@ -50,4 +55,15 @@
   padding: 5px;
   position: relative;
   top: -5px;
+}
+
+.fpsMonitor {
+  flex: 1;
+}
+
+.vrControls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 10px 5px 20px 5px;
 }

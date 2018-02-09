@@ -14,7 +14,7 @@
     "main": "./Distribution/glance.js",
     "dependencies": {
         "shelljs": "0.7.8",
-        "vtk.js": "5.15.15",
+        "vtk.js": "6.1.0",
         "font-awesome": "4.5.0",
         "monologue.js": "0.3.5",
         "mout": "1.0.0",

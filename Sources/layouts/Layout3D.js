@@ -29,6 +29,9 @@ export default class Layout3D extends React.Component {
     this.view.resetCamera();
 
     setTimeout(this.view.resize, 500);
+
+    // set mousedown capture on container after view.setContainer.
+    this.container.addEventListener('mousedown', this.activateView, true);
   }
 
   componentWillUnmount() {

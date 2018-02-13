@@ -38,7 +38,7 @@ export default function Informations(props) {
     );
   }
 
-  if (dataset) {
+  if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
     if (dataset.isA('vtkImageData')) {
       output.push(<ImageData key="ds" dataset={dataset} />);
     }

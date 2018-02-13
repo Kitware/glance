@@ -3,6 +3,7 @@ import vtkXMLImageDataReader from 'vtk.js/Sources/IO/XML/XMLImageDataReader';
 import vtkSTLReader from 'vtk.js/Sources/IO/Geometry/STLReader';
 import vtkOBJReader from 'vtk.js/Sources/IO/Misc/OBJReader';
 import vtkPDBReader from 'vtk.js/Sources/IO/Misc/PDBReader';
+import vtkJSONReader from 'vtk.js/Sources/IO/Misc/JSONReader';
 
 import ReaderFactory from './ReaderFactory';
 
@@ -44,4 +45,12 @@ ReaderFactory.registerReader({
   vtkReader: vtkPDBReader,
   binary: false,
   sourceType: 'vtkMolecule',
+});
+
+ReaderFactory.registerReader({
+  extension: 'glyph',
+  name: 'Glyph Data Reader',
+  vtkReader: vtkJSONReader,
+  binary: false,
+  sourceType: 'Glyph',
 });

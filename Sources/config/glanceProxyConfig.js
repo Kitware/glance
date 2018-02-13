@@ -1,5 +1,7 @@
 import vtk2DView from 'vtk.js/Sources/Proxy/Core/View2DProxy';
 import vtkGeometryRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/GeometryRepresentationProxy';
+import vtkGlyphRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/GlyphRepresentationProxy';
+import vtkImageMarchingCubes from 'vtk.js/Sources/Filters/General/ImageMarchingCubes';
 import vtkLookupTableProxy from 'vtk.js/Sources/Proxy/Core/LookupTableProxy';
 import vtkMoleculeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/MoleculeRepresentationProxy';
 import vtkPiecewiseFunctionProxy from 'vtk.js/Sources/Proxy/Core/PiecewiseFunctionProxy';
@@ -7,7 +9,6 @@ import vtkProxySource from 'vtk.js/Sources/Proxy/Core/SourceProxy';
 import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/SliceRepresentationProxy';
 import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
 import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
-import vtkImageMarchingCubes from 'vtk.js/Sources/Filters/General/ImageMarchingCubes';
 
 import Palettes from '../Palettes';
 
@@ -399,6 +400,22 @@ export default {
           ],
         },
       },
+      Glyph: {
+        class: vtkGlyphRepresentationProxy,
+        options: {
+          ui: [
+            {
+              name: 'edgeVisibility',
+              label: 'Edge Visibility',
+              doc: 'Toggle edge visibility',
+              widget: 'checkbox',
+              type: 'boolean',
+              advanced: 0,
+              size: 1,
+            },
+          ],
+        },
+      },
     },
     Views: {
       View3D: {
@@ -470,16 +487,19 @@ export default {
       vtkPolyData: { name: 'Geometry' },
       vtkImageData: { name: 'Volume' },
       vtkMolecule: { name: 'Molecule' },
+      Glyph: { name: 'Glyph' },
     },
     View2D: {
       vtkPolyData: { name: 'Geometry' },
       vtkImageData: { name: 'Slice' },
       vtkMolecule: { name: 'Molecule' },
+      Glyph: { name: 'Glyph' },
     },
   },
   filters: {
     vtkPolyData: [],
     vtkImageData: ['Contour'],
     vtkMolecule: [],
+    Glyph: [],
   },
 };

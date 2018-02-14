@@ -177,6 +177,13 @@ export default {
       Slice: {
         class: vtkSliceRepresentationProxy,
         options: {
+          links: [
+            { link: 'ColorWindow', property: 'colorWindow' },
+            { link: 'ColorLevel', property: 'colorLevel' },
+            { link: 'SliceX', property: 'xSlice' },
+            { link: 'SliceY', property: 'ySlice' },
+            { link: 'SliceZ', property: 'zSlice' },
+          ],
           ui: [
             {
               name: 'visibility',
@@ -217,6 +224,13 @@ export default {
       Volume: {
         class: vtkVolumeRepresentationProxy,
         options: {
+          links: [
+            { link: 'ColorWindow', property: 'colorWindow' },
+            { link: 'ColorLevel', property: 'colorLevel' },
+            { link: 'SliceX', property: 'xSliceIndex' },
+            { link: 'SliceY', property: 'ySliceIndex' },
+            { link: 'SliceZ', property: 'zSliceIndex' },
+          ],
           ui: [
             {
               label: 'Color By',

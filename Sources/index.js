@@ -16,14 +16,13 @@ import MainView from './MainView';
 import * as Controls from './controls';
 import ReaderFactory from './io/ReaderFactory';
 
-import { registerReadersToProxyManager } from './controls/FileLoader';
-
 export const {
   registerReader,
   listReaders,
   listSupportedExtensions,
   openFiles,
   loadFiles,
+  registerReadersToProxyManager,
 } = ReaderFactory;
 export const { registerControlTab, unregisterControlTab } = Controls;
 

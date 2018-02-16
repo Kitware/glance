@@ -106,7 +106,6 @@ export default class MainView extends React.Component {
           <Layout>
             <Content className={style.workspace}>
               <Renderer
-                activateOnMount
                 proxyManager={this.props.proxyManager}
                 className={style.content}
               />

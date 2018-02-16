@@ -16,12 +16,11 @@ export default function LayoutQuad(props) {
             axis={1}
             orientation={1}
             viewUp={[1, 0, 0]}
-            activateOnMount
             proxyManager={props.proxyManager}
           />
         </div>
         <div className={style.view}>
-          <Layout3D proxyManager={props.proxyManager} />
+          <Layout3D activateOnMount proxyManager={props.proxyManager} />
         </div>
       </div>
       <div className={style.splitRow}>

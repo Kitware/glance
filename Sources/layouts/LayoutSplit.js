@@ -10,7 +10,7 @@ export default function LayoutSplit(props) {
     <div className={`${style.quadRoot} ${props.className}`}>
       <div className={`${style.splitRow} ${props.className}`}>
         <div className={style.view}>
-          <Layout2D proxyManager={props.proxyManager} />
+          <Layout2D activateOnMount proxyManager={props.proxyManager} />
         </div>
         <div className={style.view}>
           <Layout3D proxyManager={props.proxyManager} />

@@ -13,7 +13,7 @@ export default function LayoutSplit(props) {
           <Layout2D proxyManager={props.proxyManager} />
         </div>
         <div className={style.view}>
-          <Layout3D proxyManager={props.proxyManager} />
+          <Layout3D activateOnMount proxyManager={props.proxyManager} />
         </div>
       </div>
     </div>

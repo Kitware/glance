@@ -152,6 +152,8 @@ function registerReadersToProxyManager(readers, proxyManager) {
         source.setInputAlgorithm(reader, sourceType);
       }
 
+      source.activate();
+
       proxyManager.createRepresentationInAllViews(source);
       proxyManager.renderAllViews();
     }

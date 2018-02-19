@@ -30,6 +30,10 @@ export default class Layout3D extends React.Component {
 
     setTimeout(this.view.resize, 500);
 
+    if (this.props.activateOnMount) {
+      this.activateView();
+    }
+
     // set mousedown capture on container after view.setContainer.
     this.container.addEventListener('mousedown', this.activateView, true);
   }
@@ -95,10 +99,12 @@ Layout3D.propTypes = {
   title: PropTypes.string,
   proxyManager: PropTypes.object,
   className: PropTypes.string,
+  activateOnMount: PropTypes.bool,
 };
 
 Layout3D.defaultProps = {
   title: 'View 3D',
   proxyManager: null,
   className: '',
+  activateOnMount: false,
 };

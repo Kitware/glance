@@ -20,7 +20,7 @@ export default function LayoutQuad(props) {
           />
         </div>
         <div className={style.view}>
-          <Layout3D proxyManager={props.proxyManager} />
+          <Layout3D activateOnMount proxyManager={props.proxyManager} />
         </div>
       </div>
       <div className={style.splitRow}>

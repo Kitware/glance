@@ -421,6 +421,7 @@ export default {
       View3D: {
         class: vtkView,
         options: {
+          activateOnCreate: true,
           ui: [
             {
               label: 'Background Color',
@@ -455,6 +456,7 @@ export default {
       View2D: {
         class: vtk2DView,
         options: {
+          activateOnCreate: true,
           ui: [
             {
               label: 'Background Color',

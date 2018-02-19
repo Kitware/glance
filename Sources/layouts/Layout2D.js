@@ -57,6 +57,10 @@ export default class Layout2D extends React.Component {
 
     setTimeout(this.view.resize, 500);
 
+    if (this.props.activateOnMount) {
+      this.activateView();
+    }
+
     // set mousedown capture on containers after view.setContainer.
     this.container.addEventListener('mousedown', this.activateView, true);
     this.sliderContainer.addEventListener('mousedown', this.activateView, true);
@@ -236,6 +240,7 @@ Layout2D.propTypes = {
   orientation: PropTypes.number,
   viewUp: PropTypes.array,
   orientations: PropTypes.array,
+  activateOnMount: PropTypes.bool,
 };
 
 Layout2D.defaultProps = {
@@ -250,4 +255,5 @@ Layout2D.defaultProps = {
     { label: 'Y', axis: 1, orientation: 1, viewUp: [1, 0, 0] },
     { label: 'Z', axis: 2, orientation: 1, viewUp: [0, 1, 0] },
   ],
+  activateOnMount: false,
 };

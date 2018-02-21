@@ -12,5 +12,14 @@ module.exports = {
     github: 'kitware/pv-web-viewer',
     google_analytics: 'UA-90338862-10',
   },
-  copy: [{ src: '../Distribution/*', dest: './build-tmp/public/app' }],
+  copy: [
+    {
+      src: '../Distribution/*',
+      dest: './build-tmp/public/app',
+    },
+    {
+      src: '../node_modules/itk',
+      dest: './build-tmp/public/app/',
+    },
+  ],
 };

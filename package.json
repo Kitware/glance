@@ -21,7 +21,7 @@
         "paraviewweb": "2.5.29"
     },
     "devDependencies": {
-        "itk": "7.1.0",
+        "itk": "7.2.0",
         "antd": "3.0.0",
         "kw-doc": "1.1.1",
         "kw-web-suite": "5.0.1",

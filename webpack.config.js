@@ -2,10 +2,14 @@ const webpack = require('webpack');
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
+const helpersPath = path.join(__dirname, 'Utilities', 'helpers');
+const externals = require(path.join(helpersPath, 'externals.js'));
+
 const plugins = [];
 const entry = path.join(__dirname, './Sources/index.js');
 const sourcePath = path.join(__dirname, './Sources');
 const outputPath = path.join(__dirname, './Distribution');
+const externalPath = path.join(sourcePath, 'externals');
 
 const linterRules = require('./Utilities/rules/linter.js');
 const glanceRules = require('./Utilities/rules/glance.js');
@@ -38,14 +42,20 @@ module.exports = (env) => {
 
   return {
     plugins,
-    entry,
+    entry: Object.assign(
+      {
+        glance: entry,
+      },
+      externals.getExternalEntries(externalPath)
+    ),
     output: {
       path: outputPath,
-      filename: 'glance.js',
+      filename: '[name].js',
       libraryTarget: 'umd',
     },
     module: {
       rules: [{ test: entry, loader: 'expose-loader?Glance' }].concat(
+        externals.getExternalExposeRules(externalPath),
         linterRules,
         glanceRules,
         vtkRules,

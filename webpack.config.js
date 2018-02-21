@@ -48,7 +48,11 @@ module.exports = (env) => {
         from: path.join(__dirname, 'node_modules', 'workbox-sw',
                   'build', 'importScripts', 'workbox-sw.prod.*.js'),
         flatten: true,
-      }
+      },
+      {
+        from: path.join(__dirname, 'node_modules', 'itk'),
+        to: 'itk',
+      },
     ])
   );
 

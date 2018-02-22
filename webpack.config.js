@@ -1,6 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 const helpersPath = path.join(__dirname, 'Utilities', 'helpers');
 const externals = require(path.join(helpersPath, 'externals.js'));
@@ -39,6 +41,29 @@ module.exports = (env) => {
       })
     );
   }
+
+  plugins.push(
+    new CopyPlugin([
+      {
+        from: path.join(__dirname, 'node_modules', 'workbox-sw',
+                  'build', 'importScripts', 'workbox-sw.prod.*.js'),
+        flatten: true,
+      }
+    ])
+  );
+
+  // workbox plugin should be last plugin
+  plugins.push(
+    new WorkboxPlugin({
+      globDirectory: outputPath,
+      globPatterns: ['**/*.{html,js,png,svg}'],
+      globIgnores: [
+        'serviceWorker.js',
+      ],
+      swSrc: path.join(sourcePath, 'externals', 'Workbox', 'serviceWorker.js'),
+      swDest: path.join(outputPath, 'serviceWorker.js'),
+    })
+  );
 
   return {
     plugins,

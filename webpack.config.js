@@ -60,7 +60,7 @@ module.exports = (env) => {
   plugins.push(
     new WorkboxPlugin({
       globDirectory: outputPath,
-      globPatterns: ['**/*.{html,js,png,svg}'],
+      globPatterns: ['*.{html,js,png,svg}'],
       globIgnores: [
         'serviceWorker.js',
       ],

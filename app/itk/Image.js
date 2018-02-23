@@ -4,6 +4,8 @@ const Matrix = require('./Matrix.js')
 const Image = function (imageType = new ImageType()) {
   this.imageType = imageType
 
+  this.name = 'Image'
+
   const dimension = imageType.dimension
   this.origin = new Array(dimension)
   this.origin.fill(0.0)

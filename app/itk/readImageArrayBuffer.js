@@ -1,9 +1,9 @@
-const PromiseWorker = require('promise-worker-transferable')
+const WebworkerPromise = require('webworker-promise')
 
 const config = require('./itkConfig.js')
 
 const worker = new window.Worker(config.webWorkersPath + '/ImageIOWorker.js')
-const promiseWorker = new PromiseWorker(worker)
+const promiseWorker = new WebworkerPromise(worker)
 
 /**
  * Read an image from a file ArrayBuffer in the browser.

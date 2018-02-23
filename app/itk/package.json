@@ -1,32 +1,32 @@
 {
   "_args": [
     [
-      "itk@7.1.0",
+      "itk@7.2.0",
       "/home/travis/build/Kitware/pv-web-viewer"
     ]
   ],
   "_development": true,
-  "_from": "itk@7.1.0",
-  "_id": "itk@7.1.0",
+  "_from": "itk@7.2.0",
+  "_id": "itk@7.2.0",
   "_inBundle": false,
-  "_integrity": "sha512-iPxTVU4McljctkeP+OZNveF3leSqgTu/2OWpe9x6u47/Snb1Bur3R9MdgAeGjnCYcEIwJdZaFktisnYkEnvd+Q==",
+  "_integrity": "sha512-CpSHKegnzCPbirf6T8qupmOpcQ9Ewyu9EYDHaJUp6wiM0A0e2nkHxPM1xnRVre82dQDC8dGmQVCq49I/0nYQZw==",
   "_location": "/itk",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "itk@7.1.0",
+    "raw": "itk@7.2.0",
     "name": "itk",
     "escapedName": "itk",
-    "rawSpec": "7.1.0",
+    "rawSpec": "7.2.0",
     "saveSpec": null,
-    "fetchSpec": "7.1.0"
+    "fetchSpec": "7.2.0"
   },
   "_requiredBy": [
     "#DEV:/"
   ],
-  "_resolved": "https://registry.npmjs.org/itk/-/itk-7.1.0.tgz",
-  "_spec": "7.1.0",
+  "_resolved": "https://registry.npmjs.org/itk/-/itk-7.2.0.tgz",
+  "_spec": "7.2.0",
   "_where": "/home/travis/build/Kitware/pv-web-viewer",
   "author": {
     "name": "Insight Software Consortium"
@@ -42,7 +42,7 @@
   "dependencies": {
     "mime-types": "^2.1.15",
     "promise-file-reader": "^0.3.1",
-    "promise-worker-transferable": "^1.0.4"
+    "webworker-promise": "^0.4.1"
   },
   "description": "Read and write 2D, 3D, and ND images with the Insight Toolkit (ITK)",
   "devDependencies": {
@@ -106,8 +106,9 @@
   },
   "standard": {
     "ignore": [
-      "itkJSImageIOPost.js"
+      "itkJSImageIOPost.js",
+      "test/Browser/tests.js"
     ]
   },
-  "version": "7.1.0"
+  "version": "7.2.0"
 }

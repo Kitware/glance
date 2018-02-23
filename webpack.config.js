@@ -1,11 +1,17 @@
 const webpack = require('webpack');
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
+
+const helpersPath = path.join(__dirname, 'Utilities', 'helpers');
+const externals = require(path.join(helpersPath, 'externals.js'));
 
 const plugins = [];
 const entry = path.join(__dirname, './Sources/index.js');
 const sourcePath = path.join(__dirname, './Sources');
 const outputPath = path.join(__dirname, './Distribution');
+const externalPath = path.join(sourcePath, 'externals');
 
 const linterRules = require('./Utilities/rules/linter.js');
 const glanceRules = require('./Utilities/rules/glance.js');
@@ -36,16 +42,49 @@ module.exports = (env) => {
     );
   }
 
+  plugins.push(
+    new CopyPlugin([
+      {
+        from: path.join(__dirname, 'node_modules', 'workbox-sw',
+                  'build', 'importScripts', 'workbox-sw.prod.*.js'),
+        flatten: true,
+      },
+      {
+        from: path.join(__dirname, 'node_modules', 'itk'),
+        to: 'itk',
+      },
+    ])
+  );
+
+  // workbox plugin should be last plugin
+  plugins.push(
+    new WorkboxPlugin({
+      globDirectory: outputPath,
+      globPatterns: ['*.{html,js,png,svg}'],
+      globIgnores: [
+        'serviceWorker.js',
+      ],
+      swSrc: path.join(sourcePath, 'externals', 'Workbox', 'serviceWorker.js'),
+      swDest: path.join(outputPath, 'serviceWorker.js'),
+    })
+  );
+
   return {
     plugins,
-    entry,
+    entry: Object.assign(
+      {
+        glance: entry,
+      },
+      externals.getExternalEntries(externalPath)
+    ),
     output: {
       path: outputPath,
-      filename: 'glance.js',
+      filename: '[name].js',
       libraryTarget: 'umd',
     },
     module: {
       rules: [{ test: entry, loader: 'expose-loader?Glance' }].concat(
+        externals.getExternalExposeRules(externalPath),
         linterRules,
         glanceRules,
         vtkRules,

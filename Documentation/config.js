@@ -17,9 +17,5 @@ module.exports = {
       src: '../Distribution/*',
       dest: './build-tmp/public/app',
     },
-    {
-      src: '../node_modules/itk',
-      dest: './build-tmp/public/app/',
-    },
   ],
 };

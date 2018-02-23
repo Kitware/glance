@@ -1,6 +1,6 @@
 importScripts('workbox-sw.prod.v2.1.2.js');
 
-const workboxSW = new self.WorkboxSW({clientsClaim: true})
+const workboxSW = new self.WorkboxSW({ clientsClaim: true });
 workboxSW.precache([
   {
     "url": "glance-external-ITKReader.js",
@@ -26,15 +26,15 @@ workboxSW.precache([
     "url": "workbox-sw.prod.v2.1.2.js",
     "revision": "685d1ceb6b9a9f94aacf71d6aeef8b51"
   }
-])
+]);
 
 workboxSW.router.registerRoute(
   /\.js|\.png|\.wasm$/,
   workboxSW.strategies.staleWhileRevalidate({
-  cacheName: 'staleWhileRevalidateContent',
-  cacheExpiration: {
-    maxEntries: 50,
-    maxAgeSeconds: 7 * 24 * 60 * 60 * 26,
-    }
+    cacheName: 'staleWhileRevalidateContent',
+    cacheExpiration: {
+      maxEntries: 50,
+      maxAgeSeconds: 7 * 24 * 60 * 60 * 26,
+    },
   })
 );

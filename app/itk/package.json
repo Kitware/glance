@@ -1,11 +1,4 @@
 {
-  "_args": [
-    [
-      "itk@7.2.0",
-      "/home/travis/build/Kitware/pv-web-viewer"
-    ]
-  ],
-  "_development": true,
   "_from": "itk@7.2.0",
   "_id": "itk@7.2.0",
   "_inBundle": false,
@@ -26,7 +19,8 @@
     "#DEV:/"
   ],
   "_resolved": "https://registry.npmjs.org/itk/-/itk-7.2.0.tgz",
-  "_spec": "7.2.0",
+  "_shasum": "65a7c2b0260e556af6a9f4b5b6431afc0c7bd529",
+  "_spec": "itk@7.2.0",
   "_where": "/home/travis/build/Kitware/pv-web-viewer",
   "author": {
     "name": "Insight Software Consortium"
@@ -34,6 +28,7 @@
   "bugs": {
     "url": "https://github.com/InsightSoftwareConsortium/itk-js/issues"
   },
+  "bundleDependencies": false,
   "config": {
     "commitizen": {
       "path": "node_modules/cz-conventional-changelog"
@@ -44,6 +39,7 @@
     "promise-file-reader": "^0.3.1",
     "webworker-promise": "^0.4.1"
   },
+  "deprecated": false,
   "description": "Read and write 2D, 3D, and ND images with the Insight Toolkit (ITK)",
   "devDependencies": {
     "async": "^2.6.0",

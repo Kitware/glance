@@ -3,8 +3,9 @@ import 'antd/dist/antd.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Menu, Progress } from 'antd';
+import { Progress } from 'antd';
 
+import UI from './ui';
 import Layouts from './layouts';
 import LayoutConfig from './config/glanceLayoutConfig';
 import style from './pv-explorer.mcss';
@@ -12,6 +13,7 @@ import icons from './icons';
 
 import Controls from './controls';
 
+const { Menu } = UI;
 const { LayoutGrid } = Layouts;
 
 const layouts = ['2D', '3D', 'Split', 'Quad'];
@@ -34,7 +36,7 @@ export default class MainView extends React.Component {
     this.forceUpdate = this.forceUpdate.bind(this);
   }
 
-  onLayoutChange({ item, key, selectedKeys }) {
+  onLayoutChange(key) {
     this.setState({ layout: key });
   }
 
@@ -65,9 +67,8 @@ export default class MainView extends React.Component {
             <img alt="logo" src={icons.Logo} />
           </div>
           <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={[this.state.layout]}
+            horizontal
+            selectedKey={this.state.layout}
             onSelect={this.onLayoutChange}
           >
             {layouts.map((name) => (

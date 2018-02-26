@@ -27,16 +27,6 @@
   justify-content: space-between;
 }
 
-.toolbar :global(.ant-menu-dark.ant-menu-horizontal) > :global(.ant-menu-item) {
-  padding: 0 $sizes.menuItemPadding;
-  background-color: $colors.menu;
-  /*border-color: $colors.menu;*/
-}
-
-.toolbar :global(.ant-menu-dark.ant-menu-horizontal) > :global(.ant-menu-item-selected) {
-  background-color: $colors.selected;
-}
-
 .fullHeight {
   height: calc(100vh - $sizes.toolbar);
 }

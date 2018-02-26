@@ -1,0 +1,13 @@
+.filterItem {
+  line-height: 3rem !important;
+  background: white;
+  border-radius: 2px;
+  border: 1px solid #ccc;
+  margin-left: 4px !important;
+  margin-right: 4px !important;
+  transition: color .5s, border-color .5s;
+}
+
+.filterItem:hover {
+  border: 1px solid $colors.selected;
+}

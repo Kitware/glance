@@ -14,4 +14,11 @@ module.exports = [
     include: /node_modules(\/|\\)vtk\.js(\/|\\)/,
     use: [{ loader: 'raw-loader' }],
   },
+  {
+    test: /\.worker\.js$/,
+    include: /node_modules(\/|\\)vtk\.js(\/|\\)/,
+    use: [
+      { loader: 'worker-loader', options: { inline: true, fallback: false } },
+    ],
+  },
 ];

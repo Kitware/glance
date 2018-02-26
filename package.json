@@ -14,15 +14,16 @@
     "main": "./Distribution/glance.js",
     "dependencies": {
         "shelljs": "0.7.8",
-        "vtk.js": "6.2.9",
+        "vtk.js": "6.3.1",
         "font-awesome": "4.5.0",
         "monologue.js": "0.3.5",
         "mout": "1.0.0",
-        "paraviewweb": "2.5.29"
+        "paraviewweb": "3.0.13"
     },
     "devDependencies": {
         "antd": "3.0.0",
         "copy-webpack-plugin": "^4.4.1",
+        "webworker-promise": "^0.4.1",
         "http-server": "0.10.0",
         "itk": "7.2.0",
         "kw-doc": "1.1.1",

@@ -45,8 +45,14 @@ module.exports = (env) => {
   plugins.push(
     new CopyPlugin([
       {
-        from: path.join(__dirname, 'node_modules', 'workbox-sw',
-                  'build', 'importScripts', 'workbox-sw.prod.*.js'),
+        from: path.join(
+          __dirname,
+          'node_modules',
+          'workbox-sw',
+          'build',
+          'importScripts',
+          'workbox-sw.prod.*.js'
+        ),
         flatten: true,
       },
       {
@@ -61,9 +67,7 @@ module.exports = (env) => {
     new WorkboxPlugin({
       globDirectory: outputPath,
       globPatterns: ['*.{html,js,png,svg}'],
-      globIgnores: [
-        'serviceWorker.js',
-      ],
+      globIgnores: ['serviceWorker.js'],
       swSrc: path.join(sourcePath, 'externals', 'Workbox', 'serviceWorker.js'),
       swDest: path.join(outputPath, 'serviceWorker.js'),
     })
@@ -92,7 +96,6 @@ module.exports = (env) => {
       ),
     },
     resolve: {
-      modules: [path.resolve(__dirname, 'node_modules'), sourcePath],
       alias: {
         'pv-explorer': __dirname,
         PVWStyle: path.resolve('./node_modules/paraviewweb/style'),

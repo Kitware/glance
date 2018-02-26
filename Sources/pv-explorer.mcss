@@ -97,15 +97,15 @@
 }
 
 .pipeline {
-  min-height: 30px;
+  height: auto;
 }
 
 .leftPaneContent {
+  display: flex;
+  flex-flow: column;
+  overflow: hidden;
   height: calc(100vh - 105px);
   max-height: calc(100vh - 105px);
-  overflow: hidden;
-  position: relative;
-  top: -10px;
 }
 
 .compactTabs {
@@ -113,7 +113,8 @@
   top: -5px;
 }
 
-.compactTabs :global(.ant-tabs-nav) :global(.ant-tabs-tab)  {
+.compactTabs :global(.rc-tabs-nav) :global(.rc-tabs-tab)  {
+  padding: 8px 16px;
   margin-right: 0;
 }
 

@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Tabs, Icon } from 'antd';
+import 'rc-tabs/assets/index.css';
+import Tabs, { TabPane } from 'rc-tabs';
+import TabContent from 'rc-tabs/lib/TabContent';
+import ScrollableInkTabBar from 'rc-tabs/lib/ScrollableInkTabBar';
+
+import { Icon } from 'antd';
 
 import FileLoader from './FileLoader';
 import Filters from './Filters';
@@ -9,8 +14,6 @@ import Informations from './Informations';
 import PipelineEditor from './PipelineEditor';
 
 import style from '../pv-explorer.mcss';
-
-const { TabPane } = Tabs;
 
 // ----------------------------------------------------------------------------
 // Module configuration
@@ -80,15 +83,17 @@ export default class ContolPanel extends React.Component {
     return (
       <Tabs
         activeKey={this.state.tab}
-        size="small"
         className={style.compactTabs}
         onChange={this.changeTabTo}
+        renderTabBar={() => <ScrollableInkTabBar />}
+        renderTabContent={() => <TabContent />}
       >
         {listControlTabs().map((controlName) => {
           const panel = PANEL_TABS[controlName];
           const Renderer = panel.reactClass;
           return (
             <TabPane
+              className={style.tabPane}
               tab={<Icon type={panel.icon} style={{ marginRight: '0' }} />}
               key={controlName}
               forceRender

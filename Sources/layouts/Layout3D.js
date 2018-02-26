@@ -11,6 +11,7 @@ export default class Layout3D extends React.Component {
 
     // Setup vtk.js objects
     this.view = props.proxyManager.createProxy('Views', 'View3D');
+    this.view.updateOrientation(props.axis, props.orientation, props.viewUp);
     this.subscription = this.props.proxyManager.onActiveViewChange(() =>
       this.forceUpdate()
     );
@@ -100,6 +101,9 @@ Layout3D.propTypes = {
   proxyManager: PropTypes.object,
   className: PropTypes.string,
   activateOnMount: PropTypes.bool,
+  axis: PropTypes.number,
+  orientation: PropTypes.number,
+  viewUp: PropTypes.array,
 };
 
 Layout3D.defaultProps = {
@@ -107,4 +111,7 @@ Layout3D.defaultProps = {
   proxyManager: null,
   className: '',
   activateOnMount: false,
+  axis: 2,
+  orientation: 1,
+  viewUp: [0, -1, 0],
 };

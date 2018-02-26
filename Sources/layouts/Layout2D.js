@@ -21,9 +21,9 @@ export default class Layout2D extends React.Component {
 
     // Slider
     this.slider = vtkSlider.newInstance();
-    this.slider.onValueChange((sliceIndex) => {
+    this.slider.onValueChange((sliceValue) => {
       if (this.activeRepresentation) {
-        this.activeRepresentation.setSliceIndex(Number(sliceIndex));
+        this.activeRepresentation.setSlice(Number(sliceValue));
         this.props.proxyManager.modified();
         this.props.proxyManager.renderAllViews();
       }
@@ -96,15 +96,10 @@ export default class Layout2D extends React.Component {
     if (newRep) {
       this.activeRepresentation = newRep;
       this.repSubscription = newRep.onModified(() => {
-        if (
-          this.activeRepresentation &&
-          this.activeRepresentation.getSliceIndex
-        ) {
-          this.slider.setValue(
-            Number(this.activeRepresentation.getSliceIndex())
-          );
+        if (this.activeRepresentation && this.activeRepresentation.getSlice) {
+          this.slider.setValue(Number(this.activeRepresentation.getSlice()));
           this.view.updateCornerAnnotation({
-            sliceIndex: this.activeRepresentation.getSliceIndex(),
+            slice: Number(this.activeRepresentation.getSlice()).toFixed(2),
           });
         }
         if (
@@ -118,17 +113,27 @@ export default class Layout2D extends React.Component {
         }
       });
     }
-    if (this.activeRepresentation && this.activeRepresentation.getSliceIndex) {
-      this.slider.setValues(this.activeRepresentation.getSliceIndexValues());
-      this.slider.setValue(Number(this.activeRepresentation.getSliceIndex()));
-      this.view.updateCornerAnnotation({
-        sliceIndex: this.activeRepresentation.getSliceIndex(),
-      });
-    }
+
     if (this.activeRepresentation && this.activeRepresentation.getColorWindow) {
       this.view.updateCornerAnnotation({
         colorWindow: Math.round(this.activeRepresentation.getColorWindow()),
         colorLevel: Math.round(this.activeRepresentation.getColorLevel()),
+      });
+    }
+    this.updateSlider();
+  }
+
+  updateSlider() {
+    if (this.activeRepresentation && this.activeRepresentation.getSlice) {
+      const {
+        min,
+        max,
+        step,
+      } = this.activeRepresentation.getPropertyDomainByName('slice');
+      this.slider.generateValues(min, max, 1 + (max - min) / step);
+      this.slider.setValue(Number(this.activeRepresentation.getSlice()));
+      this.view.updateCornerAnnotation({
+        slice: Number(this.activeRepresentation.getSlice()).toFixed(2),
       });
     }
   }
@@ -147,6 +152,13 @@ export default class Layout2D extends React.Component {
     this.view.resetCamera();
     this.view.renderLater();
     this.onActiveSourceChange();
+    this.updateSlider();
+
+    // Update control panel
+    this.props.proxyManager.modified();
+
+    // Update slider
+    this.forceUpdate();
   }
 
   rotate() {
@@ -160,7 +172,7 @@ export default class Layout2D extends React.Component {
   }
 
   activateView() {
-    this.props.proxyManager.setActiveView(this.view);
+    this.view.activate();
   }
 
   render() {
@@ -211,8 +223,7 @@ export default class Layout2D extends React.Component {
             style={{
               background: COLOR_BY_AXIS[this.view.getAxis()],
               visibility:
-                this.activeRepresentation &&
-                this.activeRepresentation.getSliceIndex
+                this.activeRepresentation && this.activeRepresentation.getSlice
                   ? 'visible'
                   : 'hidden',
             }}
@@ -249,11 +260,11 @@ Layout2D.defaultProps = {
   className: '',
   axis: 2,
   orientation: 1,
-  viewUp: [0, 1, 0],
+  viewUp: [0, -1, 0],
   orientations: [
-    { label: 'X', axis: 0, orientation: 1, viewUp: [0, 1, 0] },
-    { label: 'Y', axis: 1, orientation: 1, viewUp: [1, 0, 0] },
-    { label: 'Z', axis: 2, orientation: 1, viewUp: [0, 1, 0] },
+    { label: 'X', axis: 0, orientation: 1, viewUp: [0, -1, 0] },
+    { label: 'Y', axis: 1, orientation: 1, viewUp: [0, 1, 0] },
+    { label: 'Z', axis: 2, orientation: 1, viewUp: [0, -1, 0] },
   ],
   activateOnMount: false,
 };

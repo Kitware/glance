@@ -212,9 +212,9 @@ export default {
             },
             {
               label: 'Slice',
-              name: 'sliceIndex',
+              name: 'slice',
               widget: 'slider',
-              type: 'integer',
+              type: 'double',
               size: 1,
               domain: { min: 0, max: 255, step: 1 },
             },
@@ -227,9 +227,9 @@ export default {
           links: [
             { link: 'ColorWindow', property: 'colorWindow' },
             { link: 'ColorLevel', property: 'colorLevel' },
-            { link: 'SliceX', property: 'xSliceIndex' },
-            { link: 'SliceY', property: 'ySliceIndex' },
-            { link: 'SliceZ', property: 'zSliceIndex' },
+            { link: 'SliceX', property: 'xSlice' },
+            { link: 'SliceY', property: 'ySlice' },
+            { link: 'SliceZ', property: 'zSlice' },
           ],
           ui: [
             {
@@ -341,7 +341,7 @@ export default {
                 },
                 {
                   label: 'SliceX',
-                  name: 'xSliceIndex',
+                  name: 'xSlice',
                   widget: 'slider',
                   type: 'integer',
                   size: 1,
@@ -349,7 +349,7 @@ export default {
                 },
                 {
                   label: 'SliceY',
-                  name: 'ySliceIndex',
+                  name: 'ySlice',
                   widget: 'slider',
                   type: 'integer',
                   size: 1,
@@ -357,7 +357,7 @@ export default {
                 },
                 {
                   label: 'SliceZ',
-                  name: 'zSliceIndex',
+                  name: 'zSlice',
                   widget: 'slider',
                   type: 'integer',
                   size: 1,

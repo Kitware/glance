@@ -117,7 +117,9 @@ export default class PiecewiseFunctionProperty extends React.Component {
     if (pwfProxy) {
       const lut = pwfProxy.getLookupTableProxy().getLookupTable();
       this.piecewiseWidget.setGaussians(pwfProxy.getGaussians());
-      this.piecewiseWidget.setDataArray(pwfProxy.getDataRange());
+      this.piecewiseWidget.setDataArray(
+        Float32Array.from(pwfProxy.getDataRange())
+      );
       this.piecewiseWidget.setColorTransferFunction(lut);
       this.subscriptions.push(
         lut.onModified(() => {

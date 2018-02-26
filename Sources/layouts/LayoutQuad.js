@@ -15,7 +15,7 @@ export default function LayoutQuad(props) {
             orientations={[]}
             axis={1}
             orientation={1}
-            viewUp={[1, 0, 0]}
+            viewUp={[0, 1, 0]}
             proxyManager={props.proxyManager}
           />
         </div>
@@ -29,7 +29,7 @@ export default function LayoutQuad(props) {
           orientations={[]}
           axis={0}
           orientation={1}
-          viewUp={[0, 1, 0]}
+          viewUp={[0, -1, 0]}
           proxyManager={props.proxyManager}
         />
         <Layout2D
@@ -37,7 +37,7 @@ export default function LayoutQuad(props) {
           orientations={[]}
           axis={2}
           orientation={1}
-          viewUp={[0, 1, 0]}
+          viewUp={[0, -1, 0]}
           proxyManager={props.proxyManager}
         />
       </div>

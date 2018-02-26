@@ -1,4 +1,24 @@
+.vertContainer {
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+  box-sizing: border-box;
+}
+
+.horizContainer {
+  display: flex;
+  flex-direction: row;
+  flex: auto;
+  box-sizing: border-box;
+}
+
+.noOverflow {
+  overflow: hidden;
+}
+
 .toolbar {
+  padding: 0 50px;
+  height: 64px;
   background-color: $colors.menu;
   line-height: $sizes.toolbar;
   display: flex;
@@ -19,6 +39,27 @@
 
 .fullHeight {
   height: calc(100vh - $sizes.toolbar);
+}
+
+.appSideBar {
+  height: 100%;
+  position: relative;
+  transition: all .2s;
+}
+
+
+.appSideBarVisible {
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
+  flex: 0 0 300px;
+}
+
+.appSideBarCollapsed {
+  width: 0;
+  min-width: 0;
+  max-width: 0;
+  flex: 0 0 0;
 }
 
 .sideBar {
@@ -87,6 +128,7 @@
 }
 
 .workspace {
+  flex: auto;
   overflow: hidden;
   height: calc(100vh - 64px);
   max-height: calc(100vh - 64px);

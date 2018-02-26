@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Layout, Menu, Progress } from 'antd';
+import { Menu, Progress } from 'antd';
 
 import Layouts from './layouts';
 import LayoutConfig from './config/glanceLayoutConfig';
@@ -12,13 +12,9 @@ import icons from './icons';
 
 import Controls from './controls';
 
-const { Header, Sider, Content } = Layout;
-
 const { LayoutGrid } = Layouts;
 
 const layouts = ['2D', '3D', 'Split', 'Quad'];
-
-const WIDTH = 300;
 
 export default class MainView extends React.Component {
   constructor(props) {
@@ -63,8 +59,8 @@ export default class MainView extends React.Component {
     }
 
     return (
-      <Layout>
-        <Header className={style.toolbar}>
+      <div className={style.vertContainer}>
+        <div className={style.toolbar}>
           <div className={style.logo} onClick={this.onToggleControl}>
             <img alt="logo" src={icons.Logo} />
           </div>
@@ -85,15 +81,16 @@ export default class MainView extends React.Component {
             ))}
           </Menu>
           <div className={style.progressContainer}>{progress}</div>
-        </Header>
-        <Layout>
-          <Sider
-            className={style.sideBar}
-            width={WIDTH}
-            collapsedWidth={0}
-            trigger={null}
-            collapsible
-            collapsed={this.state.collapsed}
+        </div>
+        <div className={style.horizContainer}>
+          <div
+            className={[
+              style.appSideBar,
+              style.sideBar,
+              this.state.collapsed
+                ? style.appSideBarCollapsed
+                : style.appSideBarVisible,
+            ].join(' ')}
           >
             <Controls
               ref={(c) => {
@@ -101,19 +98,19 @@ export default class MainView extends React.Component {
               }}
               proxyManager={this.props.proxyManager}
             />
-          </Sider>
-          <Layout>
-            <Content className={style.workspace}>
+          </div>
+          <div className={[style.vertContainer, style.noOverflow].join(' ')}>
+            <div className={style.workspace}>
               <LayoutGrid
                 proxyManager={this.props.proxyManager}
                 className={style.content}
                 initialConfig={LayoutConfig}
                 layout={this.state.layout}
               />
-            </Content>
-          </Layout>
-        </Layout>
-      </Layout>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 }

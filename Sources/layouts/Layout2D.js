@@ -13,6 +13,10 @@ export default class Layout2D extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      sliceSliderVisible: false,
+    };
+
     // Setup vtk.js objects
     this.activeRepresentation = null;
     this.view = props.proxyManager.createProxy('Views', props.viewType);
@@ -42,11 +46,11 @@ export default class Layout2D extends React.Component {
       this.props.proxyManager.onActiveSourceChange(this.onActiveSourceChange),
       this.props.proxyManager.onActiveViewChange(this.flush),
     ];
-
-    this.onActiveSourceChange();
   }
 
   componentDidMount() {
+    this.onActiveSourceChange();
+
     this.view.setContainer(this.container);
     this.slider.setContainer(this.sliderContainer);
 
@@ -121,6 +125,11 @@ export default class Layout2D extends React.Component {
       });
     }
     this.updateSlider();
+
+    // update slider visibility based on current active source/representation
+    this.setState({
+      sliceSliderVisible: newRep && newRep.getSlice,
+    });
   }
 
   updateSlider() {
@@ -222,10 +231,7 @@ export default class Layout2D extends React.Component {
             className={style.sideBar}
             style={{
               background: COLOR_BY_AXIS[this.view.getAxis()],
-              visibility:
-                this.activeRepresentation && this.activeRepresentation.getSlice
-                  ? 'visible'
-                  : 'hidden',
+              visibility: this.state.sliceSliderVisible ? 'visible' : 'hidden',
             }}
             ref={(c) => {
               this.sliderContainer = c;

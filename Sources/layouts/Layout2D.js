@@ -98,7 +98,6 @@ export default class Layout2D extends React.Component {
       this.repSubscription = null;
     }
     if (newRep) {
-      this.activeRepresentation = newRep;
       this.repSubscription = newRep.onModified(() => {
         if (this.activeRepresentation && this.activeRepresentation.getSlice) {
           this.slider.setValue(Number(this.activeRepresentation.getSlice()));
@@ -118,12 +117,20 @@ export default class Layout2D extends React.Component {
       });
     }
 
+    this.activeRepresentation = newRep;
+
     if (this.activeRepresentation && this.activeRepresentation.getColorWindow) {
       this.view.updateCornerAnnotation({
         colorWindow: Math.round(this.activeRepresentation.getColorWindow()),
         colorLevel: Math.round(this.activeRepresentation.getColorLevel()),
       });
+    } else {
+      this.view.updateCornerAnnotation({
+        colorWindow: '(none)',
+        colorLevel: '(none)',
+      });
     }
+
     this.updateSlider();
 
     // update slider visibility based on current active source/representation
@@ -143,6 +150,10 @@ export default class Layout2D extends React.Component {
       this.slider.setValue(Number(this.activeRepresentation.getSlice()));
       this.view.updateCornerAnnotation({
         slice: Number(this.activeRepresentation.getSlice()).toFixed(2),
+      });
+    } else {
+      this.view.updateCornerAnnotation({
+        slice: '(none)',
       });
     }
   }

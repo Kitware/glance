@@ -15,7 +15,7 @@ export default class Layout2D extends React.Component {
 
     // Setup vtk.js objects
     this.activeRepresentation = null;
-    this.view = props.proxyManager.createProxy('Views', 'View2D');
+    this.view = props.proxyManager.createProxy('Views', props.viewType);
     this.view.updateOrientation(props.axis, props.orientation, props.viewUp);
     this.subscriptions = [];
 
@@ -252,9 +252,11 @@ Layout2D.propTypes = {
   viewUp: PropTypes.array,
   orientations: PropTypes.array,
   activateOnMount: PropTypes.bool,
+  viewType: PropTypes.string,
 };
 
 Layout2D.defaultProps = {
+  viewType: 'View2D',
   title: 'View 2D',
   proxyManager: null,
   className: '',
@@ -263,7 +265,7 @@ Layout2D.defaultProps = {
   viewUp: [0, -1, 0],
   orientations: [
     { label: 'X', axis: 0, orientation: 1, viewUp: [0, -1, 0] },
-    { label: 'Y', axis: 1, orientation: 1, viewUp: [0, 1, 0] },
+    { label: 'Y', axis: 1, orientation: 1, viewUp: [0, 0, 1] },
     { label: 'Z', axis: 2, orientation: 1, viewUp: [0, -1, 0] },
   ],
   activateOnMount: false,

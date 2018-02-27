@@ -11,11 +11,12 @@ export default function LayoutQuad(props) {
       <div className={style.splitRow}>
         <div className={style.view}>
           <Layout2D
+            viewType="View2D_Y"
             title="-Z+X"
             orientations={[]}
             axis={1}
             orientation={1}
-            viewUp={[0, 1, 0]}
+            viewUp={[0, 0, 1]}
             proxyManager={props.proxyManager}
           />
         </div>
@@ -25,6 +26,7 @@ export default function LayoutQuad(props) {
       </div>
       <div className={style.splitRow}>
         <Layout2D
+          viewType="View2D_X"
           title="-Z+Y"
           orientations={[]}
           axis={0}
@@ -33,6 +35,7 @@ export default function LayoutQuad(props) {
           proxyManager={props.proxyManager}
         />
         <Layout2D
+          viewType="View2D_Z"
           title="+X+Y"
           orientations={[]}
           axis={2}

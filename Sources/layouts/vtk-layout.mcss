@@ -57,6 +57,15 @@
   background-color: white;
 }
 
+.rwToolbarButton {
+  height: 24px;
+}
+
+.rwToolbarButton > i {
+  height: 28px; /* pretty much pixel-perfect */
+  vertical-align: middle;
+}
+
 .activeRenderWindowContainer .renderWindowToolbar {
   background-color: #99f;
 }

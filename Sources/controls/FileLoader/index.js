@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Icon } from 'antd';
-
+import UI from '../../ui';
 import ReaderFactory from '../../io/ReaderFactory';
 import RawReader from './RawReader';
 import style from './FileLoader.mcss';
+
+const { Button, FaIcon } = UI;
 
 export default class FileLoader extends React.Component {
   constructor(props) {
@@ -71,7 +72,8 @@ export default class FileLoader extends React.Component {
     return (
       <div className={style.content}>
         <Button onClick={this.loadFile}>
-          <Icon type="upload" /> Load local file
+          <FaIcon type="upload" style={{ paddingRight: '10px' }} />
+          Load local file
         </Button>
         <label className={style.supportedFiles}>
           {ReaderFactory.listSupportedExtensions()

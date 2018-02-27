@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button } from 'antd';
-
+import UI from '../../ui';
 import style from './Informations.mcss';
+
+const { Button } = UI;
 
 const SETTINGS = [
   {

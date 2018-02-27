@@ -156,7 +156,6 @@ export default class Layout2D extends React.Component {
         reps[i].setSlicingMode('XYZ'[state.axis]);
       }
     }
-    this.onActiveSourceChange();
     this.props.proxyManager.modified();
     this.view.resetCamera();
     this.view.renderLater();

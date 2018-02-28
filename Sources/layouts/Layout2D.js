@@ -37,7 +37,6 @@ export default class Layout2D extends React.Component {
     this.onActiveSourceChange = this.onActiveSourceChange.bind(this);
     this.rotate = this.rotate.bind(this);
     this.toggleOrientationMarker = this.toggleOrientationMarker.bind(this);
-    this.updateOrientation = this.updateOrientation.bind(this);
     this.activateView = this.activateView.bind(this);
     this.flush = () => this.forceUpdate();
 
@@ -158,26 +157,9 @@ export default class Layout2D extends React.Component {
     }
   }
 
-  updateOrientation(e) {
-    const state = this.props.orientations[Number(e.target.dataset.index)];
-    this.view.updateOrientation(state.axis, state.orientation, state.viewUp);
-    const reps = this.view.getRepresentations();
-    for (let i = 0; i < reps.length; i++) {
-      if (reps[i].setSlicingMode) {
-        reps[i].setSlicingMode('XYZ'[state.axis]);
-      }
-    }
-    this.props.proxyManager.modified();
-    this.view.resetCamera();
-    this.view.renderLater();
-    this.onActiveSourceChange();
-    this.updateSlider();
-
-    // Update control panel
-    this.props.proxyManager.modified();
-
-    // Update slider
-    this.forceUpdate();
+  resize() {
+    this.view.resize();
+    this.slider.resize();
   }
 
   rotate() {
@@ -217,7 +199,7 @@ export default class Layout2D extends React.Component {
                 key={o.label}
                 className={style.button}
                 data-index={i}
-                onClick={this.updateOrientation}
+                onClick={() => this.props.onAxisChange(o.axis)}
               >
                 {o.label}
               </div>
@@ -269,6 +251,7 @@ Layout2D.propTypes = {
   orientations: PropTypes.array,
   activateOnMount: PropTypes.bool,
   viewType: PropTypes.string,
+  onAxisChange: PropTypes.func,
 };
 
 Layout2D.defaultProps = {
@@ -285,4 +268,5 @@ Layout2D.defaultProps = {
     { label: 'Z', axis: 2, orientation: 1, viewUp: [0, -1, 0] },
   ],
   activateOnMount: false,
+  onAxisChange: () => {},
 };

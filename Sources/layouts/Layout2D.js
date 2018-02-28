@@ -13,6 +13,10 @@ export default class Layout2D extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      sliceSliderVisible: false,
+    };
+
     // Setup vtk.js objects
     this.activeRepresentation = null;
     this.view = props.proxyManager.createProxy('Views', props.viewType);
@@ -42,11 +46,11 @@ export default class Layout2D extends React.Component {
       this.props.proxyManager.onActiveSourceChange(this.onActiveSourceChange),
       this.props.proxyManager.onActiveViewChange(this.flush),
     ];
-
-    this.onActiveSourceChange();
   }
 
   componentDidMount() {
+    this.onActiveSourceChange();
+
     this.view.setContainer(this.container);
     this.slider.setContainer(this.sliderContainer);
 
@@ -94,7 +98,6 @@ export default class Layout2D extends React.Component {
       this.repSubscription = null;
     }
     if (newRep) {
-      this.activeRepresentation = newRep;
       this.repSubscription = newRep.onModified(() => {
         if (this.activeRepresentation && this.activeRepresentation.getSlice) {
           this.slider.setValue(Number(this.activeRepresentation.getSlice()));
@@ -114,13 +117,26 @@ export default class Layout2D extends React.Component {
       });
     }
 
+    this.activeRepresentation = newRep;
+
     if (this.activeRepresentation && this.activeRepresentation.getColorWindow) {
       this.view.updateCornerAnnotation({
         colorWindow: Math.round(this.activeRepresentation.getColorWindow()),
         colorLevel: Math.round(this.activeRepresentation.getColorLevel()),
       });
+    } else {
+      this.view.updateCornerAnnotation({
+        colorWindow: '(none)',
+        colorLevel: '(none)',
+      });
     }
+
     this.updateSlider();
+
+    // update slider visibility based on current active source/representation
+    this.setState({
+      sliceSliderVisible: newRep && newRep.getSlice,
+    });
   }
 
   updateSlider() {
@@ -135,6 +151,10 @@ export default class Layout2D extends React.Component {
       this.view.updateCornerAnnotation({
         slice: Number(this.activeRepresentation.getSlice()).toFixed(2),
       });
+    } else {
+      this.view.updateCornerAnnotation({
+        slice: '(none)',
+      });
     }
   }
 
@@ -147,7 +167,6 @@ export default class Layout2D extends React.Component {
         reps[i].setSlicingMode('XYZ'[state.axis]);
       }
     }
-    this.onActiveSourceChange();
     this.props.proxyManager.modified();
     this.view.resetCamera();
     this.view.renderLater();
@@ -222,10 +241,7 @@ export default class Layout2D extends React.Component {
             className={style.sideBar}
             style={{
               background: COLOR_BY_AXIS[this.view.getAxis()],
-              visibility:
-                this.activeRepresentation && this.activeRepresentation.getSlice
-                  ? 'visible'
-                  : 'hidden',
+              visibility: this.state.sliceSliderVisible ? 'visible' : 'hidden',
             }}
             ref={(c) => {
               this.sliderContainer = c;

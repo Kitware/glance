@@ -7,11 +7,15 @@ export default class LayoutGrid extends React.Component {
   constructor(props) {
     super(props);
 
+    // populate by the layout stack loop below
+    this.state = {};
+
     // Save this, as the layout config should not change
     this.config = props.initialConfig;
 
     this.viewRefs = {};
     this.layoutInitActiveView = {};
+    this.layoutStacks = {};
 
     Object.keys(this.config.layouts).forEach((layoutName) => {
       const layout = this.config.layouts[layoutName];
@@ -23,6 +27,33 @@ export default class LayoutGrid extends React.Component {
       if (viewName) {
         this.layoutInitActiveView[layoutName] = viewName;
       }
+
+      // process stacks
+      const gridY = layout.grid[1];
+      const tmpStacks = {};
+      Object.keys(layout.views).forEach((name) => {
+        const view = layout.views[name];
+        const [x, y] = view.cell;
+        const stackId = x * gridY + y;
+        tmpStacks[stackId] = tmpStacks[stackId] || [];
+        tmpStacks[stackId].push(name);
+      });
+
+      this.layoutStacks[layoutName] = {};
+      Object.keys(tmpStacks).forEach((stackId) => {
+        const stack = tmpStacks[stackId];
+        if (stack.length > 1) {
+          const id = `StackActive_${layoutName}_${stackId}`;
+          stack.forEach((view) => {
+            // set stack id for this view in this layout
+            this.layoutStacks[layoutName][view] = id;
+            // set view as visible in stack if possible
+            if (layout.views[view].defaultVisible || !this.state[id]) {
+              this.state[id] = view;
+            }
+          });
+        }
+      });
     });
   }
 
@@ -34,8 +65,26 @@ export default class LayoutGrid extends React.Component {
 
     // activate initial view, if specified
     if (this.props.layout in this.layoutInitActiveView) {
-      const viewName = this.layoutInitActiveView[this.props.layout];
+      let viewName = this.layoutInitActiveView[this.props.layout];
+
+      // if initial view is shadowed by another view in same stack,
+      // then activate the other view.
+      const stackId = this.layoutStacks[this.props.layout][viewName];
+      if (stackId) {
+        // if active view in stack is current view, then this is a no-op.
+        viewName = this.state[stackId];
+      }
+
       this.viewRefs[viewName].activateView();
+    }
+  }
+
+  setStackView(newView) {
+    const stackId = this.layoutStacks[this.props.layout][newView];
+    if (stackId in this.state) {
+      this.setState({ [stackId]: newView }, () => {
+        this.viewRefs[newView].activateView();
+      });
     }
   }
 
@@ -52,13 +101,18 @@ export default class LayoutGrid extends React.Component {
     };
 
     const views = Object.keys(this.config.views).map((viewName) => {
-      const visible = viewName in layout.views;
       const viewSpec = this.config.views[viewName];
       const props = Object.assign({}, viewSpec.props);
       const cellStyle = {};
 
+      let visible = viewName in layout.views;
       if (visible) {
         const layoutSpec = layout.views[viewName];
+
+        if (viewName in this.layoutStacks[this.props.layout]) {
+          const stackId = this.layoutStacks[this.props.layout][viewName];
+          visible = this.state[stackId] === viewName;
+        }
 
         const [xCell, yCell] = layoutSpec.cell;
         Object.assign(cellStyle, {
@@ -66,6 +120,14 @@ export default class LayoutGrid extends React.Component {
         });
 
         Object.assign(props, layoutSpec.propOverrides);
+
+        // set our custom stack changing function
+        if (viewSpec.stackChangeFunc && props[viewSpec.stackChangeFunc]) {
+          const func = props[viewSpec.stackChangeFunc];
+          props[viewSpec.stackChangeFunc] = (...args) => {
+            this.setStackView(func(...args));
+          };
+        }
       }
 
       return (

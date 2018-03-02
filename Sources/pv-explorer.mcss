@@ -108,6 +108,11 @@
   max-height: calc(100vh - 105px);
 }
 
+/* Force proxy editor to resize height */
+.leftPaneContent > div:nth-child(2) {
+  min-height: 0;
+}
+
 .compactTabs {
   position: relative;
   top: -5px;

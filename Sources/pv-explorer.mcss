@@ -1,4 +1,36 @@
+body {
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.8);
+  line-height: 1.5;
+}
+
+img {
+  vertical-align: middle;
+  border: none;
+}
+
+.vertContainer {
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+  box-sizing: border-box;
+}
+
+.horizContainer {
+  display: flex;
+  flex-direction: row;
+  flex: auto;
+  box-sizing: border-box;
+}
+
+.noOverflow {
+  overflow: hidden;
+}
+
 .toolbar {
+  padding: 0 50px;
+  height: 64px;
   background-color: $colors.menu;
   line-height: $sizes.toolbar;
   display: flex;
@@ -7,18 +39,29 @@
   justify-content: space-between;
 }
 
-.toolbar :global(.ant-menu-dark.ant-menu-horizontal) > :global(.ant-menu-item) {
-  padding: 0 $sizes.menuItemPadding;
-  background-color: $colors.menu;
-  /*border-color: $colors.menu;*/
-}
-
-.toolbar :global(.ant-menu-dark.ant-menu-horizontal) > :global(.ant-menu-item-selected) {
-  background-color: $colors.selected;
-}
-
 .fullHeight {
   height: calc(100vh - $sizes.toolbar);
+}
+
+.appSideBar {
+  height: 100%;
+  position: relative;
+  transition: all .2s;
+}
+
+
+.appSideBarVisible {
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
+  flex: 0 0 300px;
+}
+
+.appSideBarCollapsed {
+  width: 0;
+  min-width: 0;
+  max-width: 0;
+  flex: 0 0 0;
 }
 
 .sideBar {
@@ -57,24 +100,21 @@
   user-select: none;
 }
 
-.collapseList :global(.ant-collapse-item) {
-  background: '#f7f7f7';
-  border-radius: 4;
-  margin-bottom: 24;
-  border: 0;
-  overflow: 'hidden';
-}
-
 .pipeline {
-  min-height: 30px;
+  height: auto;
 }
 
 .leftPaneContent {
+  display: flex;
+  flex-flow: column;
+  overflow: hidden;
   height: calc(100vh - 105px);
   max-height: calc(100vh - 105px);
-  overflow: hidden;
-  position: relative;
-  top: -10px;
+}
+
+/* Force proxy editor to resize height */
+.leftPaneContent > div:nth-child(2) {
+  min-height: 0;
 }
 
 .compactTabs {
@@ -82,18 +122,32 @@
   top: -5px;
 }
 
-.compactTabs :global(.ant-tabs-nav) :global(.ant-tabs-tab)  {
+.compactTabs :global(.rc-tabs-nav) :global(.rc-tabs-tab)  {
+  padding: 8px 16px;
   margin-right: 0;
 }
 
 .workspace {
+  flex: auto;
   overflow: hidden;
   height: calc(100vh - 64px);
   max-height: calc(100vh - 64px);
 }
 
 .progressContainer {
+  /* Override toolbar line height */
+  line-height: 1em;
   flex: none;
   position: relative;
   left: 40px;
+  vertical-align: middle;
+}
+
+.progressText {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
 }

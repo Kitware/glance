@@ -1,12 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
+import 'rc-dropdown/assets/index.css';
+import Dropdown from 'rc-dropdown';
 
-import { Menu, Dropdown } from 'antd';
+import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
 
 import style from 'paraviewweb/style/ReactProperties/CellProperty.mcss';
 import localStyle from './LookupTableProperty.mcss';
+
+import UI from '../../ui';
+
+const { Menu } = UI;
 
 const WORKING_CANVAS = document.createElement('canvas');
 WORKING_CANVAS.setAttribute('width', 300);
@@ -25,14 +30,16 @@ function getLookupTableImage(lut, min, max, width) {
 function PresetMenu(props) {
   return (
     <Menu
-      onClick={props.onClick}
-      selectedKeys={[props.selected]}
+      onSelect={props.onClick}
+      selectedKey={props.selected}
       style={{
         overflowY: 'auto',
         maxHeight: '170px',
         marginLeft: '2px',
         borderRadius: '5px',
+        border: '1px solid #ddd',
         width: '280px',
+        background: 'white',
       }}
       className={localStyle.presetMenu}
     >
@@ -96,7 +103,7 @@ export default class LookupTableProperty extends React.Component {
     }
   }
 
-  onPresetChange({ key: presetName }) {
+  onPresetChange(presetName) {
     const lookupTableProxy = this.props.data.value[0];
     if (lookupTableProxy) {
       lookupTableProxy.setPresetName(presetName);
@@ -138,7 +145,7 @@ export default class LookupTableProperty extends React.Component {
           this.props.show(this.props.viewData) ? style.container : style.hidden
         }
       >
-        <Dropdown overlay={menu} trigger={['click']} placement="bottomLeft">
+        <Dropdown overlay={menu} trigger={['click']}>
           <img
             alt="Color Legend"
             src={this.state.colorMap}

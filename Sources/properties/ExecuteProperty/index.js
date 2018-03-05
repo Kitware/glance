@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button } from 'antd';
+import UI from '../../ui';
+
+const { Button } = UI;
 
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-unused-prop-types */

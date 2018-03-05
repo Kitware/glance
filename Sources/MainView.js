@@ -1,10 +1,12 @@
-import 'antd/dist/antd.css';
+import 'normalize.css/normalize.css';
 
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Layout, Menu, Progress } from 'antd';
+import 'rc-progress/assets/index.css';
+import { Circle as Progress } from 'rc-progress';
 
+import UI from './ui';
 import Layouts from './layouts';
 import LayoutConfig from './config/glanceLayoutConfig';
 import style from './pv-explorer.mcss';
@@ -12,13 +14,10 @@ import icons from './icons';
 
 import Controls from './controls';
 
-const { Header, Sider, Content } = Layout;
-
+const { Menu } = UI;
 const { LayoutGrid } = Layouts;
 
 const layouts = ['2D', '3D', 'Split', 'Quad'];
-
-const WIDTH = 300;
 
 export default class MainView extends React.Component {
   constructor(props) {
@@ -38,7 +37,7 @@ export default class MainView extends React.Component {
     this.forceUpdate = this.forceUpdate.bind(this);
   }
 
-  onLayoutChange({ item, key, selectedKeys }) {
+  onLayoutChange(key) {
     this.setState({ layout: key });
   }
 
@@ -54,24 +53,29 @@ export default class MainView extends React.Component {
 
     if (this.state.showProgress) {
       progress = (
-        <Progress
-          type="circle"
-          width={50}
-          percent={this.state.progressPercent}
-        />
+        <div>
+          <Progress
+            strokeWidth={6}
+            strokeLinecap="round"
+            width={50}
+            percent={this.state.progressPercent}
+          />
+          <span className={style.progressText}>
+            {this.state.progressPercent}%
+          </span>
+        </div>
       );
     }
 
     return (
-      <Layout>
-        <Header className={style.toolbar}>
+      <div className={style.vertContainer}>
+        <div className={style.toolbar}>
           <div className={style.logo} onClick={this.onToggleControl}>
             <img alt="logo" src={icons.Logo} />
           </div>
           <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={[this.state.layout]}
+            horizontal
+            selectedKey={this.state.layout}
             onSelect={this.onLayoutChange}
           >
             {layouts.map((name) => (
@@ -85,15 +89,16 @@ export default class MainView extends React.Component {
             ))}
           </Menu>
           <div className={style.progressContainer}>{progress}</div>
-        </Header>
-        <Layout>
-          <Sider
-            className={style.sideBar}
-            width={WIDTH}
-            collapsedWidth={0}
-            trigger={null}
-            collapsible
-            collapsed={this.state.collapsed}
+        </div>
+        <div className={style.horizContainer}>
+          <div
+            className={[
+              style.appSideBar,
+              style.sideBar,
+              this.state.collapsed
+                ? style.appSideBarCollapsed
+                : style.appSideBarVisible,
+            ].join(' ')}
           >
             <Controls
               ref={(c) => {
@@ -101,19 +106,19 @@ export default class MainView extends React.Component {
               }}
               proxyManager={this.props.proxyManager}
             />
-          </Sider>
-          <Layout>
-            <Content className={style.workspace}>
+          </div>
+          <div className={[style.vertContainer, style.noOverflow].join(' ')}>
+            <div className={style.workspace}>
               <LayoutGrid
                 proxyManager={this.props.proxyManager}
                 className={style.content}
                 initialConfig={LayoutConfig}
                 layout={this.state.layout}
               />
-            </Content>
-          </Layout>
-        </Layout>
-      </Layout>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 }

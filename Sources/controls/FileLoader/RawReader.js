@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
-import { Button } from 'antd';
+import UI from '../../ui';
 
 import style from './RawReader.mcss';
+
+const { Button } = UI;
 
 const BYTE_SIZES = {
   Int8Array: 1,

@@ -1,0 +1,21 @@
+.button {
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  line-height: 2rem;
+  background-color: white;
+  cursor: pointer;
+  transition: color .5s, border-color .5s;
+  outline: none;
+  -moz-outline: none;
+  -ms-outline: none;
+  -webkit-outline: none;
+}
+
+.button:hover {
+  color: $colors.selected;
+  border: 1px solid $colors.selected;
+}
+
+.button:active {
+  filter: brightness(98%);
+}

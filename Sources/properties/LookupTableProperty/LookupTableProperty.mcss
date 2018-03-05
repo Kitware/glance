@@ -31,8 +31,3 @@
   flex: none;
   min-width: 20px;
 }
-
-.presetMenu li:global(.ant-menu-item) {
-  line-height: 20px;
-  height: 20px;
-}

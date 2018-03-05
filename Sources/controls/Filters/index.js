@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Menu } from 'antd';
+import UI from '../../ui';
+
+import style from './Filters.mcss';
+
+const { Menu } = UI;
 
 export default class Filters extends React.Component {
   constructor(props) {
@@ -35,7 +39,7 @@ export default class Filters extends React.Component {
     }
   }
 
-  onClick({ key }) {
+  onClick(key) {
     const inputProxy = this.props.proxyManager.getActiveSource();
     if (inputProxy) {
       const filter = this.props.proxyManager.createProxy('Sources', key, {
@@ -67,9 +71,11 @@ export default class Filters extends React.Component {
 
   render() {
     return (
-      <Menu onClick={this.onClick} selectable={false}>
+      <Menu onSelect={this.onClick} selectable={false}>
         {this.state.filters.map((name) => (
-          <Menu.Item key={name}>{name}</Menu.Item>
+          <Menu.Item className={style.filterItem} key={name}>
+            {name}
+          </Menu.Item>
         ))}
       </Menu>
     );

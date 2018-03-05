@@ -1,8 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Tabs, Icon } from 'antd';
+import 'rc-tabs/assets/index.css';
+import Tabs, { TabPane } from 'rc-tabs';
+import TabContent from 'rc-tabs/lib/TabContent';
+import ScrollableInkTabBar from 'rc-tabs/lib/ScrollableInkTabBar';
 
+import UI from '../ui';
 import FileLoader from './FileLoader';
 import Filters from './Filters';
 import Informations from './Informations';
@@ -10,7 +14,7 @@ import PipelineEditor from './PipelineEditor';
 
 import style from '../pv-explorer.mcss';
 
-const { TabPane } = Tabs;
+const { FaIcon } = UI;
 
 // ----------------------------------------------------------------------------
 // Module configuration
@@ -53,8 +57,8 @@ export function getDefaultActiveTab() {
 // ----------------------------------------------------------------------------
 
 registerControlTab('pipeline', PipelineEditor, 10, 'share-alt');
-registerControlTab('files', FileLoader, 5, 'file-text', true); // Default active one
-registerControlTab('filters', Filters, 6, 'plus');
+registerControlTab('files', FileLoader, 5, 'file-alt', true); // Default active one
+registerControlTab('filters', Filters, 6, 'filter');
 registerControlTab('informations', Informations, 0, 'info');
 
 // ----------------------------------------------------------------------------
@@ -80,16 +84,18 @@ export default class ContolPanel extends React.Component {
     return (
       <Tabs
         activeKey={this.state.tab}
-        size="small"
         className={style.compactTabs}
         onChange={this.changeTabTo}
+        renderTabBar={() => <ScrollableInkTabBar />}
+        renderTabContent={() => <TabContent />}
       >
         {listControlTabs().map((controlName) => {
           const panel = PANEL_TABS[controlName];
           const Renderer = panel.reactClass;
           return (
             <TabPane
-              tab={<Icon type={panel.icon} style={{ marginRight: '0' }} />}
+              className={style.tabPane}
+              tab={<FaIcon type={panel.icon} style={{ marginRight: '0' }} />}
               key={controlName}
               forceRender
             >

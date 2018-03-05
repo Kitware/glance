@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button } from 'antd';
-
+import UI from '../ui';
 import style from './vtk-layout.mcss';
+
+const { Button, FaIcon } = UI;
 
 export default class Layout3D extends React.Component {
   constructor(props) {
@@ -75,18 +76,25 @@ export default class Layout3D extends React.Component {
       >
         <div className={style.renderWindowToolbar}>
           <Button
-            size="small"
-            icon="camera-o"
+            className={style.rwToolbarButton}
             onClick={this.view.openCaptureImage}
-          />
+          >
+            <FaIcon type="camera" />
+          </Button>
           <label className={style.renderWindowTitle}>{this.props.title}</label>
           <section className={style.renderWindowActions}>
             <Button
-              size="small"
-              icon="global"
+              className={style.rwToolbarButton}
               onClick={this.toggleOrientationMarker}
-            />
-            <Button size="small" icon="scan" onClick={this.view.resetCamera} />
+            >
+              <FaIcon type="globe" />
+            </Button>
+            <Button
+              className={style.rwToolbarButton}
+              onClick={this.view.resetCamera}
+            >
+              <FaIcon type="expand" />
+            </Button>
           </section>
         </div>
         <div

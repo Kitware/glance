@@ -59,6 +59,10 @@ export default class Layout3D extends React.Component {
     this.props.proxyManager.setActiveView(this.view);
   }
 
+  resize() {
+    this.view.resize();
+  }
+
   render() {
     return (
       <div

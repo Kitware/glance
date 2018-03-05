@@ -89,6 +89,7 @@
 .workspace {
   overflow: hidden;
   height: calc(100vh - 64px);
+  max-height: calc(100vh - 64px);
 }
 
 .progressContainer {

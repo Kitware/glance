@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { Layout, Menu, Progress } from 'antd';
 
 import Layouts from './layouts';
+import LayoutConfig from './config/glanceLayoutConfig';
 import style from './pv-explorer.mcss';
 import icons from './icons';
 
@@ -13,7 +14,9 @@ import Controls from './controls';
 
 const { Header, Sider, Content } = Layout;
 
-const layouts = ['Layout2D', 'Layout3D', 'LayoutSplit', 'LayoutQuad'];
+const { LayoutGrid } = Layouts;
+
+const layouts = ['2D', '3D', 'Split', 'Quad'];
 
 const WIDTH = 300;
 
@@ -21,7 +24,7 @@ export default class MainView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      layout: 'Layout3D',
+      layout: '3D',
       overlayOpacity: 100,
       collapsed: false,
       tab: 'files',
@@ -36,10 +39,7 @@ export default class MainView extends React.Component {
   }
 
   onLayoutChange({ item, key, selectedKeys }) {
-    this.setState({ layout: key }, () => {
-      this.forceUpdate();
-      this.props.proxyManager.createRepresentationInAllViews();
-    });
+    this.setState({ layout: key });
   }
 
   onToggleControl() {
@@ -50,7 +50,6 @@ export default class MainView extends React.Component {
   }
 
   render() {
-    const Renderer = Layouts[this.state.layout];
     let progress = null;
 
     if (this.state.showProgress) {
@@ -80,7 +79,7 @@ export default class MainView extends React.Component {
                 <img
                   alt={name}
                   className={style.toolbarIcon}
-                  src={icons[name]}
+                  src={icons[`Layout${name}`]}
                 />
               </Menu.Item>
             ))}
@@ -105,9 +104,11 @@ export default class MainView extends React.Component {
           </Sider>
           <Layout>
             <Content className={style.workspace}>
-              <Renderer
+              <LayoutGrid
                 proxyManager={this.props.proxyManager}
                 className={style.content}
+                initialConfig={LayoutConfig}
+                layout={this.state.layout}
               />
             </Content>
           </Layout>

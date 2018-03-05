@@ -18,7 +18,7 @@ export default class PiecewiseFunctionProperty extends React.Component {
 
     this.piecewiseWidget = vtkPiecewiseGaussianWidget.newInstance({
       numberOfBins: 256,
-      size: [300, 150],
+      size: [280, 150],
     });
 
     this.piecewiseWidget.updateStyle({

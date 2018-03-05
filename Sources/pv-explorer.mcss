@@ -1,3 +1,15 @@
+body {
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.8);
+  line-height: 1.5;
+}
+
+img {
+  vertical-align: middle;
+  border: none;
+}
+
 .vertContainer {
   display: flex;
   flex-direction: column;
@@ -131,7 +143,19 @@
 }
 
 .progressContainer {
+  /* Override toolbar line height */
+  line-height: 1em;
   flex: none;
   position: relative;
   left: 40px;
+  vertical-align: middle;
+}
+
+.progressText {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
 }

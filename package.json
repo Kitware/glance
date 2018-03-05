@@ -13,12 +13,15 @@
     "homepage": "https://github.com/kitware/pv-web-viewer#readme",
     "main": "./Distribution/glance.js",
     "dependencies": {
-        "shelljs": "0.7.8",
-        "vtk.js": "6.3.4",
         "font-awesome": "4.5.0",
         "monologue.js": "0.3.5",
         "mout": "1.0.0",
-        "paraviewweb": "3.0.13"
+        "normalize.css": "^8.0.0",
+        "paraviewweb": "3.0.13",
+        "rc-dropdown": "^2.1.0",
+        "rc-progress": "^2.2.5",
+        "shelljs": "0.7.8",
+        "vtk.js": "6.3.4"
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free-webfonts": "^1.0.4",

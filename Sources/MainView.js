@@ -1,9 +1,10 @@
-import 'antd/dist/antd.css';
+import 'normalize.css/normalize.css';
 
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Progress } from 'antd';
+import 'rc-progress/assets/index.css';
+import { Circle as Progress } from 'rc-progress';
 
 import UI from './ui';
 import Layouts from './layouts';
@@ -52,11 +53,17 @@ export default class MainView extends React.Component {
 
     if (this.state.showProgress) {
       progress = (
-        <Progress
-          type="circle"
-          width={50}
-          percent={this.state.progressPercent}
-        />
+        <div>
+          <Progress
+            strokeWidth={6}
+            strokeLinecap="round"
+            width={50}
+            percent={this.state.progressPercent}
+          />
+          <span className={style.progressText}>
+            {this.state.progressPercent}%
+          </span>
+        </div>
       );
     }
 

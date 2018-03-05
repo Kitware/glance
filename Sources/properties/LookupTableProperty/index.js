@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
+import 'rc-dropdown/assets/index.css';
+import Dropdown from 'rc-dropdown';
 
-import { Dropdown } from 'antd';
+import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
 
 import style from 'paraviewweb/style/ReactProperties/CellProperty.mcss';
 import localStyle from './LookupTableProperty.mcss';
@@ -36,6 +37,7 @@ function PresetMenu(props) {
         maxHeight: '170px',
         marginLeft: '2px',
         borderRadius: '5px',
+        border: '1px solid #ddd',
         width: '280px',
         background: 'white',
       }}
@@ -143,7 +145,7 @@ export default class LookupTableProperty extends React.Component {
           this.props.show(this.props.viewData) ? style.container : style.hidden
         }
       >
-        <Dropdown overlay={menu} trigger={['click']} placement="bottomLeft">
+        <Dropdown overlay={menu} trigger={['click']}>
           <img
             alt="Color Legend"
             src={this.state.colorMap}

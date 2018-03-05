@@ -21,6 +21,7 @@
         "paraviewweb": "3.0.13"
     },
     "devDependencies": {
+        "paraview-glance": "1.1.16",
         "antd": "3.0.0",
         "copy-webpack-plugin": "^4.4.1",
         "webworker-promise": "^0.4.1",

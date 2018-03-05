@@ -1,6 +1,7 @@
 menu:
   gallery: Gallery
   app: Application
+  nightly: Nightly
   news: News
   search: Search
 

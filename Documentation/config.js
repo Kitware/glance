@@ -15,6 +15,10 @@ module.exports = {
   copy: [
     {
       src: '../Distribution/*',
+      dest: './build-tmp/public/nightly',
+    },
+    {
+      src: '../node_modules/paraview-glance/Distribution/*',
       dest: './build-tmp/public/app',
     },
   ],

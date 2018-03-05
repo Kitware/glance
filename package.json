@@ -26,7 +26,6 @@
     "devDependencies": {
         "@fortawesome/fontawesome-free-webfonts": "^1.0.4",
         "paraview-glance": "1.1.16",
-        "antd": "3.0.0",
         "copy-webpack-plugin": "^4.4.1",
         "http-server": "0.10.0",
         "itk": "7.2.0",

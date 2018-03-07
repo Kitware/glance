@@ -106,18 +106,70 @@ export default {
       Glyph: createProxyDefinition(vtkGlyphRepresentationProxy, proxyUI.Glyph),
     },
     Views: {
-      View3D: activateOnCreate(createProxyDefinition(vtkView, proxyUI.View3D)),
+      View3D: activateOnCreate(
+        createProxyDefinition(vtkView, proxyUI.View3D, [
+          { link: 'AnnotationOpacity', property: 'annotationOpacity' },
+          {
+            link: 'OrientationAxesVisibility',
+            property: 'orientationAxesVisibility',
+          },
+          {
+            link: 'OrientationAxesPreset',
+            property: 'presetToOrientationAxes',
+          },
+        ])
+      ),
       View2D: activateOnCreate(
-        createProxyDefinition(vtk2DView, proxyUI.View2D)
+        createProxyDefinition(vtk2DView, proxyUI.View2D, [
+          { link: 'AnnotationOpacity', property: 'annotationOpacity' },
+          {
+            link: 'OrientationAxesVisibility',
+            property: 'orientationAxesVisibility',
+          },
+          {
+            link: 'OrientationAxesPreset',
+            property: 'presetToOrientationAxes',
+          },
+        ])
       ),
       View2D_X: activateOnCreate(
-        createProxyDefinition(vtk2DView, proxyUI.View2D)
+        createProxyDefinition(vtk2DView, proxyUI.View2D, [
+          { link: 'AnnotationOpacity', property: 'annotationOpacity' },
+          {
+            link: 'OrientationAxesVisibility',
+            property: 'orientationAxesVisibility',
+          },
+          {
+            link: 'OrientationAxesPreset',
+            property: 'presetToOrientationAxes',
+          },
+        ])
       ),
       View2D_Y: activateOnCreate(
-        createProxyDefinition(vtk2DView, proxyUI.View2D)
+        createProxyDefinition(vtk2DView, proxyUI.View2D, [
+          { link: 'AnnotationOpacity', property: 'annotationOpacity' },
+          {
+            link: 'OrientationAxesVisibility',
+            property: 'orientationAxesVisibility',
+          },
+          {
+            link: 'OrientationAxesPreset',
+            property: 'presetToOrientationAxes',
+          },
+        ])
       ),
       View2D_Z: activateOnCreate(
-        createProxyDefinition(vtk2DView, proxyUI.View2D)
+        createProxyDefinition(vtk2DView, proxyUI.View2D, [
+          { link: 'AnnotationOpacity', property: 'annotationOpacity' },
+          {
+            link: 'OrientationAxesVisibility',
+            property: 'orientationAxesVisibility',
+          },
+          {
+            link: 'OrientationAxesPreset',
+            property: 'presetToOrientationAxes',
+          },
+        ])
       ),
     },
   },

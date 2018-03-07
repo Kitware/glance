@@ -4,6 +4,7 @@ import vtkSTLReader from 'vtk.js/Sources/IO/Geometry/STLReader';
 import vtkOBJReader from 'vtk.js/Sources/IO/Misc/OBJReader';
 import vtkPDBReader from 'vtk.js/Sources/IO/Misc/PDBReader';
 import vtkJSONReader from 'vtk.js/Sources/IO/Misc/JSONReader';
+import vtkSkyboxReader from 'vtk.js/Sources/IO/Misc/SkyboxReader';
 
 import ReaderFactory from './ReaderFactory';
 
@@ -53,4 +54,12 @@ ReaderFactory.registerReader({
   vtkReader: vtkJSONReader,
   binary: false,
   sourceType: 'Glyph',
+});
+
+ReaderFactory.registerReader({
+  extension: 'skybox',
+  name: 'Skybox Data Reader',
+  vtkReader: vtkSkyboxReader,
+  binary: true,
+  sourceType: 'Skybox',
 });

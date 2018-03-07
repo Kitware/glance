@@ -358,6 +358,19 @@ const View2D = [
   },
 ];
 
+const Skybox = [
+  {
+    widget: 'list-1',
+    label: 'Position',
+    name: 'position',
+    doc: 'Choose the skybox position',
+    values: [],
+    type: 'str',
+    advanced: 0,
+    size: 1,
+  },
+];
+
 export default {
   Volume,
   Geometry,
@@ -366,4 +379,5 @@ export default {
   Glyph,
   View3D,
   View2D,
+  Skybox,
 };

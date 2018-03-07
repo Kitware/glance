@@ -3,6 +3,7 @@ const View3D = {
   vtkImageData: { name: 'Volume' },
   vtkMolecule: { name: 'Molecule' },
   Glyph: { name: 'Glyph' },
+  Skybox: { name: 'Skybox' },
 };
 
 const View2D = {
@@ -10,6 +11,7 @@ const View2D = {
   vtkImageData: { name: 'Slice' },
   vtkMolecule: { name: 'Molecule' },
   Glyph: { name: 'Glyph' },
+  Skybox: { name: 'Skybox' },
 };
 
 export default {

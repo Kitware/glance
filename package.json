@@ -21,7 +21,7 @@
         "rc-dropdown": "^2.1.0",
         "rc-progress": "^2.2.5",
         "shelljs": "0.7.8",
-        "vtk.js": "6.3.4"
+        "vtk.js": "6.3.9"
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free-webfonts": "^1.0.4",

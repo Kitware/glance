@@ -1,5 +1,6 @@
 import vtk2DView from 'vtk.js/Sources/Proxy/Core/View2DProxy';
 import vtkGeometryRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/GeometryRepresentationProxy';
+import vtkSkyboxRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/SkyboxRepresentationProxy';
 import vtkGlyphRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/GlyphRepresentationProxy';
 import vtkLookupTableProxy from 'vtk.js/Sources/Proxy/Core/LookupTableProxy';
 import vtkMoleculeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/MoleculeRepresentationProxy';
@@ -48,6 +49,10 @@ export default {
       Geometry: createProxyDefinition(
         vtkGeometryRepresentationProxy,
         proxyUI.Geometry
+      ),
+      Skybox: createProxyDefinition(
+        vtkSkyboxRepresentationProxy,
+        proxyUI.Skybox
       ),
       Slice: createProxyDefinition(vtkSliceRepresentationProxy, proxyUI.Slice, [
         { link: 'ColorWindow', property: 'colorWindow' },

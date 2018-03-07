@@ -320,7 +320,7 @@ const View3D = [
   },
   {
     label: 'Orientation Axes',
-    name: 'orientationAxes',
+    name: 'orientationAxesVisibility',
     widget: 'checkbox',
     type: 'boolean',
     advanced: 1,
@@ -349,7 +349,7 @@ const View2D = [
   },
   {
     label: 'Orientation Axes',
-    name: 'orientationAxes',
+    name: 'orientationAxesVisibility',
     widget: 'checkbox',
     type: 'boolean',
     advanced: 1,

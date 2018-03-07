@@ -51,8 +51,8 @@ export default class Layout3D extends React.Component {
   }
 
   toggleOrientationMarker() {
-    const orientationAxes = !this.view.getOrientationAxes();
-    this.view.setOrientationAxes(orientationAxes);
+    const orientationAxes = !this.view.getOrientationAxesVisibility();
+    this.view.setOrientationAxesVisibility(orientationAxes);
     this.view.renderLater();
   }
 

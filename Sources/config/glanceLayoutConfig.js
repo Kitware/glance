@@ -75,8 +75,8 @@ export default {
       component: Layout2D,
       props: {
         axis: 1,
-        orientation: 1,
-        viewUp: [0, -1, 0],
+        orientation: -1,
+        viewUp: [0, 0, 1],
         onAxisChange: (axis) => ['sliceX', 'sliceY', 'sliceZ'][axis],
       },
       stackChangeFunc: 'onAxisChange',
@@ -86,13 +86,18 @@ export default {
       props: {
         axis: 2,
         orientation: 1,
-        viewUp: [0, -1, 0],
+        viewUp: [0, 1, 0],
         onAxisChange: (axis) => ['sliceX', 'sliceY', 'sliceZ'][axis],
       },
       stackChangeFunc: 'onAxisChange',
     },
     volume: {
       component: Layout3D,
+      props: {
+        axis: 1,
+        orientation: -1,
+        viewUp: [0, 0, 1],
+      },
     },
   },
 };

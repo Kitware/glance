@@ -29,16 +29,33 @@ export default class AnnotationControl extends React.Component {
     this.addAngle = this.addAngle.bind(this);
     this.addLength = this.addLength.bind(this);
     this.addEllipticalRoi = this.addEllipticalRoi.bind(this);
-  }
+    this.enableActiveView = this.enableActiveView.bind(this);
 
-  componentDidMount() {
-    this.annotationManager.setWorkspace(this.canvas);
-    // this.annotationManager.enable();
+    this.subscription = this.proxyManager.onActiveViewChange(
+      this.enableActiveView
+    );
+    this.enableActiveView();
   }
 
   componentWillUnmount() {
+    this.subscription.unsubscribe();
     this.annotationManager.disable();
     this.annotationManager.setWorkspace(null);
+  }
+
+  enableActiveView() {
+    const activeView = this.proxyManager.getActiveView();
+    const parentElem = activeView ? activeView.getContainer() : null;
+    if (activeView) {
+      if (parentElem) {
+        const canvas = parentElem.querySelector('canvas');
+        console.log('enable', canvas);
+        this.annotationManager.enable(parentElem.parentNode);
+      } else {
+        console.log('try again');
+        setTimeout(this.enableActiveView, 100);
+      }
+    }
   }
 
   addAngle() {
@@ -77,7 +94,7 @@ export default class AnnotationControl extends React.Component {
         <div
           className={style.canvas}
           ref={(c) => {
-            this.canvas = c;
+            this.container = c;
           }}
         />
       </div>

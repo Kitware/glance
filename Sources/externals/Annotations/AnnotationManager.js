@@ -12,7 +12,7 @@ global.cornerstoneTools = cornerstoneTools;
 const ACTIONS = ['enable', 'disable', 'activate', 'deactivate'];
 const TOOLS = ['length', 'angle', 'ellipticalRoi'];
 
-let currentWorkspace = null;
+let currentContainer = null;
 const publicAPI = {};
 
 /*
@@ -38,15 +38,13 @@ invert - true if the the image should initially be displayed be inverted, false 
 sizeInBytes - the number of bytes used to store the pixels for this image.
 */
 
-const exampleImageId =
-  'https://rawgit.com/dannyrb/cornerstone-vuejs-poc/master/static/simple-study/1.2.276.0.74.3.1167540280.200511.112514.1.1.10.jpg';
-const canvas = document.createElement('canvas');
-const image = new Image();
-
-function createEmptyImage() {
-  const { width, height } = image;
-  const imageData = {
-    imageId: exampleImageId,
+function createEmptyImage(width = 300, height = 300, imageId = 'default') {
+  const pixels = new Uint8Array(width * height * 4);
+  pixels.fill(0);
+  // canvas.width = width;
+  // canvas.height = height;
+  return {
+    imageId,
     minPixelValue: 0,
     maxPixelValue: 255,
     slope: 1,
@@ -54,11 +52,37 @@ function createEmptyImage() {
     windowCenter: 128,
     windowWidth: 255,
     getPixelData() {
-      return canvas.getImageData(0, 0, width, height).data;
+      // return canvas.getImageData(0, 0, width, height).data;
+      return pixels;
     },
-    getImage() {
-      return image;
-    },
+    // getCanvas() {
+    //   return canvas;
+    // },
+    rows: height,
+    columns: width,
+    height,
+    width,
+    color: true,
+    columnPixelSpacing: undefined,
+    rowPixelSpacing: undefined,
+    invert: false,
+    sizeInBytes: width * height * 4,
+    rgba: true,
+  };
+}
+
+// ----------------------------------------------------------------------------
+
+function createImageFromCanvas(canvas, imageId = 'canvas') {
+  const { width, height } = canvas;
+  return {
+    imageId,
+    minPixelValue: 0,
+    maxPixelValue: 255,
+    slope: 1,
+    intercept: 0,
+    windowCenter: 128,
+    windowWidth: 255,
     getCanvas() {
       return canvas;
     },
@@ -73,23 +97,6 @@ function createEmptyImage() {
     sizeInBytes: width * height * 4,
     rgba: false,
   };
-  global.cImage = imageData;
-  return imageData;
-}
-
-// ----------------------------------------------------------------------------
-
-function enable() {
-  if (currentWorkspace) {
-    console.log('enable');
-    cornerstone.enable(currentWorkspace);
-    cornerstone.displayImage(
-      currentWorkspace,
-      createEmptyImage(currentWorkspace.width, currentWorkspace.height)
-    );
-    global.cornerstone = cornerstone;
-    cornerstoneTools.mouseInput.enable(currentWorkspace);
-  }
 }
 
 // ----------------------------------------------------------------------------
@@ -97,19 +104,28 @@ function enable() {
 function disable() {
   console.log('disable');
   publicAPI.disableAllTools();
-  cornerstone.disable(currentWorkspace);
-  cornerstoneTools.mouseInput.disable(currentWorkspace);
+  cornerstone.disable(currentContainer);
+  cornerstoneTools.mouseInput.disable(currentContainer);
+
+  currentContainer = null;
 }
 
 // ----------------------------------------------------------------------------
 
-function setWorkspace(canvasElem) {
-  if (currentWorkspace && currentWorkspace !== canvasElem) {
+function enable(container, canvas) {
+  if (currentContainer) {
     disable();
   }
-  currentWorkspace = canvasElem;
-  console.log('setWorkspace', currentWorkspace);
-  global.currentWorkspace = currentWorkspace;
+  currentContainer = container;
+  if (currentContainer) {
+    const { width, height } = currentContainer.getBoundingClientRect();
+    cornerstone.enable(currentContainer);
+    cornerstone.displayImage(
+      currentContainer,
+      canvas ? createImageFromCanvas(canvas) : createEmptyImage(width, height)
+    );
+    cornerstoneTools.mouseInput.enable(currentContainer);
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -117,7 +133,7 @@ function setWorkspace(canvasElem) {
 function createToolAction(action, toolName) {
   return (...args) => {
     console.log(`cornerstoneTools.${toolName}.${action}(${args.join(', ')})`);
-    cornerstoneTools[toolName][action](currentWorkspace, ...args);
+    cornerstoneTools[toolName][action](currentContainer, ...args);
   };
 }
 
@@ -125,7 +141,7 @@ function createToolAction(action, toolName) {
 // Expose API
 // ----------------------------------------------------------------------------
 
-Object.assign(publicAPI, { enable, disable, setWorkspace });
+Object.assign(publicAPI, { enable, disable });
 
 for (let actionIdx = 0; actionIdx < ACTIONS.length; actionIdx++) {
   const action = ACTIONS[actionIdx];
@@ -145,14 +161,14 @@ export default publicAPI;
 // FIXME - debug / test
 // ----------------------------------------------------------------------------
 
-image.src = exampleImageId;
-image.addEventListener('load', () => {
-  console.log('update canvas...');
-  canvas.width = image.width;
-  canvas.height = image.height;
-  canvas.getContext('2d').drawImage(image, 0, 0);
+// image.src = exampleImageId;
+// image.addEventListener('load', () => {
+//   console.log('update canvas...');
+//   canvas.width = image.width;
+//   canvas.height = image.height;
+//   canvas.getContext('2d').drawImage(image, 0, 0);
 
-  if (currentWorkspace) {
-    enable();
-  }
-});
+//   if (currentWorkspace) {
+//     enable();
+//   }
+// });

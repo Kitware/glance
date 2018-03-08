@@ -168,9 +168,9 @@ export default class Layout2D extends React.Component {
   }
 
   toggleOrientationMarker() {
-    const orientationAxes = !this.view.getOrientationAxes();
-    this.view.setOrientationAxes(orientationAxes);
-    this.view.renderLater();
+    const orientationAxes = !this.view.getOrientationAxesVisibility();
+    this.view.setOrientationAxesVisibility(orientationAxes);
+    this.props.proxyManager.renderAllViews();
   }
 
   activateView() {

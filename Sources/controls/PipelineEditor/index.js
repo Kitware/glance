@@ -12,11 +12,7 @@ export default class PipelineEditor extends React.Component {
     this.onApply = this.onApply.bind(this);
     this.flush = () => this.forceUpdate();
 
-    this.subscriptions = [
-      props.proxyManager.onActiveSourceChange(this.flush),
-      props.proxyManager.onActiveViewChange(this.flush),
-      props.proxyManager.onModified(this.flush),
-    ];
+    this.subscriptions = [props.proxyManager.onModified(this.flush)];
   }
 
   componentWillUnmount() {

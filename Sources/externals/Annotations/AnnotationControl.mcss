@@ -1,0 +1,8 @@
+.container {
+}
+
+.canvas {
+  background: #ccc;
+  width: 300px;
+  height: 300px;
+}

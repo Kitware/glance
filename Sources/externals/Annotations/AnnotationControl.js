@@ -2,7 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import UI from '../../ui';
-import AnnotationManager from './AnnotationManager';
+import vtkAnnotationManager from './AnnotationManager';
+import LengthRenderer from './LengthRenderer';
+import ArrowRenderer from './ArrowRenderer';
+import EllipticalRenderer from './EllipticalRenderer';
+import TextEditor from './TextEditor';
 import style from './AnnotationControl.mcss';
 
 const { Button } = UI;
@@ -16,12 +20,26 @@ const BUTTON_STYLE = {
   marginBottom: '20px',
 };
 
+function bStyle(activeTool, toolName) {
+  if (activeTool === toolName) {
+    return Object.assign({ background: '#ccc' }, BUTTON_STYLE);
+  }
+  return BUTTON_STYLE;
+}
+
+/* eslint-disable react/no-array-index-key */
+
 export default class AnnotationControl extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      ready: false,
+      toolsEnabled: true,
+      newTool: 'edit',
+      editText: false,
+    };
 
-    this.annotationManager = AnnotationManager;
+    this.annotationManager = vtkAnnotationManager;
     this.proxyManager = props.proxyManager;
     this.updateTab = props.updateTab;
 
@@ -29,28 +47,56 @@ export default class AnnotationControl extends React.Component {
     this.addAngle = this.addAngle.bind(this);
     this.addLength = this.addLength.bind(this);
     this.addEllipticalRoi = this.addEllipticalRoi.bind(this);
-    this.enableActiveView = this.enableActiveView.bind(this);
+    this.addArrow = this.addArrow.bind(this);
+    this.editMode = this.editMode.bind(this);
 
-    this.subscription = this.proxyManager.onActiveViewChange(
-      this.enableActiveView
-    );
+    this.activate = this.activate.bind(this);
+    this.delete = this.delete.bind(this);
+    this.toggleTools = this.toggleTools.bind(this);
+    this.enableActiveView = this.enableActiveView.bind(this);
+    this.forceUpdate = this.forceUpdate.bind(this);
+
+    this.updateText = this.updateText.bind(this);
+    this.pushText = this.pushText.bind(this);
+
+    this.subscriptions = [
+      this.proxyManager.onActiveViewChange(this.enableActiveView),
+      this.annotationManager.onImageRendered(() => this.forceUpdate()),
+      this.annotationManager.onAnnotationAdded(() => {
+        this.switchToEdit = true;
+      }),
+      this.annotationManager.onAnnotationRemoved(this.editMode),
+      this.annotationManager.onEditFinished(() => {
+        if (this.switchToEdit) {
+          this.editMode();
+        }
+      }),
+      this.annotationManager.onEditText((txt) => {
+        this.setState({ editText: true, textValue: txt || '' });
+      }),
+    ];
     this.enableActiveView();
   }
 
   componentWillUnmount() {
-    this.subscription.unsubscribe();
+    while (this.subscriptions.length) {
+      this.subscriptions.pop().unsubscribe();
+    }
     this.annotationManager.disable();
-    this.annotationManager.setWorkspace(null);
   }
 
   enableActiveView() {
+    if (this.state.ready) {
+      this.editMode();
+    }
     const activeView = this.proxyManager.getActiveView();
     const parentElem = activeView ? activeView.getContainer() : null;
     if (activeView) {
       if (parentElem) {
-        const canvas = parentElem.querySelector('canvas');
-        console.log('enable', canvas);
-        this.annotationManager.enable(parentElem.parentNode);
+        this.toolStateManager = this.annotationManager.enable(
+          parentElem.parentNode
+        );
+        this.setState({ ready: true }, this.annotationManager.render());
       } else {
         console.log('try again');
         setTimeout(this.enableActiveView, 100);
@@ -59,44 +105,152 @@ export default class AnnotationControl extends React.Component {
   }
 
   addAngle() {
-    this.annotationManager.deactivateAllTools();
+    this.annotationManager.deactivateAllTools(1);
     this.annotationManager.activateAngle(1);
+    this.annotationManager.render();
+    this.setState({ newTool: 'angle' });
   }
 
   addLength() {
-    this.annotationManager.deactivateAllTools();
+    this.annotationManager.deactivateAllTools(1);
     this.annotationManager.activateLength(1);
+    this.annotationManager.render();
+    this.setState({ newTool: 'length' });
   }
 
   addEllipticalRoi() {
-    this.annotationManager.deactivateAllTools();
+    this.annotationManager.deactivateAllTools(1);
     this.annotationManager.activateEllipticalRoi(1);
+    this.annotationManager.render();
+    this.setState({ newTool: 'ellipticalRoi' });
+  }
+
+  addArrow() {
+    this.annotationManager.deactivateAllTools(1);
+    this.annotationManager.activateArrowAnnotate(1);
+    this.annotationManager.render();
+    this.setState({ newTool: 'arrow' });
+  }
+
+  editMode() {
+    this.switchToEdit = false;
+    this.annotationManager.deactivateAllTools(1);
+    this.annotationManager.render();
+    this.setState({ newTool: 'edit' });
+  }
+
+  toggleTools() {
+    const { toolsEnabled } = this.state;
+    if (toolsEnabled) {
+      this.annotationManager.disableAllTools();
+    } else {
+      this.annotationManager.enableAllTools();
+    }
+    this.annotationManager.render();
+    this.setState({ toolsEnabled: !toolsEnabled });
+  }
+
+  activate(item) {
+    this.annotationManager.deactivateAllTools();
+    this.annotationManager.activateTool(item);
+  }
+
+  delete(item) {
+    this.annotationManager.deleteTool(item);
+  }
+
+  extractState() {
+    if (
+      this.toolStateManager &&
+      this.toolStateManager.toolState &&
+      this.toolStateManager.toolState.default
+    ) {
+      return this.toolStateManager.toolState.default;
+    }
+
+    return {};
+  }
+
+  updateText(e) {
+    this.setState({ textValue: e.target.value });
+  }
+
+  pushText() {
+    this.annotationManager.setTextValue(this.state.textValue);
+    this.setState({ editText: false, textValue: '' });
   }
 
   render() {
+    const {
+      length: lengthAnnotations,
+      arrowAnnotate: arrowAnnotations,
+      ellipticalRoi: ellipticalAnnotations,
+    } = this.extractState();
     return (
       <div className={style.container}>
         <Button
-          className="fa fa-font"
-          style={BUTTON_STYLE}
-          onClick={this.addAngle}
+          className="fa fa-map-signs"
+          style={bStyle(this.state.newTool, 'arrow')}
+          onClick={this.addArrow}
         />
         <Button
-          className="fa fa-comment"
-          style={BUTTON_STYLE}
+          className="fa fa-text-width"
+          style={bStyle(this.state.newTool, 'length')}
           onClick={this.addLength}
         />
         <Button
-          className="fa fa-angle-left"
-          style={BUTTON_STYLE}
+          className="fa fa-comment"
+          style={bStyle(this.state.newTool, 'ellipticalRoi')}
           onClick={this.addEllipticalRoi}
         />
-        <div
-          className={style.canvas}
-          ref={(c) => {
-            this.container = c;
-          }}
+        <Button
+          className="fa fa-angle-left"
+          style={bStyle(this.state.newTool, 'angle')}
+          onClick={this.addAngle}
         />
+        <Button
+          className="fa fa-edit"
+          style={bStyle(this.state.newTool, 'edit')}
+          onClick={this.editMode}
+        />
+
+        {this.state.editText ? (
+          <TextEditor
+            value={this.state.textValue}
+            onChange={this.updateText}
+            onBlur={this.pushText}
+          />
+        ) : null}
+
+        <div className={style.annotationContainer}>
+          {lengthAnnotations &&
+            lengthAnnotations.data.map((item, idx) => (
+              <LengthRenderer
+                key={`length-${idx}`}
+                item={item}
+                activate={this.activate}
+                delete={this.delete}
+              />
+            ))}
+          {arrowAnnotations &&
+            arrowAnnotations.data.map((item, idx) => (
+              <ArrowRenderer
+                key={`arrow-${idx}`}
+                item={item}
+                activate={this.activate}
+                delete={this.delete}
+              />
+            ))}
+          {ellipticalAnnotations &&
+            ellipticalAnnotations.data.map((item, idx) => (
+              <EllipticalRenderer
+                key={`arrow-${idx}`}
+                item={item}
+                activate={this.activate}
+                delete={this.delete}
+              />
+            ))}
+        </div>
       </div>
     );
   }

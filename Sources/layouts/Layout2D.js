@@ -239,11 +239,17 @@ export default class Layout2D extends React.Component {
             }}
           />
           <div
-            className={`${style.renderWindow} ${this.props.className}`}
-            ref={(c) => {
-              this.container = c;
-            }}
-          />
+            className={`js-annotation-container ${style.annotationContainer} ${
+              style.renderWindow
+            }`}
+          >
+            <div
+              className={`${style.renderWindow} ${this.props.className}`}
+              ref={(c) => {
+                this.container = c;
+              }}
+            />
+          </div>
         </div>
       </div>
     );

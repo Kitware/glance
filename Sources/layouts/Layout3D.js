@@ -98,11 +98,17 @@ export default class Layout3D extends React.Component {
           </section>
         </div>
         <div
-          className={`${style.renderWindow} ${this.props.className}`}
-          ref={(c) => {
-            this.container = c;
-          }}
-        />
+          className={`js-annotation-container ${style.annotationContainer} ${
+            style.renderWindow
+          }`}
+        >
+          <div
+            className={`${style.renderWindow} ${this.props.className}`}
+            ref={(c) => {
+              this.container = c;
+            }}
+          />
+        </div>
       </div>
     );
   }

@@ -115,6 +115,10 @@
   align-items: stretch;
 }
 
+.annotationContainer > :global(.cornerstone-canvas) {
+  opacity: 0;
+}
+
 .annotationContainer > canvas {
   position: absolute;
   top: 0;

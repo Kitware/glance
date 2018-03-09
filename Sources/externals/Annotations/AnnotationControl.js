@@ -35,8 +35,9 @@ export default class AnnotationControl extends React.Component {
     this.state = {
       ready: false,
       toolsEnabled: true,
-      newTool: 'edit',
+      newTool: 'off',
       editText: false,
+      enabled: false,
     };
 
     this.annotationManager = vtkAnnotationManager;
@@ -49,6 +50,7 @@ export default class AnnotationControl extends React.Component {
     this.addEllipticalRoi = this.addEllipticalRoi.bind(this);
     this.addArrow = this.addArrow.bind(this);
     this.editMode = this.editMode.bind(this);
+    this.disable = this.disable.bind(this);
 
     this.activate = this.activate.bind(this);
     this.delete = this.delete.bind(this);
@@ -60,7 +62,11 @@ export default class AnnotationControl extends React.Component {
     this.pushText = this.pushText.bind(this);
 
     this.subscriptions = [
-      this.proxyManager.onActiveViewChange(this.enableActiveView),
+      this.proxyManager.onActiveViewChange(() => {
+        if (this.state.enabled) {
+          this.enableActiveView();
+        }
+      }),
       this.annotationManager.onImageRendered(() => this.forceUpdate()),
       this.annotationManager.onAnnotationAdded(() => {
         this.switchToEdit = true;
@@ -96,7 +102,10 @@ export default class AnnotationControl extends React.Component {
         this.toolStateManager = this.annotationManager.enable(
           parentElem.parentNode
         );
-        this.setState({ ready: true }, this.annotationManager.render());
+        this.setState(
+          { ready: true, enabled: true },
+          this.annotationManager.render()
+        );
       } else {
         console.log('try again');
         setTimeout(this.enableActiveView, 100);
@@ -109,6 +118,9 @@ export default class AnnotationControl extends React.Component {
     this.annotationManager.activateAngle(1);
     this.annotationManager.render();
     this.setState({ newTool: 'angle' });
+    if (!this.state.enabled) {
+      this.enableActiveView();
+    }
   }
 
   addLength() {
@@ -116,6 +128,9 @@ export default class AnnotationControl extends React.Component {
     this.annotationManager.activateLength(1);
     this.annotationManager.render();
     this.setState({ newTool: 'length' });
+    if (!this.state.enabled) {
+      this.enableActiveView();
+    }
   }
 
   addEllipticalRoi() {
@@ -123,6 +138,9 @@ export default class AnnotationControl extends React.Component {
     this.annotationManager.activateEllipticalRoi(1);
     this.annotationManager.render();
     this.setState({ newTool: 'ellipticalRoi' });
+    if (!this.state.enabled) {
+      this.enableActiveView();
+    }
   }
 
   addArrow() {
@@ -130,6 +148,9 @@ export default class AnnotationControl extends React.Component {
     this.annotationManager.activateArrowAnnotate(1);
     this.annotationManager.render();
     this.setState({ newTool: 'arrow' });
+    if (!this.state.enabled) {
+      this.enableActiveView();
+    }
   }
 
   editMode() {
@@ -137,6 +158,14 @@ export default class AnnotationControl extends React.Component {
     this.annotationManager.deactivateAllTools(1);
     this.annotationManager.render();
     this.setState({ newTool: 'edit' });
+    if (!this.state.enabled) {
+      this.enableActiveView();
+    }
+  }
+
+  disable() {
+    this.annotationManager.disable();
+    this.setState({ newTool: 'off', enabled: false });
   }
 
   toggleTools() {
@@ -212,6 +241,11 @@ export default class AnnotationControl extends React.Component {
           className="fa fa-edit"
           style={bStyle(this.state.newTool, 'edit')}
           onClick={this.editMode}
+        />
+        <Button
+          className="fa fa-power-off"
+          style={bStyle(this.state.newTool, 'off')}
+          onClick={this.disable}
         />
 
         {this.state.editText ? (

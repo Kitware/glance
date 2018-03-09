@@ -4,6 +4,8 @@ import * as cornerstone from 'cornerstone-core';
 import * as cornerstoneMath from 'cornerstone-math';
 import * as cornerstoneTools from 'cornerstone-tools';
 
+import { copyCanvas, COPY_CANVAS } from './SUPER_HACK';
+
 cornerstoneTools.external.cornerstone = cornerstone;
 cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
 
@@ -226,8 +228,15 @@ function vtkAnnotationManager(publicAPI, model) {
     model.activeToolData = data;
     publicAPI.invokeEditText(data.text);
   }
+  // SUPER HACK ---------------------------------------------------------------
 
-  // PublicAPI ---------------------------------------------------------
+  publicAPI.onImageRendered(() => {
+    if (model.cornerstoneCanvas) {
+      copyCanvas(model.cornerstoneCanvas);
+    }
+  }, -1);
+
+  // PublicAPI ----------------------------------------------------------------
 
   publicAPI.setTextValue = (newText) => {
     if (model.activeToolData) {
@@ -303,16 +312,16 @@ function vtkAnnotationManager(publicAPI, model) {
 
   publicAPI.enable = (container) => {
     if (model.container) {
+      model.container.removeChild(COPY_CANVAS);
       detatchListeners();
       publicAPI.disable();
       // FIXME => may need to store previous state base on viewId + slicePosition?
       model.toolStateManager = null;
     }
-
-    console.log('container', container);
-
+    model.cornerstoneCanvas = null;
     model.container = container;
     if (model.container) {
+      model.container.appendChild(COPY_CANVAS);
       const { width, height } = model.container.getBoundingClientRect();
       cornerstone.enable(model.container);
       cornerstone.displayImage(
@@ -334,6 +343,11 @@ function vtkAnnotationManager(publicAPI, model) {
         arrowFirst: true,
       });
 
+      // SUPER HACK
+      model.cornerstoneCanvas = model.container.querySelector(
+        '.cornerstone-canvas'
+      );
+
       publicAPI.render();
     }
 
@@ -353,6 +367,10 @@ function vtkAnnotationManager(publicAPI, model) {
     }
     publicAPI[`${action}AllTools`] = macro.chain(...allTools);
   }
+
+  // --------------------------------------------------------------------------
+  // SUPER MEGA HACK !!!
+  // --------------------------------------------------------------------------
 }
 
 // ----------------------------------------------------------------------------

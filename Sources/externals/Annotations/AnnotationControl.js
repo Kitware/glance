@@ -209,6 +209,12 @@ export default class AnnotationControl extends React.Component {
     this.setState({ editText: false, textValue: '' });
   }
 
+  // <Button
+  //   className="fa fa-angle-left"
+  //   style={bStyle(this.state.newTool, 'angle')}
+  //   onClick={this.addAngle}
+  // />
+
   render() {
     const {
       length: lengthAnnotations,
@@ -231,11 +237,6 @@ export default class AnnotationControl extends React.Component {
           className="fa fa-comment"
           style={bStyle(this.state.newTool, 'ellipticalRoi')}
           onClick={this.addEllipticalRoi}
-        />
-        <Button
-          className="fa fa-angle-left"
-          style={bStyle(this.state.newTool, 'angle')}
-          onClick={this.addAngle}
         />
         <Button
           className="fa fa-edit"

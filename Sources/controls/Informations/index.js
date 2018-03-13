@@ -12,14 +12,37 @@ import style from './Informations.mcss';
 const hasVR = !!navigator.getVRDisplays;
 
 export default function Informations(props) {
-  const output = [
+  const output = [<br key="space-head" />];
+  const source = props.proxyManager.getActiveSource();
+  const view = props.proxyManager.getActiveView();
+  const dataset = source ? source.getDataset() : null;
+
+  // GPU data
+  if (view) {
+    const rw = view.getOpenglRenderWindow();
+    const allInfo = rw.getGLInformations();
+    const { UNMASKED_RENDERER, UNMASKED_VENDOR, WEBGL_VERSION } = allInfo;
+
+    output.push(
+      <label className={style.title} key="gpu">
+        {UNMASKED_VENDOR.value}
+      </label>
+    );
+    output.push(
+      <div className={style.textContent}>
+        {UNMASKED_RENDERER.value}
+        <br />WebGL {WEBGL_VERSION.value}
+      </div>
+    );
+  }
+
+  // Perf monitor
+  output.push(
     <label className={style.title} key="title-perf">
       Performance monitor
-    </label>,
-    <FPSMonitor key="fps" proxyManager={props.proxyManager} />,
-  ];
-  const source = props.proxyManager.getActiveSource();
-  const dataset = source ? source.getDataset() : null;
+    </label>
+  );
+  output.push(<FPSMonitor key="fps" proxyManager={props.proxyManager} />);
 
   if (hasVR) {
     output.push(

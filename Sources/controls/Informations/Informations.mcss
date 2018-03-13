@@ -67,3 +67,10 @@
   justify-content: space-around;
   padding: 10px 5px 20px 5px;
 }
+
+.textContent {
+  position: relative;
+  top: -5px;
+  padding: 10px 0;
+  text-align: center;
+}

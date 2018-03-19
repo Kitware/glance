@@ -35,7 +35,6 @@ export default {
         sliceX: {
           cell: [2, 1],
           propOverrides: {
-            viewType: 'View2D_X',
             title: '-Z+Y',
             orientations: [],
           },
@@ -43,7 +42,6 @@ export default {
         sliceY: {
           cell: [1, 1],
           propOverrides: {
-            viewType: 'View2D_Y',
             title: '-Z+X',
             orientations: [],
           },
@@ -51,7 +49,6 @@ export default {
         sliceZ: {
           cell: [2, 2],
           propOverrides: {
-            viewType: 'View2D_Z',
             title: '+X+Y',
             orientations: [],
           },
@@ -64,6 +61,7 @@ export default {
     sliceX: {
       component: Layout2D,
       props: {
+        viewType: 'View2D_X',
         axis: 0,
         orientation: 1,
         viewUp: [0, 0, 1],
@@ -74,6 +72,7 @@ export default {
     sliceY: {
       component: Layout2D,
       props: {
+        viewType: 'View2D_Y',
         axis: 1,
         orientation: -1,
         viewUp: [0, 0, 1],
@@ -84,6 +83,7 @@ export default {
     sliceZ: {
       component: Layout2D,
       props: {
+        viewType: 'View2D_Z',
         axis: 2,
         orientation: 1,
         viewUp: [0, 1, 0],

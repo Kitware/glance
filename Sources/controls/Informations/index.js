@@ -29,7 +29,7 @@ export default function Informations(props) {
       </label>
     );
     output.push(
-      <div className={style.textContent}>
+      <div className={style.textContent} key="webgl">
         {UNMASKED_RENDERER.value}
         <br />WebGL {WEBGL_VERSION.value}
       </div>

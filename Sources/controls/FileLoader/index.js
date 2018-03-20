@@ -73,7 +73,7 @@ export default class FileLoader extends React.Component {
       <div className={style.content}>
         <Button onClick={this.loadFile}>
           <FaIcon type="upload" style={{ paddingRight: '10px' }} />
-          Load local file
+          Load or drop file
         </Button>
         <label className={style.supportedFiles}>
           {ReaderFactory.listSupportedExtensions()

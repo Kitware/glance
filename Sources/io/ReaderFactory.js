@@ -80,27 +80,42 @@ function openFiles(extensions, onFilesCallback) {
 
 // ----------------------------------------------------------------------------
 
-function readFile(file) {
+function readRawData({ fileName, data }) {
   return new Promise((resolve, reject) => {
-    const readerMapping = getReader(file);
+    const readerMapping = getReader({ name: fileName });
     if (readerMapping) {
       const {
         vtkReader,
-        readMethod,
         parseMethod,
         fileNameMethod,
         sourceType,
       } = readerMapping;
       const reader = vtkReader.newInstance();
+      if (fileNameMethod) {
+        reader[fileNameMethod](fileName);
+      }
+      const ds = reader[parseMethod](data);
+      Promise.resolve(ds).then((dataset) =>
+        resolve({ dataset, reader, sourceType, name: fileName })
+      );
+    } else {
+      reject();
+    }
+  });
+}
+
+// ----------------------------------------------------------------------------
+
+function readFile(file) {
+  return new Promise((resolve, reject) => {
+    const readerMapping = getReader(file);
+    if (readerMapping) {
+      const { readMethod } = readerMapping;
       const io = new FileReader();
       io.onload = function onLoad(e) {
-        if (fileNameMethod) {
-          reader[fileNameMethod](file.name);
-        }
-        const ds = reader[parseMethod](io.result);
-        Promise.resolve(ds).then((dataset) => {
-          resolve({ dataset, reader, sourceType, name: file.name });
-        });
+        readRawData({ fileName: file.name, data: io.result })
+          .then((result) => resolve(result))
+          .catch((error) => reject(error));
       };
       io[readMethod](file);
     } else {
@@ -125,11 +140,11 @@ function downloadDataset(fileName, url, progressCallback) {
   return new Promise((resolve, reject) => {
     const readerMapping = getReader({ name: fileName });
     if (readerMapping) {
-      const { vtkReader, readMethod, parseMethod, sourceType } = readerMapping;
-      const reader = vtkReader.newInstance();
+      const { readMethod } = readerMapping;
       FETCH_DATA[readMethod](url, progressCallback).then((rawData) => {
-        reader[parseMethod](rawData);
-        resolve({ reader, sourceType, name: fileName });
+        readRawData({ fileName, data: rawData })
+          .then((result) => resolve(result))
+          .catch((error) => reject(error));
       });
     } else {
       throw new Error(`No reader found for ${fileName}`);
@@ -142,13 +157,13 @@ function downloadDataset(fileName, url, progressCallback) {
 function registerReadersToProxyManager(readers, proxyManager) {
   for (let i = 0; i < readers.length; i++) {
     const { reader, sourceType, name, dataset } = readers[i];
-    if (reader) {
+    if (reader || dataset) {
       const source = proxyManager.createProxy('Sources', 'TrivialProducer', {
         name,
       });
       if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
         source.setInputData(dataset, sourceType);
-      } else {
+      } else if (reader) {
         source.setInputAlgorithm(reader, sourceType);
       }
 

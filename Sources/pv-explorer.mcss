@@ -172,8 +172,13 @@ img {
   transition-delay: 0s;
 }
 
+.dndOverlayVisible > .dndOverlayText {
+  display: block;
+}
+
 .dndOverlayText {
   position: relative;
+  display: none;
   top: 50%;
   transform: translateY(-50%);
   margin: auto;

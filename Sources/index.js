@@ -34,13 +34,11 @@ export function createViewer(container, proxyConfiguration = defaultConfig) {
     container
   );
 
-  function addDataSet(name, ds, type) {
-    const source = proxyManager.createProxy('Sources', 'TrivialProducer', {
-      name,
-    });
-    source.setInputData(ds, type);
-    proxyManager.createRepresentationInAllViews(source);
-    proxyManager.renderAllViews();
+  function addDataSet(name, dataset, sourceType) {
+    registerReadersToProxyManager(
+      [{ reader: null, name, sourceType, dataset }],
+      proxyManager
+    );
   }
 
   function progressCallback(event) {

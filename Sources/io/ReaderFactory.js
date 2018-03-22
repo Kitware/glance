@@ -157,13 +157,13 @@ function downloadDataset(fileName, url, progressCallback) {
 function registerReadersToProxyManager(readers, proxyManager) {
   for (let i = 0; i < readers.length; i++) {
     const { reader, sourceType, name, dataset } = readers[i];
-    if (reader) {
+    if (reader || dataset) {
       const source = proxyManager.createProxy('Sources', 'TrivialProducer', {
         name,
       });
       if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
         source.setInputData(dataset, sourceType);
-      } else {
+      } else if (reader) {
         source.setInputAlgorithm(reader, sourceType);
       }
 

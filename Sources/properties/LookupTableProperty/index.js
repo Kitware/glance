@@ -1,17 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import 'rc-dropdown/assets/index.css';
-import Dropdown from 'rc-dropdown';
-
-import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
-
 import style from 'paraviewweb/style/ReactProperties/CellProperty.mcss';
 import localStyle from './LookupTableProperty.mcss';
 
-import UI from '../../ui';
-
-const { Menu } = UI;
+import PresetTree from './PresetTree';
 
 const WORKING_CANVAS = document.createElement('canvas');
 WORKING_CANVAS.setAttribute('width', 300);
@@ -26,39 +19,6 @@ function getLookupTableImage(lut, min, max, width) {
   ctx.putImageData(pixelsArea, 0, 0);
   return WORKING_CANVAS.toDataURL('image/jpg');
 }
-
-function PresetMenu(props) {
-  return (
-    <Menu
-      onSelect={props.onClick}
-      selectedKey={props.selected}
-      style={{
-        overflowY: 'auto',
-        maxHeight: '170px',
-        marginLeft: '2px',
-        borderRadius: '5px',
-        border: '1px solid #ddd',
-        width: '280px',
-        background: 'white',
-      }}
-      className={localStyle.presetMenu}
-    >
-      {vtkColorMaps.rgbPresetNames.map((name) => (
-        <Menu.Item key={name}>{name}</Menu.Item>
-      ))}
-    </Menu>
-  );
-}
-
-PresetMenu.propTypes = {
-  onClick: PropTypes.func,
-  selected: PropTypes.string,
-};
-
-PresetMenu.defaultProps = {
-  onClick: () => {},
-  selected: '',
-};
 
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-unused-prop-types */
@@ -133,25 +93,19 @@ export default class LookupTableProperty extends React.Component {
     if (!lutProxy || !this.state.colorMap) {
       return null;
     }
-    const menu = (
-      <PresetMenu
-        onClick={this.onPresetChange}
-        selected={lutProxy.getPresetName()}
-      />
-    );
     return (
       <div
+        title={lutProxy.getPresetName()}
         className={
           this.props.show(this.props.viewData) ? style.container : style.hidden
         }
       >
-        <Dropdown overlay={menu} trigger={['click']}>
-          <img
-            alt="Color Legend"
-            src={this.state.colorMap}
-            className={this.state.colorMap ? localStyle.colorMap : style.hidden}
-          />
-        </Dropdown>
+        <PresetTree
+          colormaps={this.props.ui.domain.colormaps}
+          background={this.state.colorMap}
+          value={lutProxy.getPresetName()}
+          onSelect={this.onPresetChange}
+        />
         <section
           className={
             this.state.colorMap ? localStyle.colorMapRange : style.hidden

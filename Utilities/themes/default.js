@@ -1,9 +1,9 @@
 module.exports = {
   globals: {
     sizes: {
-      toolbar: '64px',
+      toolbar: '52px',
       icons: '40px',
-      menuItemPadding: '10px',
+      menuItemPadding: '6px',
     },
     colors: {
       menu: '#eee',

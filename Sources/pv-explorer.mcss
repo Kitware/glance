@@ -30,7 +30,7 @@ img {
 
 .toolbar {
   padding: 0 50px;
-  height: 64px;
+  height: $sizes.toolbar;
   background-color: $colors.menu;
   line-height: $sizes.toolbar;
   display: flex;
@@ -49,7 +49,7 @@ img {
 {
   border: none;
   background: transparent;
-  font-size: 1.8em;
+  font-size: 1.5em;
   vertical-align: middle;
 }
 
@@ -101,7 +101,7 @@ img {
 }
 
 .logo img {
-  height: 60px;
+  height: calc($sizes.toolbar - 4px);
 }
 
 .toolbarIcon {
@@ -122,8 +122,8 @@ img {
   display: flex;
   flex-flow: column;
   overflow: hidden;
-  height: calc(100vh - 105px);
-  max-height: calc(100vh - 105px);
+  height: calc(100vh - $sizes.toolbar - 40px);
+  max-height: calc(100vh - $sizes.toolbar - 40px);
 }
 
 /* Force proxy editor to resize height */
@@ -144,8 +144,8 @@ img {
 .workspace {
   flex: auto;
   overflow: hidden;
-  height: calc(100vh - 64px);
-  max-height: calc(100vh - 64px);
+  height: calc(100vh - $sizes.toolbar);
+  max-height: calc(100vh - $sizes.toolbar);
 }
 
 .dndOverlay {

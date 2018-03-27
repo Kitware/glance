@@ -37,6 +37,7 @@
         "rc-tree-select": "^1.12.9",
         "react": "16.1.1",
         "react-dom": "16.1.1",
+        "react-modal": "3.4.1",
         "webpack-bundle-analyzer": "2.9.1",
         "webworker-promise": "^0.4.1",
         "workbox-sw": "^2.1.2",

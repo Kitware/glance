@@ -39,6 +39,20 @@ img {
   justify-content: space-between;
 }
 
+.toolbarButtons {
+  position: relative;
+  right: -40px;
+}
+
+.toolbarButton,
+.toolbarButton:hover
+{
+  border: none;
+  background: transparent;
+  font-size: 1.8em;
+  vertical-align: middle;
+}
+
 .fullHeight {
   height: calc(100vh - $sizes.toolbar);
 }

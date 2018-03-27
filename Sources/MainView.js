@@ -10,9 +10,10 @@ import style from './pv-explorer.mcss';
 import icons from './icons';
 import ReaderFactory from './io/ReaderFactory';
 
+import AboutPage from './AboutPage';
 import Controls from './controls';
 
-const { Menu, Progress } = UI;
+const { Menu, Button, FaIcon, Progress, TitleModal } = UI;
 const { LayoutGrid } = Layouts;
 
 const layouts = ['2D', '3D', 'Split', 'Quad'];
@@ -22,11 +23,11 @@ export default class MainView extends React.Component {
     super(props);
     this.state = {
       layout: '3D',
-      overlayOpacity: 100,
       collapsed: false,
       showProgress: false,
       progressPercent: 0,
       dndVisible: false,
+      showAboutPage: false,
     };
 
     // main app container
@@ -138,6 +139,14 @@ export default class MainView extends React.Component {
               </Menu.Item>
             ))}
           </Menu>
+          <div className={style.toolbarButtons}>
+            <Button
+              className={style.toolbarButton}
+              onClick={() => this.setState({ showAboutPage: true })}
+            >
+              <FaIcon type="question-circle" />
+            </Button>
+          </div>
         </div>
         <div className={style.horizContainer}>
           <div
@@ -167,6 +176,14 @@ export default class MainView extends React.Component {
             </div>
           </div>
         </div>
+        <TitleModal
+          title="ParaView Glance"
+          isOpen={this.state.showAboutPage}
+          onRequestClose={() => this.setState({ showAboutPage: false })}
+          shouldCloseOnOverlayClick
+        >
+          <AboutPage />
+        </TitleModal>
         <Progress
           visible={this.state.showProgress}
           percent={this.state.progressPercent / 100}

@@ -134,24 +134,6 @@ img {
   max-height: calc(100vh - 64px);
 }
 
-.progressContainer {
-  /* Override toolbar line height */
-  line-height: 1em;
-  flex: none;
-  position: relative;
-  left: 40px;
-  vertical-align: middle;
-}
-
-.progressText {
-  width: 100%;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: center;
-}
-
 .dndOverlay {
   position: absolute;
   top: 0;

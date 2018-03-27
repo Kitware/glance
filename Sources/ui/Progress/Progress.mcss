@@ -1,0 +1,28 @@
+.container {
+  pointer-events: none;
+}
+
+.bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  width: 100%;
+  opacity: 1;
+  transition:
+    width 200ms ease 0s,
+    opacity 200ms ease 200ms,
+    height 200ms ease 200ms;
+}
+
+.leader {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  width: 125px;
+  transform: rotate(2deg) translate(0, -3px);
+}
+
+.hidden {
+  opacity: 0;
+}

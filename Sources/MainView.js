@@ -3,9 +3,6 @@ import 'normalize.css/normalize.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import 'rc-progress/assets/index.css';
-import { Circle as Progress } from 'rc-progress';
-
 import UI from './ui';
 import Layouts from './layouts';
 import LayoutConfig from './config/glanceLayoutConfig';
@@ -15,7 +12,7 @@ import ReaderFactory from './io/ReaderFactory';
 
 import Controls from './controls';
 
-const { Menu } = UI;
+const { Menu, Progress } = UI;
 const { LayoutGrid } = Layouts;
 
 const layouts = ['2D', '3D', 'Split', 'Quad'];
@@ -107,24 +104,6 @@ export default class MainView extends React.Component {
   }
 
   render() {
-    let progress = null;
-
-    if (this.state.showProgress) {
-      progress = (
-        <div>
-          <Progress
-            strokeWidth={6}
-            strokeLinecap="round"
-            width={50}
-            percent={this.state.progressPercent}
-          />
-          <span className={style.progressText}>
-            {this.state.progressPercent}%
-          </span>
-        </div>
-      );
-    }
-
     const dndClasses = [style.dndOverlay];
     if (this.state.dndVisible) {
       dndClasses.push(style.dndOverlayVisible);
@@ -159,7 +138,6 @@ export default class MainView extends React.Component {
               </Menu.Item>
             ))}
           </Menu>
-          <div className={style.progressContainer}>{progress}</div>
         </div>
         <div className={style.horizContainer}>
           <div
@@ -189,6 +167,11 @@ export default class MainView extends React.Component {
             </div>
           </div>
         </div>
+        <Progress
+          visible={this.state.showProgress}
+          percent={this.state.progressPercent / 100}
+          color="#9090b5"
+        />
       </div>
     );
   }

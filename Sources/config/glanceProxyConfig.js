@@ -35,6 +35,29 @@ function activateOnCreate(def) {
 
 // ----------------------------------------------------------------------------
 
+function createDefaultView(classFactory, ui) {
+  return activateOnCreate(
+    createProxyDefinition(classFactory, ui, [
+      {
+        type: 'application',
+        link: 'AnnotationOpacity',
+        property: 'annotationOpacity',
+      },
+      {
+        type: 'application',
+        link: 'OrientationAxesVisibility',
+        property: 'orientationAxesVisibility',
+      },
+      {
+        type: 'application',
+        link: 'OrientationAxesPreset',
+        property: 'presetToOrientationAxes',
+      },
+    ])
+  );
+}
+
+// ----------------------------------------------------------------------------
 export default {
   definitions: {
     Proxy: {
@@ -106,71 +129,11 @@ export default {
       Glyph: createProxyDefinition(vtkGlyphRepresentationProxy, proxyUI.Glyph),
     },
     Views: {
-      View3D: activateOnCreate(
-        createProxyDefinition(vtkView, proxyUI.View3D, [
-          { link: 'AnnotationOpacity', property: 'annotationOpacity' },
-          {
-            link: 'OrientationAxesVisibility',
-            property: 'orientationAxesVisibility',
-          },
-          {
-            link: 'OrientationAxesPreset',
-            property: 'presetToOrientationAxes',
-          },
-        ])
-      ),
-      View2D: activateOnCreate(
-        createProxyDefinition(vtk2DView, proxyUI.View2D, [
-          { link: 'AnnotationOpacity', property: 'annotationOpacity' },
-          {
-            link: 'OrientationAxesVisibility',
-            property: 'orientationAxesVisibility',
-          },
-          {
-            link: 'OrientationAxesPreset',
-            property: 'presetToOrientationAxes',
-          },
-        ])
-      ),
-      View2D_X: activateOnCreate(
-        createProxyDefinition(vtk2DView, proxyUI.View2D, [
-          { link: 'AnnotationOpacity', property: 'annotationOpacity' },
-          {
-            link: 'OrientationAxesVisibility',
-            property: 'orientationAxesVisibility',
-          },
-          {
-            link: 'OrientationAxesPreset',
-            property: 'presetToOrientationAxes',
-          },
-        ])
-      ),
-      View2D_Y: activateOnCreate(
-        createProxyDefinition(vtk2DView, proxyUI.View2D, [
-          { link: 'AnnotationOpacity', property: 'annotationOpacity' },
-          {
-            link: 'OrientationAxesVisibility',
-            property: 'orientationAxesVisibility',
-          },
-          {
-            link: 'OrientationAxesPreset',
-            property: 'presetToOrientationAxes',
-          },
-        ])
-      ),
-      View2D_Z: activateOnCreate(
-        createProxyDefinition(vtk2DView, proxyUI.View2D, [
-          { link: 'AnnotationOpacity', property: 'annotationOpacity' },
-          {
-            link: 'OrientationAxesVisibility',
-            property: 'orientationAxesVisibility',
-          },
-          {
-            link: 'OrientationAxesPreset',
-            property: 'presetToOrientationAxes',
-          },
-        ])
-      ),
+      View3D: createDefaultView(vtkView, proxyUI.View3D),
+      View2D: createDefaultView(vtk2DView, proxyUI.View2D),
+      View2D_X: createDefaultView(vtk2DView, proxyUI.View2D),
+      View2D_Y: createDefaultView(vtk2DView, proxyUI.View2D),
+      View2D_Z: createDefaultView(vtk2DView, proxyUI.View2D),
     },
   },
   representations: {

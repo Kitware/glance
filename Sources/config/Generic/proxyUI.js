@@ -1,4 +1,4 @@
-import Palettes from '../Palettes';
+import Palettes from '../../Palettes';
 
 const Volume = [
   {

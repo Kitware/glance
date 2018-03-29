@@ -10,30 +10,13 @@ import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/Sl
 import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
 import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
 
+import ConfigUtils from '../configUtils';
+
 import proxyUI from './proxyUI';
 import proxyFilter from './proxyFilter';
 import proxyViewRepresentationMapping from './proxyViewRepresentationMapping';
 
-// ----------------------------------------------------------------------------
-
-function createProxyDefinition(classFactory, ui = {}, links = []) {
-  return {
-    class: classFactory,
-    options: {
-      links,
-      ui,
-    },
-  };
-}
-
-// ----------------------------------------------------------------------------
-
-function activateOnCreate(def) {
-  def.options.activateOnCreate = true;
-  return def;
-}
-
-// ----------------------------------------------------------------------------
+const { createProxyDefinition, activateOnCreate } = ConfigUtils;
 
 function createDefaultView(classFactory, ui) {
   return activateOnCreate(
@@ -59,6 +42,7 @@ function createDefaultView(classFactory, ui) {
 
 // ----------------------------------------------------------------------------
 export default {
+  name: 'Generic',
   definitions: {
     Proxy: {
       LookupTable: createProxyDefinition(vtkLookupTableProxy),

@@ -12,7 +12,7 @@ import React from 'react';
 import './io/ParaViewGlanceReaders';
 import './properties';
 
-import defaultConfig from './config/glanceProxyConfig';
+import Configs from './config';
 import MainView from './MainView';
 import * as Controls from './controls';
 import ReaderFactory from './io/ReaderFactory';
@@ -27,7 +27,10 @@ export const {
 } = ReaderFactory;
 export const { registerControlTab, unregisterControlTab } = Controls;
 
-export function createViewer(container, proxyConfiguration = defaultConfig) {
+export function createViewer(container, proxyConfig = null) {
+  const { mode } = vtkURLExtract.extractURLParameters();
+  const proxyConfiguration = proxyConfig || Configs[mode] || Configs.Generic;
+
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
   const mainView = ReactDOM.render(
     <MainView proxyManager={proxyManager} />,

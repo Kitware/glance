@@ -27,7 +27,10 @@ export const {
 } = ReaderFactory;
 export const { registerControlTab, unregisterControlTab } = Controls;
 
-export function createViewer(container, proxyConfiguration = Configs.Generic) {
+export function createViewer(container, proxyConfig = null) {
+  const { mode } = vtkURLExtract.extractURLParameters();
+  const proxyConfiguration = proxyConfig || Configs[mode] || Configs.Generic;
+
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
   const mainView = ReactDOM.render(
     <MainView proxyManager={proxyManager} />,

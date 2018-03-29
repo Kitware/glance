@@ -107,3 +107,21 @@
   margin-right: 5px;
   background: white;
 }
+
+.annotationContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.annotationContainer > :global(.cornerstone-canvas) {
+  opacity: 0;
+}
+
+.annotationContainer > canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}

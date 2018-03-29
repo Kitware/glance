@@ -1,0 +1,35 @@
+.container {
+}
+
+.canvas {
+  background: #ccc;
+  width: 300px;
+  height: 300px;
+}
+
+.annotationContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 10px;
+}
+
+.active {
+  background: rgba(10, 10, 200, 0.5);
+}
+
+.lineItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2px;
+  padding: 2px 5px;
+  cursor: pointer;
+}
+
+.activeLineItem {
+  composes: lineItem;
+  composes: active;
+}

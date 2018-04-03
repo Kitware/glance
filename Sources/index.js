@@ -31,9 +31,22 @@ export const {
 } = ReaderFactory;
 export const { registerControlTab, unregisterControlTab } = Controls;
 
+let activeProxyConfig = null;
+/**
+ * Sets the active proxy configuration to be used by createViewer.
+ *
+ * Once createViewer() is called, setActiveProxyConfiguration will do nothing.
+ * Proxy config precedence (decreasing order):
+ *   createViewer param, active proxy config, URL mode, Generic config
+ */
+export function setActiveProxyConfiguration(config) {
+  activeProxyConfig = config;
+}
+
 export function createViewer(container, proxyConfig = null) {
   const { mode } = vtkURLExtract.extractURLParameters();
-  const proxyConfiguration = proxyConfig || Configs[mode] || Configs.Generic;
+  const proxyConfiguration =
+    proxyConfig || activeProxyConfig || Configs[mode] || Configs.Generic;
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
 
   const remoteControl = RemoteControl();

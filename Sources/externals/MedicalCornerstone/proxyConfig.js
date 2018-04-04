@@ -18,5 +18,14 @@ let config = Medical.Proxy;
 // use cornerstone views
 config = copyAssign(config, 'definitions.Views', proxyDefs.Views);
 
+// Use cornerstone representations
+['SliceX', 'SliceY', 'SliceZ'].forEach((slice) => {
+  config = copyAssign(
+    config,
+    `definitions.Representations.${slice}`,
+    proxyDefs.Slices[slice]
+  );
+});
+
 const MedicalCornerstone = config;
 export default MedicalCornerstone;

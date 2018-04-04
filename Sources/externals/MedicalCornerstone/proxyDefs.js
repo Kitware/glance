@@ -1,5 +1,6 @@
 import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
 import vtk2DView from './CornerstoneViewProxy';
+import vtkCornerstoneRepresentationProxy from './CornerstoneRepresentationProxy';
 
 import ConfigUtils from '../../config/configUtils';
 import proxyUI from '../../config/Generic/proxyUI';
@@ -31,6 +32,18 @@ function createDefaultView(classFactory, ui) {
   );
 }
 
+function createDefaultSliceRepr(sliceName) {
+  return createProxyDefinition(
+    vtkCornerstoneRepresentationProxy,
+    proxyUI.Slice,
+    [
+      { link: 'ColorWindow', property: 'colorWindow' },
+      { link: 'ColorLevel', property: 'colorLevel' },
+      { link: sliceName, property: 'slice' },
+    ]
+  );
+}
+
 const Views = {
   View3D: createDefaultView(vtkView, proxyUI.View3D),
   View2D: createDefaultView(vtk2DView, proxyUI.View2D),
@@ -39,6 +52,13 @@ const Views = {
   View2D_Z: createDefaultView(vtk2DView, proxyUI.View2D),
 };
 
+const Slices = {
+  SliceX: createDefaultSliceRepr('SliceX'),
+  SliceY: createDefaultSliceRepr('SliceY'),
+  SliceZ: createDefaultSliceRepr('SliceZ'),
+};
+
 export default {
+  Slices,
   Views,
 };

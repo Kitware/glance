@@ -74,7 +74,7 @@
   flex: 1;
   overflow: hidden;
   position: relative;
-  background: white;
+  background: black;
 }
 
 .sideBar {

@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 import { ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import Configs from './config';
 import UI from './ui';
 import Layouts from './layouts';
-import LayoutConfig from './config/glanceLayoutConfig';
 import style from './pv-explorer.mcss';
 import icons from './icons';
 
@@ -114,7 +114,7 @@ export default class MainView extends React.Component {
               <LayoutGrid
                 proxyManager={this.props.proxyManager}
                 className={style.content}
-                initialConfig={LayoutConfig}
+                initialConfig={Configs[this.props.mode].Layout}
                 layout={this.state.layout}
               />
             </div>
@@ -143,6 +143,7 @@ export default class MainView extends React.Component {
 }
 
 MainView.propTypes = {
+  mode: PropTypes.string.isRequired,
   remoteControl: PropTypes.object.isRequired,
   proxyManager: PropTypes.object.isRequired,
 };

@@ -45,14 +45,20 @@ export function setActiveProxyConfiguration(config) {
 
 export function createViewer(container, proxyConfig = null) {
   const { mode } = vtkURLExtract.extractURLParameters();
+  const appMode = mode || 'Generic';
+
   const proxyConfiguration =
-    proxyConfig || activeProxyConfig || Configs[mode] || Configs.Generic;
-  const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
+    proxyConfig || activeProxyConfig || Configs[appMode].Proxy;
 
   const remoteControl = RemoteControl();
 
+  const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
   ReactDOM.render(
-    <MainComponent remoteControl={remoteControl} proxyManager={proxyManager} />,
+    <MainComponent
+      mode={appMode}
+      remoteControl={remoteControl}
+      proxyManager={proxyManager}
+    />,
     container
   );
 

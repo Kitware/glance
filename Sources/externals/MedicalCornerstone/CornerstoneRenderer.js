@@ -2,6 +2,7 @@ import macro from 'vtk.js/Sources/macro';
 import vtkRenderer from 'vtk.js/Sources/Rendering/Core/Renderer';
 
 import * as cornerstone from 'cornerstone-core';
+import * as cornerstoneTools from 'cornerstone-tools';
 
 const { vtkErrorMacro } = macro;
 
@@ -143,6 +144,7 @@ function CornerstoneRenderer(publicAPI, model) {
 
     if (container) {
       cornerstone.enable(container);
+      cornerstoneTools.makeUnselectable(container);
     }
 
     resetRenderer();

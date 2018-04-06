@@ -37,6 +37,20 @@ export default {
       args: {
         mouseButton: MouseButtons.Left,
       },
+
+      // tool properties (sets properties on tool object)
+      props: {
+        strategy: cornerstoneTools.wwwc.strategies.default,
+      },
+
+      // tool configuration (calls setConfiguration if possible)
+      // configuration: {},
+
+      syncViews: true,
+      syncOptions: {
+        event: 'cornerstoneimagerendered',
+        synchronizer: cornerstoneTools.wwwcSynchronizer,
+      },
     },
   },
 };

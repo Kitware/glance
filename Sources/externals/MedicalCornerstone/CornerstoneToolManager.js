@@ -13,7 +13,7 @@ function CornerstoneToolManager(publicAPI, model) {
 
   // Private ------------------------------------------------------------------
 
-  function toolFromConfig(config) {
+  function toolFromConfig(name, config) {
     const tool = config.tool;
     if (!tool) {
       return null;
@@ -28,7 +28,29 @@ function CornerstoneToolManager(publicAPI, model) {
       }
     }
 
+    if (config.props) {
+      // set properties
+      Object.keys(config.props).forEach((prop) => {
+        tool[prop] = config.props[prop];
+      });
+    }
+
+    if (config.configuration && tool.setConfiguration) {
+      tool.setConfiguration(config.configuration);
+    }
+
+    if (config.syncViews && config.syncOptions) {
+      const { event, synchronizer } = config.syncOptions;
+      const synch = new cornerstoneTools.Synchronizer(event, synchronizer);
+
+      model.synchronizers.push({
+        toolName: name,
+        synchronizer: synch,
+      });
+    }
+
     return {
+      name,
       enable: partial(invoke, 'enable'),
       disable: partial(invoke, 'disable'),
       activate: partial(invoke, 'activate'),
@@ -51,9 +73,14 @@ function CornerstoneToolManager(publicAPI, model) {
     });
   }
 
+  function reset() {
+    model.tools = Object.create(null);
+    model.synchronizers = [];
+  }
+
   // Setup --------------------------------------------------------------------
 
-  model.tools = Object.create(null);
+  reset();
 
   // Public -------------------------------------------------------------------
 
@@ -63,21 +90,21 @@ function CornerstoneToolManager(publicAPI, model) {
     }
 
     // if config is null, then unregister all tools anyways
-    model.tools = Object.create(null);
+    reset();
     model.toolConfiguration = config;
 
     if (config) {
       Object.keys(config.definitions).forEach((name) =>
-        publicAPI.registerTool(name, toolFromConfig(config.definitions[name]))
+        publicAPI.registerTool(toolFromConfig(name, config.definitions[name]))
       );
     }
 
     publicAPI.modified();
   };
 
-  publicAPI.registerTool = (toolName, tool) => {
+  publicAPI.registerTool = (tool) => {
     // allow for overwriting existing tools
-    model.tools[toolName] = tool;
+    model.tools[tool.name] = tool;
   };
 
   publicAPI.unregisterTool = (toolName) => delete model.tools[toolName];
@@ -117,13 +144,16 @@ function CornerstoneToolManager(publicAPI, model) {
     }
   };
 
-  publicAPI.setupElement = macro.chain(
-    (element) => invokeInputSources('enable', element),
-    publicAPI.resetToDefaults
-  );
+  publicAPI.setupElement = (element) => {
+    invokeInputSources('enable', element);
+    model.synchronizers.forEach((s) => s.synchronizer.add(element));
+    publicAPI.resetToDefaults(element);
+  };
 
-  publicAPI.teardownElement = (element) =>
+  publicAPI.teardownElement = (element) => {
+    model.synchronizers.forEach((s) => s.synchronizer.remove(element));
     invokeInputSources('disable', element);
+  };
 
   // Initialization -----------------------------------------------------------
 

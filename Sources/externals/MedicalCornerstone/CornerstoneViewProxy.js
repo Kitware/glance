@@ -10,24 +10,19 @@ function CornerstoneViewProxy(publicAPI, model) {
 
   // Private ------------------------------------------------------------------
 
+  function getActiveRepresentation() {
+    const proxy = model.proxyManager.getActiveSource();
+    return model.proxyManager.getRepresentation(proxy, publicAPI);
+  }
+
   function updateRenderer() {
     if (!model.container) {
       return;
     }
 
-    const proxy = model.proxyManager.getActiveSource();
-    if (!proxy) {
-      return;
-    }
+    const representation = getActiveRepresentation();
 
-    const representation = model.proxyManager.getRepresentation(
-      proxy,
-      publicAPI
-    );
-    if (!representation) {
-      return;
-    }
-
+    model.renderer.setToolManager(model.toolManager);
     model.renderer.setRepresentation(representation);
   }
 
@@ -108,6 +103,7 @@ function extend(publicAPI, model, initialValues = {}) {
 
   vtkViewProxy.extend(publicAPI, model, initialValues);
   macro.get(publicAPI, model, ['axis']);
+  macro.setGet(publicAPI, model, ['toolManager']);
 
   CornerstoneViewProxy(publicAPI, model);
 }

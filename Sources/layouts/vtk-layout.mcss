@@ -40,6 +40,8 @@
   border-right: 1px solid $colors.menu;
   border-bottom: 1px solid $colors.menu;
   overflow: hidden;
+  user-select: none;
+  cursor: pointer;
 }
 
 .activeRenderWindowContainer {

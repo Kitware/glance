@@ -8,6 +8,27 @@ const { vtkErrorMacro } = macro;
 function CornerstoneRenderer(publicAPI, model) {
   model.classHierarchy.push('vtkCornerstoneRenderer');
 
+  // Private ------------------------------------------------------------------
+
+  function resetRenderer() {
+    if (!model.container) {
+      return;
+    }
+
+    if (model.representation) {
+      // do a first render with a viewport reset
+      publicAPI.render();
+
+      if (model.toolManager) {
+        model.toolManager.setupElement(model.container);
+      }
+    } else {
+      if (model.toolManager) {
+        model.toolManager.teardownElement(model.container);
+      }
+    }
+  }
+
   // Setup --------------------------------------------------------------------
 
   let repSubscription = null;
@@ -21,7 +42,6 @@ function CornerstoneRenderer(publicAPI, model) {
 
     const imageStack = model.representation.getImageStack();
     if (!imageStack) {
-      vtkErrorMacro('Cornerstone representation has no images');
       return;
     }
 
@@ -71,9 +91,10 @@ function CornerstoneRenderer(publicAPI, model) {
     cornerstone.imageCache.purgeCache();
 
     if (representation) {
-      repSubscription = representation.onModified(publicAPI.render);
-      publicAPI.render();
+      repSubscription = representation.onModified(publicAPI.renderLater);
     }
+
+    resetRenderer();
   };
 
   publicAPI.setContainer = (container) => {
@@ -91,9 +112,7 @@ function CornerstoneRenderer(publicAPI, model) {
       cornerstone.enable(container);
     }
 
-    if (model.representation) {
-      publicAPI.render();
-    }
+    resetRenderer();
   };
 
   publicAPI.resize = () => {
@@ -108,6 +127,7 @@ function extend(publicAPI, model, initialValues = {}) {
 
   vtkRenderer.extend(publicAPI, model);
   macro.get(publicAPI, model, ['container', 'representation']);
+  macro.setGet(publicAPI, model, ['toolManager']);
 
   CornerstoneRenderer(publicAPI, model);
 }

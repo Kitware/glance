@@ -5,6 +5,22 @@ import * as cornerstone from 'cornerstone-core';
 
 const { vtkErrorMacro } = macro;
 
+const BLANK_IMAGE = {
+  imageId: 'DUMMY',
+  minPixelValue: 0,
+  maxPixelValue: 1,
+  slope: 0,
+  intercept: 0,
+  rows: 1,
+  height: 1,
+  columns: 1,
+  width: 1,
+  rowPixelSpacing: 1,
+  columnPixelSpacing: 1,
+  getPixelData: () => new Uint8Array([0]),
+  sizeInBytes: 1,
+};
+
 function CornerstoneRenderer(publicAPI, model) {
   model.classHierarchy.push('vtkCornerstoneRenderer');
 
@@ -17,12 +33,13 @@ function CornerstoneRenderer(publicAPI, model) {
 
     if (model.representation) {
       // do a first render with a viewport reset
-      publicAPI.render();
+      publicAPI.render(true);
 
       if (model.toolManager) {
         model.toolManager.setupElement(model.container);
       }
     } else {
+      publicAPI.renderBlankImage();
       if (model.toolManager) {
         model.toolManager.teardownElement(model.container);
       }
@@ -35,7 +52,7 @@ function CornerstoneRenderer(publicAPI, model) {
 
   // Public -------------------------------------------------------------------
 
-  publicAPI.render = () => {
+  publicAPI.render = (resetViewport = false) => {
     if (!model.container || !model.representation) {
       return;
     }
@@ -59,7 +76,9 @@ function CornerstoneRenderer(publicAPI, model) {
       .then((image) => {
         const viewport = Object.assign(
           {},
-          cornerstone.getViewport(model.container),
+          resetViewport
+            ? cornerstone.getViewport(model.container)
+            : cornerstone.getDefaultViewportForImage(model.container, image),
           {
             voi: {
               windowWidth: model.representation.getColorWindow(),
@@ -74,6 +93,13 @@ function CornerstoneRenderer(publicAPI, model) {
   };
 
   publicAPI.renderLater = () => setTimeout(publicAPI.render, 0);
+
+  publicAPI.renderBlankImage = () => {
+    if (!model.container) {
+      return;
+    }
+    cornerstone.displayImage(model.container, BLANK_IMAGE);
+  };
 
   publicAPI.setRepresentation = (representation) => {
     if (model.representation === representation) {

@@ -44,6 +44,9 @@ function CornerstoneRepresentationProxy(publicAPI, model) {
     if (input) {
       model.sliceFilter.setInputData(input.getDataset());
       model.imageStack = createImageStack();
+
+      model.colorLevel = model.property.getColorLevel();
+      model.colorWindow = model.property.getColorWindow();
     } else {
       model.imageStack = null;
     }
@@ -80,8 +83,18 @@ function CornerstoneRepresentationProxy(publicAPI, model) {
 }
 
 function extend(publicAPI, model, initialValues = {}) {
+  Object.assign(
+    model,
+    {
+      colorLevel: 0,
+      colorWindow: 0,
+    },
+    initialValues
+  );
+
   vtkSliceRepresentationProxy.extend(publicAPI, model, initialValues);
   macro.get(publicAPI, model, ['imageStack']);
+  macro.setGet(publicAPI, model, ['colorLevel', 'colorWindow']);
 
   CornerstoneRepresentationProxy(publicAPI, model);
 }

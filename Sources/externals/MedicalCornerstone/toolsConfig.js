@@ -1,5 +1,7 @@
 import * as cornerstoneTools from 'cornerstone-tools';
 
+import Tools from './Tools';
+
 import { ToolTypes, MouseButtons } from './Constants';
 
 export default {
@@ -40,13 +42,17 @@ export default {
 
       // tool properties (sets properties on tool object)
       props: {
-        strategy: cornerstoneTools.wwwc.strategies.default,
+        strategy: Tools.wwwc.glanceStrategy,
+        // strategy: cornerstoneTools.wwwc.strategies.default,
       },
 
       // tool configuration (calls setConfiguration if possible)
       // configuration: {},
 
-      syncViews: true,
+      // Disable syncing in favor of using a custom strategy (above).
+      // This is kept here as an example of how to use a cornerstone
+      // view synchronizer.
+      syncViews: false,
       syncOptions: {
         event: 'cornerstoneimagerendered',
         synchronizer: cornerstoneTools.wwwcSynchronizer,

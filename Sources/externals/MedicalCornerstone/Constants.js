@@ -1,3 +1,5 @@
+export const GLANCE_DATA = 'glanceData';
+
 export const ToolTypes = {
   Mouse: 0,
   MouseWheel: 1,
@@ -19,6 +21,7 @@ export const InputSources = {
 };
 
 export default {
+  GLANCE_DATA,
   ToolTypes,
   MouseButtons,
   InputSources,

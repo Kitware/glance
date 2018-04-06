@@ -4,6 +4,8 @@ import vtkRenderer from 'vtk.js/Sources/Rendering/Core/Renderer';
 import * as cornerstone from 'cornerstone-core';
 import * as cornerstoneTools from 'cornerstone-tools';
 
+import { GLANCE_DATA } from './Constants';
+
 const { vtkErrorMacro } = macro;
 
 const BLANK_IMAGE = {
@@ -33,6 +35,13 @@ function CornerstoneRenderer(publicAPI, model) {
     }
 
     if (model.representation) {
+      // store current representation on cornerstone element
+      cornerstone.getElementData(
+        model.container,
+        GLANCE_DATA
+      ).currentRepresentation =
+        model.representation;
+
       // do a first render with a viewport reset
       publicAPI.render(true);
 
@@ -44,6 +53,7 @@ function CornerstoneRenderer(publicAPI, model) {
       if (model.toolManager) {
         model.toolManager.teardownElement(model.container);
       }
+      cornerstone.removeElementData(model.container, GLANCE_DATA);
     }
   }
 

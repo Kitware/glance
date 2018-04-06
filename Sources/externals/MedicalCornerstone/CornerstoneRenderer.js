@@ -76,17 +76,24 @@ function CornerstoneRenderer(publicAPI, model) {
       .then((image) => {
         const viewport = Object.assign(
           {},
-          resetViewport
-            ? cornerstone.getViewport(model.container)
-            : cornerstone.getDefaultViewportForImage(model.container, image),
-          {
-            voi: {
-              windowWidth: model.representation.getColorWindow(),
-              windowCenter: model.representation.getColorLevel(),
-            },
-            vflip: true,
-          }
+          cornerstone.getViewport(model.container)
         );
+
+        if (resetViewport) {
+          Object.assign(
+            viewport,
+            cornerstone.getDefaultViewportForImage(model.container, image)
+          );
+        }
+
+        Object.assign(viewport, {
+          voi: {
+            windowWidth: model.representation.getColorWindow(),
+            windowCenter: model.representation.getColorLevel(),
+          },
+          vflip: true,
+        });
+
         cornerstone.displayImage(model.container, image, viewport);
       })
       .catch((error) => vtkErrorMacro(String(error)));

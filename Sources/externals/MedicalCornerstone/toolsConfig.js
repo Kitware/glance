@@ -30,6 +30,9 @@ export default {
       deactivateArgs: ['binding'],
     },
     wwwc: {
+      // When using a bundled cornerstone tool, be sure to name
+      // the tool as the same name as the cornerstone tool to ensure
+      // tool state is synchronized.
       tool: cornerstoneTools.wwwc,
       type: ToolTypes.Mouse,
       // What binding argument for the type of tool.
@@ -61,6 +64,30 @@ export default {
         event: 'cornerstoneimagerendered',
         synchronizer: cornerstoneTools.wwwcSynchronizer,
       },
+    },
+    probe: {
+      tool: cornerstoneTools.probe,
+      type: ToolTypes.Mouse,
+      binding: MouseButtons.Left,
+      icon: 'eye-dropper',
+      activateArgs: ['binding'],
+      deactivateArgs: ['binding'],
+    },
+    simpleAngle: {
+      tool: cornerstoneTools.simpleAngle,
+      type: ToolTypes.Mouse,
+      binding: MouseButtons.Left,
+      icon: 'angle-down',
+      activateArgs: ['binding'],
+      deactivateArgs: ['binding'],
+    },
+    length: {
+      tool: cornerstoneTools.length,
+      type: ToolTypes.Mouse,
+      binding: MouseButtons.Left,
+      icon: 'arrows-alt-h',
+      activateArgs: ['binding'],
+      deactivateArgs: ['binding'],
     },
   },
 };

@@ -2,7 +2,9 @@ import macro from 'vtk.js/Sources/macro';
 
 import * as cornerstoneTools from 'cornerstone-tools';
 
-import { InputSources, MouseButtons } from './Constants';
+import { InputSources } from './Constants';
+
+const { vtkErrorMacro } = macro;
 
 function partial(func, ...partialArgs) {
   return (...args) => func(...partialArgs, ...args);
@@ -19,12 +21,41 @@ function CornerstoneToolManager(publicAPI, model) {
       return null;
     }
 
-    function invoke(method, element, opts) {
-      if (tool[method]) {
-        const args = (config[`${method}Args`] || []).map(
-          (argName) => config.args[argName]
+    // private vars
+    let activateArgs = null;
+    let state = {
+      action: 'disable',
+      args: {},
+    };
+
+    function invoke(action, elements, opts) {
+      if (tool[action]) {
+        const argMapping = Object.assign(
+          { binding: config.binding },
+          config.args
         );
-        tool[method](element, ...args);
+        if (state.action === 'activate' && action === 'deactivate') {
+          // use original activate args so we correctly
+          // deactivate, e.g. on the same mouse bindings
+          Object.assign(argMapping, activateArgs);
+        }
+        Object.assign(argMapping, opts);
+
+        const args = (config[`${action}Args`] || []).map(
+          (argName) => argMapping[argName]
+        );
+
+        if (elements instanceof Array) {
+          elements.forEach((element) => tool[action](element, ...args));
+        } else {
+          tool[action](elements, ...args);
+        }
+        state = { action, argMapping };
+
+        if (action === 'activate') {
+          // save activate args for a future deactivate
+          activateArgs = argMapping;
+        }
       }
     }
 
@@ -51,6 +82,10 @@ function CornerstoneToolManager(publicAPI, model) {
 
     return {
       name,
+      config,
+      get state() {
+        return state;
+      },
       enable: partial(invoke, 'enable'),
       disable: partial(invoke, 'disable'),
       activate: partial(invoke, 'activate'),
@@ -60,9 +95,26 @@ function CornerstoneToolManager(publicAPI, model) {
     };
   }
 
-  function invokeTool(name, method, element) {
+  function invokeTool(name, action, overrides = {}) {
     if (name in model.tools) {
-      model.tools[name][method](element);
+      model.tools[name][action](model.elements, overrides);
+
+      // update slots
+      const isBind = action === 'enable' || action === 'activate';
+      const toolType = model.tools[name].config.type;
+      const binding = overrides.binding || model.tools[name].config.binding;
+
+      if (isBind) {
+        const curSlotTool = model.inputSlots[toolType][binding];
+        if (curSlotTool) {
+          // all unbound tools should still be interactive, so
+          // in a passive state.
+          publicAPI.deactivateTool(curSlotTool);
+        }
+        model.inputSlots[toolType][binding] = name;
+      } else {
+        model.inputSlots[toolType][binding] = '';
+      }
     }
   }
 
@@ -76,6 +128,38 @@ function CornerstoneToolManager(publicAPI, model) {
   function reset() {
     model.tools = Object.create(null);
     model.synchronizers = [];
+    model.elements = [];
+    model.inputSlots = {};
+  }
+
+  function applyToolConfiguration() {
+    const config = model.toolConfiguration;
+
+    Object.keys(config.definitions).forEach((name) => {
+      const definition = config.definitions[name];
+      publicAPI.registerTool(toolFromConfig(name, definition));
+
+      // setup an input slot if it's not created
+      if (!model.inputSlots[definition.type]) {
+        model.inputSlots[definition.type] = {};
+      }
+      if (!model.inputSlots[definition.type][definition.binding]) {
+        model.inputSlots[definition.type][definition.binding] = '';
+      }
+    });
+
+    if (config.defaults) {
+      Object.keys(config.defaults).forEach((toolType) => {
+        const defaults = config.defaults[toolType];
+        Object.keys(defaults).forEach((binding) => {
+          const tool = model.tools[defaults[binding]];
+          // tooltype is of type String from Object.keys
+          if (tool && tool.config.type === Number(toolType)) {
+            publicAPI.activateTool(defaults[binding], { binding });
+          }
+        });
+      });
+    }
   }
 
   // Setup --------------------------------------------------------------------
@@ -84,81 +168,64 @@ function CornerstoneToolManager(publicAPI, model) {
 
   // Public -------------------------------------------------------------------
 
-  publicAPI.setToolConfiguration = (config, force = false) => {
-    if (model.toolConfiguration === config && !force) {
-      return;
-    }
-
-    // if config is null, then unregister all tools anyways
-    reset();
-    model.toolConfiguration = config;
-
-    if (config) {
-      Object.keys(config.definitions).forEach((name) =>
-        publicAPI.registerTool(toolFromConfig(name, config.definitions[name]))
-      );
-    }
-
-    publicAPI.modified();
-  };
-
   publicAPI.registerTool = (tool) => {
     // allow for overwriting existing tools
     model.tools[tool.name] = tool;
   };
 
-  publicAPI.unregisterTool = (toolName) => delete model.tools[toolName];
-
-  publicAPI.activateTool = (toolName, element) =>
-    invokeTool(toolName, 'activate', element);
-
-  publicAPI.deactivateTool = (toolName, element) =>
-    invokeTool(toolName, 'deactivate', element);
-
-  publicAPI.enableTool = (toolName, element) =>
-    invokeTool(toolName, 'enable', element);
-
-  publicAPI.disableTool = (toolName, element) =>
-    invokeTool(toolName, 'disable', element);
-
-  publicAPI.disableAllTools = (element) => {
-    Object.keys(model.tools).forEach((name) =>
-      publicAPI.disableTool(name, element)
-    );
+  publicAPI.unregisterTool = (toolName) => {
+    if (model.tools[toolName].state !== 'disable') {
+      publicAPI.disable(toolName);
+    }
+    delete model.tools[toolName];
   };
 
-  publicAPI.resetToDefaults = (element) => {
-    // disable all tools, then enable only defaults
-    publicAPI.disableAllTools(element);
-    if (model.toolConfiguration.defaults) {
-      if (model.toolConfiguration.defaults.mouse) {
-        const mouseDefaults = model.toolConfiguration.defaults.mouse;
-        [MouseButtons.Left, MouseButtons.Middle, MouseButtons.Right].forEach(
-          (btn) => {
-            if (mouseDefaults[btn]) {
-              publicAPI.activateTool(mouseDefaults[btn], element);
-            }
-          }
-        );
-      }
-    }
+  publicAPI.activateTool = (toolName, overrides) =>
+    invokeTool(toolName, 'activate', overrides);
+
+  publicAPI.deactivateTool = (toolName, overrides) =>
+    invokeTool(toolName, 'deactivate', overrides);
+
+  publicAPI.enableTool = (toolName, overrides) =>
+    invokeTool(toolName, 'enable', overrides);
+
+  publicAPI.disableTool = (toolName, overrides) =>
+    invokeTool(toolName, 'disable', overrides);
+
+  publicAPI.disableAllTools = () =>
+    Object.keys(model.tools).forEach((name) => publicAPI.disableTool(name));
+
+  publicAPI.applyTools = (element) => {
+    Object.values(model.tools).forEach((tool) => {
+      const state = tool.state;
+      tool[state.action](element, state.args);
+    });
   };
 
   publicAPI.setupElement = (element) => {
-    invokeInputSources('enable', element);
-    model.synchronizers.forEach((s) => s.synchronizer.add(element));
-    publicAPI.resetToDefaults(element);
+    if (model.elements.indexOf(element) === -1) {
+      model.elements.push(element);
+      invokeInputSources('enable', element);
+      model.synchronizers.forEach((s) => s.synchronizer.add(element));
+      publicAPI.applyTools(element);
+    }
   };
 
   publicAPI.teardownElement = (element) => {
-    model.synchronizers.forEach((s) => s.synchronizer.remove(element));
-    invokeInputSources('disable', element);
+    const index = model.elements.indexOf(element);
+    if (index !== -1) {
+      model.synchronizers.forEach((s) => s.synchronizer.remove(element));
+      invokeInputSources('disable', element);
+      model.elements.splice(index, 1);
+    }
   };
 
   // Initialization -----------------------------------------------------------
 
   if (model.toolConfiguration) {
-    publicAPI.setToolConfiguration(model.toolConfiguration, true);
+    applyToolConfiguration();
+  } else {
+    vtkErrorMacro('Tool configuration not provided at instantiation');
   }
 }
 
@@ -166,7 +233,7 @@ function extend(publicAPI, model, initialValues = {}) {
   Object.assign(model, initialValues);
 
   macro.obj(publicAPI, model);
-  macro.get(publicAPI, model, ['toolConfiguration']);
+  macro.get(publicAPI, model, ['tools', 'toolConfiguration', 'inputSlots']);
 
   CornerstoneToolManager(publicAPI, model);
 }

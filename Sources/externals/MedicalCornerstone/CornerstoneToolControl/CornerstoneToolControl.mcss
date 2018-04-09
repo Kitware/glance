@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  flex-flow: column;
+  overflow: auto;
+  height: calc(100vh - $sizes.toolbar - 40px);
+  max-height: calc(100vh - $sizes.toolbar - 40px);
+}
+
+.toolButton {
+  display: inline-block;
+  margin: 3px;
+}

@@ -102,7 +102,10 @@ function CornerstoneRenderer(publicAPI, model) {
             windowWidth: model.representation.getColorWindow(),
             windowCenter: model.representation.getColorLevel(),
           },
-          vflip: true,
+          hflip: model.representation.getHFlip(),
+          vflip: model.representation.getVFlip(),
+          pixelReplication: !model.representation.getInterpolation(),
+          invert: model.representation.getInvertColors(),
         });
 
         cornerstone.displayImage(model.container, image, viewport);

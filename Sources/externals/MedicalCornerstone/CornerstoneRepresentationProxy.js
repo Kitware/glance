@@ -88,13 +88,24 @@ function extend(publicAPI, model, initialValues = {}) {
     {
       colorLevel: 0,
       colorWindow: 0,
+      interpolation: true,
+      invertColors: false,
+      hFlip: false,
+      vFlip: true, // start out vflipped
     },
     initialValues
   );
 
   vtkSliceRepresentationProxy.extend(publicAPI, model, initialValues);
   macro.get(publicAPI, model, ['imageStack']);
-  macro.setGet(publicAPI, model, ['colorLevel', 'colorWindow']);
+  macro.setGet(publicAPI, model, [
+    'colorLevel',
+    'colorWindow',
+    'interpolation',
+    'invertColors',
+    'hFlip',
+    'vFlip',
+  ]);
 
   CornerstoneRepresentationProxy(publicAPI, model);
 }

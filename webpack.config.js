@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
@@ -21,97 +20,75 @@ const pvwRules = require('./Utilities/rules/paraviewweb.js');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // plugins.push(new BundleAnalyzerPlugin());
 
-module.exports = (env) => {
-  if (env && env.release) {
-    plugins.push(
-      new UglifyJSPlugin({
-        uglifyOptions: {
-          beautify: false,
-          ecma: 6,
-          compress: true,
-          comments: false,
-        },
-      })
-    );
-    plugins.push(
-      new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: JSON.stringify('production'),
-        },
-      })
-    );
-  }
-
-  plugins.push(
-    new CopyPlugin([
-      {
-        from: path.join(
-          __dirname,
-          'node_modules',
-          'workbox-sw',
-          'build',
-          'importScripts',
-          'workbox-sw.prod.*.js'
-        ),
-        flatten: true,
-      },
-      {
-        from: path.join(__dirname, 'node_modules', 'itk'),
-        to: 'itk',
-      },
-    ])
-  );
-
-  // workbox plugin should be last plugin
-  plugins.push(
-    new WorkboxPlugin({
-      globDirectory: outputPath,
-      globPatterns: ['*.{html,js,png,svg}'],
-      globIgnores: ['serviceWorker.js'],
-      swSrc: path.join(sourcePath, 'externals', 'Workbox', 'serviceWorker.js'),
-      swDest: path.join(outputPath, 'serviceWorker.js'),
-    })
-  );
-
-  return {
-    plugins,
-    entry: Object.assign(
-      {
-        glance: entry,
-      },
-      externals.getExternalEntries(externalPath)
-    ),
-    output: {
-      path: outputPath,
-      filename: '[name].js',
-      libraryTarget: 'umd',
-    },
-    module: {
-      rules: [{ test: entry, loader: 'expose-loader?Glance' }].concat(
-        externals.getExternalExposeRules(externalPath),
-        linterRules,
-        glanceRules,
-        vtkRules,
-        pvwRules
+plugins.push(
+  new CopyPlugin([
+    {
+      from: path.join(
+        __dirname,
+        'node_modules',
+        'workbox-sw',
+        'build',
+        'importScripts',
+        'workbox-sw.prod.*.js'
       ),
+      flatten: true,
     },
-    resolve: {
-      alias: {
-        'pv-explorer': __dirname,
-        PVWStyle: path.resolve('./node_modules/paraviewweb/style'),
-      },
+    {
+      from: path.join(__dirname, 'node_modules', 'itk'),
+      to: 'itk',
     },
-    devServer: {
-      contentBase: outputPath,
-      port: 9999,
-      host: '0.0.0.0',
-      disableHostCheck: true,
-      hot: false,
-      quiet: false,
-      noInfo: false,
-      stats: {
-        colors: true,
-      },
+  ])
+);
+
+// workbox plugin should be last plugin
+plugins.push(
+  new WorkboxPlugin({
+    globDirectory: outputPath,
+    globPatterns: ['*.{html,js,png,svg}'],
+    globIgnores: ['serviceWorker.js'],
+    swSrc: path.join(sourcePath, 'externals', 'Workbox', 'serviceWorker.js'),
+    swDest: path.join(outputPath, 'serviceWorker.js'),
+  })
+);
+
+module.exports = {
+  plugins,
+  entry: Object.assign(
+    {
+      glance: entry,
     },
-  };
+    externals.getExternalEntries(externalPath)
+  ),
+  output: {
+    path: outputPath,
+    filename: '[name].js',
+    libraryTarget: 'umd',
+  },
+  module: {
+    rules: [{ test: entry, loader: 'expose-loader?Glance' }].concat(
+      externals.getExternalExposeRules(externalPath),
+      linterRules,
+      glanceRules,
+      vtkRules,
+      pvwRules
+    ),
+  },
+  resolve: {
+    alias: {
+      'pv-explorer': __dirname,
+      PVWStyle: path.resolve('./node_modules/paraviewweb/style'),
+    },
+  },
+  devServer: {
+    contentBase: outputPath,
+    port: 9999,
+    host: '0.0.0.0',
+    disableHostCheck: true,
+    hot: false,
+    quiet: false,
+    noInfo: false,
+    stats: {
+      colors: true,
+    },
+  },
 };

@@ -1,12 +1,12 @@
 import vtkITKImageReader from 'vtk.js/Sources/IO/Misc/ITKImageReader';
 
-import extensionToIO from 'itk/extensionToIO';
+import extensionToImageIO from 'itk/extensionToImageIO';
 import readImageArrayBuffer from 'itk/readImageArrayBuffer';
 
 vtkITKImageReader.setReadImageArrayBufferFromITK(readImageArrayBuffer);
 
 export const extensions = Array.from(
-  new Set(Object.keys(extensionToIO).map((ext) => ext.toLowerCase()))
+  new Set(Object.keys(extensionToImageIO).map((ext) => ext.toLowerCase()))
 );
 
 export function registerToGlance(Glance) {

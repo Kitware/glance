@@ -1,8 +1,8 @@
-const path = require('path')
-const fs = require('fs')
+var path = require('path');
+var fs = require('fs');
 
-const loadEmscriptenModule = require('./loadEmscriptenModule.js')
-const readImageEmscriptenFSDICOMFileSeries = require('./readImageEmscriptenFSDICOMFileSeries.js')
+var loadEmscriptenModule = require('./loadEmscriptenModuleNode.js');
+var readImageEmscriptenFSDICOMFileSeries = require('./readImageEmscriptenFSDICOMFileSeries.js');
 
 /**
  * Read an image from a series of DICOM files on the local filesystem in Node.js.
@@ -11,24 +11,24 @@ const readImageEmscriptenFSDICOMFileSeries = require('./readImageEmscriptenFSDIC
  *
  * @param: directory a directory containing a single study / series on the local filesystem.
  */
-const readImageLocalDICOMFileSeries = (directory) => {
+var readImageLocalDICOMFileSeries = function readImageLocalDICOMFileSeries(directory) {
   return new Promise(function (resolve, reject) {
-    const imageIOsPath = path.resolve(__dirname, '..', 'dist', 'ImageIOs')
-    const seriesReader = 'itkDICOMImageSeriesReaderJSBinding'
-    const files = fs.readdirSync(directory)
+    var imageIOsPath = path.resolve(__dirname, 'ImageIOs');
+    var absoluteDirectory = path.resolve(directory);
+    var seriesReader = 'itkDICOMImageSeriesReaderJSBinding';
+    var files = fs.readdirSync(absoluteDirectory);
     try {
-      const directoryWithFile = path.join(directory, 'myfile.dcm')
-      const seriesReaderPath = path.join(imageIOsPath, seriesReader)
-      const seriesReaderModule = loadEmscriptenModule(seriesReaderPath)
-      seriesReaderModule.mountContainingDirectory(directoryWithFile)
-      const image = readImageEmscriptenFSDICOMFileSeries(seriesReaderModule,
-        directory, path.join(directory, files[0]))
-      seriesReaderModule.unmountContainingDirectory(directoryWithFile)
-      resolve(image)
+      var absoluteDirectoryWithFile = path.join(absoluteDirectory, 'myfile.dcm');
+      var seriesReaderPath = path.join(imageIOsPath, seriesReader);
+      var seriesReaderModule = loadEmscriptenModule(seriesReaderPath);
+      seriesReaderModule.mountContainingDirectory(absoluteDirectoryWithFile);
+      var image = readImageEmscriptenFSDICOMFileSeries(seriesReaderModule, absoluteDirectory, path.join(absoluteDirectory, files[0]));
+      seriesReaderModule.unmountContainingDirectory(absoluteDirectoryWithFile);
+      resolve(image);
     } catch (err) {
-      reject(err)
+      reject(err);
     }
-  })
-}
+  });
+};
 
-module.exports = readImageLocalDICOMFileSeries
+module.exports = readImageLocalDICOMFileSeries;

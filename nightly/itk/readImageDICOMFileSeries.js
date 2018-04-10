@@ -1,26 +1,25 @@
-const WebworkerPromise = require('webworker-promise')
-const PromiseFileReader = require('promise-file-reader')
+import WebworkerPromise from 'webworker-promise';
+import PromiseFileReader from 'promise-file-reader';
 
-const config = require('./itkConfig.js')
+import config from './itkConfig';
 
-const worker = new window.Worker(config.webWorkersPath + '/ImageIOWorker.js')
-const promiseWorker = new WebworkerPromise(worker)
+var worker = new window.Worker(config.itkModulesPath + '/WebWorkers/ImageIO.worker.js');
+var promiseWorker = new WebworkerPromise(worker);
 
-const readImageDICOMFileSeries = (fileList) => {
-  const fetchFileDescriptions = Array.from(fileList, function (file) {
+var readImageDICOMFileSeries = function readImageDICOMFileSeries(fileList) {
+  var fetchFileDescriptions = Array.from(fileList, function (file) {
     return PromiseFileReader.readAsArrayBuffer(file).then(function (arrayBuffer) {
-      const fileDescription = { name: file.name, type: file.type, data: arrayBuffer }
-      return fileDescription
-    })
-  })
+      var fileDescription = { name: file.name, type: file.type, data: arrayBuffer };
+      return fileDescription;
+    });
+  });
 
   return Promise.all(fetchFileDescriptions).then(function (fileDescriptions) {
-    const transferables = fileDescriptions.map((description) => {
-      return description.data
-    })
-    return promiseWorker.postMessage({ operation: 'readDICOMImageSeries', fileDescriptions: fileDescriptions, config: config },
-      transferables)
-  })
-}
+    var transferables = fileDescriptions.map(function (description) {
+      return description.data;
+    });
+    return promiseWorker.postMessage({ operation: 'readDICOMImageSeries', fileDescriptions: fileDescriptions, config: config }, transferables);
+  });
+};
 
-module.exports = readImageDICOMFileSeries
+export default readImageDICOMFileSeries;

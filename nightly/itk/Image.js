@@ -1,25 +1,27 @@
-const ImageType = require('./ImageType.js')
-const Matrix = require('./Matrix.js')
+var ImageType = require('./ImageType.js');
+var Matrix = require('./Matrix.js');
 
-const Image = function (imageType = new ImageType()) {
-  this.imageType = imageType
+var Image = function Image() {
+  var imageType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new ImageType();
 
-  this.name = 'Image'
+  this.imageType = imageType;
 
-  const dimension = imageType.dimension
-  this.origin = new Array(dimension)
-  this.origin.fill(0.0)
+  this.name = 'Image';
 
-  this.spacing = new Array(dimension)
-  this.spacing.fill(1.0)
+  var dimension = imageType.dimension;
+  this.origin = new Array(dimension);
+  this.origin.fill(0.0);
 
-  this.direction = new Matrix(dimension, dimension)
-  this.direction.setIdentity()
+  this.spacing = new Array(dimension);
+  this.spacing.fill(1.0);
 
-  this.size = new Array(dimension)
-  this.size.fill(0)
+  this.direction = new Matrix(dimension, dimension);
+  this.direction.setIdentity();
 
-  this.data = new ArrayBuffer(0)
-}
+  this.size = new Array(dimension);
+  this.size.fill(0);
 
-module.exports = Image
+  this.data = new ArrayBuffer(0);
+};
+
+module.exports = Image;

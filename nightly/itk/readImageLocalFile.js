@@ -1,60 +1,61 @@
-const path = require('path')
-const mime = require('mime-types')
+var path = require('path');
+var mime = require('mime-types');
 
-const mimeToIO = require('./MimeToIO.js')
-const getFileExtension = require('./getFileExtension.js')
-const extensionToIO = require('./extensionToIO.js')
-const ImageIOIndex = require('./ImageIOIndex.js')
+var mimeToIO = require('./MimeToImageIO.js');
+var getFileExtension = require('./getFileExtension.js');
+var extensionToIO = require('./extensionToImageIO.js');
+var ImageIOIndex = require('./ImageIOIndex.js');
 
-const loadEmscriptenModule = require('./loadEmscriptenModule.js')
-const readImageEmscriptenFSFile = require('./readImageEmscriptenFSFile.js')
+var loadEmscriptenModule = require('./loadEmscriptenModuleNode.js');
+var readImageEmscriptenFSFile = require('./readImageEmscriptenFSFile.js');
 
 /**
  * Read an image from a file on the local filesystem in Node.js.
  *
  * @param: filePath path to the file on the local filesystem.
  */
-const readImageLocalFile = (filePath) => {
+var readImageLocalFile = function readImageLocalFile(filePath) {
   return new Promise(function (resolve, reject) {
-    const imageIOsPath = path.resolve(__dirname, '..', 'dist', 'ImageIOs')
+    var imageIOsPath = path.resolve(__dirname, 'ImageIOs');
+    var absoluteFilePath = path.resolve(filePath);
     try {
-      const mimeType = mime.lookup(filePath)
-      const extension = getFileExtension(filePath)
+      var mimeType = mime.lookup(absoluteFilePath);
+      var extension = getFileExtension(absoluteFilePath);
 
-      let io = null
+      var io = null;
       if (mimeToIO.hasOwnProperty(mimeType)) {
-        io = mimeToIO[mimeType]
+        io = mimeToIO[mimeType];
       } else if (extensionToIO.hasOwnProperty(extension)) {
-        io = extensionToIO[extension]
+        io = extensionToIO[extension];
       } else {
-        for (let idx = 0; idx < ImageIOIndex.length; ++idx) {
-          const modulePath = path.join(imageIOsPath, ImageIOIndex[idx])
-          const Module = loadEmscriptenModule(modulePath)
-          const imageIO = new Module.ITKImageIO()
-          Module.mountContainingDirectory(filePath)
-          imageIO.SetFileName(filePath)
-          if (imageIO.CanReadFile(filePath)) {
-            io = ImageIOIndex[idx]
-            Module.unmountContainingDirectory(filePath)
-            break
+        for (var idx = 0; idx < ImageIOIndex.length; ++idx) {
+          var _modulePath = path.join(imageIOsPath, ImageIOIndex[idx]);
+          var _Module = loadEmscriptenModule(_modulePath);
+          var imageIO = new _Module.ITKImageIO();
+          _Module.mountContainingDirectory(absoluteFilePath);
+          imageIO.SetFileName(absoluteFilePath);
+          if (imageIO.CanReadFile(absoluteFilePath)) {
+            io = ImageIOIndex[idx];
+            _Module.unmountContainingDirectory(absoluteFilePath);
+            break;
           }
-          Module.unmountContainingDirectory(filePath)
+          _Module.unmountContainingDirectory(absoluteFilePath);
         }
       }
       if (io === null) {
-        reject(Error('Could not find IO for: ' + filePath))
+        reject(Error('Could not find IO for: ' + absoluteFilePath));
       }
 
-      const modulePath = path.join(imageIOsPath, io)
-      const Module = loadEmscriptenModule(modulePath)
-      Module.mountContainingDirectory(filePath)
-      const image = readImageEmscriptenFSFile(Module, filePath)
-      Module.unmountContainingDirectory(filePath)
-      resolve(image)
+      var modulePath = path.join(imageIOsPath, io);
+      var Module = loadEmscriptenModule(modulePath);
+      Module.mountContainingDirectory(absoluteFilePath);
+      var image = readImageEmscriptenFSFile(Module, absoluteFilePath);
+      Module.unmountContainingDirectory(absoluteFilePath);
+      resolve(image);
     } catch (err) {
-      reject(err)
+      reject(err);
     }
-  })
-}
+  });
+};
 
-module.exports = readImageLocalFile
+module.exports = readImageLocalFile;

@@ -1,16 +1,16 @@
-const Int8 = 'int8_t'
-const UInt8 = 'uint8_t'
-const Int16 = 'int16_t'
-const UInt16 = 'uint16_t'
-const Int32 = 'int32_t'
-const UInt32 = 'uint32_t'
-const Int64 = 'int64_t'
-const UInt64 = 'uint64_t'
+var Int8 = 'int8_t';
+var UInt8 = 'uint8_t';
+var Int16 = 'int16_t';
+var UInt16 = 'uint16_t';
+var Int32 = 'int32_t';
+var UInt32 = 'uint32_t';
+var Int64 = 'int64_t';
+var UInt64 = 'uint64_t';
 
-const SizeValueType = UInt64
-const IdentifierType = SizeValueType
-const IndexValueType = Int64
-const OffsetValueType = Int64
+var SizeValueType = UInt64;
+var IdentifierType = SizeValueType;
+var IndexValueType = Int64;
+var OffsetValueType = Int64;
 
 module.exports = {
   Int8: Int8,
@@ -25,4 +25,4 @@ module.exports = {
   IdentifierType: IdentifierType,
   IndexValueType: IndexValueType,
   OffsetValueType: OffsetValueType
-}
+};

@@ -1,35 +1,38 @@
 {
   "_args": [
     [
-      "itk@7.2.0",
+      "itk@8.1.1",
       "/home/travis/build/Kitware/pv-web-viewer"
     ]
   ],
   "_development": true,
-  "_from": "itk@7.2.0",
-  "_id": "itk@7.2.0",
+  "_from": "itk@8.1.1",
+  "_id": "itk@8.1.1",
   "_inBundle": false,
-  "_integrity": "sha512-CpSHKegnzCPbirf6T8qupmOpcQ9Ewyu9EYDHaJUp6wiM0A0e2nkHxPM1xnRVre82dQDC8dGmQVCq49I/0nYQZw==",
+  "_integrity": "sha512-8fT1OFgW2SZaPxU5G317ea96YcXpk0ZGR5ldHbsnEV6dsaLHFskvUEwCMqSqZd8OFGPH8Fc48CY5Jstlws1WSQ==",
   "_location": "/itk",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "itk@7.2.0",
+    "raw": "itk@8.1.1",
     "name": "itk",
     "escapedName": "itk",
-    "rawSpec": "7.2.0",
+    "rawSpec": "8.1.1",
     "saveSpec": null,
-    "fetchSpec": "7.2.0"
+    "fetchSpec": "8.1.1"
   },
   "_requiredBy": [
     "#DEV:/"
   ],
-  "_resolved": "https://registry.npmjs.org/itk/-/itk-7.2.0.tgz",
-  "_spec": "7.2.0",
+  "_resolved": "https://registry.npmjs.org/itk/-/itk-8.1.1.tgz",
+  "_spec": "8.1.1",
   "_where": "/home/travis/build/Kitware/pv-web-viewer",
   "author": {
     "name": "Insight Software Consortium"
+  },
+  "bin": {
+    "itk-js": "./itk-js-cli.js"
   },
   "bugs": {
     "url": "https://github.com/InsightSoftwareConsortium/itk-js/issues"
@@ -40,6 +43,7 @@
     }
   },
   "dependencies": {
+    "commander": "^2.15.1",
     "mime-types": "^2.1.15",
     "promise-file-reader": "^0.3.1",
     "webworker-promise": "^0.4.1"
@@ -54,7 +58,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "babelify": "^7.3.0",
-    "browserify": "^15.0.0",
+    "browserify": "^16.1.1",
     "commitizen": "2.9.6",
     "condition-circle": "1.5.0",
     "cz-conventional-changelog": "2.0.0",
@@ -97,6 +101,7 @@
   },
   "scripts": {
     "browser-test": "karma start ./karma.conf.js",
+    "browser-test:debug": "karma start ./karma.conf.js --no-single-run",
     "build": "node ./build.js",
     "commit": "git cz",
     "doc": "kw-doc -c ./doc/config.js",
@@ -106,9 +111,11 @@
   },
   "standard": {
     "ignore": [
+      "src/loadEmscriptenModuleBrowser.js",
+      "src/itk-js-cli.js",
       "itkJSImageIOPost.js",
       "test/Browser/tests.js"
     ]
   },
-  "version": "7.2.0"
+  "version": "8.1.1"
 }

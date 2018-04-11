@@ -4,6 +4,7 @@ import FaIcon from './FaIcon';
 import Menu from './Menu';
 import MobileOverlay from './MobileOverlay';
 import Progress from './Progress';
+import Table from './Table';
 import TitleModal from './TitleModal';
 
 export default {
@@ -13,5 +14,6 @@ export default {
   Menu,
   MobileOverlay,
   Progress,
+  Table,
   TitleModal,
 };

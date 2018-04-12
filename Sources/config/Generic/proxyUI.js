@@ -1,4 +1,5 @@
 import Palettes from '../../Palettes';
+import ColorMaps from './ColorMaps';
 
 const Volume = [
   {
@@ -17,7 +18,9 @@ const Volume = [
     name: 'lookupTableProxy',
     advanced: 0,
     size: 1,
-    domain: {},
+    domain: {
+      colormaps: ColorMaps,
+    },
     doc: 'Edit lookup table',
   },
   {

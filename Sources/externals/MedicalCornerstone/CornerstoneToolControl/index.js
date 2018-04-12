@@ -34,6 +34,7 @@ export default class CornerstoneToolControl extends React.Component {
     this.onMeasurementChanged = this.onMeasurementChanged.bind(this);
     this.setMeasurementVisible = this.setMeasurementVisible.bind(this);
     this.deleteMeasurement = this.deleteMeasurement.bind(this);
+    this.gotoSlice = this.gotoSlice.bind(this);
 
     // set active tool to whatever is default for left mouse button
     if (
@@ -118,6 +119,16 @@ export default class CornerstoneToolControl extends React.Component {
     this.forceUpdate();
   }
 
+  gotoSlice(sliceIndex) {
+    const view = this.props.proxyManager.getProxyById(this.state.viewProxyId);
+    if (view) {
+      view
+        .getRenderer()
+        .getRepresentation()
+        .setSlice(sliceIndex);
+    }
+  }
+
   toggleTool(name) {
     const view = this.props.proxyManager.getProxyById(this.state.viewProxyId);
     if (!view || !view.getContainer()) {
@@ -174,6 +185,12 @@ export default class CornerstoneToolControl extends React.Component {
 
       Object.keys(toolMeasurements).forEach((toolName) => {
         toolMeasurements[toolName].forEach((measurement, index) => {
+          // get current slice from active representation
+          const sliceIndex = view
+            .getRenderer()
+            .getRepresentation()
+            .getSlice();
+
           measurements.push({
             key: `${toolName}::${index}`,
             index,
@@ -181,6 +198,7 @@ export default class CornerstoneToolControl extends React.Component {
             visible: measurement.visible,
             icon: this.toolManager.getTool(toolName).config.icon,
             value: valueFromMeasurement(toolName, measurement),
+            sliceIndex,
           });
         });
       });
@@ -205,14 +223,30 @@ export default class CornerstoneToolControl extends React.Component {
         resizable: true,
       },
       {
+        key: 'gotoSlice',
+        label: <FaIcon type="external-link-alt" title="Goto slice" />,
+        dataKey: 'gotoSlice',
+        render: (_, row) => (
+          <button
+            className={style.centeredControl}
+            title="Goto slice"
+            onClick={() => this.gotoSlice(row.sliceIndex)}
+          >
+            <FaIcon type="external-link-alt" />
+          </button>
+        ),
+        columnClass: style.iconColumn,
+      },
+      {
         key: 'eye',
-        label: <FaIcon type="eye" />,
+        label: <FaIcon type="eye" title="Visibility" />,
         dataKey: 'visible',
         render: (visible, row) => (
           <input
             className={style.centeredControl}
             type="checkbox"
             checked={visible}
+            title="Visbility"
             onChange={(ev) =>
               this.setMeasurementVisible(row.type, row.index, ev.target.checked)
             }
@@ -223,10 +257,11 @@ export default class CornerstoneToolControl extends React.Component {
       {
         key: 'trash',
         dataKey: 'trash',
-        label: <FaIcon type="trash" />,
+        label: <FaIcon type="trash" title="Delete" />,
         render: (_, row) => (
           <button
             className={style.centeredControl}
+            title="Delete"
             onClick={() => this.deleteMeasurement(row.type, row.index)}
           >
             <FaIcon type="trash" />

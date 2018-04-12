@@ -77,6 +77,9 @@ module.exports = {
     alias: {
       'pv-explorer': __dirname,
       PVWStyle: path.resolve('./node_modules/paraviewweb/style'),
+      'cornerstone-tools': path.resolve(
+        path.join('node_modules', '@florist', 'cornerstone-tools')
+      ),
     },
   },
   devServer: {

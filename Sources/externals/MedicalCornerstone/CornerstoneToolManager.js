@@ -162,6 +162,22 @@ function CornerstoneToolManager(publicAPI, model) {
     }
   }
 
+  function attachListeners(element, shouldBind) {
+    const method = shouldBind ? 'addEventListener' : 'removeEventListener';
+    element[method](
+      cornerstoneTools.EVENTS.MEASUREMENT_ADDED,
+      publicAPI.invokeMeasurementAdded
+    );
+    element[method](
+      cornerstoneTools.EVENTS.MEASUREMENT_MODIFIED,
+      publicAPI.invokeMeasurementModified
+    );
+    element[method](
+      cornerstoneTools.EVENTS.MEASUREMENT_REMOVED,
+      publicAPI.invokeMeasurementRemoved
+    );
+  }
+
   // Setup --------------------------------------------------------------------
 
   reset();
@@ -202,10 +218,36 @@ function CornerstoneToolManager(publicAPI, model) {
     });
   };
 
+  publicAPI.getTool = (name) => model.tools[name];
+
+  publicAPI.getMeasurements = (element) => {
+    const measurements = {};
+    Object.keys(model.tools).forEach((toolName) => {
+      const state = cornerstoneTools.getToolState(element, toolName);
+      measurements[toolName] = (state || {}).data || [];
+    });
+    return measurements;
+  };
+
+  publicAPI.setMeasurementData = (element, tool, measurementIndex, data) => {
+    const state = cornerstoneTools.getToolState(element, tool);
+    if (state.data && state.data[measurementIndex]) {
+      Object.assign(state.data[measurementIndex], data);
+    }
+  };
+
+  publicAPI.deleteMeasurement = (element, tool, measurementIndex) => {
+    const state = cornerstoneTools.getToolState(element, tool);
+    if (state.data && state.data[measurementIndex]) {
+      state.data.splice(measurementIndex, 1);
+    }
+  };
+
   publicAPI.setupElement = (element) => {
     if (model.elements.indexOf(element) === -1) {
       model.elements.push(element);
       invokeInputSources('enable', element);
+      attachListeners(element, true);
       model.synchronizers.forEach((s) => s.synchronizer.add(element));
       publicAPI.applyTools(element);
     }
@@ -216,6 +258,7 @@ function CornerstoneToolManager(publicAPI, model) {
     if (index !== -1) {
       model.synchronizers.forEach((s) => s.synchronizer.remove(element));
       invokeInputSources('disable', element);
+      attachListeners(element, false);
       model.elements.splice(index, 1);
     }
   };
@@ -234,6 +277,10 @@ function extend(publicAPI, model, initialValues = {}) {
 
   macro.obj(publicAPI, model);
   macro.get(publicAPI, model, ['tools', 'toolConfiguration', 'inputSlots']);
+
+  ['measurementAdded', 'measurementModified', 'measurementRemoved'].forEach(
+    (ev) => macro.event(publicAPI, model, ev)
+  );
 
   CornerstoneToolManager(publicAPI, model);
 }

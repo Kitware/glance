@@ -10,3 +10,21 @@
   display: inline-block;
   margin: 3px;
 }
+
+.toolTable {
+  flex: 2;
+}
+
+.iconColumn {
+  width: 25px;
+}
+
+.centeredControl {
+  display: block;
+  background: transparent;
+  border: none;
+  margin: 0 auto;
+  padding: 7px;
+  cursor: pointer;
+  outline: none;
+}

@@ -89,5 +89,13 @@ export default {
       activateArgs: ['binding'],
       deactivateArgs: ['binding'],
     },
+    ellipticalRoi: {
+      tool: cornerstoneTools.ellipticalRoi,
+      type: ToolTypes.Mouse,
+      binding: MouseButtons.Left,
+      icon: 'circle-notch',
+      activateArgs: ['binding'],
+      deactivateArgs: ['binding'],
+    },
   },
 };

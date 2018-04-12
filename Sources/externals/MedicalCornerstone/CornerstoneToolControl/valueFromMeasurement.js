@@ -21,6 +21,8 @@ export default function valueFromMeasurement(toolName, measurement) {
       return measurement.angle || 0;
     case 'probe':
       return pixelValue(measurement);
+    case 'ellipticalRoi':
+      return '(none)';
     default:
       return null;
   }

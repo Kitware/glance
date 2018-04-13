@@ -53,7 +53,10 @@ export function createViewer(container, proxyConfig = null) {
     mainView.setState({ showProgress: true });
     ReaderFactory.downloadDataset(name, url, progressCallback)
       .then(({ reader, sourceType }) => {
-        addDataSet(name, reader.getOutputData(), type || sourceType);
+        registerReadersToProxyManager(
+          [{ reader, name, sourceType: type || sourceType }],
+          proxyManager
+        );
         mainView.setState({ showProgress: false });
       })
       .catch(console.error);

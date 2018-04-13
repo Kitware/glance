@@ -11,6 +11,11 @@ export default {
       [MouseButtons.Middle]: 'pan',
       [MouseButtons.Right]: 'zoom',
     },
+    [ToolTypes.MouseWheel]: {
+      // Dummy binding value of true since mouse wheels don't
+      // have specific bind slots.
+      true: 'stackScroll',
+    },
   },
   definitions: {
     pan: {
@@ -96,6 +101,11 @@ export default {
       icon: 'circle-notch',
       activateArgs: ['binding'],
       deactivateArgs: ['binding'],
+    },
+    stackScroll: {
+      tool: Tools.stackScroll,
+      type: ToolTypes.MouseWheel,
+      // no binding needed for mousewheel
     },
   },
 };

@@ -2,6 +2,7 @@ import macro from 'vtk.js/Sources/macro';
 
 import * as cornerstoneTools from 'cornerstone-tools';
 
+import vtkCornerstoneToolStateManager from './CornerstoneToolStateManager';
 import { InputSources } from './Constants';
 
 const { vtkErrorMacro } = macro;
@@ -229,23 +230,23 @@ function CornerstoneToolManager(publicAPI, model) {
     return measurements;
   };
 
-  publicAPI.setMeasurementData = (element, tool, measurementIndex, data) => {
-    const state = cornerstoneTools.getToolState(element, tool);
-    if (state.data && state.data[measurementIndex]) {
-      Object.assign(state.data[measurementIndex], data);
-    }
-  };
+  publicAPI.setMeasurementData = (el, toolType, measurementData, newData) =>
+    cornerstoneTools
+      .getElementToolStateManager(el)
+      .setData(el, toolType, measurementData, newData);
 
-  publicAPI.deleteMeasurement = (element, tool, measurementIndex) => {
-    const state = cornerstoneTools.getToolState(element, tool);
-    if (state.data && state.data[measurementIndex]) {
-      state.data.splice(measurementIndex, 1);
-    }
-  };
+  publicAPI.deleteMeasurement = (el, toolType, measurementData) =>
+    cornerstoneTools
+      .getElementToolStateManager(el)
+      .removeData(el, toolType, measurementData);
 
   publicAPI.setupElement = (element) => {
     if (model.elements.indexOf(element) === -1) {
       model.elements.push(element);
+      cornerstoneTools.setElementToolStateManager(
+        element,
+        vtkCornerstoneToolStateManager.newInstance()
+      );
       invokeInputSources('enable', element);
       attachListeners(element, true);
       model.synchronizers.forEach((s) => s.synchronizer.add(element));

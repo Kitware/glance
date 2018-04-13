@@ -24,15 +24,65 @@ function removeSliceFilter(id) {
 }
 
 /**
+ * Parses a vtkImage imageId.
+ */
+function parseImageId(imageId) {
+  function split(str, delim, limit = Infinity) {
+    const result = [];
+    let i = 0;
+    let lim = limit;
+    while (lim-- > 0) {
+      const ni = str.indexOf(delim);
+      if (ni === -1) {
+        break;
+      }
+      result.push(str.substring(i, ni));
+      i = ni + 1;
+    }
+    result.push(str.substr(i));
+    return result;
+  }
+
+  let parts;
+
+  parts = split(imageId, ':', 1);
+  if (parts.length !== 2) {
+    return null;
+  }
+
+  const [proto, info] = parts;
+  if (proto !== 'vtkImage') {
+    return null;
+  }
+
+  parts = split(info, '?', 1);
+  if (parts.length !== 2) {
+    return null;
+  }
+
+  const [filterId, query] = parts;
+  const params = vtkURLExtract.extractURLParameters(true, query);
+
+  return {
+    proto,
+    filterId: Number(filterId),
+    params,
+  };
+}
+
+/**
  * Loader for Cornerstone.
  */
 function loader(imageId) {
-  const info = imageId.substr(imageId.indexOf(':') + 1);
-  const filterId = Number(info.substr(0, info.indexOf('?')));
-  const query = info.substr(info.indexOf('?') + 1);
-  const params = vtkURLExtract.extractURLParameters(true, query);
+  const parsed = parseImageId(imageId);
 
   const promise = new Promise((resolve, reject) => {
+    if (!parsed) {
+      reject(new Error(`Bad imageId "${imageId}"`));
+    }
+
+    const { filterId, params } = parseImageId(imageId);
+
     if (!(filterId in SliceFilters)) {
       reject(new Error(`No corresponding slice filter for ${filterId}`));
     }
@@ -84,4 +134,5 @@ export default {
   loader,
   addSliceFilter,
   removeSliceFilter,
+  parseImageId,
 };

@@ -1,17 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { EVENTS } from 'cornerstone-tools';
+import * as cornerstoneTools from 'cornerstone-tools';
 
 import vtkCornerstoneToolManager from '../CornerstoneToolManager';
 import toolConfiguration from '../toolsConfig';
+import valueFromMeasurement from './valueFromMeasurement';
+import vtkCornerstoneImageLoader from '../CornerstoneImageLoader';
+import { ToolTypes, MouseButtons } from '../Constants';
 
 import UI from '../../../ui';
-import { ToolTypes, MouseButtons } from '../Constants';
-import valueFromMeasurement from './valueFromMeasurement';
 
 import style from './CornerstoneToolControl.mcss';
 
+const { EVENTS } = cornerstoneTools;
+const { parseImageId } = vtkCornerstoneImageLoader;
 const { Table, Button, FaIcon } = UI;
 
 export default class CornerstoneToolControl extends React.Component {
@@ -74,22 +77,18 @@ export default class CornerstoneToolControl extends React.Component {
   }
 
   onMeasurementChanged(ev) {
-    const view = this.props.proxyManager.getProxyById(this.state.viewProxyId);
-    if (!view || !view.getContainer() || ev.target !== view.getContainer()) {
-      return;
-    }
-
-    const element = view.getContainer();
+    const { element } = ev.detail;
 
     const rendered = () => {
       element.removeEventListener(EVENTS.IMAGE_RENDERED, rendered);
-      // rendered state is external in cornerstone
       this.forceUpdate();
     };
+    // defer update until after a render, since some tools
+    // compute their measurement data in their render method
     element.addEventListener(EVENTS.IMAGE_RENDERED, rendered);
   }
 
-  setMeasurementVisible(toolName, measurementIndex, visible) {
+  setMeasurementVisible(measurement, visible) {
     const view = this.props.proxyManager.getProxyById(this.state.viewProxyId);
     if (!view || !view.getContainer()) {
       return;
@@ -97,15 +96,20 @@ export default class CornerstoneToolControl extends React.Component {
 
     const element = view.getContainer();
 
-    this.toolManager.setMeasurementData(element, toolName, measurementIndex, {
-      visible,
-    });
+    // use this to trigger a measurement modified event
+    this.toolManager.setMeasurementData(
+      element,
+      measurement.type,
+      measurement.data,
+      {
+        visible,
+      }
+    );
 
     view.getRenderer().render();
-    this.forceUpdate();
   }
 
-  deleteMeasurement(toolName, measurementIndex) {
+  deleteMeasurement(measurement) {
     const view = this.props.proxyManager.getProxyById(this.state.viewProxyId);
     if (!view || !view.getContainer()) {
       return;
@@ -113,10 +117,13 @@ export default class CornerstoneToolControl extends React.Component {
 
     const element = view.getContainer();
 
-    this.toolManager.deleteMeasurement(element, toolName, measurementIndex);
+    this.toolManager.deleteMeasurement(
+      element,
+      measurement.type,
+      measurement.data
+    );
 
     view.getRenderer().render();
-    this.forceUpdate();
   }
 
   gotoSlice(sliceIndex) {
@@ -181,27 +188,38 @@ export default class CornerstoneToolControl extends React.Component {
     const measurements = [];
     if (view && view.getContainer()) {
       const element = view.getContainer();
-      const toolMeasurements = this.toolManager.getMeasurements(element);
+      const stateManager = cornerstoneTools.getElementToolStateManager(element);
 
-      Object.keys(toolMeasurements).forEach((toolName) => {
-        toolMeasurements[toolName].forEach((measurement, index) => {
-          // get current slice from active representation
-          const sliceIndex = view
-            .getRenderer()
-            .getRepresentation()
-            .getSlice();
+      if (
+        stateManager !== cornerstoneTools.globalImageIdSpecificToolStateManager
+      ) {
+        const getSliceIndex = (imageId) => {
+          const { params } = parseImageId(imageId);
+          return params.slice;
+        };
 
-          measurements.push({
-            key: `${toolName}::${index}`,
-            index,
-            type: toolName,
-            visible: measurement.visible,
-            icon: this.toolManager.getTool(toolName).config.icon,
-            value: valueFromMeasurement(toolName, measurement),
-            sliceIndex,
+        const toolState = stateManager.getToolState();
+        Object.values(toolState).forEach((states) => {
+          Object.keys(states).forEach((toolType) => {
+            states[toolType].data.forEach((item) =>
+              measurements.push({
+                key: item.metadata.measurementId,
+                type: item.metadata.toolType,
+                sliceIndex: getSliceIndex(item.metadata.imageId),
+                icon: this.toolManager.getTool(item.metadata.toolType).config
+                  .icon,
+                value: valueFromMeasurement(item.metadata.toolType, item),
+                visible: item.visible,
+                data: item,
+              })
+            );
           });
         });
-      });
+      }
+
+      measurements.sort(
+        (a, b) => a.data.metadata.measurementId > b.data.metadata.measurementId
+      );
     }
 
     const tableColumns = [
@@ -248,7 +266,7 @@ export default class CornerstoneToolControl extends React.Component {
             checked={visible}
             title="Visbility"
             onChange={(ev) =>
-              this.setMeasurementVisible(row.type, row.index, ev.target.checked)
+              this.setMeasurementVisible(row, ev.target.checked)
             }
           />
         ),
@@ -262,7 +280,7 @@ export default class CornerstoneToolControl extends React.Component {
           <button
             className={style.centeredControl}
             title="Delete"
-            onClick={() => this.deleteMeasurement(row.type, row.index)}
+            onClick={() => this.deleteMeasurement(row)}
           >
             <FaIcon type="trash" />
           </button>

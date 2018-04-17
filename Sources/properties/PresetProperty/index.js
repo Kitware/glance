@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import PiecewiseFunctionProxyConstants from 'vtk.js/Sources/Proxy/Core/PiecewiseFunctionProxy/Constants';
 
+import Slider from 'paraviewweb/src/React/Properties/SliderProperty/Slider';
 import ToggleIconButton from 'paraviewweb/src/React/Widgets/ToggleIconButtonWidget';
 import style from 'paraviewweb/style/ReactProperties/CellProperty.mcss';
 
@@ -25,7 +26,7 @@ function createPresetMap(tree) {
 function computeDataRange(points) {
   let min = Infinity;
   let max = -Infinity;
-  points.forEach(([x, y]) => {
+  points.forEach((x) => {
     min = Math.min(min, x);
     max = Math.max(max, x);
   });
@@ -47,6 +48,7 @@ export default class PresetProperty extends React.Component {
       helpOpen: false,
       ui: props.ui,
       preset: '',
+      shift: 0,
     };
 
     this.presetMap = {};
@@ -67,8 +69,15 @@ export default class PresetProperty extends React.Component {
       this.presetMap = createPresetMap(this.props.ui.domain.presets);
     }
 
+    const shift = this.getShift();
+    if (shift !== 0) {
+      newState.shift = shift;
+    }
+
     if (Object.keys(newState).length > 0) {
-      this.setState(newState, this.updatePiecewiseFunction);
+      this.setState(newState, this.update);
+    } else {
+      this.update();
     }
   }
 
@@ -76,7 +85,7 @@ export default class PresetProperty extends React.Component {
     const data = nextProps.data;
 
     if (this.state.data !== data) {
-      this.setState({ data }, this.updatePiecewiseFunction);
+      this.setState({ data }, this.update);
     }
   }
 
@@ -103,16 +112,88 @@ export default class PresetProperty extends React.Component {
 
     lutProxy.setPresetName(presetName);
 
-    const dataRange = computeDataRange(points);
+    const dataRange = computeDataRange(points.map(([x, y]) => x));
     pwfProxy.setPoints(normalize(points, dataRange));
     pwfProxy.setDataRange(...dataRange);
 
-    this.updatePiecewiseFunction();
-
+    this.update();
     lutProxy.getProxyManager().renderAllViews();
   }
 
-  updatePiecewiseFunction() {
+  onShiftChange(idx, valStr) {
+    const val = Number(valStr);
+
+    const pwfProxy = this.props.data.value[0];
+    if (pwfProxy && this.state.preset) {
+      const preset = this.presetMap[this.state.preset];
+
+      const points = [];
+      for (let i = 0; i < preset.OpacityPoints.length; i += 2) {
+        points.push([preset.OpacityPoints[i], preset.OpacityPoints[i + 1]]);
+      }
+
+      const dataRange = computeDataRange(points.map(([x, y]) => x));
+      const shiftedPoints = points.map(([x, y]) => [
+        Math.max(dataRange[0], Math.min(dataRange[1], x + val)),
+        y,
+      ]);
+
+      pwfProxy.setPoints(normalize(shiftedPoints, dataRange));
+
+      this.setState({ shift: val });
+      pwfProxy.getProxyManager().renderAllViews();
+    }
+  }
+
+  getShift() {
+    const pwfProxy = this.props.data.value[0];
+    if (!pwfProxy) {
+      return 0;
+    }
+
+    const lutProxy = pwfProxy.getLookupTableProxy();
+    if (!lutProxy) {
+      return 0;
+    }
+
+    const preset = this.presetMap[lutProxy.getPresetName()];
+
+    if (!preset) {
+      return 0;
+    }
+
+    const points = [];
+    for (let i = 0; i < preset.OpacityPoints.length; i += 2) {
+      points.push(preset.OpacityPoints[i]);
+    }
+
+    const last = points.length - 1;
+    points.sort((a, b) => a - b);
+
+    // get current pwf
+    const dataRange = pwfProxy.getDataRange();
+    const dataWidth = dataRange[1] - dataRange[0];
+    const shiftedPoints = pwfProxy
+      .getPoints()
+      .map(([x, y]) => x * dataWidth + dataRange[0]);
+
+    if (shiftedPoints.length !== points.length) {
+      return 0;
+    }
+
+    // compute current shift
+    let shift = 0;
+    if (points[last - 1] > shiftedPoints[last - 1]) {
+      shift = shiftedPoints[last - 1] - points[last - 1];
+    } else if (points[1] < shiftedPoints[1]) {
+      shift = shiftedPoints[1] - points[1];
+    }
+
+    shift = Math.round(shift);
+    return shift;
+  }
+
+  update() {
     const pwfProxy = this.props.data.value[0];
     if (!pwfProxy) {
       return;
@@ -122,7 +203,14 @@ export default class PresetProperty extends React.Component {
     if (lutProxy) {
       if (lutProxy.getPresetName() in this.presetMap) {
         pwfProxy.setMode(Mode.Points);
-        this.setState({ preset: lutProxy.getPresetName() });
+
+        if (this.state.preset !== lutProxy.getPresetName()) {
+          this.setState({
+            preset: lutProxy.getPresetName(),
+            // reset shift whenever preset changes
+            shift: 0,
+          });
+        }
       } else {
         pwfProxy.setMode(Mode.Gaussians);
       }
@@ -140,6 +228,18 @@ export default class PresetProperty extends React.Component {
       return null;
     }
 
+    let shiftMin = 0;
+    let shiftMax = 0;
+
+    const preset = this.presetMap[this.state.preset];
+    if (preset) {
+      // compute shift range
+      const points = [];
+      for (let i = 0; i < preset.OpacityPoints.length; i += 2) {
+        points.push(preset.OpacityPoints[i]);
+      }
+      [shiftMin, shiftMax] = computeDataRange(points);
+    }
 
     return (
       <div
@@ -163,6 +263,18 @@ export default class PresetProperty extends React.Component {
           value={this.state.preset}
           onSelect={this.onPresetChange}
         />
+        <div className={style.header}>
+          <strong>Shift</strong>
+        </div>
+        <div className={style.inputBlock}>
+          <Slider
+            value={this.state.shift}
+            min={shiftMin}
+            max={shiftMax}
+            step={1}
+            onChange={this.onShiftChange}
+          />
+        </div>
       </div>
     );
   }

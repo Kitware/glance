@@ -9,7 +9,7 @@ import style from 'paraviewweb/style/ReactProperties/CellProperty.mcss';
 
 import PresetTree from './PresetTree';
 
-const { Mode } = PiecewiseFunctionProxyConstants;
+const { Mode: PwfMode } = PiecewiseFunctionProxyConstants;
 
 function createPresetMap(tree) {
   const map = {};
@@ -34,9 +34,42 @@ function computeDataRange(points) {
   return [min, max];
 }
 
-function normalize(points, range) {
-  const width = range[1] - range[0];
-  return points.map(([x, y]) => [(x - range[0]) / width, y]);
+function setOpacityPoints(pwfProxy, preset, shift = 0) {
+  const rawPoints = preset.OpacityPoints;
+  const points = [];
+  let min = Infinity;
+  let max = -Infinity;
+
+  for (let i = 0; i < rawPoints.length; i += 2) {
+    points.push([rawPoints[i], rawPoints[i + 1]]);
+    min = Math.min(min, rawPoints[i]);
+    max = Math.max(max, rawPoints[i]);
+  }
+
+  const width = max - min;
+  const normPoints = points.map(([x, y]) => [(x - min) / width, y]);
+  pwfProxy.setPoints(normPoints);
+
+  min += shift;
+  max += shift;
+  pwfProxy.setDataRange(min, max);
+}
+
+function setColormap(lutProxy, colormap, shift = 0) {
+  lutProxy.setPresetName(colormap.Name);
+
+  const rawPoints = colormap.RGBPoints;
+  let min = Infinity;
+  let max = -Infinity;
+
+  for (let i = 0; i < rawPoints.length; i += 4) {
+    min = Math.min(min, rawPoints[i]);
+    max = Math.max(max, rawPoints[i]);
+  }
+
+  min += shift;
+  max += shift;
+  lutProxy.setDataRange(min, max);
 }
 
 /* eslint-disable react/no-unused-prop-types */
@@ -67,11 +100,6 @@ export default class PresetProperty extends React.Component {
 
     if (this.props.ui.domain && this.props.ui.domain.presets) {
       this.presetMap = createPresetMap(this.props.ui.domain.presets);
-    }
-
-    const shift = this.getShift();
-    if (shift !== 0) {
-      newState.shift = shift;
     }
 
     if (Object.keys(newState).length > 0) {
@@ -105,16 +133,8 @@ export default class PresetProperty extends React.Component {
       return;
     }
 
-    const points = [];
-    for (let i = 0; i < preset.OpacityPoints.length; i += 2) {
-      points.push([preset.OpacityPoints[i], preset.OpacityPoints[i + 1]]);
-    }
-
-    lutProxy.setPresetName(presetName);
-
-    const dataRange = computeDataRange(points.map(([x, y]) => x));
-    pwfProxy.setPoints(normalize(points, dataRange));
-    pwfProxy.setDataRange(...dataRange);
+    setColormap(lutProxy, preset);
+    setOpacityPoints(pwfProxy, preset);
 
     this.update();
     lutProxy.getProxyManager().renderAllViews();
@@ -124,24 +144,17 @@ export default class PresetProperty extends React.Component {
     const val = Number(valStr);
 
     const pwfProxy = this.props.data.value[0];
-    if (pwfProxy && this.state.preset) {
-      const preset = this.presetMap[this.state.preset];
+    if (pwfProxy) {
+      const lutProxy = pwfProxy.getLookupTableProxy();
+      if (lutProxy && this.state.preset) {
+        const preset = this.presetMap[this.state.preset];
 
-      const points = [];
-      for (let i = 0; i < preset.OpacityPoints.length; i += 2) {
-        points.push([preset.OpacityPoints[i], preset.OpacityPoints[i + 1]]);
+        setOpacityPoints(pwfProxy, preset, val);
+        setColormap(lutProxy, preset, val);
+
+        this.setState({ shift: val });
+        pwfProxy.getProxyManager().renderAllViews();
       }
-
-      const dataRange = computeDataRange(points.map(([x, y]) => x));
-      const shiftedPoints = points.map(([x, y]) => [
-        Math.max(dataRange[0], Math.min(dataRange[1], x + val)),
-        y,
-      ]);
-
-      pwfProxy.setPoints(normalize(shiftedPoints, dataRange));
-
-      this.setState({ shift: val });
-      pwfProxy.getProxyManager().renderAllViews();
     }
   }
 
@@ -162,32 +175,18 @@ export default class PresetProperty extends React.Component {
       return 0;
     }
 
-    const points = [];
-    for (let i = 0; i < preset.OpacityPoints.length; i += 2) {
-      points.push(preset.OpacityPoints[i]);
+    // Compute shift based on range of colormap points
+    let min = Infinity;
+    let max = -Infinity;
+    for (let i = 0; i < preset.RGBPoints.length; i += 4) {
+      min = Math.min(min, preset.RGBPoints[i]);
+      max = Math.max(max, preset.RGBPoints[i]);
     }
 
-    const last = points.length - 1;
-    points.sort((a, b) => a - b);
-
-    // get current pwf
-    const dataRange = pwfProxy.getDataRange();
-    const dataWidth = dataRange[1] - dataRange[0];
-    const shiftedPoints = pwfProxy
-      .getPoints()
-      .map(([x, y]) => x * dataWidth + dataRange[0]);
-
-    if (shiftedPoints.length !== points.length) {
-      return 0;
-    }
+    const shiftedRange = lutProxy.getDataRange();
 
     // compute current shift
-    let shift = 0;
-    if (points[last - 1] > shiftedPoints[last - 1]) {
-      shift = shiftedPoints[last - 1] - points[last - 1];
-    } else if (points[1] < shiftedPoints[1]) {
-      shift = shiftedPoints[1] - points[1];
-    }
+    let shift = shiftedRange[0] - min;
 
     shift = Math.round(shift);
     return shift;
@@ -202,17 +201,16 @@ export default class PresetProperty extends React.Component {
     const lutProxy = pwfProxy.getLookupTableProxy();
     if (lutProxy) {
       if (lutProxy.getPresetName() in this.presetMap) {
-        pwfProxy.setMode(Mode.Points);
+        pwfProxy.setMode(PwfMode.Points);
 
         if (this.state.preset !== lutProxy.getPresetName()) {
           this.setState({
             preset: lutProxy.getPresetName(),
-            // reset shift whenever preset changes
-            shift: 0,
+            shift: this.getShift(),
           });
         }
       } else {
-        pwfProxy.setMode(Mode.Gaussians);
+        pwfProxy.setMode(PwfMode.Gaussians);
       }
     }
   }

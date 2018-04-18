@@ -178,7 +178,7 @@ export default class MainView extends React.Component {
           </div>
         </div>
         <TitleModal
-          title="ParaView Glance"
+          title="About Glance"
           isOpen={this.state.showAboutPage}
           onRequestClose={() => this.setState({ showAboutPage: false })}
           shouldCloseOnOverlayClick

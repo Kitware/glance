@@ -19,7 +19,7 @@
         "normalize.css": "^8.0.0",
         "paraviewweb": "3.0.13",
         "shelljs": "0.7.8",
-        "vtk.js": "6.4.11"
+        "vtk.js": "6.4.16"
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free-webfonts": "^1.0.4",

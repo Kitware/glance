@@ -1,0 +1,41 @@
+.tree {
+  width: 260px;
+  color: #333;
+}
+
+.tree > :global(.rc-tree-select-selection) {
+  background: transparent;
+  border: none;
+}
+
+.tree :global(.rc-tree-select-arrow) {
+  mix-blend-mode: difference;
+}
+
+.treeDropdown {
+  /* override rc-tree-select's width */
+  width: 400px !important;
+  height: 300px;
+  overflow-y: auto;
+}
+
+.treeDropdown :global(.rc-tree-select-tree-node-content-wrapper) {
+  display: inline-block;
+  width: calc(100% - 32px);
+  cursor: pointer;
+  padding: 4px 5px 5px 5px;
+  user-select: none;
+}
+
+.treeDropdown :global(.rc-tree-select-tree-node-content-wrapper):hover {
+  background: $colors.selected;
+  opacity: 0.8;
+  color: white;
+}
+
+.treeDropdown :global(.rc-tree-select-tree-node-selected) {
+  background: $colors.selected;
+  border: none;
+  opacity: 1;
+  color: white;
+}

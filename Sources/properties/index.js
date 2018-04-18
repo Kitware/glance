@@ -6,6 +6,7 @@ import ColorProperty from './ColorProperty';
 import ExecuteProperty from './ExecuteProperty';
 import LookupTableProperty from './LookupTableProperty';
 import PiecewiseFunctionProperty from './PiecewiseFunctionProperty';
+import PresetProperty from './PresetProperty';
 
 PropertyFactory.updateWidgetMapping('Color', (prop, viewData, onChange) => (
   <ColorProperty
@@ -62,6 +63,20 @@ PropertyFactory.updateWidgetMapping(
   (prop, viewData, onChange) => (
     <ExecuteProperty
       key={prop.data.id}
+      data={prop.data}
+      ui={prop.ui}
+      viewData={viewData}
+      show={prop.show}
+      onChange={onChange || prop.onChange}
+    />
+  )
+);
+
+PropertyFactory.updateWidgetMapping(
+  'PresetProperty',
+  (prop, viewData, onChange) => (
+    <PresetProperty
+      key={`PresetProperty:${prop.data.id}`}
       data={prop.data}
       ui={prop.ui}
       viewData={viewData}

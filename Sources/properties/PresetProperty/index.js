@@ -23,17 +23,6 @@ function createPresetMap(tree) {
   return map;
 }
 
-function computeDataRange(points) {
-  let min = Infinity;
-  let max = -Infinity;
-  points.forEach((x) => {
-    min = Math.min(min, x);
-    max = Math.max(max, x);
-  });
-
-  return [min, max];
-}
-
 function setOpacityPoints(pwfProxy, preset, shift = 0) {
   const rawPoints = preset.OpacityPoints;
   const points = [];
@@ -231,12 +220,17 @@ export default class PresetProperty extends React.Component {
 
     const preset = this.presetMap[this.state.preset];
     if (preset) {
-      // compute shift range
-      const points = [];
-      for (let i = 0; i < preset.OpacityPoints.length; i += 2) {
-        points.push(preset.OpacityPoints[i]);
+      // shift range is original rgb/opacity range centered around 0
+      let min = Infinity;
+      let max = -Infinity;
+      for (let i = 0; i < preset.RGBPoints.length; i += 4) {
+        min = Math.min(min, preset.RGBPoints[i]);
+        max = Math.max(max, preset.RGBPoints[i]);
       }
-      [shiftMin, shiftMax] = computeDataRange(points);
+
+      const center = (max - min) / 2 + min;
+      shiftMin = Math.round(min - center);
+      shiftMax = Math.round(max - center);
     }
 
     return (

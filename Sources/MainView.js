@@ -26,6 +26,7 @@ export default class MainView extends React.Component {
       collapsed: false,
       showProgress: false,
       progressPercent: 0,
+      progressMsg: '',
       dndVisible: false,
       showAboutPage: false,
     };
@@ -188,6 +189,7 @@ export default class MainView extends React.Component {
           visible={this.state.showProgress}
           percent={this.state.progressPercent / 100}
           color="#9090b5"
+          message={this.state.progressMsg}
         />
       </div>
     );

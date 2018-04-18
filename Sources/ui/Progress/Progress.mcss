@@ -1,8 +1,5 @@
-.container {
-  pointer-events: none;
-}
-
 .bar {
+  pointer-events: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -25,4 +22,51 @@
 
 .hidden {
   opacity: 0;
+}
+
+.messageBox {
+  position: fixed;
+  height: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.messageText {
+  /* transform won't work on inline elements */
+  display: inline-block;
+  padding: 8px 20px;
+  background: #222;
+  color: #feffef;
+  font-size: 1.2em;
+  border-radius: 0 0 5px 5px;
+  transition: transform 150ms linear;
+  /* hide above page */
+  transform: translateY(-80px);
+}
+
+.messageVisible {
+  transform: translateY(0px);
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  display: inline;
+  padding-left: 10px;
+}
+
+.spinner:before {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  content: '';
+  box-sizing: border-box;
+  border-radius: 50%;
+  border-top: 2px solid #08a;
+  border-right: 2px solid transparent;
+  animation: spinner 1s linear infinite;
 }

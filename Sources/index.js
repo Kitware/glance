@@ -50,7 +50,7 @@ export function createViewer(container, proxyConfig = null) {
   }
 
   function openRemoteDataset(name, url, type) {
-    mainView.setState({ showProgress: true });
+    mainView.setState({ showProgress: true, progressMsg: 'Downloading...' });
     ReaderFactory.downloadDataset(name, url, progressCallback)
       .then(({ reader, sourceType }) => {
         registerReadersToProxyManager(

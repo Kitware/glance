@@ -10,7 +10,7 @@
 
 .modal {
   position: absolute;
-  top: 30%;
+  top: 30px;
   left: 0;
   right: 0;
   margin: auto;
@@ -20,6 +20,8 @@
   outline: none;
   width: 60%;
   max-width: 800px;
+  max-height: 80%;
+  overflow: auto;
 }
 
 .title {

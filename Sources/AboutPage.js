@@ -2,7 +2,7 @@ import React from 'react';
 
 import Icons from './icons';
 
-const imageStyle = {
+const linkStyle = {
   width: '50%',
   display: 'inline-block',
   textAlign: 'center',
@@ -12,9 +12,14 @@ function AboutPage(props) {
   // prettier-ignore
   return (
     <div>
-      <a href="https://kitware.github.io/pv-web-viewer/">
-        <img src={Icons.Logo} alt="ParaView Glance" />
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://kitware.github.io/pv-web-viewer/"
+      >
+        <img src={Icons.Logo} alt="ParaView Glance" style={{ width: '100%' }} />
       </a>
+      &nbsp;
       <div>
         <a href="https://kitware.github.io/pv-web-viewer/">ParaView Glance</a> is a
         general purpose web application useful for visualizing many data types,
@@ -22,11 +27,21 @@ function AboutPage(props) {
       </div>
       &nbsp;
       <div>
-        <a href="https://www.kitware.com/" style={imageStyle}>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.kitware.com/"
+          style={linkStyle}
+        >
           <img src={Icons.KitwareLogo} alt="Kitware" />
         </a>
-        <a href="https://www.kitware.com/" style={imageStyle}>
-          <img src={Icons.VtkJsLogo} alt="Kitware" style={{ height: '130px' }} />
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.kitware.com/"
+          style={linkStyle}
+        >
+          <img src={Icons.VtkJsLogo} alt="Kitware" style={{ width: '50%' }} />
         </a>
       </div>
     </div>

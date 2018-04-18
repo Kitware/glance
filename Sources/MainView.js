@@ -188,8 +188,8 @@ export default class MainView extends React.Component {
         <Progress
           visible={this.state.showProgress}
           percent={this.state.progressPercent / 100}
-          color="#9090b5"
           message={this.state.progressMsg}
+          color="#997fef"
         />
       </div>
     );

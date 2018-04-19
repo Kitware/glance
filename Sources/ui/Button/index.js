@@ -18,14 +18,12 @@ function Button(props) {
 }
 
 Button.propTypes = {
-  style: PropTypes.object,
   className: PropTypes.string,
   children: PropTypes.any,
   onClick: PropTypes.func,
 };
 
 Button.defaultProps = {
-  style: {},
   className: '',
   children: [],
   onClick: () => {},

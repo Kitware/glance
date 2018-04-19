@@ -30,13 +30,27 @@ img {
 
 .toolbar {
   padding: 0 50px;
-  height: 64px;
+  height: $sizes.toolbar;
   background-color: $colors.menu;
   line-height: $sizes.toolbar;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+}
+
+.toolbarButtons {
+  position: relative;
+  right: -40px;
+}
+
+.toolbarButton,
+.toolbarButton:hover
+{
+  border: none;
+  background: transparent;
+  font-size: 1.5em;
+  vertical-align: middle;
 }
 
 .fullHeight {
@@ -87,7 +101,7 @@ img {
 }
 
 .logo img {
-  height: 60px;
+  height: calc($sizes.toolbar - 4px);
 }
 
 .toolbarIcon {
@@ -108,8 +122,8 @@ img {
   display: flex;
   flex-flow: column;
   overflow: hidden;
-  height: calc(100vh - 105px);
-  max-height: calc(100vh - 105px);
+  height: calc(100vh - $sizes.toolbar - 40px);
+  max-height: calc(100vh - $sizes.toolbar - 40px);
 }
 
 /* Force proxy editor to resize height */
@@ -130,26 +144,8 @@ img {
 .workspace {
   flex: auto;
   overflow: hidden;
-  height: calc(100vh - 64px);
-  max-height: calc(100vh - 64px);
-}
-
-.progressContainer {
-  /* Override toolbar line height */
-  line-height: 1em;
-  flex: none;
-  position: relative;
-  left: 40px;
-  vertical-align: middle;
-}
-
-.progressText {
-  width: 100%;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: center;
+  height: calc(100vh - $sizes.toolbar);
+  max-height: calc(100vh - $sizes.toolbar);
 }
 
 .dndOverlay {

@@ -3,9 +3,6 @@ import 'normalize.css/normalize.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import 'rc-progress/assets/index.css';
-import { Circle as Progress } from 'rc-progress';
-
 import UI from './ui';
 import Layouts from './layouts';
 import LayoutConfig from './config/glanceLayoutConfig';
@@ -13,23 +10,23 @@ import style from './pv-explorer.mcss';
 import icons from './icons';
 import ReaderFactory from './io/ReaderFactory';
 
+import AboutPage from './AboutPage';
 import Controls from './controls';
 
-const { Menu } = UI;
+const { Progress, Menu, Button, FaIcon, TitleModal } = UI;
 const { LayoutGrid } = Layouts;
 
 const layouts = ['2D', '3D', 'Split', 'Quad'];
+const { ProgressContainer } = Progress;
 
 export default class MainView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       layout: '3D',
-      overlayOpacity: 100,
       collapsed: false,
-      showProgress: false,
-      progressPercent: 0,
       dndVisible: false,
+      showAboutPage: false,
     };
 
     // main app container
@@ -107,24 +104,6 @@ export default class MainView extends React.Component {
   }
 
   render() {
-    let progress = null;
-
-    if (this.state.showProgress) {
-      progress = (
-        <div>
-          <Progress
-            strokeWidth={6}
-            strokeLinecap="round"
-            width={50}
-            percent={this.state.progressPercent}
-          />
-          <span className={style.progressText}>
-            {this.state.progressPercent}%
-          </span>
-        </div>
-      );
-    }
-
     const dndClasses = [style.dndOverlay];
     if (this.state.dndVisible) {
       dndClasses.push(style.dndOverlayVisible);
@@ -137,6 +116,7 @@ export default class MainView extends React.Component {
           this.container = r;
         }}
       >
+        <ProgressContainer color="#997fef" minPercent={5} />
         <div className={dndClasses.join(' ')}>
           <span className={style.dndOverlayText}>Drop files to open</span>
         </div>
@@ -159,7 +139,14 @@ export default class MainView extends React.Component {
               </Menu.Item>
             ))}
           </Menu>
-          <div className={style.progressContainer}>{progress}</div>
+          <div className={style.toolbarButtons}>
+            <Button
+              className={style.toolbarButton}
+              onClick={() => this.setState({ showAboutPage: true })}
+            >
+              <FaIcon type="question-circle" />
+            </Button>
+          </div>
         </div>
         <div className={style.horizContainer}>
           <div
@@ -189,6 +176,14 @@ export default class MainView extends React.Component {
             </div>
           </div>
         </div>
+        <TitleModal
+          title="About Glance"
+          isOpen={this.state.showAboutPage}
+          onRequestClose={() => this.setState({ showAboutPage: false })}
+          shouldCloseOnOverlayClick
+        >
+          <AboutPage />
+        </TitleModal>
       </div>
     );
   }

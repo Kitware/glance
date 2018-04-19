@@ -13,10 +13,11 @@ import ReaderFactory from './io/ReaderFactory';
 import AboutPage from './AboutPage';
 import Controls from './controls';
 
-const { Menu, Button, FaIcon, Progress, TitleModal } = UI;
+const { Progress, Menu, Button, FaIcon, TitleModal } = UI;
 const { LayoutGrid } = Layouts;
 
 const layouts = ['2D', '3D', 'Split', 'Quad'];
+const { ProgressContainer } = Progress;
 
 export default class MainView extends React.Component {
   constructor(props) {
@@ -24,9 +25,6 @@ export default class MainView extends React.Component {
     this.state = {
       layout: '3D',
       collapsed: false,
-      showProgress: false,
-      progressPercent: 0,
-      progressMsg: '',
       dndVisible: false,
       showAboutPage: false,
     };
@@ -118,6 +116,7 @@ export default class MainView extends React.Component {
           this.container = r;
         }}
       >
+        <ProgressContainer color="#997fef" minPercent={5} />
         <div className={dndClasses.join(' ')}>
           <span className={style.dndOverlayText}>Drop files to open</span>
         </div>
@@ -185,12 +184,6 @@ export default class MainView extends React.Component {
         >
           <AboutPage />
         </TitleModal>
-        <Progress
-          visible={this.state.showProgress}
-          percent={this.state.progressPercent / 100}
-          message={this.state.progressMsg}
-          color="#997fef"
-        />
       </div>
     );
   }

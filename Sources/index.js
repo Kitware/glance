@@ -16,6 +16,7 @@ import Configs from './config';
 import MainView from './MainView';
 import * as Controls from './controls';
 import ReaderFactory from './io/ReaderFactory';
+import UI from './ui';
 
 export const {
   registerReader,
@@ -44,20 +45,22 @@ export function createViewer(container, proxyConfig = null) {
     );
   }
 
-  function progressCallback(event) {
-    const progressPercent = Math.round(100 * event.loaded / event.total);
-    mainView.setState({ progressPercent });
-  }
-
   function openRemoteDataset(name, url, type) {
-    mainView.setState({ showProgress: true, progressMsg: 'Downloading...' });
+    const progressId = `url-${name}`;
+
+    const progressCallback = (event) => {
+      const progressPercent = Math.round(100 * event.loaded / event.total);
+      UI.Progress.setPercent(progressId, progressPercent);
+    };
+
+    UI.Progress.start(progressId, 'Downloading...');
     ReaderFactory.downloadDataset(name, url, progressCallback)
       .then(({ reader, sourceType }) => {
         registerReadersToProxyManager(
           [{ reader, name, sourceType: type || sourceType }],
           proxyManager
         );
-        mainView.setState({ showProgress: false });
+        UI.Progress.end(progressId);
       })
       .catch(console.error);
   }

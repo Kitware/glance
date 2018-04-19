@@ -125,7 +125,7 @@ export default class FileLoader extends React.Component {
 
     return (
       <div className={style.content}>
-        <Button onClick={this.openFile}>
+        <Button onClick={this.openFile} style={{ flex: '0 0 100%' }}>
           <FaIcon type="upload" style={{ paddingRight: '10px' }} />
           Load or drop file
         </Button>

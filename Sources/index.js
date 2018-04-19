@@ -62,7 +62,10 @@ export function createViewer(container, proxyConfig = null) {
         );
         UI.Progress.end(progressId);
       })
-      .catch(console.error);
+      .catch((error) => {
+        UI.Progress.end(progressId);
+        console.error(error);
+      });
   }
 
   function loadAndViewFiles(files) {

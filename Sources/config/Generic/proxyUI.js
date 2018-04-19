@@ -156,7 +156,9 @@ const Geometry = [
     name: 'lookupTableProxy',
     advanced: 0,
     size: 1,
-    domain: {},
+    domain: {
+      colormaps: ColorMaps,
+    },
     doc: 'Edit lookup table',
   },
   // {

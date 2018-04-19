@@ -6,9 +6,6 @@
   cursor: pointer;
   transition: color .5s, border-color .5s;
   outline: none;
-  -moz-outline: none;
-  -ms-outline: none;
-  -webkit-outline: none;
 }
 
 .button:hover {

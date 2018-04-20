@@ -8,7 +8,8 @@ function getExternals(basePath) {
   const files = fs.readdirSync(basePath);
   return files.filter((name) => {
     const dir = path.join(basePath, name);
-    return fs.statSync(dir).isDirectory();
+    const entry = path.join(dir, 'index.js');
+    return fs.statSync(dir).isDirectory() && fs.statSync(entry).isFile();
   });
 }
 

@@ -12,12 +12,18 @@ function createDefaultView(classFactory, ui) {
       classFactory,
       ui,
       [
-        { link: 'AnnotationOpacity', property: 'annotationOpacity' },
         {
+          type: 'application',
+          link: 'AnnotationOpacity',
+          property: 'annotationOpacity',
+        },
+        {
+          type: 'application',
           link: 'OrientationAxesVisibility',
           property: 'orientationAxesVisibility',
         },
         {
+          type: 'application',
           link: 'OrientationAxesPreset',
           property: 'presetToOrientationAxes',
         },

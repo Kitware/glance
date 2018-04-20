@@ -13,7 +13,7 @@ import ReaderFactory from './io/ReaderFactory';
 import AboutPage from './AboutPage';
 import Controls from './controls';
 
-const { Progress, Menu, Button, FaIcon, TitleModal } = UI;
+const { Progress, Menu, FaIcon, TitleModal } = UI;
 const { LayoutGrid } = Layouts;
 
 const layouts = ['2D', '3D', 'Split', 'Quad'];
@@ -140,12 +140,13 @@ export default class MainView extends React.Component {
             ))}
           </Menu>
           <div className={style.toolbarButtons}>
-            <Button
+            <button
               className={style.toolbarButton}
+              title="About"
               onClick={() => this.setState({ showAboutPage: true })}
             >
               <FaIcon type="question-circle" />
-            </Button>
+            </button>
           </div>
         </div>
         <div className={style.horizContainer}>

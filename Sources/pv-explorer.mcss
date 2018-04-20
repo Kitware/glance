@@ -44,13 +44,18 @@ img {
   right: -40px;
 }
 
-.toolbarButton,
-.toolbarButton:hover
-{
+.toolbarButton {
+  outline: none;
+  cursor: pointer;
   border: none;
   background: transparent;
   font-size: 1.5em;
   vertical-align: middle;
+  transition: color .5s, border-color .5s;
+}
+
+.toolbarButton:hover {
+  color: $colors.selected;
 }
 
 .fullHeight {

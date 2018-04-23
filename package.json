@@ -19,13 +19,13 @@
         "normalize.css": "^8.0.0",
         "paraviewweb": "3.0.13",
         "shelljs": "0.7.8",
-        "vtk.js": "6.4.16"
+        "vtk.js": "6.4.19"
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free-webfonts": "^1.0.4",
         "copy-webpack-plugin": "^4.4.1",
         "http-server": "0.10.0",
-        "itk": "8.1.1",
+        "itk": "9.0.0",
         "kw-doc": "1.1.1",
         "kw-web-suite": "6.0.2",
         "lodash": "^4.17.4",

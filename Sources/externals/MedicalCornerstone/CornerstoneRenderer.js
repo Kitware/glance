@@ -60,6 +60,7 @@ function CornerstoneRenderer(publicAPI, model) {
   // Setup --------------------------------------------------------------------
 
   let repSubscription = null;
+  model.rotateAngle = 0;
 
   // Public -------------------------------------------------------------------
 
@@ -106,6 +107,7 @@ function CornerstoneRenderer(publicAPI, model) {
           vflip: model.representation.getVFlip(),
           pixelReplication: !model.representation.getInterpolation(),
           invert: model.representation.getInvertColors(),
+          rotation: model.rotateAngle,
         });
 
         cornerstone.displayImage(model.container, image, viewport);
@@ -167,6 +169,23 @@ function CornerstoneRenderer(publicAPI, model) {
     if (model.container) {
       cornerstone.resize(model.container);
     }
+  };
+
+  publicAPI.resetViewport = () => publicAPI.render(true);
+
+  publicAPI.captureImage = (format = 'image/png') => {
+    if (model.container) {
+      const canvas = model.container.querySelector('canvas');
+      if (canvas) {
+        return canvas.toDataURL(format);
+      }
+    }
+    return null;
+  };
+
+  publicAPI.rotate = (angle = 90) => {
+    model.rotateAngle = (model.rotateAngle + angle) % 360;
+    publicAPI.renderLater();
   };
 }
 

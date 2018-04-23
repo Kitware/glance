@@ -91,7 +91,7 @@ function extend(publicAPI, model, initialValues = {}) {
       interpolation: true,
       invertColors: false,
       hFlip: false,
-      vFlip: true, // start out vflipped
+      vFlip: false,
     },
     initialValues
   );

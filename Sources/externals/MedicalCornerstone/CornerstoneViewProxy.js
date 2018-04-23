@@ -82,6 +82,14 @@ function CornerstoneViewProxy(publicAPI, model) {
 
   publicAPI.resize = () => model.renderer.resize();
 
+  publicAPI.renderLater = () => model.renderer.renderLater();
+
+  publicAPI.resetCamera = () => model.renderer.resetViewport();
+
+  publicAPI.captureImage = () => model.renderer.captureImage();
+
+  publicAPI.rotate = (angle = 90) => model.renderer.rotate(angle);
+
   publicAPI.delete = macro.chain(() => {
     while (unsubscribes.length) {
       unsubscribes.pop().unsubscribe();

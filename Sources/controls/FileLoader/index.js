@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { toast } from 'react-toastify';
+
 import UI from '../../ui';
 import ReaderFactory from '../../io/ReaderFactory';
 import RawReader from './RawReader';
 import style from './FileLoader.mcss';
 
-const { Button, FaIcon } = UI;
+const { Button, FaIcon, Messages } = UI;
 
 export default class FileLoader extends React.Component {
   constructor(props) {
@@ -34,7 +36,10 @@ export default class FileLoader extends React.Component {
             this.setState({ file: null });
             this.props.updateTab('pipeline');
           })
-          .catch(() => {
+          .catch((error) => {
+            if (error) {
+              toast.error(Messages.LoadFailure);
+            }
             // No reader found
             if (files.length === 1) {
               this.setState({ file: files[0] });

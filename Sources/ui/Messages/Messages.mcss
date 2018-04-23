@@ -1,0 +1,8 @@
+.errorLine {
+  margin: 0;
+  padding: 2px;
+}
+
+.errorLink {
+  color: yellow;
+}

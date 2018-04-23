@@ -2,13 +2,15 @@ import WebworkerPromise from 'webworker-promise';
 
 import config from './itkConfig';
 
-var worker = new window.Worker(config.itkModulesPath + '/WebWorkers/MeshIO.worker.js');
-var promiseWorker = new WebworkerPromise(worker);
-
-var writeMeshArrayBuffer = function writeMeshArrayBuffer(_ref, mesh, fileName, mimeType) {
+var writeMeshArrayBuffer = function writeMeshArrayBuffer(webWorker, _ref, mesh, fileName, mimeType) {
   var useCompression = _ref.useCompression,
       binaryFileType = _ref.binaryFileType;
 
+  var worker = webWorker;
+  if (!worker) {
+    worker = new window.Worker(config.itkModulesPath + '/WebWorkers/MeshIO.worker.js');
+  }
+  var promiseWorker = new WebworkerPromise(worker);
   var transferables = [];
   if (mesh.points.buffer) {
     transferables.push(mesh.points.buffer);
@@ -38,7 +40,9 @@ var writeMeshArrayBuffer = function writeMeshArrayBuffer(_ref, mesh, fileName, m
     useCompression: useCompression,
     binaryFileType: binaryFileType,
     config: config
-  }, transferables);
+  }, transferables).then(function () {
+    return Promise.resolve({ webWorker: worker });
+  });
 };
 
 export default writeMeshArrayBuffer;

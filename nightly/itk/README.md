@@ -3,10 +3,18 @@ itk.js
 
 [![CircleCI](https://img.shields.io/circleci/project/github/InsightSoftwareConsortium/itk-js/master.svg)](https://circleci.com/gh/InsightSoftwareConsortium/itk-js)
 
-Provides general scientific image, mesh, and point set IO capability and bridges
-[ITK](https://itk.org) code running in an
-[asm.js](http://asmjs.org/) or [WebAssembly](http://webassembly.org/)
-runtime environment.
+*itk.js* combines [Emscripten](http://emscripten.org/) and
+[ITK](https://www.itk.org/) to enable high-performance spatial analysis in a
+JavaScript runtime environment.
+
+The project provides tools to a) build C/C++ code to JavaScript
+([asm.js](http://asmjs.org/)) and [WebAssembly](http://webassembly.org/), b)
+bridge local filesystems, native JavaScript data structures, and traditional
+file formats, c) transfer data efficiently in and out of the Emscripten
+runtime, and d) asynchronously execute processing pipelines in a background
+thread. *itk.js* can be used to execute [ITK](https://www.itk.org/),
+[VTK](https://www.vtk.org/) or arbitrary C++ codes in the browser or on a
+workstation / server with Node.js.
 
 For more information, please see [the project
 documentation](https://insightsoftwareconsortium.github.io/itk-js/).

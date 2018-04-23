@@ -1,32 +1,32 @@
 {
   "_args": [
     [
-      "itk@8.1.1",
+      "itk@9.0.0",
       "/home/travis/build/Kitware/pv-web-viewer"
     ]
   ],
   "_development": true,
-  "_from": "itk@8.1.1",
-  "_id": "itk@8.1.1",
+  "_from": "itk@9.0.0",
+  "_id": "itk@9.0.0",
   "_inBundle": false,
-  "_integrity": "sha512-8fT1OFgW2SZaPxU5G317ea96YcXpk0ZGR5ldHbsnEV6dsaLHFskvUEwCMqSqZd8OFGPH8Fc48CY5Jstlws1WSQ==",
+  "_integrity": "sha512-l+P/elWjeqsac8Q6ATmTcnvFdLl2SKEvRKnLeeR8PZlY+4vgvTr6RUPdoianPkvDNIXE3cTSC41JCrtsVrXtVg==",
   "_location": "/itk",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "itk@8.1.1",
+    "raw": "itk@9.0.0",
     "name": "itk",
     "escapedName": "itk",
-    "rawSpec": "8.1.1",
+    "rawSpec": "9.0.0",
     "saveSpec": null,
-    "fetchSpec": "8.1.1"
+    "fetchSpec": "9.0.0"
   },
   "_requiredBy": [
     "#DEV:/"
   ],
-  "_resolved": "https://registry.npmjs.org/itk/-/itk-8.1.1.tgz",
-  "_spec": "8.1.1",
+  "_resolved": "https://registry.npmjs.org/itk/-/itk-9.0.0.tgz",
+  "_spec": "9.0.0",
   "_where": "/home/travis/build/Kitware/pv-web-viewer",
   "author": {
     "name": "Insight Software Consortium"
@@ -74,7 +74,7 @@
     "karma-webpack": "2.0.4",
     "kw-doc": "1.0.20",
     "ramda": "^0.23.0",
-    "standard": "^8.6.0",
+    "standard": "^11.0.1",
     "tap-spec": "^4.1.1",
     "tape": "^4.8.0",
     "uglifyify": "^3.0.4",
@@ -117,5 +117,5 @@
       "test/Browser/tests.js"
     ]
   },
-  "version": "8.1.1"
+  "version": "9.0.0"
 }

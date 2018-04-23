@@ -2,18 +2,12 @@ import WebworkerPromise from 'webworker-promise';
 
 import config from './itkConfig';
 
-var worker = new window.Worker(config.itkModulesPath + '/WebWorkers/ImageIO.worker.js');
-var promiseWorker = new WebworkerPromise(worker);
-
-/**
- * Write a file ArrayBuffer from an image in the browser.
- *
- * @param: useCompression compression the pixel data buffer when possible
- * @param: image itk.Image instance to write
- * @param: fileName string that contains the file name
- * @param: mimeType optional mime-type string
- */
-var writeImageArrayBuffer = function writeImageArrayBuffer(useCompression, image, fileName, mimeType) {
+var writeImageArrayBuffer = function writeImageArrayBuffer(webWorker, useCompression, image, fileName, mimeType) {
+  var worker = webWorker;
+  if (!worker) {
+    worker = new window.Worker(config.itkModulesPath + '/WebWorkers/ImageIO.worker.js');
+  }
+  var promiseWorker = new WebworkerPromise(worker);
   return promiseWorker.postMessage({
     operation: 'writeImage',
     name: fileName,
@@ -21,7 +15,9 @@ var writeImageArrayBuffer = function writeImageArrayBuffer(useCompression, image
     image: image,
     useCompression: useCompression,
     config: config
-  }, [image.data.buffer]);
+  }, [image.data.buffer]).then(function () {
+    return Promise.resolve({ webWorker: worker });
+  });
 };
 
 export default writeImageArrayBuffer;

@@ -4,10 +4,12 @@ import config from './itkConfig';
 
 import IOTypes from './IOTypes';
 
-var worker = new window.Worker(config.itkModulesPath + '/WebWorkers/Pipeline.worker.js');
-var promiseWorker = new WebworkerPromise(worker);
-
-var runPipelineBrowser = function runPipelineBrowser(pipelinePath, args, outputs, inputs) {
+var runPipelineBrowser = function runPipelineBrowser(webWorker, pipelinePath, args, outputs, inputs) {
+  var worker = webWorker;
+  if (!worker) {
+    worker = new window.Worker(config.itkModulesPath + '/WebWorkers/Pipeline.worker.js');
+  }
+  var promiseWorker = new WebworkerPromise(worker);
   var transferables = [];
   if (inputs) {
     inputs.forEach(function (input) {
@@ -36,7 +38,13 @@ var runPipelineBrowser = function runPipelineBrowser(pipelinePath, args, outputs
     args: args,
     outputs: outputs,
     inputs: inputs
-  }, transferables);
+  }, transferables).then(function (_ref) {
+    var stdout = _ref.stdout,
+        stderr = _ref.stderr,
+        outputs = _ref.outputs;
+
+    return Promise.resolve({ stdout: stdout, stderr: stderr, outputs: outputs, webWorker: worker });
+  });
 };
 
 export default runPipelineBrowser;

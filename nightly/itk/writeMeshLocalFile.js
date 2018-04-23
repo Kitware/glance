@@ -10,7 +10,7 @@ var loadEmscriptenModule = require('./loadEmscriptenModuleNode.js');
 var writeMeshEmscriptenFSFile = require('./writeMeshEmscriptenFSFile.js');
 
 /**
- * Write an mesh to a file on the local filesystem in Node.js.
+ * Write a mesh to a file on the local filesystem in Node.js.
  *
  * @param: useCompression compression the pixel data when possible
  * @param: binaryFileType write in an binary as opposed to a ascii format, if

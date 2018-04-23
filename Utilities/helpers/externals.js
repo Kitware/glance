@@ -9,7 +9,11 @@ function getExternals(basePath) {
   return files.filter((name) => {
     const dir = path.join(basePath, name);
     const entry = path.join(dir, 'index.js');
-    return fs.statSync(dir).isDirectory() && fs.statSync(entry).isFile();
+    try {
+      return fs.statSync(dir).isDirectory() && fs.statSync(entry).isFile();
+    } catch (e) {
+      return false;
+    }
   });
 }
 

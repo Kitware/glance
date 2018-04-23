@@ -58,11 +58,16 @@ function CornerstoneRepresentationProxy(publicAPI, model) {
 
   publicAPI.setSlice = (slice) => {
     if (model.imageStack) {
-      if (model.imageStack.currentImageIdIndex === slice) {
+      const sliceAxis = 'IJK'.indexOf(model.slicingMode);
+      // -1 since we are getting max slice index
+      const maxIndex = model.input.getDataset().getDimensions()[sliceAxis] - 1;
+      // slice must be an integer (and valid image ID index)
+      const newIndex = Math.round(Math.max(0, Math.min(maxIndex, slice)));
+
+      if (model.imageStack.currentImageIdIndex === newIndex) {
         return;
       }
-      // slice must be an integer (and valid image ID index)
-      model.imageStack.currentImageIdIndex = Math.round(slice);
+      model.imageStack.currentImageIdIndex = newIndex;
       publicAPI.modified();
     }
   };

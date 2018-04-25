@@ -18,6 +18,8 @@ import * as Controls from './controls';
 import ReaderFactory from './io/ReaderFactory';
 import UI from './ui';
 
+const MainComponent = UI.MobileOverlay(MainView);
+
 export const {
   registerReader,
   listReaders,
@@ -34,7 +36,7 @@ export function createViewer(container, proxyConfig = null) {
 
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
   const mainView = ReactDOM.render(
-    <MainView proxyManager={proxyManager} />,
+    <MainComponent proxyManager={proxyManager} />,
     container
   );
 

@@ -1,0 +1,25 @@
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 99;
+  background: $colors.menu;
+}
+
+.centered {
+  text-align: center;
+  font-size: 2em;
+  padding: 15px;
+}
+
+.glance {
+  max-width: 100%;
+}
+
+.kitware {
+  margin: 0 auto;
+  margin-top: 15px;
+  width: 55%;
+}

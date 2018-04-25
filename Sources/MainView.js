@@ -3,6 +3,9 @@ import 'normalize.css/normalize.css';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { ToastContainer, Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import UI from './ui';
 import Layouts from './layouts';
 import LayoutConfig from './config/glanceLayoutConfig';
@@ -185,6 +188,15 @@ export default class MainView extends React.Component {
         >
           <AboutPage />
         </TitleModal>
+        <ToastContainer
+          position="top-right"
+          autoClose={8000}
+          transition={Slide}
+          hideProgressBar
+          closeOnClick
+          pauseOnHover
+          draggable={false}
+        />
       </div>
     );
   }

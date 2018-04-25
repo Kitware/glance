@@ -95,9 +95,11 @@ function readRawData({ fileName, data }) {
         reader[fileNameMethod](fileName);
       }
       const ds = reader[parseMethod](data);
-      Promise.resolve(ds).then((dataset) =>
-        resolve({ dataset, reader, sourceType, name: fileName })
-      );
+      Promise.resolve(ds)
+        .then((dataset) =>
+          resolve({ dataset, reader, sourceType, name: fileName })
+        )
+        .catch(reject);
     } else {
       reject();
     }

@@ -210,9 +210,8 @@ export default class RawReader extends React.Component {
           <Button
             className={style.button}
             onClick={this.onLoad}
-            disabled={userDim !== this.state.size}
+            disabled={userDim !== this.state.size || this.state.loading}
             style={{ marginLeft: '5px' }}
-            loading={this.state.loading}
           >
             Read
           </Button>

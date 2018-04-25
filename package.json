@@ -18,6 +18,7 @@
         "mout": "1.0.0",
         "normalize.css": "^8.0.0",
         "paraviewweb": "3.0.13",
+        "react-toastify": "^4.0.0-rc.5",
         "shelljs": "0.7.8",
         "vtk.js": "6.4.19"
     },

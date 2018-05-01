@@ -33,15 +33,15 @@ function AboutPage(props) {
           href="https://www.kitware.com/"
           style={linkStyle}
         >
-          <img src={Icons.KitwareLogo} alt="Kitware" />
+          <img src={Icons.KitwareLogo} alt="Kitware" style={{ width: '80%' }} />
         </a>
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://www.kitware.com/"
+          href="https://kitware.github.io/vtk-js/"
           style={linkStyle}
         >
-          <img src={Icons.VtkJsLogo} alt="Kitware" style={{ width: '50%' }} />
+          <img src={Icons.VtkJsLogo} alt="vtk.js" style={{ width: '80%' }} />
         </a>
       </div>
     </div>

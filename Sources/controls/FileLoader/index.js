@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import UI from '../../ui';
 import ReaderFactory from '../../io/ReaderFactory';
 import RawReader from './RawReader';
+import DragAndDrop from './DragAndDrop';
 import style from './FileLoader.mcss';
 
 const { Button, FaIcon, Messages } = UI;
@@ -19,36 +20,39 @@ export default class FileLoader extends React.Component {
 
     // Closure for callback
     this.addDataset = this.addDataset.bind(this);
-    this.loadFile = this.loadFile.bind(this);
+    this.openFile = this.openFile.bind(this);
+    this.loadFiles = this.loadFiles.bind(this);
     this.updateReader = this.updateReader.bind(this);
   }
 
-  loadFile() {
+  openFile() {
     ReaderFactory.openFiles(
       ['raw'].concat(ReaderFactory.listSupportedExtensions()),
-      (files) => {
-        ReaderFactory.loadFiles(files)
-          .then((readers) => {
-            ReaderFactory.registerReadersToProxyManager(
-              readers,
-              this.props.proxyManager
-            );
-            this.setState({ file: null });
-            this.props.updateTab('pipeline');
-          })
-          .catch((error) => {
-            if (error) {
-              toast.error(Messages.LoadFailure);
-            }
-            // No reader found
-            if (files.length === 1) {
-              this.setState({ file: files[0] });
-            } else {
-              this.setState({ file: null });
-            }
-          });
-      }
+      this.loadFiles
     );
+  }
+
+  loadFiles(files) {
+    ReaderFactory.loadFiles(files)
+      .then((readers) => {
+        ReaderFactory.registerReadersToProxyManager(
+          readers,
+          this.props.proxyManager
+        );
+        this.setState({ file: null });
+        this.props.updateTab('pipeline');
+      })
+      .catch((error) => {
+        if (error) {
+          toast.error(Messages.LoadFailure);
+        }
+        // No reader found
+        if (files.length === 1) {
+          this.setState({ file: files[0] });
+        } else {
+          this.setState({ file: null });
+        }
+      });
   }
 
   addDataset(ds) {
@@ -76,7 +80,7 @@ export default class FileLoader extends React.Component {
   render() {
     return (
       <div className={style.content}>
-        <Button onClick={this.loadFile}>
+        <Button onClick={this.openFile}>
           <FaIcon type="upload" style={{ paddingRight: '10px' }} />
           Load or drop file
         </Button>
@@ -88,6 +92,7 @@ export default class FileLoader extends React.Component {
         {this.state.file ? (
           <RawReader file={this.state.file} addDataset={this.addDataset} />
         ) : null}
+        <DragAndDrop target=".paraview-glance-root" onDrop={this.loadFiles} />
       </div>
     );
   }

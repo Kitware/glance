@@ -16,6 +16,11 @@ function update() {
   }
 }
 
+function setIndeterminate(state) {
+  EventManager.invoke('visible', state);
+  EventManager.invoke('indeterminate', state);
+}
+
 function setPercent(key, p) {
   if (key in active) {
     active[key].percent = p;
@@ -47,6 +52,7 @@ function end(key) {
 }
 
 export default {
+  setIndeterminate,
   setPercent,
   start,
   end,

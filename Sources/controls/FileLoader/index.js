@@ -9,7 +9,7 @@ import RawReader from './RawReader';
 import DragAndDrop from './DragAndDrop';
 import style from './FileLoader.mcss';
 
-const { Button, FaIcon, Messages } = UI;
+const { Button, FaIcon, Messages, Progress } = UI;
 
 export default class FileLoader extends React.Component {
   constructor(props) {
@@ -33,8 +33,12 @@ export default class FileLoader extends React.Component {
   }
 
   loadFiles(files) {
+    Progress.setIndeterminate(true);
+
     ReaderFactory.loadFiles(files)
       .then((readers) => {
+        Progress.setIndeterminate(false);
+
         ReaderFactory.registerReadersToProxyManager(
           readers,
           this.props.proxyManager

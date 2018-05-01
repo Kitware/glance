@@ -9,7 +9,41 @@
   transition:
     width 200ms ease 0s,
     opacity 200ms ease 200ms,
-    height 200ms ease 200ms;
+    height 200ms ease 200ms,
+    transform 200ms ease 0s;
+}
+
+.indeterminateLong {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  transform: translateX(-100%);
+  /* 3s for animation, 1.5s delay */
+  animation: faster 3s 1.5s infinite;
+}
+
+.indeterminateShort {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  transform: translateX(-100%);
+  /* 3s for animation, 3s delay (2x delay of indeterminateLong) */
+  animation: slower 3s 3s infinite;
+}
+
+
+@keyframes faster {
+  0% { transform: translateX(-55%) scale(0.05, 1); }
+  100% { transform: translateX(130%) scale(1, 1); }
+}
+
+@keyframes slower {
+  0% { transform: translateX(-90%) scale(0.8, 1); }
+  100% { transform: translateX(110%) scale(0.1, 1); }
 }
 
 .leader {

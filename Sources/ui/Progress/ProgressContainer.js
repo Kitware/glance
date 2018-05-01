@@ -13,7 +13,8 @@ export default class Progress extends React.Component {
       visible: false,
       percent: 0,
       message: '',
-      messageVisible: true,
+      messageVisible: false,
+      indeterminate: false,
     };
 
     this.messageEl = null;
@@ -28,6 +29,9 @@ export default class Progress extends React.Component {
       EventManager.on('percent', (percent) => this.setState({ percent })),
       EventManager.on('visible', (visible) => this.setState({ visible })),
       EventManager.on('message', (message) => this.setState({ message })),
+      EventManager.on('indeterminate', (indeterminate) =>
+        this.setState({ indeterminate })
+      ),
     ];
   }
 
@@ -79,30 +83,54 @@ export default class Progress extends React.Component {
       100
     );
 
+    const visible = this.state.visible;
+    const indeterminateVisible = visible && this.state.indeterminate;
+    const messageVisible = visible && this.state.messageVisible;
+
     const messageStyles = [
       style.messageText,
-      this.state.messageVisible && this.state.visible
-        ? style.messageVisible
-        : '',
+      messageVisible ? style.messageVisible : '',
     ].join(' ');
 
     return (
       <div>
-        <div
-          className={style.bar}
-          style={{
-            background: color,
-            height: this.state.visible ? height : 0,
-            width: `${percent}%`,
-          }}
-        >
+        {this.state.indeterminate ? (
           <div
-            className={style.leader}
+            className={style.bar}
             style={{
-              boxShadow: `0 0 10px ${color}, 0 0 8px ${color}`,
+              height: indeterminateVisible ? height : 0,
             }}
-          />
-        </div>
+          >
+            <div
+              className={style.indeterminateLong}
+              style={{
+                background: color,
+              }}
+            />
+            <div
+              className={style.indeterminateShort}
+              style={{
+                background: color,
+              }}
+            />
+          </div>
+        ) : (
+          <div
+            className={style.bar}
+            style={{
+              background: color,
+              height: visible ? height : 0,
+              width: `${percent}%`,
+            }}
+          >
+            <div
+              className={style.leader}
+              style={{
+                boxShadow: `0 0 10px ${color}, 0 0 8px ${color}`,
+              }}
+            />
+          </div>
+        )}
         <div className={style.messageBox}>
           <div
             ref={(r) => {

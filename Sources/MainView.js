@@ -11,7 +11,6 @@ import Layouts from './layouts';
 import LayoutConfig from './config/glanceLayoutConfig';
 import style from './pv-explorer.mcss';
 import icons from './icons';
-import ReaderFactory from './io/ReaderFactory';
 
 import AboutPage from './AboutPage';
 import Controls from './controls';
@@ -28,71 +27,13 @@ export default class MainView extends React.Component {
     this.state = {
       layout: '3D',
       collapsed: false,
-      dndVisible: false,
       showAboutPage: false,
     };
-
-    // main app container
-    this.container = null;
-    // timer id for dragleave
-    this.dragTimeout = null;
 
     // Closure for callback
     this.onLayoutChange = this.onLayoutChange.bind(this);
     this.onToggleControl = this.onToggleControl.bind(this);
     this.forceUpdate = this.forceUpdate.bind(this);
-    this.onDragOver = this.onDragOver.bind(this);
-    this.onDragLeave = this.onDragLeave.bind(this);
-    this.onDrop = this.onDrop.bind(this);
-  }
-
-  componentDidMount() {
-    this.container.addEventListener('dragover', this.onDragOver);
-    this.container.addEventListener('dragleave', this.onDragLeave);
-    this.container.addEventListener('drop', this.onDrop);
-  }
-
-  componentWillUnmount() {
-    this.container.removeEventListener('dragover', this.onDragOver);
-    this.container.removeEventListener('dragleave', this.onDragLeave);
-    this.container.removeEventListener('drop', this.onDrop);
-  }
-
-  onDragOver(ev) {
-    const types = ev.dataTransfer.types;
-    if (
-      types && types instanceof Array
-        ? types.indexOf('Files') !== -1
-        : 'Files' in types
-    ) {
-      this.setState({ dndVisible: true });
-      if (this.dragTimeout !== null) {
-        window.clearTimeout(this.dragTimeout);
-        this.dragTimeout = null;
-      }
-      ev.preventDefault();
-    }
-  }
-
-  onDragLeave(ev) {
-    this.dragTimeout = window.setTimeout(() => {
-      this.setState({ dndVisible: false });
-      this.dragTimeout = null;
-    }, 50);
-  }
-
-  onDrop(ev) {
-    ReaderFactory.loadFiles(Array.from(ev.dataTransfer.files))
-      .then((readers) =>
-        ReaderFactory.registerReadersToProxyManager(
-          readers,
-          this.props.proxyManager
-        )
-      )
-      .then(() => this.controls.changeTabTo('pipeline'));
-
-    this.setState({ dndVisible: false });
-    ev.preventDefault();
   }
 
   onLayoutChange(key) {
@@ -107,22 +48,9 @@ export default class MainView extends React.Component {
   }
 
   render() {
-    const dndClasses = [style.dndOverlay];
-    if (this.state.dndVisible) {
-      dndClasses.push(style.dndOverlayVisible);
-    }
-
     return (
-      <div
-        className={style.vertContainer}
-        ref={(r) => {
-          this.container = r;
-        }}
-      >
+      <div className={[style.vertContainer, 'paraview-glance-root'].join(' ')}>
         <ProgressContainer color="#997fef" minPercent={5} />
-        <div className={dndClasses.join(' ')}>
-          <span className={style.dndOverlayText}>Drop files to open</span>
-        </div>
         <div className={style.toolbar}>
           <div className={style.logo} onClick={this.onToggleControl}>
             <img alt="logo" src={icons.Logo} />

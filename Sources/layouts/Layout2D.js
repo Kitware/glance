@@ -8,7 +8,11 @@ import style from './vtk-layout.mcss';
 
 const { Button, FaIcon } = UI;
 
-const COLOR_BY_AXIS = ['yellow', 'red', 'green'];
+const COLOR_BY_AXIS = [
+  'rgb(237, 313, 76)', // yellow, X axis
+  'rgb(243, 74, 51)', // red, Y axis
+  'rgb(110, 176, 75)', // green, Z axis
+];
 
 export default class Layout2D extends React.Component {
   constructor(props) {

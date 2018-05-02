@@ -48,9 +48,13 @@ Building
 If you wish to view, enhance, or adapt this application in any way, you can access and run the freely available source code from any platform using the following commands: 
 
 > $ git clone https://github.com/Kitware/pv-web-viewer.git
+
 > $ cd pv-web-viewer/
+
 > $ git checkout cornerstone_integration
+
 > $ npm install
+
 > $ npm run start
 
 The prerequesits are [git][] and [node.js-npm][].

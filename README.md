@@ -51,8 +51,6 @@ If you wish to view, enhance, or adapt this application in any way, you can acce
 
 > $ cd pv-web-viewer/
 
-> $ git checkout cornerstone_integration
-
 > $ npm install
 
 > $ npm run start

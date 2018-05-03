@@ -51,21 +51,19 @@ plugins.push(
   })
 );
 
-module.exports = {
+const baseConfig = {
   plugins,
-  entry: Object.assign(
-    {
-      glance: entry,
-    },
-    externals.getExternalEntries(externalPath)
-  ),
   output: {
     path: outputPath,
     filename: '[name].js',
     libraryTarget: 'umd',
   },
   module: {
-    rules: [{ test: entry, loader: 'expose-loader?Glance' }].concat(
+    rules: [
+      { test: entry, loader: 'expose-loader?Glance' },
+      { test: require.resolve('react'), loader: 'expose-loader?React' },
+      { test: require.resolve('react-dom'), loader: 'expose-loader?ReactDOM' },
+    ].concat(
       externals.getExternalExposeRules(externalPath),
       linterRules,
       glanceRules,
@@ -95,3 +93,21 @@ module.exports = {
     },
   },
 };
+
+module.exports = [
+  // Process main Glance app
+  Object.assign({
+    entry: {
+      glance: entry,
+    },
+  }, baseConfig),
+
+  // Process externals
+  Object.assign({
+    entry: externals.getExternalEntries(externalPath),
+    externals: {
+      'react': 'React',
+      'react-dom': 'ReactDOM',
+    },
+  }, baseConfig),
+];

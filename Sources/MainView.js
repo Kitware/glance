@@ -36,6 +36,18 @@ export default class MainView extends React.Component {
     this.forceUpdate = this.forceUpdate.bind(this);
   }
 
+  componentDidMount() {
+    const { remoteControl } = this.props;
+    remoteControl.addTrigger('toggleControl', this.onToggleControl);
+    remoteControl.addTrigger('changeTabTo', this.controls.changeTabTo);
+  }
+
+  componentWillUnmount() {
+    const { remoteControl } = this.props;
+    remoteControl.delTrigger('toggleControl');
+    remoteControl.delTrigger('changeTabTo');
+  }
+
   onLayoutChange(key) {
     this.setState({ layout: key });
   }
@@ -131,6 +143,7 @@ export default class MainView extends React.Component {
 }
 
 MainView.propTypes = {
+  remoteControl: PropTypes.object.isRequired,
   proxyManager: PropTypes.object.isRequired,
 };
 

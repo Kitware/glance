@@ -16,6 +16,7 @@ import Configs from './config';
 import MainView from './MainView';
 import * as Controls from './controls';
 import ReaderFactory from './io/ReaderFactory';
+import RemoteControl from './RemoteControl';
 import UI from './ui';
 
 const MainComponent = UI.MobileOverlay(MainView);
@@ -33,10 +34,12 @@ export const { registerControlTab, unregisterControlTab } = Controls;
 export function createViewer(container, proxyConfig = null) {
   const { mode } = vtkURLExtract.extractURLParameters();
   const proxyConfiguration = proxyConfig || Configs[mode] || Configs.Generic;
-
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
-  const mainView = ReactDOM.render(
-    <MainComponent proxyManager={proxyManager} />,
+
+  const remoteControl = RemoteControl();
+
+  ReactDOM.render(
+    <MainComponent remoteControl={remoteControl} proxyManager={proxyManager} />,
     container
   );
 
@@ -77,11 +80,11 @@ export function createViewer(container, proxyConfig = null) {
   }
 
   function toggleControl() {
-    mainView.onToggleControl();
+    remoteControl.trigger('toggleControl');
   }
 
   function updateTab(tabName = 'pipeline') {
-    mainView.controls.changeTabTo(tabName);
+    remoteControl.trigger('changeTabTo', tabName);
   }
 
   function processURLArgs() {

@@ -51,7 +51,7 @@ export default class VRControl extends React.Component {
 
   componentWillUnmount() {
     while (this.subscriptions.length) {
-      this.subscriptions.pop().unsubcribe();
+      this.subscriptions.pop().unsubscribe();
     }
   }
 

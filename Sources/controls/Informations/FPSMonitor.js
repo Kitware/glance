@@ -31,7 +31,7 @@ export default class FPSMonitor extends React.Component {
       this.monitor = null;
     }
     while (this.subscriptions.length) {
-      this.subscriptions.pop().unsubcribe();
+      this.subscriptions.pop().unsubscribe();
     }
   }
 

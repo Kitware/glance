@@ -65,7 +65,7 @@ registerControlTab('informations', Informations, 0, 'info');
 // Tab control panel
 // ----------------------------------------------------------------------------
 
-export default class ContolPanel extends React.Component {
+export default class ControlPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -111,8 +111,8 @@ export default class ContolPanel extends React.Component {
   }
 }
 
-ContolPanel.propTypes = {
+ControlPanel.propTypes = {
   proxyManager: PropTypes.object.isRequired,
 };
 
-ContolPanel.defaultProps = {};
+ControlPanel.defaultProps = {};

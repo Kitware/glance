@@ -1,48 +1,48 @@
-const Image = require('./Image.js')
-const ImageType = require('./ImageType.js')
+var Image = require('./Image.js');
+var ImageType = require('./ImageType.js');
 
-const imageIOComponentToJSComponent = require('./imageIOComponentToJSComponent.js')
-const imageIOPixelTypeToJSPixelType = require('./imageIOPixelTypeToJSPixelType.js')
+var imageIOComponentToJSComponent = require('./imageIOComponentToJSComponent.js');
+var imageIOPixelTypeToJSPixelType = require('./imageIOPixelTypeToJSPixelType.js');
 
-const readImageEmscriptenFSDICOMFileSeries = (seriesReaderModule, directory, firstFile) => {
-  const seriesReader = new seriesReaderModule.ITKDICOMImageSeriesReader()
+var readImageEmscriptenFSDICOMFileSeries = function readImageEmscriptenFSDICOMFileSeries(seriesReaderModule, directory, firstFile) {
+  var seriesReader = new seriesReaderModule.ITKDICOMImageSeriesReader();
   if (!seriesReader.CanReadTestFile(firstFile)) {
-    throw new Error('Could not read file: ' + firstFile)
+    throw new Error('Could not read file: ' + firstFile);
   }
-  seriesReader.SetTestFileName(firstFile)
-  seriesReader.ReadTestImageInformation()
+  seriesReader.SetTestFileName(firstFile);
+  seriesReader.ReadTestImageInformation();
 
-  const dimension = 3
-  let imageType = new ImageType(dimension)
+  var dimension = 3;
+  var imageType = new ImageType(dimension);
 
-  const ioComponentType = seriesReader.GetIOComponentType()
-  imageType.componentType = imageIOComponentToJSComponent(seriesReaderModule, ioComponentType)
+  var ioComponentType = seriesReader.GetIOComponentType();
+  imageType.componentType = imageIOComponentToJSComponent(seriesReaderModule, ioComponentType);
 
-  const ioPixelType = seriesReader.GetIOPixelType()
-  imageType.pixelType = imageIOPixelTypeToJSPixelType(seriesReaderModule, ioPixelType)
+  var ioPixelType = seriesReader.GetIOPixelType();
+  imageType.pixelType = imageIOPixelTypeToJSPixelType(seriesReaderModule, ioPixelType);
 
-  imageType.components = seriesReader.GetNumberOfComponents()
+  imageType.components = seriesReader.GetNumberOfComponents();
 
-  let image = new Image(imageType)
+  var image = new Image(imageType);
 
-  seriesReader.SetIOComponentType(ioComponentType)
-  seriesReader.SetIOPixelType(ioPixelType)
-  seriesReader.SetDirectory(directory)
+  seriesReader.SetIOComponentType(ioComponentType);
+  seriesReader.SetIOPixelType(ioPixelType);
+  seriesReader.SetDirectory(directory);
   if (seriesReader.Read()) {
-    throw new Error('Could not read series')
+    throw new Error('Could not read series');
   }
 
-  for (let ii = 0; ii < dimension; ++ii) {
-    image.spacing[ii] = seriesReader.GetSpacing(ii)
-    image.size[ii] = seriesReader.GetSize(ii)
-    image.origin[ii] = seriesReader.GetOrigin(ii)
-    for (let jj = 0; jj < dimension; ++jj) {
-      image.direction.setElement(ii, jj, seriesReader.GetDirection(ii, jj))
+  for (var ii = 0; ii < dimension; ++ii) {
+    image.spacing[ii] = seriesReader.GetSpacing(ii);
+    image.size[ii] = seriesReader.GetSize(ii);
+    image.origin[ii] = seriesReader.GetOrigin(ii);
+    for (var jj = 0; jj < dimension; ++jj) {
+      image.direction.setElement(ii, jj, seriesReader.GetDirection(ii, jj));
     }
   }
-  image.data = seriesReader.GetPixelBufferData()
+  image.data = seriesReader.GetPixelBufferData();
 
-  return image
-}
+  return image;
+};
 
-module.exports = readImageEmscriptenFSDICOMFileSeries
+module.exports = readImageEmscriptenFSDICOMFileSeries;

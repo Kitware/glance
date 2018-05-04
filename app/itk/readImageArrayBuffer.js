@@ -1,20 +1,22 @@
-const WebworkerPromise = require('webworker-promise')
+import WebworkerPromise from 'webworker-promise';
 
-const config = require('./itkConfig.js')
+import config from './itkConfig';
 
-const worker = new window.Worker(config.webWorkersPath + '/ImageIOWorker.js')
-const promiseWorker = new WebworkerPromise(worker)
+var readImageArrayBuffer = function readImageArrayBuffer(webWorker, arrayBuffer, fileName, mimeType) {
+  var worker = webWorker;
+  if (!worker) {
+    worker = new window.Worker(config.itkModulesPath + '/WebWorkers/ImageIO.worker.js');
+  }
+  var promiseWorker = new WebworkerPromise(worker);
+  return promiseWorker.postMessage({
+    operation: 'readImage',
+    name: fileName,
+    type: mimeType,
+    data: arrayBuffer,
+    config: config
+  }, [arrayBuffer]).then(function (image) {
+    return Promise.resolve({ image: image, webWorker: worker });
+  });
+};
 
-/**
- * Read an image from a file ArrayBuffer in the browser.
- *
- * @param: data arrayBuffer that contains the file contents
- * @param: fileName string that contains the file name
- * @param: mimeType optional mime-type string
- */
-const readImageArrayBuffer = (arrayBuffer, fileName, mimeType) => {
-  return promiseWorker.postMessage({ operation: 'readImage', name: fileName, type: mimeType, data: arrayBuffer, config: config },
-    [arrayBuffer])
-}
-
-module.exports = readImageArrayBuffer
+export default readImageArrayBuffer;

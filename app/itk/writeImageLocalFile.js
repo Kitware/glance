@@ -1,13 +1,13 @@
-const path = require('path')
-const mime = require('mime-types')
+var path = require('path');
+var mime = require('mime-types');
 
-const mimeToIO = require('./MimeToIO.js')
-const getFileExtension = require('./getFileExtension.js')
-const extensionToIO = require('./extensionToIO.js')
-const ImageIOIndex = require('./ImageIOIndex.js')
+var mimeToIO = require('./MimeToImageIO.js');
+var getFileExtension = require('./getFileExtension.js');
+var extensionToIO = require('./extensionToImageIO.js');
+var ImageIOIndex = require('./ImageIOIndex.js');
 
-const loadEmscriptenModule = require('./loadEmscriptenModule.js')
-const writeImageEmscriptenFSFile = require('./writeImageEmscriptenFSFile.js')
+var loadEmscriptenModule = require('./loadEmscriptenModuleNode.js');
+var writeImageEmscriptenFSFile = require('./writeImageEmscriptenFSFile.js');
 
 /**
  * Write an image to a file on the local filesystem in Node.js.
@@ -15,48 +15,51 @@ const writeImageEmscriptenFSFile = require('./writeImageEmscriptenFSFile.js')
  * @param: useCompression compression the pixel data when possible
  * @param: image itk.Image instance to write
  * @param: filePath path to the file on the local filesystem.
+ *
+ * @return empty Promise
  */
-const writeImageLocalFile = (useCompression, image, filePath) => {
+var writeImageLocalFile = function writeImageLocalFile(useCompression, image, filePath) {
   return new Promise(function (resolve, reject) {
-    const imageIOsPath = path.resolve(__dirname, '..', 'dist', 'ImageIOs')
+    var imageIOsPath = path.resolve(__dirname, 'ImageIOs');
+    var absoluteFilePath = path.resolve(filePath);
     try {
-      const mimeType = mime.lookup(filePath)
-      const extension = getFileExtension(filePath)
+      var mimeType = mime.lookup(absoluteFilePath);
+      var extension = getFileExtension(absoluteFilePath);
 
-      let io = null
+      var io = null;
       if (mimeToIO.hasOwnProperty(mimeType)) {
-        io = mimeToIO[mimeType]
+        io = mimeToIO[mimeType];
       } else if (extensionToIO.hasOwnProperty(extension)) {
-        io = extensionToIO[extension]
+        io = extensionToIO[extension];
       } else {
-        for (let idx = 0; idx < ImageIOIndex.length; ++idx) {
-          const modulePath = path.join(imageIOsPath, ImageIOIndex[idx])
-          const Module = loadEmscriptenModule(modulePath)
-          const imageIO = new Module.ITKImageIO()
-          Module.mountContainingDirectory(filePath)
-          imageIO.SetFileName(filePath)
-          if (imageIO.CanWriteFile(filePath)) {
-            io = ImageIOIndex[idx]
-            Module.unmountContainingDirectory(filePath)
-            break
+        for (var idx = 0; idx < ImageIOIndex.length; ++idx) {
+          var _modulePath = path.join(imageIOsPath, ImageIOIndex[idx]);
+          var _Module = loadEmscriptenModule(_modulePath);
+          var imageIO = new _Module.ITKImageIO();
+          _Module.mountContainingDirectory(absoluteFilePath);
+          imageIO.SetFileName(absoluteFilePath);
+          if (imageIO.CanWriteFile(absoluteFilePath)) {
+            io = ImageIOIndex[idx];
+            _Module.unmountContainingDirectory(absoluteFilePath);
+            break;
           }
-          Module.unmountContainingDirectory(filePath)
+          _Module.unmountContainingDirectory(absoluteFilePath);
         }
       }
       if (io === null) {
-        reject(Error('Could not find IO for: ' + filePath))
+        reject(Error('Could not find IO for: ' + absoluteFilePath));
       }
 
-      const modulePath = path.join(imageIOsPath, io)
-      const Module = loadEmscriptenModule(modulePath)
-      Module.mountContainingDirectory(filePath)
-      writeImageEmscriptenFSFile(Module, useCompression, image, filePath)
-      Module.unmountContainingDirectory(filePath)
-      resolve(null)
+      var modulePath = path.join(imageIOsPath, io);
+      var Module = loadEmscriptenModule(modulePath);
+      Module.mountContainingDirectory(absoluteFilePath);
+      writeImageEmscriptenFSFile(Module, useCompression, image, absoluteFilePath);
+      Module.unmountContainingDirectory(absoluteFilePath);
+      resolve(null);
     } catch (err) {
-      reject(err)
+      reject(err);
     }
-  })
-}
+  });
+};
 
-module.exports = writeImageLocalFile
+module.exports = writeImageLocalFile;

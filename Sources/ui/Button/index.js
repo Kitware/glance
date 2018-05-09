@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 import style from './Button.mcss';
 
 function Button(props) {
-  const classes = [style.button, props.className];
+  const classes = [
+    style.button,
+    props.checked ? style.checked : '',
+    props.className,
+  ];
 
   const otherProps = Object.assign({}, props);
   delete otherProps.className;
@@ -20,12 +24,14 @@ function Button(props) {
 Button.propTypes = {
   className: PropTypes.string,
   children: PropTypes.any,
+  checked: PropTypes.bool,
   onClick: PropTypes.func,
 };
 
 Button.defaultProps = {
   className: '',
   children: [],
+  checked: false,
   onClick: () => {},
 };
 

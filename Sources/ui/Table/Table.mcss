@@ -1,0 +1,52 @@
+.wrapper {
+  width: 100%;
+  overflow: auto;
+  background: white;
+  max-height: calc(100vh - $sizes.toolbar);
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border: 1px solid #aaa;
+}
+
+.table thead {
+  background: #ddd;
+}
+
+.table th {
+  border: 1px solid #aaa;
+  text-overflow: clip;
+  /* needed so resizer grip can overflow onto next inline element */
+  overflow: visible;
+}
+
+.headerCell {
+  overflow: hidden;
+}
+
+.table td {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.table th, .table td {
+  position: relative;
+  padding: 6px;
+  white-space: nowrap;
+}
+
+.table tbody > tr:nth-child(even) {
+  background: #eeedff;
+}
+
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  cursor: col-resize;
+  z-index: 9;
+  user-select: none;
+}

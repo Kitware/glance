@@ -1,5 +1,5 @@
-import Layout2D from '../layouts/Layout2D';
-import Layout3D from '../layouts/Layout3D';
+import Layout2D from '../../layouts/Layout2D';
+import Layout3D from '../../layouts/Layout3D';
 
 export default {
   layouts: {

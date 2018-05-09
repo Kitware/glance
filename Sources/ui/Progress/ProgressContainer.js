@@ -28,7 +28,9 @@ export default class Progress extends React.Component {
     this.unsubscribes = [
       EventManager.on('percent', (percent) => this.setState({ percent })),
       EventManager.on('visible', (visible) => this.setState({ visible })),
-      EventManager.on('message', (message) => this.setState({ message })),
+      EventManager.on('message', (message) =>
+        this.setState({ message, messageVisible: true })
+      ),
       EventManager.on('indeterminate', (indeterminate) =>
         this.setState({ indeterminate })
       ),

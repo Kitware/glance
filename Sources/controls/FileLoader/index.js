@@ -7,6 +7,8 @@ import UI from '../../ui';
 import ReaderFactory from '../../io/ReaderFactory';
 import RawReader from './RawReader';
 import DragAndDrop from './DragAndDrop';
+import Demos from './demos';
+
 import style from './FileLoader.mcss';
 
 const { Button, FaIcon, Messages, Progress } = UI;
@@ -81,10 +83,49 @@ export default class FileLoader extends React.Component {
     this.setState({ file: null });
   }
 
+  openRemoteDataset(name, url) {
+    const progressId = `url-${name}`;
+
+    const progressCallback = (event) => {
+      const progressPercent = Math.round(100 * event.loaded / event.total);
+      Progress.setPercent(progressId, progressPercent);
+    };
+
+    Progress.start(progressId, `Downloading ${name}...`);
+    ReaderFactory.downloadDataset(name, url, progressCallback)
+      .then(({ reader, sourceType }) => {
+        ReaderFactory.registerReadersToProxyManager(
+          [{ reader, name, sourceType }],
+          this.props.proxyManager
+        );
+        Progress.end(progressId);
+        this.props.updateTab('pipeline');
+      })
+      .catch((error) => {
+        Progress.end(progressId);
+        console.error(error);
+      });
+  }
+
   render() {
+    const demos = Demos.map((demo) => (
+      <div
+        key={demo.name}
+        className={style.demo}
+        onClick={() => this.openRemoteDataset(demo.name, demo.url)}
+      >
+        <img
+          className={style.demoImage}
+          src={demo.image}
+          alt={`${demo.name} Demo`}
+        />
+        <div className={style.demoText}>{demo.name}</div>
+      </div>
+    ));
+
     return (
       <div className={style.content}>
-        <Button onClick={this.openFile}>
+        <Button onClick={this.openFile} style={{ flex: '0 0 100%' }}>
           <FaIcon type="upload" style={{ paddingRight: '10px' }} />
           Load or drop file
         </Button>
@@ -96,6 +137,8 @@ export default class FileLoader extends React.Component {
         {this.state.file ? (
           <RawReader file={this.state.file} addDataset={this.addDataset} />
         ) : null}
+        <div className={style.title}>Sample data</div>
+        <div className={style.demoData}>{demos}</div>
         <DragAndDrop target=".paraview-glance-root" onDrop={this.loadFiles} />
       </div>
     );

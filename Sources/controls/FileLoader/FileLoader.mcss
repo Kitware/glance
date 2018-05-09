@@ -4,6 +4,8 @@
   align-items: stretch;
   justify-content: flex-start;
   padding: 0 5px;
+  max-height: calc(100vh - $sizes.toolbar - 40px);
+  overflow: auto;
 }
 
 .button {
@@ -30,4 +32,44 @@
   text-align: center;
   font-style: italic;
   font-size: 75%;
+}
+
+.title {
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  background-color: lightgray;
+  padding: 5px;
+  position: relative;
+  margin: 10px 0;
+}
+
+.demoData {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.demo {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  margin: 2px;
+  cursor: pointer;
+}
+
+.demo:hover {
+  background: #ccc;
+}
+
+.demoImage {
+  width: 120px;
+  height: 120px;
+}
+
+.demoText {
+  text-align: center;
+  text-decoration: underline;
+  font-weight: bold;
 }

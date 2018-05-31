@@ -23,11 +23,8 @@
         "vtk.js": "6.4.19"
     },
     "devDependencies": {
-        "@florist/cornerstone-tools": "latest",
         "@fortawesome/fontawesome-free-webfonts": "^1.0.4",
         "copy-webpack-plugin": "^4.4.1",
-        "cornerstone-core": "^2.1.0",
-        "cornerstone-math": "^0.1.6",
         "http-server": "0.10.0",
         "itk": "9.0.0",
         "kw-doc": "1.1.1",

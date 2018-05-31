@@ -3,20 +3,20 @@ importScripts('workbox-sw.prod.v2.1.2.js');
 const workboxSW = new self.WorkboxSW({ clientsClaim: true });
 workboxSW.precache([
   {
-    "url": "glance-external-ITKReader.js",
-    "revision": "511a0a0e3c6381e32de258147b4c80be"
+    "url": "7b3ee4270b6aa7d04653bdca14a30b1b.svg",
+    "revision": "7b3ee4270b6aa7d04653bdca14a30b1b"
   },
   {
-    "url": "glance-external-MedicalCornerstone.js",
-    "revision": "ce645148cbe23f2bb5aba3ad7cccc7cf"
+    "url": "glance-external-ITKReader.js",
+    "revision": "0489949b2c6976797a97479288a140a3"
   },
   {
     "url": "glance-external-Workbox.js",
-    "revision": "64bc72a009855e4ab9f1a7984a701126"
+    "revision": "d9de853d54e847cce66ae652b796086f"
   },
   {
     "url": "index.html",
-    "revision": "4536cedbf9a8bfe09b9cf4a6bb1007b2"
+    "revision": "a471f1e498ad9a1ae30fabd0ac3e14a7"
   },
   {
     "url": "ParaView.png",

@@ -1,5 +1,6 @@
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const autoprefixer = require('autoprefixer');
 
 const paths = {
   entry: path.join(__dirname, '../src/app.js'),
@@ -43,11 +44,51 @@ module.exports = {
         loader: 'eslint-loader',
         enforce: 'pre',
       },
+      /* for vtk.js */
+      {
+        test: /\.glsl$/,
+        include: /node_modules(\/|\\)vtk\.js(\/|\\)/,
+        loader: 'shader-loader',
+      },
+      {
+        test: /\.svg$/,
+        include: /node_modules(\/|\\)vtk\.js(\/|\\)/,
+        loader: 'raw-loader',
+      },
+      {
+        test: /\.worker\.js$/,
+        include: /node_modules(\/|\\)vtk\.js(\/|\\)/,
+        use: [
+          {
+            loader: 'worker-loader',
+            options: { inline: true, fallback: false },
+          },
+        ],
+      },
+      {
+        test: /\.mcss$/,
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              localIdentName: '[name]-[local]-[sha512:hash:base32:5]',
+              modules: true,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [
+                autoprefixer('last 3 version', 'ie >= 10'),
+              ],
+            },
+          },
+        ],
+      },
     ],
   },
-  plugins: [
-    new VueLoaderPlugin(),
-  ],
+  plugins: [new VueLoaderPlugin()],
   resolve: {
     extensions: ['.js', '.vue'],
     alias: {

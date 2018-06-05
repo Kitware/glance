@@ -11,6 +11,7 @@
   "author": "Forrest Li <forrest.li@kitware.com>",
   "license": "BSD-3-Clause",
   "dependencies": {
+    "vtk.js": "^6.6.1",
     "vue": "^2.5.16"
   },
   "devDependencies": {

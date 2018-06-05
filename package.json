@@ -1,0 +1,25 @@
+{
+  "name": "glance-vue",
+  "version": "0.0.1",
+  "description": "Glance, with vue.js",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config build/webpack.dev.config.js",
+    "dev": "webpack-dev-server --config build/webpack.dev.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Forrest Li <forrest.li@kitware.com>",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "vue": "^2.5.16"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.11",
+    "eslint-plugin-vue": "^4.5.0",
+    "kw-web-suite": "^6.1.0",
+    "vue-loader": "^15.2.4",
+    "vue-style-loader": "^4.1.0",
+    "vue-template-compiler": "^2.5.16",
+    "webpack-merge": "^4.1.2"
+  }
+}

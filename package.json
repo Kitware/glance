@@ -11,8 +11,10 @@
   "author": "Forrest Li <forrest.li@kitware.com>",
   "license": "BSD-3-Clause",
   "dependencies": {
+    "material-design-icons-iconfont": "^3.0.3",
     "vtk.js": "^6.6.1",
-    "vue": "^2.5.16"
+    "vue": "^2.5.16",
+    "vuetify": "^1.0.19"
   },
   "devDependencies": {
     "css-loader": "^0.28.11",

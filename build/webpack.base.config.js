@@ -33,11 +33,16 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|jpg|svg)$/,
+        test: /\.(png|jpe?g|svg|ttf|woff2?|eot|otf)$/,
         loader: 'url-loader',
         options: {
           limit: 60000,
         },
+      },
+      {
+        test: /\.css$/,
+        include: /node_modules/,
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(js|vue)$/,

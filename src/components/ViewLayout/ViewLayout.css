@@ -1,9 +1,9 @@
-.layout-grid {
+.layoutGrid {
   display: grid;
   height: 100%;
 }
 
-.view-container {
+.viewContainer {
   min-height: 0;
   min-width: 0;
   display: flex;

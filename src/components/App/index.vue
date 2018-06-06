@@ -29,34 +29,34 @@
       <v-toolbar-title>ParaView Glance</v-toolbar-title>
       <v-spacer />
       <v-btn
+        :class="$style.toolbarButton"
         flat
-        class="toolbar-button"
       >
         <v-icon>folder</v-icon>
         <span>Open</span>
       </v-btn>
       <v-btn
+        :class="$style.toolbarButton"
         flat
-        class="toolbar-button"
       >
         <v-icon>collections</v-icon>
         <span>Screenshots (0)</span>
       </v-btn>
       <v-btn
+        :class="$style.toolbarButton"
         flat
-        class="toolbar-button"
       >
         <v-icon>help</v-icon>
         <span>About</span>
       </v-btn>
     </v-toolbar>
-    <v-content class="app-content">
+    <v-content :class="$style.appContent">
       <view-layout />
     </v-content>
   </v-app>
 </template>
 
-<style scoped src="./App.css">
+<style module src="./App.css">
 </style>
 <script src="./App.js">
 </script>

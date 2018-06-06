@@ -1,7 +1,7 @@
 <template>
-  <div class="layout-grid">
+  <div :class="$style.layoutGrid">
     <div
-      class="view-container"
+      :class="$style.viewContainer"
       style="grid-area: 1 / 1 / 2 / 2"
     >
       <VTKViewer type="3D" />
@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<style scoped src="./ViewLayout.css">
+<style module src="./ViewLayout.css">
 </style>
 <script src="./ViewLayout.js">
 </script>

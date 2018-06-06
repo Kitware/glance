@@ -1,8 +1,8 @@
 <template>
-  <div class="vtk-container" />
+  <div :class="$style.vtkContainer" />
 </template>
 
 <script src="./VTKViewer2D.js">
 </script>
-<style scoped src="../VTKViewer/VTKViewer.css">
+<style module src="../VTKViewer/VTKViewer.css">
 </style>

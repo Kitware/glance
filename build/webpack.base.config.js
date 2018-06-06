@@ -47,7 +47,16 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: /node_modules/,
-        use: ['vue-style-loader', 'css-loader'],
+        use: [
+          'vue-style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              localIdentName: '[name]-[local]-[sha512:hash:base32:5]',
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,

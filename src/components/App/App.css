@@ -1,9 +1,9 @@
-.app-content {
+.appContent {
   /* need a fixed height of arbitrary value
    * so the vtk viewers don't grow too much in
    * height when resizing. */
   height: 0;
 }
-.toolbar-button span {
+.toolbarButton span {
   margin-left: 4px;
 }

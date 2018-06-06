@@ -4,7 +4,7 @@
       class="view-container"
       style="grid-area: 1 / 1 / 2 / 2"
     >
-      <VTKViewer type="2D" />
+      <VTKViewer type="3D" />
     </div>
   </div>
 </template>

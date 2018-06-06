@@ -1,4 +1,19 @@
-.vtkContainer {
+.container {
   position: relative;
   height: 100%;
+}
+
+.vtkView {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.viewSelector {
+  position: absolute;
+  top: 0px;
+  left: 15px;
+  width: 140px;
+  z-index: 1;
 }

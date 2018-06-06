@@ -27,7 +27,7 @@ function getView(type, name) {
 }
 
 function onMounted() {
-  const container = this.$el;
+  const container = this.$el.querySelector('.js-view');
 
   this.view = this.getView(this.proxyManager, 'View3D');
   this.view.setContainer(container);
@@ -54,6 +54,13 @@ export default {
   inject: ['proxyManager'],
   data: () => ({
     view: null,
+    currentType: 'View3D:default',
+    types: [
+      { text: 'View 3D', value: 'View3D:default' },
+      { text: 'Orientation X', value: 'View2D:x' },
+      { text: 'Orientation Y', value: 'View2D:y' },
+      { text: 'Orientation Z', value: 'View2D:z' },
+    ],
   }),
   methods: {
     onMounted,

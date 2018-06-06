@@ -1,1 +1,4 @@
-<div :class="$style.vtkContainer" />
+<div :class="$style.container">
+  <v-select :class="$style.viewSelector" :items="types" :value="currentType" dark/>
+  <div :class="[$style.vtkView, 'js-view']" />
+</div>

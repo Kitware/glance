@@ -10,7 +10,7 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
-import App from 'paraview-glance/src/components/App';
+import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
 
 // Expose IO API to Glance global object

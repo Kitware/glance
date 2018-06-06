@@ -1,4 +1,4 @@
-import LayoutView from 'paraview-glance/src/components/LayoutView';
+import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 
 const data = () => ({
   sidebar: true,

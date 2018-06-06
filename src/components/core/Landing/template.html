@@ -1,0 +1,76 @@
+<div :class="['grey lighten-3', $style.root]">
+  <v-jumbotron color="grey darken-3" height="250px">
+    <v-container fill-height>
+      <v-layout row align-center>
+        <v-flex xs6>
+          <v-card flat dark>
+            <v-card-title class="display-1">Visualize your data with Glance</v-card-title>
+            <v-card-text>
+              A general purpose standalone web application by
+              <a
+                class="indigo--text text--lighten-3"
+                href="https://www.kitware.com/"
+                rel="noopener noreferrer"
+              >Kitware, Inc.</a>
+              that can be used to visualize many data types.
+              It is also a great framework for building custom
+              viewers on the web which can involve remote services.
+            </v-card-text>
+          </v-card>
+        </v-flex>
+        <v-flex xs6 fill-height>
+          <div
+            :class="$style.fileUpload"
+            v-on:click.stop="$emit('open')"
+          >
+            <div :class="['white--text body-2', $style.fileUploadContents]">
+              Please
+              <v-btn
+                color="primary"
+                raised="false"
+                v-on:click.stop="$emit('open')"
+              >
+                <span :class="$style.buttonText">open a file</span>
+                <v-icon>folder_open</v-icon>
+              </v-btn>
+              or drag it anywhere in this window to begin.
+            </div>
+          </div>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-jumbotron>
+  <v-container :class="$style.textSampleData">
+    <v-layout row>
+      <v-flex xs12>
+        <span class="title">Sample Data</span>
+      </v-flex>
+    </v-layout>
+  </v-container>
+  <v-container
+    fill-height
+    grid-list-md
+  >
+    <v-layout row wrap>
+      <v-flex
+        v-for="n in 9"
+        :key="n"
+        d-flex
+        xs4
+      >
+        <v-card
+          :class="['grey lighten-2', $style.sampleData]"
+          flat
+          tile
+        >
+          <a
+            :class="$style.dataLink"
+            href="#"
+            v-on:click.prevent="$emit('open', 'http://dummy')"
+          >
+          </a>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
+</div>

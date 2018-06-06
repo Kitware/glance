@@ -1,6 +1,6 @@
 <v-app>
   <v-navigation-drawer
-    :value="sidebar"
+    :value="!landing && sidebar"
     absolute
     app
     clipped
@@ -24,7 +24,10 @@
     clipped-left
     app
   >
-    <v-toolbar-side-icon @click.native.stop="sidebar = !sidebar" />
+    <v-toolbar-side-icon
+      :disabled="landing"
+      @click.native.stop="sidebar = !sidebar"
+    />
     <v-toolbar-title>ParaView Glance</v-toolbar-title>
     <v-spacer />
     <v-btn
@@ -36,6 +39,7 @@
     </v-btn>
     <v-btn
       :class="$style.toolbarButton"
+      :disabled="landing"
       flat
     >
       <v-icon>collections</v-icon>
@@ -50,6 +54,7 @@
     </v-btn>
   </v-toolbar>
   <v-content :class="$style.appContent">
-    <layout-view />
+    <landing v-if="landing" />
+    <layout-view v-if="!landing" />
   </v-content>
 </v-app>

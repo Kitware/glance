@@ -50,22 +50,36 @@
         <span>About</span>
       </v-btn>
     </v-toolbar>
+    <v-content class="app-content">
+      <view-layout />
+    </v-content>
   </v-app>
 </template>
 
 <style scoped>
+.app-content {
+  /* need a fixed height of arbitrary value
+   * so the vtk viewers don't grow too much in
+   * height when resizing. */
+  height: 0;
+}
 .toolbar-button span {
   margin-left: 4px;
 }
 </style>
 
 <script>
+import ViewLayout from '@/components/ViewLayout';
+
 const data = () => ({
   sidebar: true,
   activeTab: 0,
 });
 
 export default {
+  components: {
+    ViewLayout,
+  },
   data,
 };
 </script>

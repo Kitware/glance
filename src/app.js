@@ -37,7 +37,7 @@ export function createViewer(container, proxyConfig = null) {
   new Vue({
     el: '#root-container',
     components: { App },
-    data: {
+    provide: {
       proxyManager,
     },
     template: '<App />',

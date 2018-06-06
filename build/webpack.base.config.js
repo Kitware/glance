@@ -103,7 +103,7 @@ module.exports = {
     extensions: ['.js', '.vue'],
     alias: {
       vue$: 'vue/dist/vue.esm.js',
-      '@': paths.source,
+      'paraview-glance': paths.source,
     },
   },
 };

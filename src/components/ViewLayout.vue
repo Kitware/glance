@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import VTKViewer from '@/components/VTKViewer';
+import VTKViewer from 'paraview-glance/components/VTKViewer';
 
 const ViewLayout = {
   components: {

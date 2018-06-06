@@ -1,5 +1,5 @@
 {
-  "name": "glance-vue",
+  "name": "paraview-glance",
   "version": "0.0.1",
   "description": "Glance, with vue.js",
   "main": "index.js",

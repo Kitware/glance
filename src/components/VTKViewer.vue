@@ -1,6 +1,6 @@
 <script>
-import VTKViewer2D from '@/components/VTKViewer2D';
-import VTKViewer3D from '@/components/VTKViewer3D';
+import VTKViewer2D from 'paraview-glance/components/VTKViewer2D';
+import VTKViewer3D from 'paraview-glance/components/VTKViewer3D';
 
 const viewTypes = {
   '2D': VTKViewer2D,

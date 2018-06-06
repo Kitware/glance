@@ -1,6 +1,7 @@
 .layoutGrid {
   display: grid;
   height: 100%;
+  background-color: black;
 }
 
 .viewContainer {

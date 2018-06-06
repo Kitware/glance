@@ -1,4 +1,4 @@
-import ViewLayout from 'paraview-glance/src/components/ViewLayout';
+import LayoutView from 'paraview-glance/src/components/LayoutView';
 
 const data = () => ({
   sidebar: true,
@@ -6,8 +6,9 @@ const data = () => ({
 });
 
 export default {
+  name: 'App',
   components: {
-    ViewLayout,
+    LayoutView,
   },
   data,
 };

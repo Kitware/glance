@@ -1,9 +1,28 @@
+import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
+
 import Landing from 'paraview-glance/src/components/core/Landing';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 
+function loadFiles(files) {
+  return ReaderFactory.loadFiles(files).then((readers) => {
+    ReaderFactory.registerReadersToProxyManager(readers, this.proxyManager);
+  });
+}
+
 function openFile(url) {
-  console.log('openFile', url);
-  this.landing = false;
+  if (url) {
+    // handle remote dataset
+  } else {
+    ReaderFactory.openFiles(
+      // doesn't handle *.raw
+      ReaderFactory.listSupportedExtensions(),
+      (files) => {
+        this.loadFiles(files).then(() => {
+          this.landing = false;
+        });
+      }
+    );
+  }
 }
 
 const data = () => ({
@@ -14,12 +33,14 @@ const data = () => ({
 
 export default {
   name: 'App',
+  inject: ['proxyManager'],
   components: {
     Landing,
     LayoutView,
   },
   data,
   methods: {
+    loadFiles,
     openFile,
   },
 };

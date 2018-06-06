@@ -33,6 +33,7 @@
     <v-btn
       :class="$style.toolbarButton"
       flat
+      v-on:click="openFile()"
     >
       <v-icon>folder</v-icon>
       <span>Open</span>
@@ -54,7 +55,10 @@
     </v-btn>
   </v-toolbar>
   <v-content :class="$style.appContent">
-    <landing v-if="landing" />
+    <landing
+      v-if="landing"
+      v-on:open="openFile"
+    />
     <layout-view v-if="!landing" />
   </v-content>
 </v-app>

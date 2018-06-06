@@ -53,7 +53,7 @@ module.exports = {
             loader: 'css-loader',
             options: {
               modules: true,
-              localIdentName: '[name]-[local]-[sha512:hash:base32:5]',
+              localIdentName: '[folder]-[local]-[sha512:hash:base32:5]',
             },
           },
         ],

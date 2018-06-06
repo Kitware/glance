@@ -1,13 +1,27 @@
 /* eslint-disable import/prefer-default-export */
 import Vue from 'vue';
 import Vuetify from 'vuetify';
+
+// import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
 import 'vuetify/dist/vuetify.min.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
+import 'paraview-glance/src/io/ParaViewGlanceReaders';
+import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/App';
 import Config from 'paraview-glance/src/config';
+
+// Expose IO API to Glance global object
+export const {
+  registerReader,
+  listReaders,
+  listSupportedExtensions,
+  openFiles,
+  loadFiles,
+  registerReadersToProxyManager,
+} = ReaderFactory;
 
 Vue.use(Vuetify);
 

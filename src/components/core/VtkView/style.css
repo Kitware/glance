@@ -1,19 +1,25 @@
 .container {
   position: relative;
   height: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .vtkView {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  position: relative;
   z-index: 0;
+  overflow: hidden;
 }
 
-.viewSelector {
+.viewTypeSelector {
+  max-width: 140px;
+  min-width: 140px;
+}
+
+.floatToolbar {
   position: absolute;
-  top: 0px;
-  left: 15px;
-  width: 140px;
   z-index: 1;
+  right: 10px;
+  top: 10px;
+  background: black;
 }

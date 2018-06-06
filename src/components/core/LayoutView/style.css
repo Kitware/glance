@@ -1,12 +1,4 @@
-.layoutGrid {
-  display: grid;
+.container {
   height: 100%;
-  background-color: black;
-}
-
-.viewContainer {
-  min-height: 0;
-  min-width: 0;
-  display: flex;
-  flex-flow: column;
+  padding: 0;
 }

@@ -1,4 +1,43 @@
-<div :class="$style.container">
-  <v-select :class="$style.viewSelector" :items="types" :value="currentType" dark/>
-  <div :class="[$style.vtkView, 'js-view']" />
-</div>
+<v-container fluid :class="$style.container">
+  <v-layout column :class="$style.floatToolbar">
+    <v-btn icon dark small>
+      <v-icon>filter_center_focus</v-icon>
+    </v-btn>
+    <v-btn icon dark small>
+      <v-icon>crop</v-icon>
+    </v-btn>
+    <v-btn icon dark small>
+      <v-icon>rotate_left</v-icon>
+    </v-btn>
+    <v-btn icon dark small>
+      <v-icon>rotate_right</v-icon>
+    </v-btn>
+  </v-layout>
+  <v-layout column fill-height>
+    <v-flex fill-height :class="[$style.vtkView, 'js-view']" />
+    <v-toolbar dark>
+      <v-select
+        dense
+        flat
+        dark
+        :class="$style.viewTypeSelector"
+        :items="types"
+        :value="currentType"
+        @change="changeViewType"
+      />
+      <v-spacer />
+      <v-btn icon>
+        <v-icon>palette</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon>add_a_photo</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon>library_add</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon>fullscreen</v-icon>
+      </v-btn>
+    </v-toolbar>
+  </v-layout>
+</v-container>

@@ -1,8 +1,7 @@
-<div :class="$style.layoutGrid">
-  <div
-    :class="$style.viewContainer"
-    style="grid-area: 1 / 1 / 2 / 2"
-  >
-    <vtk-view type="3D" />
-  </div>
-</div>
+<v-container fluid :class="$style.container">
+  <v-layout column fill-height>
+    <v-flex fill-height>
+      <vtk-view />
+    </v-flex>
+  </v-layout>
+</v-container>

@@ -1,9 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-
-// old browser support, bundled with kw-web-suite
-/* eslint-disable import/no-extraneous-dependencies */
-import 'babel-polyfill';
-
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
@@ -11,8 +6,8 @@ import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 import 'vuetify/dist/vuetify.min.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
-import App from './App';
-import Config from './config';
+import App from 'paraview-glance/src/App';
+import Config from 'paraview-glance/src/config';
 
 Vue.use(Vuetify);
 

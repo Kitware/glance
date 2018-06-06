@@ -1,4 +1,4 @@
-import ColorMaps from './ColorMaps';
+import ColorMaps from 'paraview-glance/src/config/ColorMaps';
 
 const Volume = [
   {

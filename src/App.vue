@@ -69,7 +69,7 @@
 </style>
 
 <script>
-import ViewLayout from 'paraview-glance/components/ViewLayout';
+import ViewLayout from 'paraview-glance/src/components/ViewLayout';
 
 const data = () => ({
   sidebar: true,

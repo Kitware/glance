@@ -1,28 +1,49 @@
 {
   "name": "paraview-glance",
-  "version": "0.0.1",
-  "description": "Glance, with vue.js",
-  "main": "index.js",
-  "scripts": {
-    "build": "webpack --config build/webpack.dev.config.js",
-    "dev": "webpack-dev-server --config build/webpack.dev.config.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "0.0.0-semantically-release",
+  "description": "Web application for Visualizing Scientific and Medical datasets",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kitware/pv-web-viewer.git"
   },
-  "author": "Forrest Li <forrest.li@kitware.com>",
   "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/kitware/pv-web-viewer/issues"
+  },
+  "homepage": "https://github.com/kitware/pv-web-viewer#readme",
+  "scripts": {
+    "validate": "prettier --config ./prettier.config.js --list-different \"src/**/*.js\"",
+    "reformat": "prettier --config ./prettier.config.js --write \"src/**/*.js\"",
+    "build": "webpack --config build/webpack.dev.config.js",
+    "build:release": "webpack --config build/webpack.dev.config.js --mode production -p",
+    "dev": "webpack-dev-server --config build/webpack.dev.config.js",
+    "bundle": "inline-source --compress false --root ./Distribution ./Distribution/index.html ./Distribution/ParaViewGlance.html",
+    "commit": "git cz",
+    "semantic-release": "semantic-release"
+  },
+  "author": "Kitware",
   "dependencies": {
-    "material-design-icons-iconfont": "^3.0.3",
-    "vtk.js": "^6.6.1",
-    "vue": "^2.5.16",
-    "vuetify": "^1.0.19"
+    "material-design-icons-iconfont": "3.0.3",
+    "vtk.js": "6.6.1",
+    "itk": "9.0.0",
+    "webworker-promise": "0.4.1",
+    "workbox-sw": "2.1.2",
+    "workbox-webpack-plugin": "2.1.2",
+    "vue": "2.5.16",
+    "vuetify": "1.0.19"
   },
   "devDependencies": {
-    "css-loader": "^0.28.11",
-    "eslint-plugin-vue": "^4.5.0",
-    "kw-web-suite": "^6.1.0",
-    "vue-loader": "^15.2.4",
-    "vue-style-loader": "^4.1.0",
-    "vue-template-compiler": "^2.5.16",
-    "webpack-merge": "^4.1.2"
+    "eslint-plugin-vue": "4.5.0",
+    "copy-webpack-plugin": "4.4.1",
+    "kw-web-suite": "6.1.0",
+    "vue-loader": "15.2.4",
+    "vue-style-loader": "4.1.0",
+    "vue-template-compiler": "2.5.16",
+    "webpack-merge": "4.1.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
   }
 }

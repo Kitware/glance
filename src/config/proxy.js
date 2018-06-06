@@ -10,11 +10,11 @@ import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/Sl
 import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
 import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
 
-import ConfigUtils from './configUtils';
+import ConfigUtils from 'paraview-glance/src/config/configUtils';
 
-import proxyUI from './proxyUI';
-import proxyFilter from './proxyFilter';
-import proxyViewRepresentationMapping from './proxyViewRepresentationMapping';
+import proxyUI from 'paraview-glance/src/config/proxyUI';
+import proxyFilter from 'paraview-glance/src/config/proxyFilter';
+import proxyViewRepresentationMapping from 'paraview-glance/src/config/proxyViewRepresentationMapping';
 
 const { createProxyDefinition, activateOnCreate } = ConfigUtils;
 

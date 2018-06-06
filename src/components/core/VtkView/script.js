@@ -1,16 +1,16 @@
 let subscriptions = [];
 
 // ----------------------------------------------------------------------------
-// Global methods
+// Component methods
 // ----------------------------------------------------------------------------
 
-function getView(proxyManager, type, name) {
+function getView(type, name) {
   let view = null;
-  const views = proxyManager.getViews();
+  const views = this.proxyManager.getViews();
   for (let i = 0; i < views.length; i++) {
     if (views[i].getProxyName() === type) {
       if (name) {
-        if (views[i].getReferenceByName('name') == name) {
+        if (views[i].getReferenceByName('name') === name) {
           view = views[i];
         }
       } else {
@@ -20,20 +20,16 @@ function getView(proxyManager, type, name) {
   }
 
   if (!view) {
-    view = proxyManager.createProxy('Views', 'View3D', { name });
+    view = this.proxyManager.createProxy('Views', 'View3D', { name });
   }
 
   return view;
 }
 
-// ----------------------------------------------------------------------------
-// Component method
-// ----------------------------------------------------------------------------
-
 function onMounted() {
   const container = this.$el;
 
-  this.view = getView(this.proxyManager, 'View3D');
+  this.view = this.getView(this.proxyManager, 'View3D');
   this.view.setContainer(container);
   this.view.resetCamera();
   this.view.resize();
@@ -59,8 +55,12 @@ export default {
   data: () => ({
     view: null,
   }),
+  methods: {
+    onMounted,
+    getView,
+  },
   mounted() {
-    this.$nextTick(onMounted);
+    this.$nextTick(this.onMounted);
   },
   beforeDestroy: onBeforeDestroy,
 };

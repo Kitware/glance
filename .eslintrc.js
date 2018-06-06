@@ -33,6 +33,7 @@ module.exports = {
 
       'no-console': 0,
       'prefer-destructuring': 0,
+      'no-plusplus': 0,
 
       // don't require .vue extension when importing
       'import/extensions': ['error', 'always', {

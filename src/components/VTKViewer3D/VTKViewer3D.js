@@ -1,14 +1,9 @@
-<template>
-  <div class="vtk-container" />
-</template>
-
-<script>
 let subscriptions = [];
 
 function onMounted() {
   const container = this.$el;
 
-  this.view = this.proxyManager.createProxy('Views', 'View2D');
+  this.view = this.proxyManager.createProxy('Views', 'View3D');
   this.view.setContainer(container);
   this.view.resetCamera();
   this.view.resize();
@@ -40,11 +35,3 @@ const VTKViewer2D = {
 };
 
 export default VTKViewer2D;
-</script>
-
-<style scoped>
-.vtk-container {
-  position: relative;
-  height: 100%;
-}
-</style>

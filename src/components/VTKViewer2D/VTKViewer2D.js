@@ -1,14 +1,9 @@
-<template>
-  <div class="vtk-container" />
-</template>
-
-<script>
 let subscriptions = [];
 
 function onMounted() {
   const container = this.$el;
 
-  this.view = this.proxyManager.createProxy('Views', 'View3D');
+  this.view = this.proxyManager.createProxy('Views', 'View2D');
   this.view.setContainer(container);
   this.view.resetCamera();
   this.view.resize();
@@ -28,7 +23,7 @@ function onBeforeDestroy() {
   }
 }
 
-const VTKViewer3D = {
+const VTKViewer2D = {
   inject: ['proxyManager'],
   data: () => ({
     view: null,
@@ -39,12 +34,4 @@ const VTKViewer3D = {
   beforeDestroy: onBeforeDestroy,
 };
 
-export default VTKViewer3D;
-</script>
-
-<style scoped>
-.vtk-container {
-  position: relative;
-  height: 100%;
-}
-</style>
+export default VTKViewer2D;

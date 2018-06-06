@@ -56,30 +56,7 @@
   </v-app>
 </template>
 
-<style scoped>
-.app-content {
-  /* need a fixed height of arbitrary value
-   * so the vtk viewers don't grow too much in
-   * height when resizing. */
-  height: 0;
-}
-.toolbar-button span {
-  margin-left: 4px;
-}
+<style scoped src="./App.css">
 </style>
-
-<script>
-import ViewLayout from 'paraview-glance/src/components/ViewLayout';
-
-const data = () => ({
-  sidebar: true,
-  activeTab: 0,
-});
-
-export default {
-  components: {
-    ViewLayout,
-  },
-  data,
-};
+<script src="./App.js">
 </script>

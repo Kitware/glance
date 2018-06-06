@@ -1,4 +1,3 @@
-<script>
 import VTKViewer2D from 'paraview-glance/src/components/VTKViewer2D';
 import VTKViewer3D from 'paraview-glance/src/components/VTKViewer3D';
 
@@ -26,4 +25,3 @@ const VTKViewer = {
 };
 
 export default VTKViewer;
-</script>

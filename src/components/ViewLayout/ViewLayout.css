@@ -1,0 +1,11 @@
+.layout-grid {
+  display: grid;
+  height: 100%;
+}
+
+.view-container {
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-flow: column;
+}

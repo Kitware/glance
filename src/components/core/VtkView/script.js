@@ -31,7 +31,6 @@ function getView(type, name) {
     this.view = this.proxyManager.createProxy('Views', type, { name });
 
     // Update orientation
-    console.log(name, VIEW_ORIENTATIONS, VIEW_ORIENTATIONS[name]);
     const { axis, orientation, viewUp } = VIEW_ORIENTATIONS[name];
     this.view.updateOrientation(axis, orientation, viewUp);
   }
@@ -52,6 +51,12 @@ function changeViewType(value) {
 }
 
 // ----------------------------------------------------------------------------
+
+function resetCamera() {
+  if (this.view) {
+    this.view.resetCamera();
+  }
+}
 
 // ----------------------------------------------------------------------------
 
@@ -92,6 +97,7 @@ export default {
     onBeforeDestroy,
     getView,
     changeViewType,
+    resetCamera,
   },
   mounted() {
     this.$nextTick(this.onMounted);

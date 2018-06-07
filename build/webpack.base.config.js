@@ -3,6 +3,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const autoprefixer = require('autoprefixer');
+const merge = require('webpack-merge');
+
+const externals = require('./externals.js');
 
 const paths = {
   entry: path.join(__dirname, '../src/app.js'),
@@ -13,10 +16,7 @@ const paths = {
   node_modules: path.join(__dirname, '../node_modules'),
 };
 
-module.exports = {
-  entry: {
-    glance: paths.entry,
-  },
+const baseConfig = {
   output: {
     path: paths.output,
     filename: '[name].js',
@@ -144,4 +144,16 @@ module.exports = {
       'paraview-glance': paths.root,
     },
   },
+};
+
+module.exports = {
+  main: merge(baseConfig, {
+    entry: {
+      glance: paths.entry,
+    },
+  }),
+
+  externals: merge(baseConfig, {
+    entry: externals.getExternalEntries(paths.externals),
+  })
 };

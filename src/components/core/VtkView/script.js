@@ -1,4 +1,4 @@
-import { Events, Messages } from 'paraview-glance/src/constants';
+import { Events } from 'paraview-glance/src/constants';
 import {
   DEFAULT_VIEW_TYPE,
   VIEW_TYPES,
@@ -65,26 +65,10 @@ function screenCapture() {
 // ----------------------------------------------------------------------------
 
 function splitScreen() {
-  // FIXME the VtkView should not make assumption on how layout
-  // should handle the count split... (but good enough for now)
   const nbViews = viewHelper.getNumberOfVisibleViews(this.proxyManager);
-  console.log('splitScreen', nbViews);
-  switch (nbViews) {
-    case 1:
-      this.$emit(Events.LAYOUT_UPDATE, { count: 2, current: this.view });
-      break;
-    case 2:
-      console.log('case 2');
-    case 3:
-      console.log('case 3');
-    case 4:
-      console.log('case 4');
-    default:
-      console.log('default');
-      console.log('send 4');
-      this.$emit(Events.LAYOUT_UPDATE, { count: 4, current: this.view });
-      break;
-  }
+
+  const newNbViews = nbViews < 2 ? 2 : 4;
+  this.$emit('layout-update', { count: newNbViews, current: this.view });
 
   // Update actions state
   this.updateActionState();
@@ -93,7 +77,7 @@ function splitScreen() {
 // ----------------------------------------------------------------------------
 
 function singleView() {
-  this.$emit(Events.LAYOUT_UPDATE, { count: 1, current: this.view });
+  this.$emit('layout-update', { count: 1, current: this.view });
 }
 
 // ----------------------------------------------------------------------------
@@ -154,12 +138,15 @@ function onBeforeDestroy() {
 
 export default {
   inject: ['proxyManager'],
-  data: () => ({
-    view: null,
+  props: ['initialView'],
+  data() {
+    return {
+      view: this.initialView,
     currentType: DEFAULT_VIEW_TYPE,
     types: VIEW_TYPES,
     actions: {},
-  }),
+    };
+  },
   methods: {
     onMounted,
     onBeforeDestroy,

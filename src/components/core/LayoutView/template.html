@@ -1,12 +1,17 @@
 <v-container fluid :class="$style.container">
-  <v-layout column fill-height>
-    <v-flex fill-height>
+  <div
+    :class="$style.grid"
+    :style="{ gridTemplateRows, gridTemplateColumns }"
+  >
+    <div
+      :class="$style.viewContainer"
+      v-for="view in views"
+      v-bind:key="view.getProxyId()"
+    >
       <vtk-view
-        v-for="view in views"
-        v-bind:key="view.getProxyId()"
-        v-on:LAYOUT_UPDATE="updateLayout"
-        v-bind:view="view"
+        v-on:layout-update="updateLayout"
+        v-bind:initialView="view"
       />
-    </v-flex>
-  </v-layout>
+    </div>
+  </div>
 </v-container>

@@ -23,14 +23,15 @@
   },
   "author": "Kitware",
   "dependencies": {
-    "material-design-icons-iconfont": "3.0.3",
-    "vtk.js": "6.6.1",
     "itk": "9.0.0",
+    "material-design-icons-iconfont": "3.0.3",
+    "typeface-roboto": "0.0.54",
+    "vtk.js": "6.6.1",
+    "vue": "2.5.16",
+    "vuetify": "1.0.19",
     "webworker-promise": "0.4.1",
     "workbox-sw": "2.1.2",
-    "workbox-webpack-plugin": "2.1.2",
-    "vue": "2.5.16",
-    "vuetify": "1.0.19"
+    "workbox-webpack-plugin": "2.1.2"
   },
   "devDependencies": {
     "copy-webpack-plugin": "4.4.1",

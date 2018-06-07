@@ -5,6 +5,8 @@ import Vuetify from 'vuetify';
 // import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
+/* eslint-disable-next-line import/extensions */
+import 'typeface-roboto';
 import 'vuetify/dist/vuetify.min.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 

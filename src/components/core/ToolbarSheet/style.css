@@ -1,0 +1,11 @@
+.sheet {
+  position: absolute;
+  width: 100%;
+  visibility: hidden;
+  transition: transform 200ms, visibility 0s 200ms;
+}
+
+.visible {
+  visibility: visible;
+  transition-delay: 0s;
+}

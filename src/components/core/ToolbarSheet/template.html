@@ -1,0 +1,7 @@
+<div
+  class="grey darken-3 white--text"
+  :class="{ [$style.sheet]: true, [$style.visible]: value }"
+  :style="{ transform: `translateY(${visiblityOffset}px)` }"
+>
+  <slot></slot>
+</div>

@@ -15,29 +15,43 @@
   </v-layout>
   <v-layout column fill-height>
     <v-flex fill-height :class="[$style.vtkView, 'js-view']" />
-    <v-toolbar dark>
-      <v-select
-        dense
-        flat
-        dark
-        :class="$style.viewTypeSelector"
-        :items="types"
-        :value="currentType"
-        @change="changeViewType"
-      />
-      <v-spacer />
-      <v-btn icon>
-        <v-icon>palette</v-icon>
-      </v-btn>
-      <v-btn icon v-on:click="screenCapture()">
-        <v-icon>add_a_photo</v-icon>
-      </v-btn>
-      <v-btn icon v-on:click="splitScreen()" v-if="actions.split">
-        <v-icon>library_add</v-icon>
-      </v-btn>
-      <v-btn icon v-on:click="singleView()" v-if="actions.single">
-        <v-icon>fullscreen</v-icon>
-      </v-btn>
-    </v-toolbar>
+    <div :class="$style.toolbarWrapper">
+      <toolbar-sheet v-model="backgroundSheet">
+        <v-card dark>
+          <v-card-title class="body-2">Background Color</v-card-title>
+          <v-card-text>
+            Colors here...
+          </v-card-text>
+        </v-card>
+      </toolbar-sheet>
+      <v-toolbar dark>
+        <v-select
+          dense
+          flat
+          dark
+          :class="$style.viewTypeSelector"
+          :items="types"
+          :value="currentType"
+          @change="changeViewType"
+        />
+        <v-spacer />
+        <v-btn
+          icon
+          :disabled="backgroundSheet"
+          v-on:click="backgroundSheet = !backgroundSheet"
+        >
+          <v-icon>palette</v-icon>
+        </v-btn>
+        <v-btn icon v-on:click="screenCapture()">
+          <v-icon>add_a_photo</v-icon>
+        </v-btn>
+        <v-btn icon v-on:click="splitScreen()" v-if="actions.split">
+          <v-icon>library_add</v-icon>
+        </v-btn>
+        <v-btn icon v-on:click="singleView()" v-if="actions.single">
+          <v-icon>fullscreen</v-icon>
+        </v-btn>
+      </v-toolbar>
+    </div>
   </v-layout>
 </v-container>

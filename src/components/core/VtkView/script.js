@@ -4,6 +4,7 @@ import {
   VIEW_TYPES,
 } from 'paraview-glance/src/components/core/VtkView/constants';
 
+import ToolbarSheet from 'paraview-glance/src/components/core/ToolbarSheet';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 
 // ----------------------------------------------------------------------------
@@ -138,13 +139,17 @@ function onBeforeDestroy() {
 
 export default {
   inject: ['proxyManager'],
+  components: {
+    ToolbarSheet,
+  },
   props: ['initialView'],
   data() {
     return {
       view: this.initialView,
-    currentType: DEFAULT_VIEW_TYPE,
-    types: VIEW_TYPES,
-    actions: {},
+      currentType: DEFAULT_VIEW_TYPE,
+      types: VIEW_TYPES,
+      actions: {},
+      backgroundSheet: false,
     };
   },
   methods: {

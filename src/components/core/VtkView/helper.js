@@ -1,4 +1,17 @@
-import { VIEW_ORIENTATIONS } from 'paraview-glance/src/components/core/VtkView/constants';
+import {
+  VIEW_ORIENTATIONS,
+  VIEW_TYPES,
+} from 'paraview-glance/src/components/core/VtkView/constants';
+
+// ----------------------------------------------------------------------------
+
+function getNumberOfVisibleViews(proxyManager) {
+  let nbViews = 0;
+  proxyManager.getViews().forEach((v) => {
+    nbViews += v.getContainer() ? 1 : 0;
+  });
+  return nbViews;
+}
 
 // ----------------------------------------------------------------------------
 
@@ -18,10 +31,7 @@ function getViewActions(proxyManager) {
   });
 
   // Count number of view in UI
-  let nbViews = 0;
-  proxyManager.getViews().forEach((v) => {
-    nbViews += v.getContainer() ? 1 : 0;
-  });
+  const nbViews = getNumberOfVisibleViews(proxyManager);
   possibleActions.split = nbViews < 4;
   possibleActions.single = nbViews > 1;
 
@@ -75,8 +85,49 @@ function bindView(proxyManager, viewType, container) {
 
 // ----------------------------------------------------------------------------
 
+function getViews(proxyManager, count = 1, current = null) {
+  const views = proxyManager.getViews();
+  if (views.length === count) {
+    // FIXME preserve order
+    return views;
+  }
+
+  const sortedViews = [];
+  for (let i = 0; i < VIEW_TYPES.length && i < count; i++) {
+    const [type, name] = VIEW_TYPES[i].value.split(':');
+    sortedViews.push(getView(proxyManager, type, name));
+  }
+
+  const result = [];
+  switch (count) {
+    case 1:
+      result.push(current || sortedViews[0]);
+      break;
+    case 2:
+      result.push(sortedViews[1]);
+      result.push(sortedViews[0]);
+      break;
+    case 4:
+      result.push(sortedViews[1]);
+      result.push(sortedViews[0]);
+      result.push(sortedViews[2]);
+      result.push(sortedViews[3]);
+      break;
+    default:
+      result.push(sortedViews[0]);
+      break;
+  }
+  console.log('sortedViews', sortedViews);
+  console.log('viewToShow', result);
+  return result;
+}
+
+// ----------------------------------------------------------------------------
+
 export default {
+  getViews,
   bindView,
   getView,
   getViewActions,
+  getNumberOfVisibleViews,
 };

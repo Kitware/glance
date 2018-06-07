@@ -1,3 +1,4 @@
+import { Events, Messages } from 'paraview-glance/src/constants';
 import {
   DEFAULT_VIEW_TYPE,
   VIEW_TYPES,
@@ -6,8 +7,9 @@ import {
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 
 // ----------------------------------------------------------------------------
-// View API
+// Component API
 // ----------------------------------------------------------------------------
+
 function changeViewType(newType) {
   if (this.view) {
     this.view.setContainer(null);
@@ -53,36 +55,45 @@ function rollRight() {
 
 function screenCapture() {
   if (this.view) {
-    // const imgSrc = this.view.captureImage();
-    // push that image to some data model somewhere...
-
-    // DEBUG - remove
-    this.view.openCaptureImage();
-    // DEBUG - remove
+    this.$eventBus.$emit(Events.SCREENSHOT, {
+      imgSrc: this.view.captureImage(),
+      viewName: this.view.getReferenceByName('name'),
+    });
   }
 }
 
 // ----------------------------------------------------------------------------
 
 function splitScreen() {
-  // Tell parent how many view are needed
-  // 1 -> 2
-  // 2 -> 4
-  console.log('splitScreen');
+  // FIXME the VtkView should not make assumption on how layout
+  // should handle the count split... (but good enough for now)
+  const nbViews = viewHelper.getNumberOfVisibleViews(this.proxyManager);
+  console.log('splitScreen', nbViews);
+  switch (nbViews) {
+    case 1:
+      this.$emit(Events.LAYOUT_UPDATE, { count: 2, current: this.view });
+      break;
+    case 2:
+      console.log('case 2');
+    case 3:
+      console.log('case 3');
+    case 4:
+      console.log('case 4');
+    default:
+      console.log('default');
+      console.log('send 4');
+      this.$emit(Events.LAYOUT_UPDATE, { count: 4, current: this.view });
+      break;
+  }
 
   // Update actions state
-  this.actions = viewHelper.getViewActions(this.proxyManager);
+  this.updateActionState();
 }
 
 // ----------------------------------------------------------------------------
 
 function singleView() {
-  // Tell parent how many view are needed
-  // -> 1
-  console.log('singleView');
-
-  // Update actions state
-  this.actions = viewHelper.getViewActions(this.proxyManager);
+  this.$emit(Events.LAYOUT_UPDATE, { count: 1, current: this.view });
 }
 
 // ----------------------------------------------------------------------------
@@ -90,32 +101,39 @@ function singleView() {
 // ----------------------------------------------------------------------------
 
 function onMounted() {
-  this.view = viewHelper.bindView(
-    this.proxyManager,
-    DEFAULT_VIEW_TYPE,
-    this.$el.querySelector('.js-view')
-  );
+  if (!this.view) {
+    this.view = viewHelper.bindView(
+      this.proxyManager,
+      DEFAULT_VIEW_TYPE,
+      this.$el.querySelector('.js-view')
+    );
+  } else {
+    this.view.setContainer(this.$el.querySelector('.js-view'));
+  }
 
-  // Update actions state
-  this.actions = viewHelper.getViewActions(this.proxyManager);
-
-  const resizeCurrentView = () => {
+  // Closure creation for callback
+  this.resizeCurrentView = () => {
     if (this.view) {
       this.view.resize();
     }
   };
+  this.updateActionState = () => {
+    this.actions = viewHelper.getViewActions(this.proxyManager);
+  };
 
-  window.addEventListener('resize', resizeCurrentView);
+  // Event handling
+  window.addEventListener('resize', this.resizeCurrentView);
 
+  // Capture event handler to release then at exit
   this.subscriptions = [
-    {
-      unsubscribe: () =>
-        window.removeEventListener('resize', resizeCurrentView),
-    },
-    this.proxyManager.onProxyRegistrationChange(() => {
-      this.actions = viewHelper.getViewActions(this.proxyManager);
-    }),
+    () => window.removeEventListener('resize', this.resizeCurrentView),
+    this.proxyManager.onProxyRegistrationChange(this.updateActionState)
+      .unsubscribe,
   ];
+
+  // Initial setup
+  this.resizeCurrentView();
+  this.updateActionState();
 }
 
 // ----------------------------------------------------------------------------
@@ -126,7 +144,7 @@ function onBeforeDestroy() {
   }
 
   while (this.subscriptions.length) {
-    this.subscriptions.pop().unsubscribe();
+    this.subscriptions.pop()();
   }
 }
 

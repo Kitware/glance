@@ -26,10 +26,10 @@ function openFile(url) {
           })
           .catch((error) => {
             if (error) {
-              this.$eventBus.$emit(Events.MSG_ERROR, Messages.OPEN_ERROR);
+              this.$globalBus.$emit(Events.MSG_ERROR, Messages.OPEN_ERROR);
             }
             // TODO display popup for raw parsing
-            this.$eventBus.$emit(Events.MSG_INFO, 'TODO interpret as *.raw');
+            this.$globalBus.$emit(Events.MSG_INFO, 'TODO interpret as *.raw');
             this.landing = false;
           });
       }

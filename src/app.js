@@ -28,7 +28,7 @@ export const {
 Vue.use(Vuetify);
 
 // setup event bus
-Vue.prototype.$eventBus = new Vue();
+Vue.prototype.$globalBus = new Vue();
 
 let activeProxyConfig = null;
 /**

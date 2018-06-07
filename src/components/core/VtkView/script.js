@@ -55,7 +55,7 @@ function rollRight() {
 
 function screenCapture() {
   if (this.view) {
-    this.$eventBus.$emit(Events.SCREENSHOT, {
+    this.$globalBus.$emit(Events.SCREENSHOT, {
       imgSrc: this.view.captureImage(),
       viewName: this.view.getReferenceByName('name'),
     });

@@ -1,3 +1,4 @@
+// global events
 export const Events = {
   MSG_INFO: 'MSG_INFO',
   MSG_ERROR: 'MSG_ERROR',

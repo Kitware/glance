@@ -1,13 +1,13 @@
 import { Events } from 'paraview-glance/src/constants';
 
 function onMounted() {
-  this.$eventBus.$on(Events.MSG_INFO, this.showInfo);
-  this.$eventBus.$on(Events.MSG_ERROR, this.showError);
+  this.$globalBus.$on(Events.MSG_INFO, this.showInfo);
+  this.$globalBus.$on(Events.MSG_ERROR, this.showError);
 }
 
 function onBeforeDestroy() {
-  this.$eventBus.$off(Events.MSG_INFO, this.showInfo);
-  this.$eventBus.$off(Events.MSG_ERROR, this.showError);
+  this.$globalBus.$off(Events.MSG_INFO, this.showInfo);
+  this.$globalBus.$off(Events.MSG_ERROR, this.showError);
 }
 
 function showError(msg) {

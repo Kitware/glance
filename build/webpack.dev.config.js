@@ -1,3 +1,4 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('webpack-merge');
 
 const baseConfig = require('./webpack.base.config');
@@ -20,5 +21,12 @@ module.exports = merge.multiple(baseConfig, {
         colors: true,
       },
     },
+    plugins: [
+      new HtmlWebpackPlugin({
+        filename: 'index.html',
+        template: 'static/index.html',
+        inject: 'head',
+      }),
+    ],
   },
 });

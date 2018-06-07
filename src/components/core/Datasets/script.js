@@ -1,12 +1,13 @@
-let subscriptions = [];
+import ColorByWidget from 'paraview-glance/src/components/widgets/dataset/ColorBy';
+import InformationWidget from 'paraview-glance/src/components/widgets/dataset/Information';
+import RepresentationWidget from 'paraview-glance/src/components/widgets/dataset/Representation';
+import SliceWidget from 'paraview-glance/src/components/widgets/dataset/SliceControl';
 
 function onMounted() {
-  subscriptions = [
+  this.subscriptions = [
     this.proxyManager.onProxyRegistrationChange(({ proxyGroup }) => {
       if (proxyGroup === 'Sources') {
-        this.datasets = this.proxyManager.getSources().map((source) => ({
-          name: source.getName(),
-        }));
+        this.datasets = this.proxyManager.getSources();
       }
     }),
   ];
@@ -29,6 +30,12 @@ export default {
   },
   beforeDestroy() {
     this.onBeforeDestroy();
+  },
+  components: {
+    ColorByWidget,
+    InformationWidget,
+    RepresentationWidget,
+    SliceWidget,
   },
   methods: {
     onMounted,

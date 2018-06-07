@@ -1,0 +1,82 @@
+<v-expansion-panel-content>
+  <div
+    :class="$style.subpanelHeader"
+    slot="header"
+  >
+    <v-icon>tune</v-icon>
+    <span class="body-2">Slices</span>
+  </div>
+
+  <v-card light flat :class="$style.block">
+    <v-card-title :class="$style.blockTitle">
+      <span class="body-2">Window/Level</span>
+    </v-card-title>
+    <v-card-text :class="$style.blockContent">
+      <v-container fluid grid-list-md>
+        <v-layout row wrap>
+          <v-flex xs3>
+            <label :class="$style.smallLabel">Window</label>
+          </v-flex>
+          <v-flex xs6>
+            <v-slider :class="$style.noTopPadding" hide-details />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field :class="$style.noTopPadding" hide-details type="number"></v-text-field>
+          </v-flex>
+          <v-flex xs3>
+            <label :class="$style.smallLabel">Level</label>
+          </v-flex>
+          <v-flex xs6>
+            <v-slider :class="$style.noTopPadding" hide-details />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field :class="$style.noTopPadding" hide-details type="number"></v-text-field>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card-text>
+  </v-card>
+
+  <v-card light flat :class="$style.block">
+    <v-card-title light flat :class="$style.blockTitle">
+      <span class="body-2">Slices</span>
+      <v-spacer />
+      <v-btn icon :class="[$style.noMargin,$style.active]">
+        <v-icon small>remove_red_eye</v-icon>
+      </v-btn>
+    </v-card-title>
+    <v-card-text :class="$style.blockContent">
+      <v-container fluid grid-list-md>
+        <v-layout row wrap>
+          <v-flex xs3>
+            <label :class="$style.smallLabel">X</label>
+          </v-flex>
+          <v-flex xs6>
+            <v-slider :class="$style.noTopPadding" hide-details />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field :class="$style.noTopPadding" hide-details type="number"></v-text-field>
+          </v-flex>
+          <v-flex xs3>
+            <label :class="$style.smallLabel">Y</label>
+          </v-flex>
+          <v-flex xs6>
+            <v-slider :class="$style.noTopPadding" hide-details />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field :class="$style.noTopPadding" hide-details type="number"></v-text-field>
+          </v-flex>
+          <v-flex xs3>
+            <label :class="$style.smallLabel">Z</label>
+          </v-flex>
+          <v-flex xs6>
+            <v-slider :class="$style.noTopPadding" hide-details />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field :class="$style.noTopPadding" hide-details type="number"></v-text-field>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card-text>
+  </v-card>
+</v-expansion-panel-content>

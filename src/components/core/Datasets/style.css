@@ -13,7 +13,8 @@
 /** should be moved to own component **/
 
 .block {
-  padding: 4px 16px;
+  padding: 4px 10px 4px 16px;
+  margin-left: 6px;
 }
 
 .blockTitle {
@@ -28,4 +29,24 @@
 
 .blockRow {
   margin: 4px 0;
+}
+
+.noTopPadding {
+  padding-top: 0;
+}
+
+.smallLabel {
+  font-size: 12px;
+}
+
+.noMargin {
+  margin: 0;
+}
+
+.active {
+  color: rgba(0,0,0,0.54) !important;
+}
+
+.inactive {
+  color: rgba(0,0,0,0.25) !important;
 }

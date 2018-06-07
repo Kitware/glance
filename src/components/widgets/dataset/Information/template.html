@@ -1,0 +1,15 @@
+<v-expansion-panel-content>
+  <div
+    :class="$style.subpanelHeader"
+    slot="header"
+  >
+    <v-icon>help_outline</v-icon>
+    <span class="body-2">Informations</span>
+  </div>
+
+  <vtk-image-data  />
+  <vtk-molecule />
+  <vtk-poly-data />
+  <vtk-field-data  /> <!-- v-bind:dataset="source.getDataSet()" -->
+
+</v-expansion-panel-content>

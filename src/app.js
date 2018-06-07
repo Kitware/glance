@@ -25,6 +25,9 @@ export const {
 
 Vue.use(Vuetify);
 
+// setup event bus
+Vue.prototype.$eventBus = new Vue();
+
 let activeProxyConfig = null;
 /**
  * Sets the active proxy configuration to be used by createViewer.

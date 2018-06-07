@@ -1,0 +1,8 @@
+<v-snackbar
+  :color="color"
+  top
+  v-model="snackbar"
+>
+  {{ text }}
+  <v-btn flat color="white darken-1" @click.native="snackbar = false">Close</v-btn>
+</v-snackbar>

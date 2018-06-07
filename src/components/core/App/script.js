@@ -1,7 +1,9 @@
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 
+import { Events, Messages } from 'paraview-glance/src/constants';
 import Landing from 'paraview-glance/src/components/core/Landing';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
+import Notification from 'paraview-glance/src/components/core/Notification';
 
 function loadFiles(files) {
   return ReaderFactory.loadFiles(files).then((readers) => {
@@ -17,9 +19,16 @@ function openFile(url) {
       // doesn't handle *.raw
       ReaderFactory.listSupportedExtensions(),
       (files) => {
-        this.loadFiles(files).then(() => {
-          this.landing = false;
-        });
+        this.loadFiles(files)
+          .then(() => {
+            this.landing = false;
+          })
+          .catch((error) => {
+            if (error) {
+              this.$eventBus.$emit(Events.MSG_ERROR, Messages.OPEN_ERROR);
+            }
+            // display popup for raw parsing
+          });
       }
     );
   }
@@ -37,6 +46,7 @@ export default {
   components: {
     Landing,
     LayoutView,
+    Notification,
   },
   data,
   methods: {

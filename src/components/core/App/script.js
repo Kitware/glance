@@ -1,6 +1,7 @@
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 
 import { Events, Messages } from 'paraview-glance/src/constants';
+import Datasets from 'paraview-glance/src/components/core/Datasets';
 import Landing from 'paraview-glance/src/components/core/Landing';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Notification from 'paraview-glance/src/components/core/Notification';
@@ -46,6 +47,7 @@ export default {
   name: 'App',
   inject: ['proxyManager'],
   components: {
+    Datasets,
     Landing,
     LayoutView,
     Notification,

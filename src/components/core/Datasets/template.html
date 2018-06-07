@@ -1,0 +1,34 @@
+<v-expansion-panel focusable>
+  <v-expansion-panel-content
+    v-for="(item, i) in datasets"
+    :key="i"
+  >
+    <div
+      :class="$style.datasetHeader"
+      slot="header"
+      v-bind:title="item.name"
+    >
+      <span class="body-2">{{ item.name }}</span>
+    </div>
+    <v-card>
+      <v-expansion-panel dark>
+        <v-expansion-panel-content>
+            <div
+              :class="$style.subpanelHeader"
+              slot="header"
+            >
+              <span class="body-2">Info</span>
+            </div>
+          </v-expansion-panel-content>
+          <v-expansion-panel-content>
+            <div
+              :class="$style.subpanelHeader"
+              slot="header"
+            >
+              <span class="body-2">Controls</span>
+            </div>
+          </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-card>
+  </v-expansion-panel-content>
+</v-expansion-panel>

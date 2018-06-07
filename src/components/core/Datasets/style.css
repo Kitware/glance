@@ -1,0 +1,11 @@
+.datasetHeader {
+  user-select: none;
+  /* handle overflowing names */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subpanelHeader {
+  user-select: none;
+  margin-left: 1em;
+}

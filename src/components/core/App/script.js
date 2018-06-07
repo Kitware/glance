@@ -27,7 +27,9 @@ function openFile(url) {
             if (error) {
               this.$eventBus.$emit(Events.MSG_ERROR, Messages.OPEN_ERROR);
             }
-            // display popup for raw parsing
+            // TODO display popup for raw parsing
+            this.$eventBus.$emit(Events.MSG_INFO, 'TODO interpret as *.raw');
+            this.landing = false;
           });
       }
     );

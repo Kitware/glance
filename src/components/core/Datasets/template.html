@@ -19,6 +19,33 @@
             >
               <span class="body-2">Info</span>
             </div>
+ 
+            <!-- sample block, should be moved to own component -->
+            <v-card light flat :class="['grey lighten-3', $style.block]">
+              <v-card-title :class="$style.blockTitle">
+                <span class="body-2">Image Info</span>
+              </v-card-title>
+              <v-card-text :class="$style.blockContent">
+                <v-layout row>
+                  <v-flex xs8 class="body-1">Dimensions:</v-flex>
+                  <v-flex xs4 class="body-1">1x1x1</v-flex>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+
+            <!-- sample block, should be moved to own component -->
+            <v-card light flat :class="['grey lighten-3', $style.block]">
+              <v-card-title :class="$style.blockTitle">
+                <span class="body-2">Geometry Info</span>
+              </v-card-title>
+              <v-card-text :class="$style.blockContent">
+                <v-layout row>
+                  <v-flex xs8 class="body-1">Triangle count:</v-flex>
+                  <v-flex xs4 class="body-1">a lot</v-flex>
+                </v-layout>
+              </v-card-text>
+            </v-card>
+ 
           </v-expansion-panel-content>
           <v-expansion-panel-content>
             <div
@@ -27,7 +54,18 @@
             >
               <span class="body-2">Controls</span>
             </div>
-          </v-expansion-panel-content>
+ 
+            <!-- sample block, should be moved to own component -->
+            <v-card light flat :class="['grey lighten-3', $style.block]">
+              <v-card-title :class="$style.blockTitle">
+                <span class="body-2">Window/Level</span>
+              </v-card-title>
+              <v-card-text :class="$style.blockContent">
+                <span>Window/level controls here</span>
+              </v-card-text>
+            </v-card>
+
+         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-card>
   </v-expansion-panel-content>

@@ -9,3 +9,23 @@
   user-select: none;
   margin-left: 1em;
 }
+
+/** should be moved to own component **/
+
+.block {
+  padding: 4px 16px;
+}
+
+.blockTitle {
+  padding: 4px 0; /* override vuetify */
+  margin: 8px 4px;
+  border-bottom: 1px solid #bbb;
+}
+
+.blockContent {
+  padding: 4px;
+}
+
+.blockRow {
+  margin: 4px 0;
+}

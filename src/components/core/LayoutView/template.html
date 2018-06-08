@@ -5,12 +5,16 @@
   >
     <div
       :class="$style.viewContainer"
-      v-for="view in views"
+      v-for="(view, index) in views"
       v-bind:key="view.getProxyId()"
     >
       <vtk-view
         v-on:layout-update="updateLayout"
-        v-bind:initialView="view"
+        v-bind:view="view"
+        v-bind:layout-index="index"
+        v-bind:layout-count="views.length"
+        v-bind:layout-view-type="order[index]"
+        layoutManager
       />
     </div>
   </div>

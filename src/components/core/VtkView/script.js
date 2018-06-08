@@ -12,14 +12,16 @@ import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 // ----------------------------------------------------------------------------
 
 function changeViewType(newType) {
-  if (this.view) {
-    this.view.setContainer(null);
+  if (this.layoutManager) {
+    console.log('trigger layout update', this.layoutIndex, this.layoutViewType);
+    this.$emit('layout-update', { count: this.layoutCount, index: this.layoutIndex, view: this.view, newType: newType });
+  } else {
+    this.view = viewHelper.bindView(
+      this.proxyManager,
+      newType,
+      this.$el.querySelector('.js-view')
+    );
   }
-  this.view = viewHelper.bindView(
-    this.proxyManager,
-    newType,
-    this.$el.querySelector('.js-view')
-  );
 }
 
 // ----------------------------------------------------------------------------
@@ -66,19 +68,14 @@ function screenCapture() {
 // ----------------------------------------------------------------------------
 
 function splitScreen() {
-  const nbViews = viewHelper.getNumberOfVisibleViews(this.proxyManager);
-
-  const newNbViews = nbViews < 2 ? 2 : 4;
-  this.$emit('layout-update', { count: newNbViews, current: this.view });
-
-  // Update actions state
-  this.updateActionState();
+  const newNbViews = this.layoutCount < 2 ? 2 : 4;
+  this.$emit('layout-update', { index: this.layoutIndex, count: newNbViews, view: this.view });
 }
 
 // ----------------------------------------------------------------------------
 
 function singleView() {
-  this.$emit('layout-update', { count: 1, current: this.view });
+  this.$emit('layout-update', { index: this.layoutIndex, count: 1, view: this.view });
 }
 
 // ----------------------------------------------------------------------------
@@ -86,13 +83,7 @@ function singleView() {
 // ----------------------------------------------------------------------------
 
 function onMounted() {
-  if (!this.view) {
-    this.view = viewHelper.bindView(
-      this.proxyManager,
-      DEFAULT_VIEW_TYPE,
-      this.$el.querySelector('.js-view')
-    );
-  } else {
+  if (this.view) {
     this.view.setContainer(this.$el.querySelector('.js-view'));
   }
 
@@ -102,9 +93,6 @@ function onMounted() {
       this.view.resize();
     }
   };
-  this.updateActionState = () => {
-    this.actions = viewHelper.getViewActions(this.proxyManager);
-  };
 
   // Event handling
   window.addEventListener('resize', this.resizeCurrentView);
@@ -112,22 +100,19 @@ function onMounted() {
   // Capture event handler to release then at exit
   this.subscriptions = [
     () => window.removeEventListener('resize', this.resizeCurrentView),
-    this.proxyManager.onProxyRegistrationChange(this.updateActionState)
+    this.proxyManager.onProxyRegistrationChange(() => this.$forceUpdate())
       .unsubscribe,
   ];
 
   // Initial setup
   this.resizeCurrentView();
-  this.updateActionState();
+
+  console.log('onMounted', this.layoutIndex, this.layoutCount, this.layoutViewType, this.currentType);
 }
 
 // ----------------------------------------------------------------------------
 
 function onBeforeDestroy() {
-  if (this.view) {
-    this.view.setContainer(null);
-  }
-
   while (this.subscriptions.length) {
     this.subscriptions.pop()();
   }
@@ -142,15 +127,43 @@ export default {
   components: {
     ToolbarSheet,
   },
-  props: ['initialView'],
+  props: {
+    view: {
+      default: null,
+    },
+    layoutIndex: {
+      default: 0,
+      type: Number,
+    },
+    layoutCount: {
+      default: 1,
+      type: Number,
+    },
+    layoutManager: {
+      default: false,
+      type: Boolean,
+    },
+    layoutViewType: {
+      default: '',
+      type: String,
+    },
+  },
   data() {
     return {
-      view: this.initialView,
-      currentType: DEFAULT_VIEW_TYPE,
-      types: VIEW_TYPES,
-      actions: {},
+      viewTypes: VIEW_TYPES,
       backgroundSheet: false,
     };
+  },
+  computed: {
+    viewType() {
+      return this.layoutViewType || viewHelper.getViewType(this.view);
+    },
+    actions() {
+      const actions = viewHelper.getViewActions(this.proxyManager);
+      actions.single = this.layoutCount > 1;
+      actions.split = this.layoutCount < 4;
+      return actions;
+    },
   },
   methods: {
     onMounted,
@@ -168,4 +181,14 @@ export default {
     this.$nextTick(this.onMounted);
   },
   beforeDestroy: onBeforeDestroy,
+  beforeUpdate() {
+    if (!this.view) {
+      this.changeViewType(DEFAULT_VIEW_TYPE);
+    }
+    console.log('beforeUpdate', this.layoutIndex, this.layoutCount, this.layoutViewType, this.currentType);
+  },
+  updated() {
+    console.log('updated', this.layoutIndex, this.layoutCount, this.layoutViewType, this.currentType);
+    this.view.setContainer(this.$el.querySelector('.js-view'));
+  },
 };

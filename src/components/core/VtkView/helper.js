@@ -1,7 +1,4 @@
-import {
-  VIEW_ORIENTATIONS,
-  VIEW_TYPES,
-} from 'paraview-glance/src/components/core/VtkView/constants';
+import { VIEW_ORIENTATIONS } from 'paraview-glance/src/components/core/VtkView/constants';
 
 // ----------------------------------------------------------------------------
 
@@ -18,8 +15,6 @@ function getNumberOfVisibleViews(proxyManager) {
 function getViewActions(proxyManager) {
   const possibleActions = {
     crop: false,
-    split: false,
-    single: false,
   };
 
   // To crop we need at list an image data
@@ -30,17 +25,19 @@ function getViewActions(proxyManager) {
     }
   });
 
-  // Count number of view in UI
-  const nbViews = getNumberOfVisibleViews(proxyManager);
-  possibleActions.split = nbViews < 4;
-  possibleActions.single = nbViews > 1;
-
   return possibleActions;
 }
 
 // ----------------------------------------------------------------------------
 
-function getView(proxyManager, type, name, container) {
+function getViewType(view) {
+  return `${view.getProxyName()}:${view.getReferenceByName('name')}`;
+}
+
+// ----------------------------------------------------------------------------
+
+function getView(proxyManager, viewType, container) {
+  const [type, name] = viewType.split(':');
   let view = null;
   const views = proxyManager.getViews();
   for (let i = 0; i < views.length; i++) {
@@ -79,53 +76,13 @@ function getView(proxyManager, type, name, container) {
 // ----------------------------------------------------------------------------
 
 function bindView(proxyManager, viewType, container) {
-  const [type, name] = viewType.split(':');
-  return getView(proxyManager, type, name, container);
-}
-
-// ----------------------------------------------------------------------------
-
-function getViews(proxyManager, count = 1, current = null) {
-  const views = proxyManager.getViews();
-  if (views.length === count) {
-    // FIXME preserve order
-    return views;
-  }
-
-  const sortedViews = [];
-  for (let i = 0; i < VIEW_TYPES.length && i < count; i++) {
-    const [type, name] = VIEW_TYPES[i].value.split(':');
-    sortedViews.push(getView(proxyManager, type, name));
-  }
-
-  const result = [];
-  switch (count) {
-    case 1:
-      result.push(current || sortedViews[0]);
-      break;
-    case 2:
-      result.push(sortedViews[1]);
-      result.push(sortedViews[0]);
-      break;
-    case 4:
-      result.push(sortedViews[1]);
-      result.push(sortedViews[0]);
-      result.push(sortedViews[2]);
-      result.push(sortedViews[3]);
-      break;
-    default:
-      result.push(sortedViews[0]);
-      break;
-  }
-  console.log('sortedViews', sortedViews);
-  console.log('viewToShow', result);
-  return result;
+  return getView(proxyManager, viewType, container);
 }
 
 // ----------------------------------------------------------------------------
 
 export default {
-  getViews,
+  getViewType,
   bindView,
   getView,
   getViewActions,

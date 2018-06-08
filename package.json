@@ -15,7 +15,7 @@
     "validate": "prettier --config ./prettier.config.js --list-different \"src/**/*.js\"",
     "reformat": "prettier --config ./prettier.config.js --write \"src/**/*.js\"",
     "build": "webpack --config build/webpack.dev.config.js",
-    "build:release": "webpack --config build/webpack.dev.config.js --mode production -p",
+    "build:release": "webpack --config build/webpack.prod.config.js -p",
     "dev": "webpack-dev-server --config build/webpack.dev.config.js",
     "bundle": "inline-source --compress false --root ./Distribution ./Distribution/index.html ./Distribution/ParaViewGlance.html",
     "commit": "git cz",

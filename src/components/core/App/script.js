@@ -17,7 +17,12 @@ function loadRemoteDataset(url, name, type) {
     return Promise.reject(new Error('No url or name provided'));
   }
 
-  const progressCb = (progress) => {};
+  this.loadingName = name;
+  this.loadingProgress = 0;
+
+  const progressCb = (progress) => {
+    this.loadingProgress = Math.round(100 * progress.loaded / progress.total);
+  };
 
   return ReaderFactory.downloadDataset(name, url, progressCb)
     .then(({ reader, sourceType }) => {
@@ -28,6 +33,9 @@ function loadRemoteDataset(url, name, type) {
     })
     .then(() => {
       this.landing = false;
+    })
+    .finally(() => {
+      this.loadingName = null;
     });
 }
 
@@ -53,6 +61,8 @@ function openFile() {
 }
 
 const data = () => ({
+  loadingName: null,
+  loadingProgress: 0,
   landing: true,
   sidebar: true,
   activeTab: 0,

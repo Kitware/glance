@@ -32,8 +32,9 @@
     <v-spacer />
     <v-btn
       :class="$style.toolbarButton"
+      :disabled="!!loadingName"
       flat
-      v-on:click="openFile()"
+      v-on:click="openFile"
     >
       <v-icon>folder</v-icon>
       <span>Open</span>
@@ -55,6 +56,21 @@
     </v-btn>
   </v-toolbar>
   <v-content :class="$style.appContent">
+    <div
+      :class="$style.loadingOverlay"
+      v-if="!!loadingName"
+    >
+      <div
+        :class="$style.overlayText"
+      >
+        <div class="display-2">Loading {{ loadingName }}...</div>
+        <v-progress-linear
+          :value="loadingProgress"
+          height="10"
+          color="info"
+        />
+      </div>
+    </div>
     <landing
       v-if="landing"
       v-on:open="openFile"

@@ -7,7 +7,7 @@ import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 // ----------------------------------------------------------------------------
 
 function swapOrder(order, index, newType) {
-  const result = order.map(i => i);
+  const result = order.slice();
   const oldViewType = result[index];
   const destIndex = result.indexOf(newType);
   result[index] = newType;
@@ -31,8 +31,6 @@ function updateLayout({ index, count, newType }) {
     this.order = swapOrder(this.order, index, this.order[1]);
   }
   this.updateViews(count);
-  console.log('layout manager changing views');
-  console.log(count, this.order);
 }
 
 // ----------------------------------------------------------------------------

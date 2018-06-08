@@ -13,8 +13,12 @@ import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 
 function changeViewType(newType) {
   if (this.layoutManager) {
-    console.log('trigger layout update', this.layoutIndex, this.layoutViewType);
-    this.$emit('layout-update', { count: this.layoutCount, index: this.layoutIndex, view: this.view, newType: newType });
+    this.$emit('layout-update', {
+      count: this.layoutCount,
+      index: this.layoutIndex,
+      view: this.view,
+      newType,
+    });
   } else {
     this.view = viewHelper.bindView(
       this.proxyManager,
@@ -69,13 +73,21 @@ function screenCapture() {
 
 function splitScreen() {
   const newNbViews = this.layoutCount < 2 ? 2 : 4;
-  this.$emit('layout-update', { index: this.layoutIndex, count: newNbViews, view: this.view });
+  this.$emit('layout-update', {
+    index: this.layoutIndex,
+    count: newNbViews,
+    view: this.view,
+  });
 }
 
 // ----------------------------------------------------------------------------
 
 function singleView() {
-  this.$emit('layout-update', { index: this.layoutIndex, count: 1, view: this.view });
+  this.$emit('layout-update', {
+    index: this.layoutIndex,
+    count: 1,
+    view: this.view,
+  });
 }
 
 // ----------------------------------------------------------------------------
@@ -106,8 +118,6 @@ function onMounted() {
 
   // Initial setup
   this.resizeCurrentView();
-
-  console.log('onMounted', this.layoutIndex, this.layoutCount, this.layoutViewType, this.currentType);
 }
 
 // ----------------------------------------------------------------------------
@@ -185,10 +195,8 @@ export default {
     if (!this.view) {
       this.changeViewType(DEFAULT_VIEW_TYPE);
     }
-    console.log('beforeUpdate', this.layoutIndex, this.layoutCount, this.layoutViewType, this.currentType);
   },
   updated() {
-    console.log('updated', this.layoutIndex, this.layoutCount, this.layoutViewType, this.currentType);
     this.view.setContainer(this.$el.querySelector('.js-view'));
   },
 };

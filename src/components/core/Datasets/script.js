@@ -14,8 +14,8 @@ function onMounted() {
 }
 
 function onBeforeDestroy() {
-  while (subscriptions.length) {
-    subscriptions.pop().unsubscribe();
+  while (this.subscriptions.length) {
+    this.subscriptions.pop().unsubscribe();
   }
 }
 
@@ -25,6 +25,9 @@ export default {
   data: () => ({
     datasets: [],
   }),
+  created() {
+    this.subscriptions = [];
+  },
   mounted() {
     this.$nextTick(this.onMounted);
   },

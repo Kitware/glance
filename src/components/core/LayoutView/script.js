@@ -31,6 +31,8 @@ function updateLayout({ index, count, newType }) {
     this.order = swapOrder(this.order, index, this.order[1]);
   }
   this.updateViews(count);
+  console.log('layout manager changing views');
+  console.log(count, this.order);
 }
 
 // ----------------------------------------------------------------------------

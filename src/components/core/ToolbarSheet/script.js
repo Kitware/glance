@@ -14,11 +14,12 @@ function updateVisibility(newVal, oldVal) {
   if (newVal && !oldVal) {
     document.addEventListener('mousedown', this.onMouseDown, true);
     this.$nextTick(() => {
-      this.visiblityOffset = -this.$el.offsetHeight;
+      this.sheetTop = -this.$refs.slotWrapper.offsetHeight;
+      this.visible = true;
     });
   } else {
     document.removeEventListener('mousedown', this.onMouseDown, true);
-    this.visiblityOffset = 0;
+    this.visible = false;
   }
 }
 
@@ -31,7 +32,8 @@ export default {
     value: { type: Boolean, default: false },
   },
   data: () => ({
-    visiblityOffset: 0,
+    sheetTop: 0,
+    visible: false,
   }),
   methods: {
     onMouseDown,

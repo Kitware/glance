@@ -1,0 +1,13 @@
+<div :class="$style.wrapper">
+  <div
+    :class="{ [$style.bubble]: true, [$style.selected]: color === value }"
+    v-for="color in palette"
+    :key="color"
+  >
+    <div
+      :class="$style.circle"
+      :style="getStyles(color)"
+      v-on:click="$emit('input', color)"
+    />
+  </div>
+</div>

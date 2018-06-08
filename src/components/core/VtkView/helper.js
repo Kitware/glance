@@ -63,6 +63,9 @@ function getView(proxyManager, viewType, container) {
     // Update orientation
     const { axis, orientation, viewUp } = VIEW_ORIENTATIONS[name];
     view.updateOrientation(axis, orientation, viewUp);
+
+    // set background to transparent
+    view.setBackground(0, 0, 0, 0);
   }
 
   if (container) {

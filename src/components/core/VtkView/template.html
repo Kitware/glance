@@ -51,13 +51,22 @@
     </v-tooltip>
   </v-layout>
   <v-layout column fill-height>
-    <v-flex fill-height :class="[$style.vtkView, 'js-view']" />
+    <v-flex
+      fill-height
+      :class="[$style.vtkView, 'js-view']"
+      :style="{ backgroundColor: bgcolor }"
+    />
     <div :class="$style.toolbarWrapper">
       <toolbar-sheet v-model="backgroundSheet">
         <v-card dark>
           <v-card-title class="body-2">Background Color</v-card-title>
           <v-card-text>
-            Colors here...
+            <palette-picker
+              :size="28"
+              :palette="palette"
+              v-model="bgcolor"
+              v-on:input="backgroundSheet = false"
+            />
           </v-card-text>
         </v-card>
       </toolbar-sheet>
@@ -77,7 +86,7 @@
           <v-btn
             slot="activator"
             icon
-            :disabled="backgroundSheet"
+            :disabled="backgroundSheet || !view"
             v-on:click="backgroundSheet = !backgroundSheet"
           >
             <v-icon>palette</v-icon>

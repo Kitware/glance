@@ -4,8 +4,10 @@ import {
   VIEW_TYPES,
 } from 'paraview-glance/src/components/core/VtkView/constants';
 
+import PalettePicker from 'paraview-glance/src/components/core/PalettePicker';
 import ToolbarSheet from 'paraview-glance/src/components/core/ToolbarSheet';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
+import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -135,6 +137,7 @@ function onBeforeDestroy() {
 export default {
   inject: ['proxyManager'],
   components: {
+    PalettePicker,
     ToolbarSheet,
   },
   props: {
@@ -160,6 +163,8 @@ export default {
   },
   data() {
     return {
+      palette: BACKGROUND,
+      bgcolor: BACKGROUND[0],
       viewTypes: VIEW_TYPES,
       backgroundSheet: false,
     };

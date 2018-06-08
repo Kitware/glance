@@ -65,6 +65,7 @@ const data = () => ({
   loadingProgress: 0,
   landing: true,
   sidebar: true,
+  aboutDialog: false,
   activeTab: 0,
 });
 

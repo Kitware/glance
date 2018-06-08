@@ -50,6 +50,7 @@
     <v-btn
       :class="$style.toolbarButton"
       flat
+      v-on:click="aboutDialog = true"
     >
       <v-icon>help</v-icon>
       <span>About</span>
@@ -78,5 +79,28 @@
     />
     <layout-view v-if="!landing" />
   </v-content>
+
   <notification />
+  <v-dialog v-model="aboutDialog" max-width="50%">
+    <v-card>
+      <v-card-title>
+        <span class="title">About ParaView Glance</span>
+        <v-spacer />
+        <v-btn
+          flat
+          icon
+          v-on:click="aboutDialog = false"
+        >
+          <v-icon>close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+        <p class="body-1">
+          ParaView Glance is a general purpose web application for visualizing
+          useful for visualizing many data types, as well as a framework for
+          building custom web-based visualization applications.
+        </p>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </v-app>

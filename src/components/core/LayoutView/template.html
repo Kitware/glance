@@ -6,7 +6,7 @@
     <div
       :class="$style.viewContainer"
       v-for="(view, index) in views"
-      v-bind:key="view.getProxyId()"
+      v-bind:key="`${index}::${view.getProxyId()}`"
     >
       <vtk-view
         v-on:layout-update="updateLayout"

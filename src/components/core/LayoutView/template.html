@@ -14,6 +14,8 @@
         v-bind:layout-index="index"
         v-bind:layout-count="views.length"
         v-bind:layout-view-type="order[index]"
+        v-bind:viewData="viewData[view.getProxyId()]"
+        v-on:bg-change="setViewBackground(view, $event)"
         layoutManager
       />
     </div>

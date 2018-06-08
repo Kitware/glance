@@ -160,11 +160,14 @@ export default {
       default: '',
       type: String,
     },
+    viewData: {
+      required: true,
+      type: Object,
+    },
   },
   data() {
     return {
       palette: BACKGROUND,
-      bgcolor: BACKGROUND[0],
       viewTypes: VIEW_TYPES,
       backgroundSheet: false,
     };

@@ -54,7 +54,7 @@
     <v-flex
       fill-height
       :class="[$style.vtkView, 'js-view']"
-      :style="{ background: bgcolor }"
+      :style="{ background: viewData.background }"
     />
     <div :class="$style.toolbarWrapper">
       <toolbar-sheet v-model="backgroundSheet">
@@ -64,8 +64,7 @@
             <palette-picker
               :size="28"
               :palette="palette"
-              v-model="bgcolor"
-              v-on:input="backgroundSheet = false"
+              v-on:input="backgroundSheet = false; $emit('bg-change', $event)"
             />
           </v-card-text>
         </v-card>

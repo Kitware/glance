@@ -1,6 +1,7 @@
 import { VIEW_TYPES } from 'paraview-glance/src/components/core/VtkView/constants';
 import VtkView from 'paraview-glance/src/components/core/VtkView';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
+import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 
 // ----------------------------------------------------------------------------
 // Helper
@@ -39,6 +40,22 @@ function updateViews(count = 1) {
   this.views = this.order
     .filter((v, i) => i < count)
     .map((t) => viewHelper.getView(this.proxyManager, t));
+
+  // initialize viewData for new views
+  this.views.forEach((view) => {
+    const viewId = view.getProxyId();
+    if (!(viewId in this.viewData)) {
+      this.viewData[viewId] = {
+        background: BACKGROUND[0],
+      };
+    }
+  });
+}
+
+// ----------------------------------------------------------------------------
+
+function setViewBackground(view, bg) {
+  this.viewData[view.getProxyId()].background = bg;
 }
 
 // ----------------------------------------------------------------------------
@@ -56,6 +73,7 @@ export default {
   name: 'LayoutView',
   data: () => ({
     views: [],
+    viewData: {},
     order: VIEW_TYPES.map((v) => v.value),
   }),
   computed: {
@@ -70,6 +88,7 @@ export default {
     onMounted,
     updateLayout,
     updateViews,
+    setViewBackground,
   },
   components: {
     VtkView,

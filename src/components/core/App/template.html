@@ -58,6 +58,7 @@
     <landing
       v-if="landing"
       v-on:open="openFile"
+      v-on:open-url="loadRemoteDataset"
     />
     <layout-view v-if="!landing" />
   </v-content>

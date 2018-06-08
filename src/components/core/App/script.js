@@ -12,29 +12,44 @@ function loadFiles(files) {
   });
 }
 
-function openFile(url) {
-  if (url) {
-    // handle remote dataset
-  } else {
-    ReaderFactory.openFiles(
-      // doesn't handle *.raw
-      ReaderFactory.listSupportedExtensions(),
-      (files) => {
-        this.loadFiles(files)
-          .then(() => {
-            this.landing = false;
-          })
-          .catch((error) => {
-            if (error) {
-              this.$globalBus.$emit(Events.MSG_ERROR, Messages.OPEN_ERROR);
-            }
-            // TODO display popup for raw parsing
-            this.$globalBus.$emit(Events.MSG_INFO, 'TODO interpret as *.raw');
-            this.landing = false;
-          });
-      }
-    );
+function loadRemoteDataset(url, name, type) {
+  if (!url || !name) {
+    return Promise.reject(new Error('No url or name provided'));
   }
+
+  const progressCb = (progress) => {};
+
+  return ReaderFactory.downloadDataset(name, url, progressCb)
+    .then(({ reader, sourceType }) => {
+      ReaderFactory.registerReadersToProxyManager(
+        [{ reader, name, sourceType: type || sourceType }],
+        this.proxyManager
+      );
+    })
+    .then(() => {
+      this.landing = false;
+    });
+}
+
+function openFile() {
+  ReaderFactory.openFiles(
+    // doesn't handle *.raw
+    ReaderFactory.listSupportedExtensions(),
+    (files) => {
+      this.loadFiles(files)
+        .then(() => {
+          this.landing = false;
+        })
+        .catch((error) => {
+          if (error) {
+            this.$globalBus.$emit(Events.MSG_ERROR, Messages.OPEN_ERROR);
+          }
+          // TODO display popup for raw parsing
+          this.$globalBus.$emit(Events.MSG_INFO, 'TODO interpret as *.raw');
+          this.landing = false;
+        });
+    }
+  );
 }
 
 const data = () => ({
@@ -56,5 +71,6 @@ export default {
   methods: {
     loadFiles,
     openFile,
+    loadRemoteDataset,
   },
 };

@@ -2,7 +2,7 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 
-// import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
+import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
 /* eslint-disable-next-line import/extensions */
@@ -48,12 +48,21 @@ export function createViewer(container, proxyConfig = null) {
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
 
   /* eslint-disable no-new */
-  new Vue({
+  const vm = new Vue({
     el: '#root-container',
     components: { App },
     provide: {
       proxyManager,
     },
-    template: '<App />',
+    template: '<App ref="app" />',
   });
+
+  return {
+    processURLArgs() {
+      const { name, url, type } = vtkURLExtract.extractURLParameters();
+      if (name && url) {
+        vm.$refs.app.loadRemoteDataset(url, name, type);
+      }
+    },
+  };
 }

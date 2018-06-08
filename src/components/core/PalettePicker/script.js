@@ -23,7 +23,7 @@ export default {
       return {
         width: `${this.size}px`,
         height: `${this.size}px`,
-        backgroundColor: color,
+        background: color,
       };
     },
   },

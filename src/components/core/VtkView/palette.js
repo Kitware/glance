@@ -12,6 +12,7 @@ export const BACKGROUND = [
   '#66c2a5',
   '#3288bd',
   '#5e4fa2',
+  'linear-gradient(#7478BE, #C1C3CA)', // from 3D Slicer default
 ];
 
 export default {

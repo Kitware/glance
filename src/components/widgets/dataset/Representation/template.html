@@ -1,9 +1,79 @@
-<v-expansion-panel-content>
+<v-expansion-panel-content v-if="available.polydata || available.glyph || available.molecule || available.imagedata">
   <div
     :class="$style.subpanelHeader"
     slot="header"
   >
-    <v-icon>remove_red_eye</v-icon>
+    <v-icon v-show="Number(getRepresentationType()) > 0">far fa-eye</v-icon>
+    <v-icon v-show="Number(getRepresentationType()) < 1">far fa-eye-slash</v-icon>
     <span class="body-2">Representation</span>
   </div>
+
+
+  <v-card light flat :class="$style.block">
+    <v-container fluid grid-list-md>
+      <v-layout row wrap>
+        <v-flex xs12 v-if="available.polydata">
+          <v-select
+            :class="$style.noTopPadding"
+            dense
+            flat
+            hide-details
+            :items="representationTypes"
+            :value="getRepresentationType()"
+            @change="setRepresentationType"
+          />
+        </v-flex>
+        <v-flex xs3 v-if="available.polydata">
+          <label :class="$style.smallLabel">Point Size</label>
+        </v-flex>
+        <v-flex xs6 v-if="available.polydata">
+          <v-slider
+            :class="$style.noTopPadding"
+            hide-details
+            min="1"
+            max="20"
+            :value="getPointSize()"
+            @input="setPointSize"
+          />
+        </v-flex>
+        <v-flex xs3 v-if="available.polydata">
+          <v-text-field
+            :class="$style.noTopPadding"
+            hide-details
+            type="number"
+            min="1"
+            max="20"
+            :value="getPointSize()"
+            @input="setPointSize"
+          />
+        </v-flex>
+        <v-flex xs3 v-if="available.polydata || available.glyph || available.molecule">
+          <label :class="$style.smallLabel">Opacity</label>
+        </v-flex>
+        <v-flex xs6 v-if="available.polydata || available.glyph || available.molecule">
+          <v-slider
+            :class="$style.noTopPadding"
+            hide-details
+            min="0"
+            max="1"
+            step="0.01"
+            :value="getOpacity()"
+            @input="setOpacity"
+          />
+        </v-flex>
+        <v-flex xs3 v-if="available.polydata || available.glyph || available.molecule">
+          <v-text-field
+            :class="$style.noTopPadding"
+            hide-details
+            type="number"
+            min="0"
+            max="1"
+            step="0.01"
+            :value="getOpacity()"
+            @input="setOpacity"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-card>
 </v-expansion-panel-content>

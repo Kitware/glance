@@ -10,6 +10,10 @@ import 'typeface-roboto';
 import 'vuetify/dist/vuetify.min.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
+import '@fortawesome/fontawesome';
+// import '@fortawesome/fontawesome-free-solid';
+import '@fortawesome/fontawesome-free-regular';
+
 import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/components/core/App';

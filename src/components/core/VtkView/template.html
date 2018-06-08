@@ -64,6 +64,7 @@
             <palette-picker
               :size="28"
               :palette="palette"
+              :value="viewData.background"
               v-on:input="backgroundSheet = false; $emit('bg-change', $event)"
             />
           </v-card-text>

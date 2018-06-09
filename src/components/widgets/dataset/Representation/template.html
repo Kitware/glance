@@ -8,15 +8,24 @@
   </div>
 
   <v-card light flat :class="$style.block" v-if="domains.representation">
-    <v-select
-      :class="$style.noTopPadding"
-      dense
-      flat
-      hide-details
+    <v-container fluid grid-list-md>
+      <v-layout row wrap>
+        <v-flex xs3>
+          <v-switch v-model="visibility" />
+        </v-flex>
+        <v-flex xs9>
+          <v-select
+            :class="$style.noTopPadding"
+            dense
+            flat
+            hide-details
 
-      v-model="representation"
-      :items="domains.representation.items"
-    />
+            v-model="representation"
+            :items="domains.representation.items"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
   </v-card>
   <v-card light flat :class="$style.block" v-if="domains.opacity && domains.pointSize">
     <v-card-title light flat :class="$style.blockTitle">

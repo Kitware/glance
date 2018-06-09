@@ -32,7 +32,7 @@ function extractDomains(domains, uiList) {
 function findProxyWithMethod(self, methodName) {
   // Look on the source
   if (self.source[methodName]) {
-    return self.source;
+    return self.source[methodName];
   }
 
   // Look in the views
@@ -40,7 +40,7 @@ function findProxyWithMethod(self, methodName) {
   for (let i = 0; i < allViews.length; i++) {
     const view = allViews[i];
     if (view[methodName]) {
-      return view;
+      return view[methodName];
     }
   }
 
@@ -51,7 +51,7 @@ function findProxyWithMethod(self, methodName) {
   for (let i = 0; i < myRepresentations.length; i++) {
     const representation = myRepresentations[i];
     if (representation[methodName]) {
-      return representation;
+      return representation[methodName];
     }
   }
 
@@ -62,7 +62,7 @@ function findProxyWithMethod(self, methodName) {
 // ----------------------------------------------------------------------------
 
 function dataGenerator(fields) {
-  const data = { domains: {} };
+  const data = { fields, domains: {} };
   for (let i = 0; i < fields.length; i++) {
     const { name, initialValue } = fields[i];
     data[name] = initialValue;
@@ -74,9 +74,9 @@ function dataGenerator(fields) {
 
 function proxyUpdated(fieldName, value) {
   const methodName = `set${macro.capitalize(fieldName)}`;
-  const proxyToUpdate = findProxyWithMethod(this, methodName);
-  if (proxyToUpdate) {
-    proxyToUpdate[methodName](value);
+  const setter = findProxyWithMethod(this, methodName);
+  if (setter) {
+    setter(value);
   } else {
     console.log('could not find proxy for fieldName', fieldName);
   }
@@ -84,7 +84,7 @@ function proxyUpdated(fieldName, value) {
 
 // ----------------------------------------------------------------------------
 
-function addWatchers(instance, fields) {
+export function addWatchers(instance, fields) {
   const subscritions = [];
   for (let i = 0; i < fields.length; i++) {
     const { name } = fields[i];
@@ -101,6 +101,7 @@ function updateDomains() {
   if (this.inUpdateDomains) {
     return;
   }
+  console.log('updateDomains', this.source.getName());
   this.inUpdateDomains = true;
   const allViews = this.proxyManager.getViews();
   const myRepresentations = allViews.map((v) =>
@@ -113,15 +114,62 @@ function updateDomains() {
     extractDomains(myDomains, uiList);
   }
   this.inUpdateDomains = false;
+  console.log(myDomains);
   this.domains = myDomains;
 }
 
 // ----------------------------------------------------------------------------
 
+function updateData() {
+  console.log('updateData', this.source.getName());
+  for (let i = 0; i < this.fields.length; i++) {
+    const { name } = this.fields[i];
+    const methodName = `get${macro.capitalize(name)}`;
+    const getter = findProxyWithMethod(this, methodName);
+    if (getter) {
+      this[name] = getter();
+      console.log(` - ${name}: ${getter()}`);
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Factory
+// ----------------------------------------------------------------------------
+
+function generateComponent(fields) {
+  return {
+    inject: ['proxyManager'],
+    props: ['source'],
+    methods: {
+      updateDomains,
+      updateData,
+    },
+    data: function data() {
+      return dataGenerator(fields);
+    },
+    created() {
+      this.subscritions = addWatchers(this, fields);
+      this.subscritions.push(
+        this.proxyManager.onProxyRegistrationChange(() => {
+          this.updateDomains();
+        }).unsubscribe
+      );
+    },
+    mounted() {
+      this.updateDomains();
+      this.$nextTick(this.updateData);
+    },
+    beforeDestroy() {
+      while (this.subscritions.length) {
+        this.subscritions.pop()();
+      }
+    },
+  };
+}
+
+// ----------------------------------------------------------------------------
+
 export default {
-  componentMethods: {
-    updateDomains,
-  },
-  dataGenerator,
-  addWatchers,
+  generateComponent,
 };

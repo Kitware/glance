@@ -1,20 +1,14 @@
-export const REPRESENTATION_TYPES = [
-  { text: 'Hidden', value: '0' },
-  { text: 'Surface', value: '1' },
-  { text: 'Surface with edges', value: '2' },
-  { text: 'Wireframe', value: '3' },
-  { text: 'Points', value: '4' },
+export const FIELDS = [
+  { name: 'pointSize', initialValue: 1 },
+  { name: 'opacity', initialValue: 1 },
+  { name: 'sampleDistance', initialValue: 1 },
+  { name: 'edgeGradient', initialValue: 1 },
+  { name: 'representation', initialValue: 'Surface' },
 ];
 
-export const REPRESENTATION_PROXY_VALUES = [
-  'Hidden',
-  'Surface',
-  'Surface with edges',
-  'Wireframe',
-  'Points',
-];
+export const FIELD_NAMES = FIELDS.map((f) => f.name);
 
 export default {
-  REPRESENTATION_TYPES,
-  REPRESENTATION_PROXY_VALUES,
+  FIELDS,
+  FIELD_NAMES,
 };

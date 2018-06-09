@@ -170,14 +170,15 @@ const Geometry = [
   //   doc: 'Edit piecewise function',
   // },
   {
-    widget: 'list-1',
-    label: 'Representation',
     name: 'representation',
-    doc: 'Choose the type for the representation',
-    values: ['Surface with edges', 'Surface', 'Wireframe', 'Points'],
-    type: 'str',
-    advanced: 0,
-    size: 1,
+    domain: {
+      choices: [
+        { text: 'Surface', value: 'Surface' },
+        { text: 'Surface with edges', value: 'Surface with edges' },
+        { text: 'Wireframe', value: 'Wireframe' },
+        { text: 'Points', value: 'Points' },
+      ],
+    },
   },
   {
     label: 'Opacity',

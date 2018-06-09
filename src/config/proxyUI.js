@@ -2,177 +2,69 @@ import ColorMaps from 'paraview-glance/src/config/ColorMaps';
 
 const Volume = [
   {
-    label: 'Color By',
-    propType: 'colorBy',
     name: 'colorBy',
-    type: 'str',
-    advanced: 0,
-    size: 3,
     domain: {},
-    doc: 'Array to color by',
   },
   {
-    label: 'Lookup Table Editor',
-    propType: 'lookupTableProperty',
     name: 'lookupTableProxy',
-    advanced: 0,
-    size: 1,
-    domain: {
-      colormaps: ColorMaps,
-    },
-    doc: 'Edit lookup table',
+    domain: { colormaps: ColorMaps },
   },
   {
-    label: 'Piecewise Function Editor',
-    propType: 'piecewiseFunctionProperty',
     name: 'piecewiseFunctionProxy',
-    advanced: 0,
-    size: 1,
     domain: {},
-    doc: 'Edit piecewise function',
   },
   {
     name: 'volumeVisibility',
-    label: 'Volume Visibility',
-    doc: 'Toggle visibility of the Volume',
-    widget: 'checkbox',
-    type: 'boolean',
-    advanced: 1,
-    size: 1,
   },
   {
-    widget: 'PropertyGroup', // 'ProxyEditorPropertyWidget',
-    label: 'Shadow and Edge',
-    name: 'groupShadowEdge',
-    type: null,
-    children: [
-      {
-        name: 'useShadow',
-        label: 'Use shadow',
-        doc: 'Toggle shadow for volume rendering',
-        widget: 'checkbox',
-        type: 'boolean',
-        size: 1,
-      },
-      {
-        label: 'Sample distance',
-        name: 'sampleDistance',
-        widget: 'slider',
-        type: 'double',
-        size: 1,
-        domain: { min: 0, max: 1, step: 0.01 },
-      },
-      {
-        label: 'Edge Gradient',
-        name: 'edgeGradient',
-        widget: 'slider',
-        type: 'double',
-        size: 1,
-        domain: { min: 0, max: 1, step: 0.01 },
-      },
-    ],
+    name: 'useShadow',
   },
   {
-    widget: 'PropertyGroup', // 'ProxyEditorPropertyWidget',
-    label: 'Window setup',
-    name: 'groupWindow',
-    type: null,
-    children: [
-      {
-        label: 'Color Window',
-        name: 'colorWindow',
-        widget: 'slider',
-        type: 'integer',
-        size: 1,
-        domain: { min: 0, max: 255, step: 1 },
-      },
-      {
-        label: 'Color Level',
-        name: 'colorLevel',
-        widget: 'slider',
-        type: 'integer',
-        size: 1,
-        domain: { min: 0, max: 255, step: 1 },
-      },
-    ],
+    name: 'sampleDistance',
+    domain: { min: 0, max: 1, step: 0.01 },
   },
   {
-    widget: 'PropertyGroup', // 'ProxyEditorPropertyWidget',
-    label: 'Slices',
-    name: 'groupSlices',
-    type: null,
-    children: [
-      {
-        name: 'sliceVisibility',
-        label: 'Slices Visibility',
-        doc: 'Toggle visibility of the Slices',
-        widget: 'checkbox',
-        type: 'boolean',
-        size: 1,
-      },
-      {
-        label: 'SliceX',
-        name: 'xSlice',
-        widget: 'slider',
-        type: 'integer',
-        size: 1,
-        domain: { min: 0, max: 255, step: 1 },
-      },
-      {
-        label: 'SliceY',
-        name: 'ySlice',
-        widget: 'slider',
-        type: 'integer',
-        size: 1,
-        domain: { min: 0, max: 255, step: 1 },
-      },
-      {
-        label: 'SliceZ',
-        name: 'zSlice',
-        widget: 'slider',
-        type: 'integer',
-        size: 1,
-        domain: { min: 0, max: 255, step: 1 },
-      },
-    ],
+    name: 'edgeGradient',
+    domain: { min: 0, max: 1, step: 0.01 },
+  },
+  {
+    name: 'colorWindow',
+    domain: { min: 0, max: 255, step: 1 },
+  },
+  {
+    name: 'colorLevel',
+    domain: { min: 0, max: 255, step: 1 },
+  },
+  {
+    name: 'sliceVisibility',
+  },
+  {
+    name: 'xSlice',
+    domain: { min: 0, max: 255, step: 1 },
+  },
+  {
+    name: 'ySlice',
+    domain: { min: 0, max: 255, step: 1 },
+  },
+  {
+    name: 'zSlice',
+    domain: { min: 0, max: 255, step: 1 },
   },
 ];
 
 const Geometry = [
   {
-    label: 'Color By',
-    propType: 'colorBy',
     name: 'colorBy',
-    type: 'str',
-    advanced: 0,
-    size: 3,
     domain: {},
-    doc: 'Array to color by',
   },
   {
-    label: 'Lookup Table Editor',
-    propType: 'lookupTableProperty',
     name: 'lookupTableProxy',
-    advanced: 0,
-    size: 1,
-    domain: {
-      colormaps: ColorMaps,
-    },
-    doc: 'Edit lookup table',
+    domain: { colormaps: ColorMaps },
   },
-  // {
-  //   label: 'Piecewise Function Editor',
-  //   propType: 'piecewiseFunctionProperty',
-  //   name: 'piecewiseFunctionProxy',
-  //   advanced: 0,
-  //   size: 1,
-  //   domain: {},
-  //   doc: 'Edit piecewise function',
-  // },
   {
     name: 'representation',
     domain: {
-      choices: [
+      items: [
         { text: 'Surface', value: 'Surface' },
         { text: 'Surface with edges', value: 'Surface with edges' },
         { text: 'Wireframe', value: 'Wireframe' },
@@ -181,231 +73,108 @@ const Geometry = [
     },
   },
   {
-    label: 'Opacity',
     name: 'opacity',
-    widget: 'slider',
-    propType: 'slider',
-    type: 'double',
-    size: 1,
     domain: { min: 0, max: 1, step: 0.01 },
-    doc: 'Adjust object opactity',
   },
   {
-    label: 'Interpolate Scalar before mapping',
     name: 'interpolateScalarsBeforeMapping',
-    widget: 'checkbox',
-    type: 'boolean',
-    advanced: 1,
-    size: 1,
-    doc: 'Enable smooth color interpolation',
   },
   {
     name: 'visibility',
-    label: 'Visibility',
-    doc: 'Toggle object visibility',
-    widget: 'checkbox',
-    type: 'boolean',
-    advanced: 1,
-    size: 1,
   },
   {
-    label: 'Point size',
     name: 'pointSize',
-    widget: 'slider',
-    propType: 'slider',
-    type: 'integer',
-    size: 1,
     domain: { min: 1, max: 50 },
-    doc: 'Adjust point size',
-    advanced: 1,
   },
 ];
 
 const Slice = [
   {
     name: 'visibility',
-    label: 'Visibility',
-    doc: 'Toggle visibility',
-    widget: 'checkbox',
-    type: 'boolean',
-    advanced: 1,
-    size: 1,
   },
   {
-    label: 'Color Window',
     name: 'colorWindow',
-    widget: 'slider',
-    type: 'integer',
-    size: 1,
     domain: { min: 0, max: 255, step: 1 },
   },
   {
-    label: 'Color Level',
     name: 'colorLevel',
-    widget: 'slider',
-    type: 'integer',
-    size: 1,
     domain: { min: 0, max: 255, step: 1 },
   },
   {
-    label: 'Slice',
     name: 'slice',
-    widget: 'slider',
-    type: 'double',
-    size: 1,
     domain: { min: 0, max: 255, step: 1 },
   },
 ];
 
 const Molecule = [
   {
-    label: 'Tolerance',
     name: 'tolerance',
-    widget: 'slider',
-    type: 'double',
-    size: 1,
     domain: { min: 0, max: 1, step: 0.01 },
   },
   {
-    label: 'Atomic Radius Scale Factor',
     name: 'atomicRadiusScaleFactor',
-    widget: 'slider',
-    type: 'double',
-    size: 1,
     domain: { min: 0, max: 1, step: 0.01 },
   },
   {
-    label: 'Bond Radius',
     name: 'bondRadius',
-    widget: 'slider',
-    type: 'double',
-    size: 1,
     domain: { min: 0, max: 1, step: 0.01 },
   },
   {
-    label: 'Delta Bond Factor',
     name: 'deltaBondFactor',
-    widget: 'slider',
-    type: 'double',
-    size: 1,
     domain: { min: 0, max: 1, step: 0.01 },
   },
   {
-    label: 'Hide Elements',
     name: 'hideElements',
-    propType: 'cell',
-    type: 'str',
-    size: 1,
   },
 ];
 
 const Glyph = [
   {
     name: 'edgeVisibility',
-    label: 'Edge Visibility',
-    doc: 'Toggle edge visibility',
-    widget: 'checkbox',
-    type: 'boolean',
-    advanced: 0,
-    size: 1,
   },
 ];
 
 const View3D = [
   {
-    label: 'Background Color',
     name: 'background',
-    propType: 'Color',
-    type: 'double',
-    size: 3,
-    doc: 'RGB mapping of the background color with values between 0 and 1.0',
     domain: {
       palette: [],
     },
   },
   {
-    label: 'Orientation Axes',
     name: 'orientationAxesVisibility',
-    widget: 'checkbox',
-    type: 'boolean',
-    advanced: 1,
-    size: 1,
-    doc: 'Toggle orientation axes visibility',
   },
   {
-    widget: 'list-1',
-    label: 'Orientation Axes Preset',
     name: 'presetToOrientationAxes',
-    doc: 'Choose Orientation cube preset',
-    values: ['default', 'lps'],
-    type: 'str',
-    advanced: 1,
-    size: 1,
+    domain: {
+      items: [{ text: 'XYZ', value: 'default' }, { text: 'LPS', value: 'lps' }],
+    },
   },
-  // {
-  //   label: 'ResetCamera',
-  //   name: 'resetCamera',
-  //   propType: 'ExecuteProperty',
-  //   size: 1,
-  // },
 ];
 
 const View2D = [
   {
-    label: 'Background Color',
     name: 'background',
-    propType: 'Color',
-    type: 'double',
-    size: 3,
-    doc: 'RGB mapping of the background color with values between 0 and 1.0',
     domain: {
       palette: [],
     },
   },
   {
-    label: 'Orientation Axes',
     name: 'orientationAxesVisibility',
-    widget: 'checkbox',
-    type: 'boolean',
-    advanced: 1,
-    size: 1,
-    doc: 'Toggle orientation axes visibility',
   },
   {
-    widget: 'list-1',
-    label: 'Orientation Axes Preset',
     name: 'presetToOrientationAxes',
-    doc: 'Choose Orientation cube preset',
-    values: ['default', 'lps'],
-    type: 'str',
-    advanced: 1,
-    size: 1,
+    domain: {
+      items: [{ text: 'XYZ', value: 'default' }, { text: 'LPS', value: 'lps' }],
+    },
   },
   {
-    label: 'Annotation Opacity',
     name: 'annotationOpacity',
-    widget: 'slider',
-    propType: 'slider',
-    type: 'double',
-    size: 1,
-    advanced: 1,
     domain: { min: 0, max: 1, step: 0.01 },
-    doc: 'Adjust annotation opactity',
   },
 ];
 
-const Skybox = [
-  {
-    widget: 'list-1',
-    label: 'Position',
-    name: 'position',
-    doc: 'Choose the skybox position',
-    values: [],
-    type: 'str',
-    advanced: 0,
-    size: 1,
-  },
-];
+const Skybox = [{ name: 'position' }];
 
 export default {
   Volume,

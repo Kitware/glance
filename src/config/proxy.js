@@ -13,6 +13,7 @@ import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/V
 import ConfigUtils from 'paraview-glance/src/config/configUtils';
 
 import proxyUI from 'paraview-glance/src/config/proxyUI';
+import proxyLinks from 'paraview-glance/src/config/proxyLinks';
 import proxyFilter from 'paraview-glance/src/config/proxyFilter';
 import proxyViewRepresentationMapping from 'paraview-glance/src/config/proxyViewRepresentationMapping';
 
@@ -54,62 +55,49 @@ export default {
     Representations: {
       Geometry: createProxyDefinition(
         vtkGeometryRepresentationProxy,
-        proxyUI.Geometry
+        proxyUI.Geometry,
+        proxyLinks.Geometry
       ),
       Skybox: createProxyDefinition(
         vtkSkyboxRepresentationProxy,
-        proxyUI.Skybox
+        proxyUI.Skybox,
+        proxyLinks.Skybox
       ),
-      Slice: createProxyDefinition(vtkSliceRepresentationProxy, proxyUI.Slice, [
-        { link: 'ColorWindow', property: 'colorWindow' },
-        { link: 'ColorLevel', property: 'colorLevel' },
-      ]),
+      Slice: createProxyDefinition(
+        vtkSliceRepresentationProxy,
+        proxyUI.Slice,
+        proxyLinks.Slice
+      ),
       SliceX: createProxyDefinition(
         vtkSliceRepresentationProxy,
         proxyUI.Slice,
-        [
-          { link: 'ColorWindow', property: 'colorWindow' },
-          { link: 'ColorLevel', property: 'colorLevel' },
-          { link: 'SliceX', property: 'slice' },
-        ]
+        [{ link: 'SliceX', property: 'slice' }].concat(proxyLinks.Slice)
       ),
       SliceY: createProxyDefinition(
         vtkSliceRepresentationProxy,
         proxyUI.Slice,
-        [
-          { link: 'ColorWindow', property: 'colorWindow' },
-          { link: 'ColorLevel', property: 'colorLevel' },
-          { link: 'SliceY', property: 'slice' },
-        ]
+        [{ link: 'SliceY', property: 'slice' }].concat(proxyLinks.Slice)
       ),
       SliceZ: createProxyDefinition(
         vtkSliceRepresentationProxy,
         proxyUI.Slice,
-        [
-          { link: 'ColorWindow', property: 'colorWindow' },
-          { link: 'ColorLevel', property: 'colorLevel' },
-          { link: 'SliceZ', property: 'slice' },
-        ]
+        [{ link: 'SliceZ', property: 'slice' }].concat(proxyLinks.Slice)
       ),
       Volume: createProxyDefinition(
         vtkVolumeRepresentationProxy,
         proxyUI.Volume,
-        [
-          { link: 'ColorWindow', property: 'colorWindow' },
-          { link: 'ColorLevel', property: 'colorLevel' },
-          { link: 'SliceX', property: 'xSlice' },
-          { link: 'SliceY', property: 'ySlice' },
-          { link: 'SliceZ', property: 'zSlice' },
-          { link: 'Shadow', property: 'useShadow' },
-          { link: 'SampleDistance', property: 'sampleDistance' },
-          { link: 'EdgeGradient', property: 'edgeGradient' },
-        ]
+        proxyLinks.Volume
       ),
       Molecule: createProxyDefinition(
         vtkMoleculeRepresentationProxy,
-        proxyUI.Molecule
+        proxyUI.Molecule,
+        proxyLinks.Molecule
       ),
-      Glyph: createProxyDefinition(vtkGlyphRepresentationProxy, proxyUI.Glyph),
+      Glyph: createProxyDefinition(
+        vtkGlyphRepresentationProxy,
+        proxyUI.Glyph,
+        proxyLinks.Glyph
+      ),
     },
     Views: {
       View3D: createDefaultView(vtkView, proxyUI.View3D),

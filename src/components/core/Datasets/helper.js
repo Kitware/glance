@@ -76,6 +76,7 @@ function proxyUpdated(fieldName, value) {
   const methodName = `set${macro.capitalize(fieldName)}`;
   const setter = findProxyWithMethod(this, methodName);
   if (setter) {
+    console.log('proxyUpdated', this.source.getName(), methodName, value);
     setter(value);
   } else {
     console.log('could not find proxy for fieldName', fieldName);
@@ -114,23 +115,30 @@ function updateDomains() {
     extractDomains(myDomains, uiList);
   }
   this.inUpdateDomains = false;
-  console.log(myDomains);
   this.domains = myDomains;
 }
 
 // ----------------------------------------------------------------------------
 
 function updateData() {
+  if (this.inUpdateData) {
+    return;
+  }
+  this.inUpdateData = true;
   console.log('updateData', this.source.getName());
   for (let i = 0; i < this.fields.length; i++) {
     const { name } = this.fields[i];
     const methodName = `get${macro.capitalize(name)}`;
     const getter = findProxyWithMethod(this, methodName);
     if (getter) {
-      this[name] = getter();
-      console.log(` - ${name}: ${getter()}`);
+      const newValue = getter();
+      if (this[name] !== newValue) {
+        console.log(` - ${name}: ${newValue}`);
+        this[name] = newValue;
+      }
     }
   }
+  this.inUpdateData = false;
 }
 
 // ----------------------------------------------------------------------------
@@ -153,12 +161,13 @@ function generateComponent(fields) {
       this.subscritions.push(
         this.proxyManager.onProxyRegistrationChange(() => {
           this.updateDomains();
+          this.updateData();
         }).unsubscribe
       );
     },
     mounted() {
       this.updateDomains();
-      this.$nextTick(this.updateData);
+      this.updateData();
     },
     beforeDestroy() {
       while (this.subscritions.length) {

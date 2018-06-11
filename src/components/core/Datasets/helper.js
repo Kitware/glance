@@ -85,8 +85,8 @@ function proxyUpdated(fieldName, value) {
   // );
   while (proxies.length) {
     proxies.pop()[methodName](value);
-    // proxies.pop().modified(); // SHOULD NOT BE NEEDED !!!
   }
+  this.proxyManager.autoAnimateViews();
 }
 
 // ----------------------------------------------------------------------------

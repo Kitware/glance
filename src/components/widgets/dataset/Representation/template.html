@@ -11,7 +11,10 @@
     <v-container fluid grid-list-md>
       <v-layout row wrap>
         <v-flex xs3>
-          <v-switch v-model="visibility" />
+          <v-switch
+            hide-details
+            v-model="visibility"
+          />
         </v-flex>
         <v-flex xs9>
           <v-select

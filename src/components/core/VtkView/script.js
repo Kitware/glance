@@ -125,6 +125,9 @@ function onMounted() {
 // ----------------------------------------------------------------------------
 
 function onBeforeDestroy() {
+  if (this.view) {
+    this.view.setContainer(null);
+  }
   while (this.subscriptions.length) {
     this.subscriptions.pop()();
   }

@@ -54,3 +54,7 @@
 .matrix {
   padding: 0;
 }
+
+.disable {
+  opacity: 0.25;
+}

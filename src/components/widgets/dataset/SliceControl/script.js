@@ -8,7 +8,17 @@ const FIELDS = [
   { name: 'ySlice', initialValue: -1 },
   { name: 'zSlice', initialValue: -1 },
   { name: 'sliceVisibility', initialValue: false },
-
 ];
 
-export default helper.generateComponent(FIELDS);
+function isSliceAvailable(name) {
+  return !!this.proxyManager
+    .getViews()
+    .filter((v) => v.getContainer())
+    .filter((v) => v.getReferenceByName('name') === name).length;
+}
+
+// Add custom method
+const component = helper.generateComponent(FIELDS);
+component.methods.isSliceAvailable = isSliceAvailable;
+
+export default component;

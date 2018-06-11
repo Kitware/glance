@@ -89,10 +89,10 @@
     <v-card-text :class="$style.blockContent">
       <v-container fluid grid-list-md>
         <v-layout row wrap>
-          <v-flex xs3>
+          <v-flex xs3 :class="isSliceAvailable('x') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
             <label :class="$style.smallLabel">X</label>
           </v-flex>
-          <v-flex xs6>
+          <v-flex xs6 :class="isSliceAvailable('x') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
             <v-slider
               :class="$style.noTopPadding"
               hide-details
@@ -103,7 +103,7 @@
               :step="domains.xSlice.step"
             />
           </v-flex>
-          <v-flex xs3>
+          <v-flex xs3 :class="isSliceAvailable('x') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
             <v-text-field
               :class="$style.noTopPadding"
               hide-details
@@ -115,10 +115,10 @@
               :step="domains.xSlice.step"
             />
           </v-flex>
-          <v-flex xs3>
+          <v-flex xs3 :class="isSliceAvailable('y') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
             <label :class="$style.smallLabel">Y</label>
           </v-flex>
-          <v-flex xs6>
+          <v-flex xs6 :class="isSliceAvailable('y') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
             <v-slider
               :class="$style.noTopPadding"
               hide-details
@@ -129,7 +129,7 @@
               :step="domains.ySlice.step"
             />
           </v-flex>
-          <v-flex xs3>
+          <v-flex xs3 :class="isSliceAvailable('y') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
             <v-text-field
               :class="$style.noTopPadding"
               hide-details
@@ -141,10 +141,10 @@
               :step="domains.ySlice.step"
             />
           </v-flex>
-          <v-flex xs3>
+          <v-flex xs3 :class="isSliceAvailable('z') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
             <label :class="$style.smallLabel">Z</label>
           </v-flex>
-          <v-flex xs6>
+          <v-flex xs6 :class="isSliceAvailable('z') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
             <v-slider
               :class="$style.noTopPadding"
               hide-details
@@ -155,7 +155,7 @@
               :step="domains.zSlice.step"
             />
           </v-flex>
-          <v-flex xs3>
+          <v-flex xs3 :class="isSliceAvailable('z') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
             <v-text-field
               :class="$style.noTopPadding"
               hide-details

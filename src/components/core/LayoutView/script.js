@@ -2,6 +2,7 @@ import { VIEW_TYPES } from 'paraview-glance/src/components/core/VtkView/constant
 import VtkView from 'paraview-glance/src/components/core/VtkView';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
+import { Events } from 'paraview-glance/src/constants';
 
 // ----------------------------------------------------------------------------
 // Helper
@@ -32,6 +33,7 @@ function updateLayout({ index, count, newType }) {
     this.order = swapOrder(this.order, index, this.order[1]);
   }
   this.updateViews(count);
+  this.$globalBus.$emit(Events.LAYOUT_CHANGE);
 }
 
 // ----------------------------------------------------------------------------

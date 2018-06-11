@@ -18,7 +18,7 @@ function isSliceAvailable(name) {
 }
 
 // Add custom method
-const component = helper.generateComponent(FIELDS);
+const component = helper.generateComponent(FIELDS, true);
 component.methods.isSliceAvailable = isSliceAvailable;
 
 export default component;

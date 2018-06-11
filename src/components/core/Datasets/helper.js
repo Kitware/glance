@@ -1,4 +1,5 @@
 import macro from 'vtk.js/Sources/macro';
+import { Events } from 'paraview-glance/src/constants';
 
 const MAX_SLIDER_STEPS = 500;
 
@@ -155,7 +156,7 @@ function updateData() {
 // Factory
 // ----------------------------------------------------------------------------
 
-function generateComponent(fields) {
+function generateComponent(fields, dependOnLayout = false) {
   return {
     inject: ['proxyManager'],
     props: ['source'],
@@ -178,8 +179,16 @@ function generateComponent(fields) {
     mounted() {
       this.updateDomains();
       this.updateData();
+      if (dependOnLayout) {
+        this.$globalBus.$on(Events.LAYOUT_CHANGE, () => {
+          this.$nextTick(this.$forceUpdate);
+        });
+      }
     },
     beforeDestroy() {
+      if (dependOnLayout) {
+        this.$globalBus.$off(Events.LAYOUT_CHANGE, this.$forceUpdate);
+      }
       while (this.subscritions.length) {
         this.subscritions.pop()();
       }

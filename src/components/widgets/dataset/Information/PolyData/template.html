@@ -1,11 +1,20 @@
-<v-card light flat :class="$style.block">
+<v-card
+  light
+  flat
+  :class="$style.block"
+  v-if="dataset.isA('vtkPolyData')"
+>
   <v-card-title :class="$style.blockTitle">
     <span class="body-2">vtkPolyData</span>
   </v-card-title>
   <v-card-text :class="$style.blockContent">
     <v-layout row>
-      <v-flex xs8 class="body-1">Triangle count:</v-flex>
-      <v-flex xs4 class="body-1">a lot</v-flex>
+      <v-flex xs6 class="body-1">Number of points:</v-flex>
+      <v-flex xs6 class="body-1">{{ dataset.getPoints().getNumberOfPoints() }}</v-flex>
+    </v-layout>
+    <v-layout row>
+      <v-flex xs6 class="body-1">Number of cells:</v-flex>
+      <v-flex xs6 class="body-1">{{ dataset.getNumberOfCells() }}</v-flex>
     </v-layout>
   </v-card-text>
 </v-card>

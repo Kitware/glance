@@ -10,13 +10,25 @@
     >
       <span class="body-2">{{ source.getName() }}</span>
       <v-spacer />
-      <v-btn
-        icon
-        small
-        v-on:click.stop="deleteDataset(source)"
-      >
-        <v-icon style="margin: 0">delete</v-icon>
-      </v-btn>
+      <div v-on:click.stop> <!-- prevent panel expansion on menu click -->
+        <v-menu bottom left>
+          <v-btn
+            slot="activator"
+            :class="$style.headerMenuButton"
+            icon
+            small
+          >
+            <v-icon style="margin: 0">more_vert</v-icon>
+          </v-btn>
+          <v-list>
+            <v-list-tile
+              v-on:click="deleteDataset(source)"
+            >
+              <v-list-tile-title>Delete</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+      </div>
     </div>
     <v-card>
       <v-expansion-panel :class="['grey lighten-4']">

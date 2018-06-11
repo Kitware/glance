@@ -33,7 +33,6 @@ function findProxiesWithMethod(self, methodName) {
   const proxies = [];
   // Look on the source
   if (self.source[methodName]) {
-    console.log(' + source');
     proxies.push(self.source);
   }
 
@@ -42,7 +41,6 @@ function findProxiesWithMethod(self, methodName) {
   for (let i = 0; i < allViews.length; i++) {
     const view = allViews[i];
     if (view[methodName]) {
-      console.log(' + view');
       proxies.push(view);
     }
   }
@@ -54,13 +52,12 @@ function findProxiesWithMethod(self, methodName) {
   for (let i = 0; i < myRepresentations.length; i++) {
     const representation = myRepresentations[i];
     if (representation[methodName]) {
-      console.log(' + representation');
       proxies.push(representation);
     }
   }
 
   // Not found
-  console.log(`found ${proxies.length} functions for ${methodName}`);
+  // console.log(`found ${proxies.length} functions for ${methodName}`);
   return proxies;
 }
 
@@ -80,11 +77,11 @@ function dataGenerator(fields) {
 function proxyUpdated(fieldName, value) {
   const methodName = `set${macro.capitalize(fieldName)}`;
   const proxies = findProxiesWithMethod(this, methodName);
-  console.log(
-    `proxyUpdated (x${
-      proxies.length
-    }) ${this.source.getName()}.${methodName}(${value})`
-  );
+  // console.log(
+  //   `proxyUpdated (x${
+  //     proxies.length
+  //   }) ${this.source.getName()}.${methodName}(${value})`
+  // );
   while (proxies.length) {
     proxies.pop()[methodName](value);
     // proxies.pop().modified(); // SHOULD NOT BE NEEDED !!!
@@ -110,12 +107,12 @@ function updateDomains() {
   if (this.inUpdateDomains) {
     return;
   }
-  console.log(
-    'updateDomains',
-    this.source.getName(),
-    '- views:',
-    this.proxyManager.getViews().length
-  );
+  // console.log(
+  //   'updateDomains',
+  //   this.source.getName(),
+  //   '- views:',
+  //   this.proxyManager.getViews().length
+  // );
   this.inUpdateDomains = true;
   const allViews = this.proxyManager.getViews();
   const myRepresentations = allViews.map((v) =>
@@ -138,7 +135,7 @@ function updateData() {
     return;
   }
   this.inUpdateData = true;
-  console.log('updateData', this.source.getName());
+  // console.log('updateData', this.source.getName());
   for (let i = 0; i < this.fields.length; i++) {
     const { name } = this.fields[i];
     const methodName = `get${macro.capitalize(name)}`;
@@ -146,7 +143,7 @@ function updateData() {
     if (proxies.length) {
       const newValue = proxies[0][methodName]();
       if (this[name] !== newValue) {
-        console.log(` - ${name}: ${newValue}`);
+        // console.log(` - ${name}: ${newValue}`);
         this[name] = newValue;
       }
     }
@@ -175,7 +172,7 @@ function generateComponent(fields) {
         this.proxyManager.onProxyRegistrationChange(() => {
           this.updateDomains();
           this.updateData();
-        }, 1).unsubscribe
+        }).unsubscribe
       );
     },
     mounted() {

@@ -40,7 +40,7 @@
       </v-layout>
     </v-container>
   </v-jumbotron>
-  <v-container :class="$style.textSampleData">
+  <v-container style="flex-basis: 0">
     <v-layout row>
       <v-flex xs12>
         <span class="title">Sample Data</span>
@@ -48,26 +48,29 @@
     </v-layout>
   </v-container>
   <v-container
-    fill-height
     grid-list-md
   >
     <v-layout row wrap>
       <v-flex
-        v-for="n in 9"
-        :key="n"
+        v-for="(sample, i) in samples"
+        :key="i"
         d-flex
         xs4
       >
         <v-card
-          :class="['grey lighten-2', $style.sampleData]"
+          class="grey lighten-2"
+          :class="$style.sampleData"
           flat
           tile
         >
           <a
             :class="$style.dataLink"
-            href="#"
-            v-on:click.prevent="$emit('open-url', 'http://dummy', 'dummy')"
+            :href="sample.url"
+            v-on:click.prevent="$emit('open-url', sample.url, sample.name)"
           >
+            <img :class="$style.image" :src="sample.image" />
+            <span class="body-2">{{ sample.name }}</span>
+            <div :class="$style.linkOverlay" />
           </a>
         </v-card>
       </v-flex>

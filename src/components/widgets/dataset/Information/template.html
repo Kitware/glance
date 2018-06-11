@@ -10,6 +10,15 @@
   <vtk-image-data :dataset="source.getDataset()" />
   <vtk-molecule :dataset="source.getDataset()" />
   <vtk-poly-data :dataset="source.getDataset()" />
-  <vtk-field-data  /> <!-- v-bind:dataset="source.getDataSet()" -->
+  <vtk-field-data
+    :dataset="source.getDataset()"
+    name="Point Data"
+    type="PointData"
+  />
+  <vtk-field-data
+    :dataset="source.getDataset()"
+    name="Cell Data"
+    type="CellData"
+  />
 
 </v-expansion-panel-content>

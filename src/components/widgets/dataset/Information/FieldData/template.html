@@ -1,20 +1,35 @@
-<v-card light flat :class="$style.block">
+<v-card
+  light
+  flat
+  :class="$style.block"
+  v-if="hasFieldData()"
+>
   <v-card-title :class="$style.blockTitle">
-    <span class="body-2">PointData</span>
+    <span class="body-2">{{ name || type }}</span>
   </v-card-title>
   <v-card-text :class="$style.blockContent">
     <v-layout row>
-      <v-flex xs8 class="body-1">Dimensions:</v-flex>
-      <v-flex xs4 class="body-1">1x1x1</v-flex>
+      <v-select
+        v-model="activeFieldName"
+        :items="this.getFieldData().getArrays().map((a) => a.getName())"
+        label="Array"
+      />
     </v-layout>
-  </v-card-text>
-  <v-card-title :class="$style.blockTitle">
-    <span class="body-2">CellData</span>
-  </v-card-title>
-  <v-card-text :class="$style.blockContent">
-    <v-layout row>
-      <v-flex xs8 class="body-1">Dimensions:</v-flex>
-      <v-flex xs4 class="body-1">1x1x1</v-flex>
+    <v-layout row v-if="!!activeFieldName">
+      <v-flex xs6 class="body-1">Type:</v-flex>
+      <v-flex xs6 class="body-1">{{ getActiveArray().getDataType() }}</v-flex>
     </v-layout>
-  </v-card-text>
+    <v-layout row v-if="!!activeFieldName">
+        <v-flex xs6 class="body-1">Min value:</v-flex>
+        <v-flex xs6 class="body-1">{{ getActiveArray().getRange()[0] }}</v-flex>
+      </v-layout>
+      <v-layout row v-if="!!activeFieldName">
+        <v-flex xs6 class="body-1">Max value:</v-flex>
+        <v-flex xs6 class="body-1">{{ getActiveArray().getRange()[1] }}</v-flex>
+      </v-layout>
+      <v-layout row v-if="!!activeFieldName">
+        <v-flex xs6 class="body-1"># of components:</v-flex>
+        <v-flex xs6 class="body-1">{{ getActiveArray().getNumberOfComponents() }}</v-flex>
+      </v-layout>
+    </v-card-text>
 </v-card>

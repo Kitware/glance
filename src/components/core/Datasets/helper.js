@@ -75,27 +75,36 @@ function dataGenerator(fields) {
 
 // ----------------------------------------------------------------------------
 
-function proxyUpdated(fieldName, value) {
+function proxyUpdated(fieldName, onChange, value) {
   const methodName = `set${macro.capitalize(fieldName)}`;
   const proxies = findProxiesWithMethod(this, methodName);
+  let changeDetected = false;
   // console.log(
   //   `proxyUpdated (x${
   //     proxies.length
   //   }) ${this.source.getName()}.${methodName}(${value})`
   // );
   while (proxies.length) {
-    proxies.pop()[methodName](value);
+    changeDetected = proxies.pop()[methodName](value) || changeDetected;
   }
   this.proxyManager.autoAnimateViews();
+  if (changeDetected && onChange && this[onChange]) {
+    this[onChange](fieldName, value);
+  }
 }
 
 // ----------------------------------------------------------------------------
 
-export function addWatchers(instance, fields) {
+export function addWatchers(instance, fields, onChange) {
   const subscritions = [];
   for (let i = 0; i < fields.length; i++) {
     const { name } = fields[i];
-    subscritions.push(instance.$watch(name, proxyUpdated.bind(instance, name)));
+    subscritions.push(
+      instance.$watch(
+        name,
+        proxyUpdated.bind(instance, name, onChange && onChange[name])
+      )
+    );
   }
   return subscritions;
 }
@@ -157,7 +166,14 @@ function updateData() {
 // Factory
 // ----------------------------------------------------------------------------
 
-function generateComponent(fields, dependOnLayout = false) {
+function generateComponent(
+  fields,
+  dependOnLayout = false,
+  options = {
+    onChange: {},
+    onUpdate: [],
+  }
+) {
   return {
     inject: ['proxyManager'],
     props: ['source'],
@@ -169,17 +185,27 @@ function generateComponent(fields, dependOnLayout = false) {
       return dataGenerator(fields);
     },
     created() {
-      this.subscritions = addWatchers(this, fields);
+      this.subscritions = addWatchers(this, fields, options.onChange);
       this.subscritions.push(
         this.proxyManager.onProxyRegistrationChange(() => {
           this.updateDomains();
           this.updateData();
+          if (options.onUpdate) {
+            for (let i = 0; i < options.onUpdate.length; i++) {
+              this[options.onUpdate[i]]();
+            }
+          }
         }).unsubscribe
       );
     },
     mounted() {
       this.updateDomains();
       this.updateData();
+      if (options.onUpdate) {
+        for (let i = 0; i < options.onUpdate.length; i++) {
+          this[options.onUpdate[i]]();
+        }
+      }
       if (dependOnLayout) {
         this.$globalBus.$on(Events.LAYOUT_CHANGE, () => {
           this.$nextTick(this.$forceUpdate);

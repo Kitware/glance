@@ -4,6 +4,7 @@ import VtkMolecule from 'paraview-glance/src/components/widgets/dataset/Informat
 import VtkPolyData from 'paraview-glance/src/components/widgets/dataset/Information/PolyData';
 
 export default {
+  props: ['source'],
   components: {
     VtkFieldData,
     VtkImageData,

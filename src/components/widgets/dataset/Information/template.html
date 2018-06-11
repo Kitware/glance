@@ -7,7 +7,7 @@
     <span class="body-2">Information</span>
   </div>
 
-  <vtk-image-data  />
+  <vtk-image-data :dataset="source.getDataset()" />
   <vtk-molecule />
   <vtk-poly-data />
   <vtk-field-data  /> <!-- v-bind:dataset="source.getDataSet()" -->

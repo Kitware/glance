@@ -1,11 +1,41 @@
-<v-card light flat :class="$style.block">
+<v-card
+  light
+  flat
+  :class="$style.block"
+  v-if="dataset.isA('vtkImageData')"
+>
   <v-card-title :class="$style.blockTitle">
     <span class="body-2">vtkImageData</span>
   </v-card-title>
   <v-card-text :class="$style.blockContent">
     <v-layout row>
-      <v-flex xs8 class="body-1">Dimensions:</v-flex>
-      <v-flex xs4 class="body-1">1x1x1</v-flex>
+      <v-flex xs6 class="body-1">Dimensions:</v-flex>
+      <v-flex xs6 class="body-1">
+        {{ showVect(dataset.getDimensions(), ' x ') }}
+      </v-flex>
+    </v-layout>
+    <v-layout row>
+      <v-flex xs6 class="body-1">Origin:</v-flex>
+      <v-flex xs6 class="body-1">
+        {{ showVect(dataset.getOrigin()) }}
+      </v-flex>
+    </v-layout>
+    <v-layout row>
+      <v-flex xs6 class="body-1">Spacing:</v-flex>
+      <v-flex xs6 class="body-1">
+        {{ showVect(dataset.getSpacing()) }}
+      </v-flex>
+    </v-layout>
+    <v-layout row>
+      <v-flex xs6 class="body-1">Orientation:</v-flex>
+      <v-flex xs6 class="body-1">
+        <matrix-view
+          :class="$style.matrix"
+          :matrix="dataset.getDirection()"
+          :rows="3"
+          :columns="3"
+        />
+      </v-flex>
     </v-layout>
   </v-card-text>
 </v-card>

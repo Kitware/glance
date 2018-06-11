@@ -1,4 +1,4 @@
-<v-expansion-panel focusable>
+<v-expansion-panel expand>
   <v-expansion-panel-content
     v-for="source in datasets"
     :key="source.getProxyId()"
@@ -31,7 +31,7 @@
       </div>
     </div>
     <v-card>
-      <v-expansion-panel :class="['grey lighten-4']">
+      <v-expansion-panel expand :class="['grey lighten-4']">
         <representation-widget v-bind:source="source" />
         <color-by-widget v-bind:source="source" />
         <slice-widget v-bind:source="source" />

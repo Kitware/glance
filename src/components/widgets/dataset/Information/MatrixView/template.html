@@ -1,0 +1,14 @@
+<v-container>
+  <v-layout
+    row
+    v-for="i in rows"
+    :key="i"
+  >
+    <v-flex
+      v-for="j in columns"
+      :key="i*rows+j"
+    >
+      <span>{{ matrix[(i-1)*rows + (j-1)] }}</span>
+    </v-flex>
+  </v-layout>
+</v-container>

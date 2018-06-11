@@ -3,6 +3,9 @@
   /* handle overflowing names */
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
 }
 
 .subpanelHeader {

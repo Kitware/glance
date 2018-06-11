@@ -9,6 +9,14 @@
       :class="$style.datasetHeader"
     >
       <span class="body-2">{{ source.getName() }}</span>
+      <v-spacer />
+      <v-btn
+        icon
+        small
+        v-on:click.stop="deleteDataset(source)"
+      >
+        <v-icon style="margin: 0">delete</v-icon>
+      </v-btn>
     </div>
     <v-card>
       <v-expansion-panel :class="['grey lighten-4']">

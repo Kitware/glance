@@ -19,6 +19,11 @@ function onBeforeDestroy() {
   }
 }
 
+function deleteDataset(proxy) {
+  this.proxyManager.deleteProxy(proxy);
+  this.proxyManager.renderAllViews();
+}
+
 export default {
   name: 'App',
   inject: ['proxyManager'],
@@ -43,5 +48,6 @@ export default {
   methods: {
     onMounted,
     onBeforeDestroy,
+    deleteDataset,
   },
 };

@@ -1,5 +1,6 @@
 import ColorByWidget from 'paraview-glance/src/components/widgets/dataset/ColorBy';
 import InformationWidget from 'paraview-glance/src/components/widgets/dataset/Information';
+import MoleculeWidget from 'paraview-glance/src/components/widgets/dataset/Molecule';
 import RepresentationWidget from 'paraview-glance/src/components/widgets/dataset/Representation';
 import SliceWidget from 'paraview-glance/src/components/widgets/dataset/SliceControl';
 
@@ -42,6 +43,7 @@ export default {
   components: {
     ColorByWidget,
     InformationWidget,
+    MoleculeWidget,
     RepresentationWidget,
     SliceWidget,
   },

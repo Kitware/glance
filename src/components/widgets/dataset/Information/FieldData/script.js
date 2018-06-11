@@ -11,8 +11,8 @@ export default {
     };
   },
   mounted() {
-    const arrays = this.getFieldData().getArrays();
-    if (arrays.length > 0) {
+    if (this.hasFieldData()) {
+      const arrays = this.getFieldData().getArrays();
       this.activeFieldName = arrays[0].getName();
     }
   },

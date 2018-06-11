@@ -47,9 +47,9 @@ function findProxiesWithMethod(self, methodName) {
   }
 
   // Look on the representations
-  const myRepresentations = allViews.map((v) =>
-    self.proxyManager.getRepresentation(self.source, v)
-  );
+  const myRepresentations = self.proxyManager
+    .getRepresentations()
+    .filter((r) => r.getInput() === self.source);
   for (let i = 0; i < myRepresentations.length; i++) {
     const representation = myRepresentations[i];
     if (representation[methodName]) {
@@ -116,9 +116,10 @@ function updateDomains() {
   // );
   this.inUpdateDomains = true;
   const allViews = this.proxyManager.getViews();
-  const myRepresentations = allViews.map((v) =>
-    this.proxyManager.getRepresentation(this.source, v)
-  );
+  const myRepresentations = this.proxyManager
+    .getRepresentations()
+    .filter((r) => r.getInput() === this.source);
+
   const myDomains = {};
   const objectsToControls = [this.source].concat(myRepresentations, allViews);
   while (objectsToControls.length) {

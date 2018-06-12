@@ -59,14 +59,16 @@
     <div :class="$style.toolbarWrapper">
       <toolbar-sheet v-model="backgroundSheet">
         <v-card dark>
-          <v-card-title class="body-2">Background Color</v-card-title>
-          <v-card-text>
-            <palette-picker
-              :size="28"
-              :palette="palette"
-              :value="viewData.background"
-              v-on:input="backgroundSheet = false; $emit('bg-change', $event)"
-            />
+          <v-card-text :class="$style.smallCardText">
+            <v-layout row>
+              <v-spacer />
+              <palette-picker
+                :size="20"
+                :palette="palette"
+                :value="viewData.background"
+                v-on:input="backgroundSheet = false; $emit('bg-change', $event)"
+              />
+            </v-layout>
           </v-card-text>
         </v-card>
       </toolbar-sheet>

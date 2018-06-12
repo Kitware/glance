@@ -6,6 +6,8 @@ export const BACKGROUND = [
   '#ffffff',
   ...SPECTRAL,
   'linear-gradient(#7478BE, #C1C3CA)', // from 3D Slicer default
+  'linear-gradient(#333, #eee)',
+  'linear-gradient(#00002A, #52576E)', // from ParaView
 ];
 
 export default {

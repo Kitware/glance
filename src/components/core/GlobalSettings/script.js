@@ -5,7 +5,10 @@ import { Events } from 'paraview-glance/src/constants';
 function setOrientationAxesVisible(visible) {
   this.proxyManager
     .getViews()
-    .forEach((view) => view.setOrientationAxesVisibility(visible));
+    .forEach((view) => {
+      view.setOrientationAxesVisibility(visible);
+      view.renderLater();
+    });
 }
 
 function setBackgroundColor(color) {
@@ -16,6 +19,11 @@ function setAnnotationOpacity(opacity) {
   this.proxyManager
     .getViews()
     .forEach((view) => view.setAnnotationOpacity(opacity));
+}
+
+function pushGlobalSettings() {
+  this.setOrientationAxesVisible(this.orientationAxis);
+  this.setAnnotationOpacity(this.annotationOpacity);
 }
 
 export default {
@@ -37,5 +45,18 @@ export default {
   },
   methods: {
     setBackgroundColor,
+    setOrientationAxesVisible,
+    setAnnotationOpacity,
+    pushGlobalSettings,
+  },
+  created() {
+    this.subscrition =
+      this.proxyManager.onProxyRegistrationChange(() => {
+        this.pushGlobalSettings();
+      });
+    ;
+  },
+  beforeDestroy() {
+    this.subscrition.unsubscribe();
   },
 };

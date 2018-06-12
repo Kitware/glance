@@ -26,3 +26,7 @@
 .toolbarWrapper {
   position: relative;
 }
+
+.smallCardText {
+  padding: 5px;
+}

@@ -1,12 +1,14 @@
 <v-container :class="$style.container">
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
-      <span class="body-2">Background Color (all views)</span>
+      <span class="body-2">Background</span>
     </div>
     <v-divider :class="$style.divider" />
     <palette-picker
       :palette="palette"
+      :size="20"
       v-on:input="setBackgroundColor"
+
     />
   </v-card>
   <v-card flat :class="$style.card">

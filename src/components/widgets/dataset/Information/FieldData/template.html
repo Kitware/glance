@@ -4,17 +4,15 @@
   :class="$style.block"
   v-if="hasFieldData()"
 >
-  <v-card-title :class="$style.blockTitle">
-    <span class="body-2">{{ name || type }}</span>
-  </v-card-title>
   <v-card-text :class="$style.blockContent">
-    <v-layout row>
-      <v-select
-        v-model="activeFieldName"
-        :items="this.getFieldData().getArrays().map((a) => a.getName())"
-        label="Array"
-      />
-    </v-layout>
+    <v-select
+      :label="name || type"
+      v-model="activeFieldName"
+      :items="this.getFieldData().getArrays().map((a) => a.getName())"
+      dense
+      flat
+      hide-details
+    />
     <v-layout row v-if="!!activeFieldName">
       <v-flex xs6 class="body-1">Type:</v-flex>
       <v-flex xs6 class="body-1">{{ getActiveArray().getDataType() }}</v-flex>

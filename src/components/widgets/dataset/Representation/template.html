@@ -1,4 +1,4 @@
-<v-expansion-panel-content>
+<v-expansion-panel-content v-if="domains.representation || domains.opacity || domains.sampleDistance">
   <div
     :class="$style.subpanelHeader"
     slot="header"

@@ -1,5 +1,5 @@
-import PalettePicker from 'paraview-glance/src/components/core/PalettePicker';
-import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
+import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
+import { SPECTRAL } from 'paraview-glance/src/palette';
 
 import vtkMath from 'vtk.js/Sources/Common/Core/Math';
 import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
@@ -33,6 +33,10 @@ function setSolidColor(value) {
     myRepresentations[i].setColor(...color);
   }
   this.proxyManager.renderAllViews();
+
+  // FIXME the checkmark does not work here...
+  console.log('setSolidColor', value);
+  this.solidColor = value;
 }
 
 // ----------------------------------------------------------------------------
@@ -100,12 +104,13 @@ export default {
   },
   data() {
     return {
-      palette: BACKGROUND,
+      palette: SPECTRAL.concat('#ffffff'),
       available: false,
       colorBy: '',
       arrays: [
         { text: 'Solid color', value: '' },
       ],
+      solidColor: '#ffffff',
       lutImage: '',
       presetName: '',
       presets: vtkColorMaps.rgbPresetNames.map((name) => ({ text: name, value: name })),
@@ -128,7 +133,6 @@ export default {
       const rep = myRepresentations[0];
       if (rep.getProxyName() === 'Geometry') {
         const colorByValue = rep.getColorBy();
-        console.log('colorByValue', colorByValue);
         this.colorBy = colorByValue.join(':');
         const propUI = rep.getReferenceByName('ui').find((item) => item.name === 'colorBy');
         if (propUI) {

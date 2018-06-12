@@ -27,6 +27,7 @@
         <v-flex xs12 v-show="colorBy.length === 0">
           <palette-picker
             :palette="palette"
+            :value="solidColor"
             :size="20"
             v-on:input="setSolidColor"
           />

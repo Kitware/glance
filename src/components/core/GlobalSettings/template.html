@@ -1,0 +1,28 @@
+<v-container :class="$style.container">
+  <v-card flat :class="$style.card">
+    <div :class="$style.heading">
+      <span class="body-2">Background Color (all views)</span>
+    </div>
+    <v-divider :class="$style.divider" />
+    <palette-picker
+      :palette="palette"
+    />
+  </v-card>
+  <v-card flat :class="$style.card">
+    <div :class="$style.heading">
+      <span class="body-2">UI Overlay</span>
+    </div>
+    <v-divider :class="$style.divider" />
+    <v-layout row align-center>
+      <v-flex xs8>
+        <span class="body-2">Orientation Axis Visibility:</span>
+      </v-flex>
+      <v-flex xs4>
+        <v-switch
+          v-model="orientationAxis"
+          hide-details
+        />
+      </v-flex>
+    </v-layout>
+  </v-card>
+</v-container>

@@ -10,11 +10,17 @@ function onMouseDown(ev) {
 
 // ----------------------------------------------------------------------------
 
+function updateHeight() {
+  this.sheetTop = -this.$refs.slotWrapper.offsetHeight;
+}
+
+// ----------------------------------------------------------------------------
+
 function updateVisibility(newVal, oldVal) {
   if (newVal && !oldVal) {
     document.addEventListener('mousedown', this.onMouseDown, true);
     this.$nextTick(() => {
-      this.sheetTop = -this.$refs.slotWrapper.offsetHeight;
+      this.updateHeight();
       this.visible = true;
     });
   } else {
@@ -37,8 +43,16 @@ export default {
   }),
   methods: {
     onMouseDown,
+    updateHeight,
   },
   watch: {
     value: updateVisibility,
   },
+  mounted() {
+    // maybe debounce this?
+    window.addEventListener('resize', this.updateHeight);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updateHeight);
+  }
 };

@@ -1,6 +1,6 @@
 <v-container fluid :class="$style.container">
   <v-layout column :class="$style.floatToolbar">
-    <v-tooltip left open-delay="500">
+    <v-tooltip left>
       <span>Reset camera</span>
       <v-btn
         slot="activator"
@@ -12,7 +12,7 @@
         <v-icon>filter_center_focus</v-icon>
       </v-btn>
     </v-tooltip>
-    <v-tooltip left open-delay="500">
+    <v-tooltip left>
       <span>Crop</span>
       <v-btn
         slot="activator"
@@ -25,7 +25,7 @@
         <v-icon>crop</v-icon>
       </v-btn>
     </v-tooltip>
-    <v-tooltip left open-delay="500">
+    <v-tooltip left>
       <span>Rotate left 90°</span>
       <v-btn
         slot="activator"
@@ -37,7 +37,7 @@
         <v-icon>rotate_left</v-icon>
       </v-btn>
     </v-tooltip>
-    <v-tooltip left open-delay="500">
+    <v-tooltip left>
       <span>Rotate right 90°</span>
       <v-btn
         slot="activator"
@@ -83,7 +83,7 @@
           @change="changeViewType"
         />
         <v-spacer />
-        <v-tooltip top open-delay="500">
+        <v-tooltip top>
           <span>Background color</span>
           <v-btn
             slot="activator"
@@ -94,7 +94,7 @@
             <v-icon>palette</v-icon>
           </v-btn>
         </v-tooltip>
-        <v-tooltip top open-delay="500">
+        <v-tooltip top>
           <span>Screenshot</span>
           <v-btn
             slot="activator"
@@ -106,7 +106,6 @@
         </v-tooltip>
         <v-tooltip
           top
-          open-delay="500"
           v-if="actions.split"
           >
           <span>Add view(s)</span>
@@ -119,7 +118,6 @@
         </v-tooltip>
         <v-tooltip
           top
-          open-delay="500"
           v-if="actions.single"
         >
           <span>Fullscreen</span>

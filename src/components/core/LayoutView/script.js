@@ -47,9 +47,11 @@ function updateViews(count = 1) {
   this.views.forEach((view) => {
     const viewId = view.getProxyId();
     if (!(viewId in this.viewData)) {
-      this.viewData[viewId] = {
-        background: BACKGROUND[0],
-      };
+      this.viewData = Object.assign({}, this.viewData, {
+        [viewId]: {
+          background: BACKGROUND[0],
+        },
+      });
     }
   });
 }
@@ -57,7 +59,22 @@ function updateViews(count = 1) {
 // ----------------------------------------------------------------------------
 
 function setViewBackground(view, bg) {
-  this.viewData[view.getProxyId()].background = bg;
+  this.viewData[view.getProxyId()] = Object.assign(
+    {},
+    this.viewData[view.getProxyId()],
+    {
+      background: bg,
+    }
+  );
+}
+
+// ----------------------------------------------------------------------------
+
+function setAllViewBackgrounds(bg) {
+  this.proxyManager
+    .getViews()
+    .forEach((view) => this.setViewBackground(view, bg));
+  this.$forceUpdate();
 }
 
 // ----------------------------------------------------------------------------
@@ -91,14 +108,26 @@ export default {
     updateLayout,
     updateViews,
     setViewBackground,
+    setAllViewBackgrounds,
   },
   components: {
     VtkView,
   },
   mounted() {
+    this.$globalBus.$on(
+      Events.ALL_BACKGROUND_CHANGE,
+      this.setAllViewBackgrounds
+    );
+
     this.$nextTick(this.onMounted);
   },
   updated() {
     this.proxyManager.resizeAllViews();
+  },
+  beforeDestroy() {
+    this.$globalBus.$off(
+      Events.ALL_BACKGROUND_CHANGE,
+      this.setAllViewBackgrounds
+    );
   },
 };

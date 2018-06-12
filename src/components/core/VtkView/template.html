@@ -87,6 +87,7 @@
           <span>Background color</span>
           <v-btn
             slot="activator"
+            :class="$style.button"
             icon
             :disabled="backgroundSheet || !view"
             v-on:click="backgroundSheet = !backgroundSheet"
@@ -98,6 +99,7 @@
           <span>Screenshot</span>
           <v-btn
             slot="activator"
+            :class="$style.button"
             icon
             v-on:click="screenCapture()"
           >
@@ -109,7 +111,9 @@
           v-if="actions.split"
           >
           <span>Add view(s)</span>
-          <v-btn slot="activator"
+          <v-btn
+            slot="activator"
+            :class="$style.button"
             icon
             v-on:click="splitScreen()"
           >
@@ -121,7 +125,9 @@
           v-if="actions.single"
         >
           <span>Fullscreen</span>
-          <v-btn slot="activator"
+          <v-btn
+            slot="activator"
+            :class="$style.button"
             icon
             v-on:click="singleView()"
           >

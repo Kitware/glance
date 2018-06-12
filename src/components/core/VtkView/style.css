@@ -30,3 +30,8 @@
 .smallCardText {
   padding: 5px;
 }
+
+.button {
+  /* override vuetify */
+  margin: 2px 4px;
+}

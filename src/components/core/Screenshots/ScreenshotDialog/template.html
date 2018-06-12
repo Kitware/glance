@@ -25,6 +25,7 @@
                 <v-text-field
                   v-model="filename"
                   label="Filename"
+                  v-on:keyup.enter="visible = false; save()"
                 />
               </v-flex>
               <v-flex xs3>

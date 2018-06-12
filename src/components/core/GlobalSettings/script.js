@@ -3,12 +3,10 @@ import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette'
 import { Events } from 'paraview-glance/src/constants';
 
 function setOrientationAxesVisible(visible) {
-  this.proxyManager
-    .getViews()
-    .forEach((view) => {
-      view.setOrientationAxesVisibility(visible);
-      view.renderLater();
-    });
+  this.proxyManager.getViews().forEach((view) => {
+    view.setOrientationAxesVisibility(visible);
+    view.renderLater();
+  });
 }
 
 function setBackgroundColor(color) {
@@ -41,7 +39,7 @@ export default {
   },
   watch: {
     orientationAxis: setOrientationAxesVisible,
-    annotationOpacity: setAnnotationOpacity
+    annotationOpacity: setAnnotationOpacity,
   },
   methods: {
     setBackgroundColor,
@@ -50,11 +48,9 @@ export default {
     pushGlobalSettings,
   },
   created() {
-    this.subscrition =
-      this.proxyManager.onProxyRegistrationChange(() => {
-        this.pushGlobalSettings();
-      });
-    ;
+    this.subscrition = this.proxyManager.onProxyRegistrationChange(() => {
+      this.pushGlobalSettings();
+    });
   },
   beforeDestroy() {
     this.subscrition.unsubscribe();

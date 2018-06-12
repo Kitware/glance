@@ -1,4 +1,4 @@
-<v-expansion-panel-content v-if="available">
+<v-expansion-panel-content v-if="available === 'geometry' || available === 'volume'">
   <div
     :class="$style.subpanelHeader"
     slot="header"
@@ -10,10 +10,10 @@
   <v-card light flat :class="$style.block">
     <v-container fluid grid-list-md>
       <v-layout row wrap align-center>
-        <v-flex xs3>
+        <v-flex xs3 v-show="available === 'geometry'">
           Color By
         </v-flex>
-        <v-flex xs9>
+        <v-flex xs9 v-show="available === 'geometry'">
           <v-select
             :class="$style.noTopPadding"
             dense
@@ -24,7 +24,7 @@
             :items="arrays"
           />
         </v-flex>
-        <v-flex xs12 v-show="colorBy.length === 0">
+        <v-flex xs12 v-show="colorBy.length === 0 && available === 'geometry'">
           <palette-picker
             :palette="palette"
             :value="solidColor"
@@ -43,8 +43,11 @@
             :items="presets"
           />
         </v-flex>
-        <v-flex xs12 v-show="colorBy.length">
+        <v-flex xs12 v-show="colorBy.length && available === 'geometry'">
           <img :src="lutImage" :class="$style.lutImage" />
+        </v-flex>
+        <v-flex xs12 v-if="colorBy.length && piecewiseFunction">
+          <piecewise-function-editor :piecewiseFunction="piecewiseFunction" :source="source" />
         </v-flex>
       </v-layout>
     </v-container>

@@ -12,6 +12,12 @@ function setBackgroundColor(color) {
   this.$globalBus.$emit(Events.ALL_BACKGROUND_CHANGE, color);
 }
 
+function setAnnotationOpacity(opacity) {
+  this.proxyManager
+    .getViews()
+    .forEach((view) => view.setAnnotationOpacity(opacity));
+}
+
 export default {
   name: 'GlobalSettings',
   inject: ['proxyManager'],
@@ -22,10 +28,12 @@ export default {
     return {
       palette: BACKGROUND,
       orientationAxis: true,
+      annotationOpacity: 1,
     };
   },
   watch: {
     orientationAxis: setOrientationAxesVisible,
+    annotationOpacity: setAnnotationOpacity
   },
   methods: {
     setBackgroundColor,

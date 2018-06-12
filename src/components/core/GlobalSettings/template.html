@@ -11,17 +11,31 @@
   </v-card>
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
-      <span class="body-2">UI Overlay</span>
+      <span class="body-2">Overlay</span>
     </div>
     <v-divider :class="$style.divider" />
-    <v-layout row align-center>
-      <v-flex xs8>
-        <span class="body-2">Orientation Axis Visibility:</span>
+    <v-layout row wrap align-center>
+      <v-flex xs10>
+        <span class="body-2">Orientation Axis</span>
       </v-flex>
-      <v-flex xs4>
+      <v-flex xs2>
         <v-switch
           v-model="orientationAxis"
           hide-details
+        />
+      </v-flex>
+      <v-flex xs6>
+        <span class="body-2">Text opacity</span>
+      </v-flex>
+      <v-flex xs6>
+        <v-slider
+          :class="$style.noTopPadding"
+          hide-details
+
+          v-model="annotationOpacity"
+          :min="0"
+          :max="1"
+          :step="0.01"
         />
       </v-flex>
     </v-layout>

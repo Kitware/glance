@@ -26,6 +26,9 @@ function deleteScreenshot(viewName, index) {
   if (this.screenshots[viewName]) {
     this.screenshots[viewName].splice(index, 1);
   }
+
+  const totalCount = this.getTotalCount();
+  this.$emit('screenshot-count', totalCount);
 }
 
 function getTotalCount() {

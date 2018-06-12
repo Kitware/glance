@@ -43,9 +43,10 @@
       :class="$style.toolbarButton"
       :disabled="landing"
       flat
+      v-on:click="screenshotsDrawer = true"
     >
       <v-icon>collections</v-icon>
-      <span>Screenshots (0)</span>
+      <span>Screenshots ({{ screenshotCount }})</span>
     </v-btn>
     <v-btn
       :class="$style.toolbarButton"
@@ -79,6 +80,17 @@
     />
     <layout-view v-if="!landing" />
   </v-content>
+
+  <v-navigation-drawer
+    v-model="screenshotsDrawer"
+    absolute
+    right
+    temporary
+  >
+    <screenshots
+      v-on:screenshot-count="screenshotCount = $event"
+    />
+  </v-navigation-drawer>
 
   <notification />
   <v-dialog v-model="aboutDialog" max-width="50%">

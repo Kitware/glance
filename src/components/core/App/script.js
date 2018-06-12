@@ -5,6 +5,7 @@ import Datasets from 'paraview-glance/src/components/core/Datasets';
 import Landing from 'paraview-glance/src/components/core/Landing';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Notification from 'paraview-glance/src/components/core/Notification';
+import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 
 function loadFiles(files) {
   return ReaderFactory.loadFiles(files).then((readers) => {
@@ -67,6 +68,8 @@ const data = () => ({
   sidebar: true,
   aboutDialog: false,
   activeTab: 0,
+  screenshotsDrawer: false,
+  screenshotCount: 0,
 });
 
 export default {
@@ -77,6 +80,7 @@ export default {
     Landing,
     LayoutView,
     Notification,
+    Screenshots,
   },
   data,
   methods: {

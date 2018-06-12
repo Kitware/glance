@@ -1,0 +1,38 @@
+.imagePreview {
+  border: 2px dashed black;
+}
+
+.filename {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listAvatar {
+  /* override vuetify */
+  min-width: 0;
+}
+
+.listButton {
+  /* match v-list-tile-title height */
+  height: 24px;
+  width: 24px;
+  /* override vuetify */
+  margin: 0 3px;
+}
+
+.listButtons {
+  display: none;
+}
+
+.listItem:hover .listButtons {
+  display: flex;
+}
+
+.hoverTooltip {
+  background-color: white;
+  opacity: 1;
+}
+
+.hoverImage {
+  max-height: 200px;
+}

@@ -1,0 +1,119 @@
+<v-card>
+  <v-toolbar color="transparent" flat>
+    <v-toolbar-title>Screenshots</v-toolbar-title>
+  </v-toolbar>
+  <v-expansion-panel expand>
+    <v-expansion-panel-content
+      v-for="name in Object.keys(screenshots)"
+      :key="name"
+    >
+      <div slot="header" class="title">
+        <v-icon>folder</v-icon>
+        <span>{{ name }} ({{ screenshots[name].length }})</span>
+      </div>
+      <v-list dense>
+        <v-tooltip
+          left
+          v-for="(screenshot, i) in screenshots[name]"
+          :key="i"
+          :content-class="$style.hoverTooltip"
+        >
+          <v-list-tile
+            slot="activator"
+            :class="$style.listItem"
+            avatar
+            v-on:click=""
+          >
+            <v-list-tile-avatar :class="$style.listAvatar">
+              <v-icon>image</v-icon>
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title :title="screenshot.filename">
+                <v-layout row>
+                  <v-flex xs8 :class="$style.filename">
+                    <span>{{ screenshot.filename }}</span>
+                  </v-flex>
+                  <v-flex xs4 :class="$style.listButtons">
+                    <v-btn
+                      icon
+                      :class="$style.listButton"
+                    >
+                      <v-icon small>get_app</v-icon>
+                    </v-btn>
+                    <v-btn
+                      icon
+                      :class="$style.listButton"
+                      v-on:click="deleteScreenshot(name, i)"
+                    >
+                      <v-icon small>delete</v-icon>
+                    </v-btn>
+                  </v-flex>
+                </v-layout>
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <img
+            :class="$style.hoverImage"
+            :src="screenshot.image"
+          />
+        </v-tooltip>
+      </v-list>
+    </v-expansion-panel-content>
+  </v-expansion-panel>
+
+  <!-- save dialog -->
+  <v-dialog v-model="dialogVisible" max-width="60%">
+    <v-toolbar color="grey lighten-4" flat>
+      <v-toolbar-title>Save Screenshot</v-toolbar-title>
+    </v-toolbar>
+    <v-card
+      flat
+      v-if="pendingScreenshot"
+    >
+      <v-container>
+        <v-layout row>
+          <v-flex xs6>
+            <v-card flat tile>
+              <v-card-media
+                :class="$style.imagePreview"
+                :src="pendingScreenshot.imgSrc"
+                contain
+                height="250px"
+              />
+            </v-card>
+          </v-flex>
+          <v-flex xs6>
+            <v-container>
+              <v-layout row>
+                <v-flex xs12>
+                  <v-text-field
+                    v-model="dialogFilename"
+                    label="Filename"
+                    value="Untitled.png"
+                  />
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-flex>
+        </v-layout>
+      </v-container>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn
+          flat
+          color="red"
+          @click.native="dialogVisible = false"
+        >
+          <span>Cancel</span>
+        </v-btn>
+        <v-btn
+          color="primary"
+          @click.native="dialogVisible = false; addPendingScreenshot()"
+        >
+          <span>Save</span>
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+</v-card>

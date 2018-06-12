@@ -1,4 +1,4 @@
-<v-expansion-panel-content>
+<v-expansion-panel-content v-if="available">
   <div
     :class="$style.subpanelHeader"
     slot="header"
@@ -6,4 +6,46 @@
     <v-icon>invert_colors</v-icon>
     <span class="body-2">Colors</span>
   </div>
+
+  <v-card light flat :class="$style.block">
+    <v-container fluid grid-list-md>
+      <v-layout row wrap align-center>
+        <v-flex xs3>
+          Color By
+        </v-flex>
+        <v-flex xs9>
+          <v-select
+            :class="$style.noTopPadding"
+            dense
+            flat
+            hide-details
+
+            v-model="colorBy"
+            :items="arrays"
+          />
+        </v-flex>
+        <v-flex xs12 v-show="colorBy.length === 0">
+          <palette-picker
+            :palette="palette"
+            :size="20"
+            v-on:input="setSolidColor"
+          />
+        </v-flex>
+        <v-flex xs12 v-show="colorBy.length">
+          <v-select
+            :class="$style.noTopPadding"
+            dense
+            flat
+            hide-details
+
+            v-model="presetName"
+            :items="presets"
+          />
+        </v-flex>
+        <v-flex xs12 v-show="colorBy.length">
+          <img :src="lutImage" :class="$style.lutImage" />
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-card>
 </v-expansion-panel-content>

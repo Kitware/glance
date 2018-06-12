@@ -70,3 +70,8 @@
 .disable {
   opacity: 0.25;
 }
+
+.lutImage {
+  width: 100%;
+  height: 20px;
+}

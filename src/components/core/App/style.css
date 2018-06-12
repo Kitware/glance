@@ -10,6 +10,12 @@
   position: relative;
 }
 
+/* override vuetify */
+/* widens the tabs to take up full space */
+.tabs :global(.tabs__div) {
+  flex: 1 1 auto;
+}
+
 .toolbarButton span {
   margin-left: 4px;
 }

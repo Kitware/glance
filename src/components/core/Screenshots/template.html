@@ -22,7 +22,7 @@
             slot="activator"
             :class="$style.listItem"
             avatar
-            v-on:click=""
+            v-on:click="downloadScreenshot(name, i)"
           >
             <v-list-tile-avatar :class="$style.listAvatar">
               <v-icon>image</v-icon>
@@ -31,19 +31,20 @@
               <v-list-tile-title :title="screenshot.filename">
                 <v-layout row>
                   <v-flex xs8 :class="$style.filename">
-                    <span>{{ screenshot.filename }}</span>
+                    <span class="body-1">{{ screenshot.filename }}</span>
                   </v-flex>
                   <v-flex xs4 :class="$style.listButtons">
                     <v-btn
                       icon
                       :class="$style.listButton"
+                      v-on:click.stop="downloadScreenshot(name, i)"
                     >
                       <v-icon small>get_app</v-icon>
                     </v-btn>
                     <v-btn
                       icon
                       :class="$style.listButton"
-                      v-on:click="deleteScreenshot(name, i)"
+                      v-on:click.stop="deleteScreenshot(name, i)"
                     >
                       <v-icon small>delete</v-icon>
                     </v-btn>

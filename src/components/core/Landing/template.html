@@ -24,7 +24,6 @@
             v-on:click.stop="$emit('open')"
           >
             <div :class="['white--text body-2', $style.fileUploadContents]">
-              Please
               <v-btn
                 color="primary"
                 raised="false"
@@ -33,7 +32,7 @@
                 <span :class="$style.buttonText">open a file</span>
                 <v-icon>folder_open</v-icon>
               </v-btn>
-              or drag it anywhere in this window to begin.
+              <div>or drag it anywhere in this window to begin.</div>
             </div>
           </div>
         </v-flex>

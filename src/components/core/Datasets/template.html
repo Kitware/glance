@@ -2,12 +2,23 @@
   <v-expansion-panel-content
     v-for="source in datasets"
     :key="source.getProxyId()"
+    :class="$style.datasetPanel"
   >
     <div
       slot="header"
       v-bind:title="source.getName()"
       :class="$style.datasetHeader"
     >
+      <v-btn
+        :class="$style.headerMenuButton"
+        icon
+        small
+        v-on:click.stop="toggleDatasetVisibility(source)"
+      >
+        <v-icon>
+          {{ getDatasetVisibility(source) ? 'visibility' : 'visibility_off' }}
+        </v-icon>
+      </v-btn>
       <span class="body-2">{{ source.getName() }}</span>
       <v-spacer />
       <div v-on:click.stop> <!-- prevent panel expansion on menu click -->
@@ -18,7 +29,7 @@
             icon
             small
           >
-            <v-icon style="margin: 0">more_vert</v-icon>
+            <v-icon>more_vert</v-icon>
           </v-btn>
           <v-list>
             <v-list-tile

@@ -10,18 +10,12 @@
   <v-card light flat :class="$style.block" v-if="domains.representation">
     <v-container fluid grid-list-md>
       <v-layout row wrap>
-        <v-flex xs3>
-          <v-switch
-            hide-details
-            v-model="visibility"
-          />
-        </v-flex>
-        <v-flex xs9>
+        <v-flex xs12>
           <v-select
-            :class="$style.noTopPadding"
             dense
             flat
             hide-details
+            label="Type"
 
             v-model="representation"
             :items="domains.representation.items"

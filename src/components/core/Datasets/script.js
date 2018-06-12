@@ -25,6 +25,22 @@ function deleteDataset(proxy) {
   this.proxyManager.renderAllViews();
 }
 
+function getDatasetVisibility(source) {
+  return this.proxyManager
+    .getRepresentations()
+    .filter((r) => r.getInput() === source)[0]
+    .isVisible();
+}
+
+function toggleDatasetVisibility(source) {
+  const visible = !this.getDatasetVisibility(source);
+  this.proxyManager
+    .getRepresentations()
+    .filter((r) => r.getInput() === source)
+    .forEach((r) => r.setVisibility(visible));
+  this.$forceUpdate();
+}
+
 export default {
   name: 'Datasets',
   inject: ['proxyManager'],
@@ -51,5 +67,7 @@ export default {
     onMounted,
     onBeforeDestroy,
     deleteDataset,
+    getDatasetVisibility,
+    toggleDatasetVisibility,
   },
 };

@@ -1,12 +1,12 @@
 const Volume = [
   // { link: 'ColorBy', property: 'colorBy' },
-  // { link: 'VolumeVisibility', property: 'volumeVisibility' },
+  { link: 'Visibility', property: 'volumeVisibility' },
   // { link: 'UseShadow', property: 'useShadow' },
   // { link: 'SampleDistance', property: 'sampleDistance' },
   // { link: 'EdgeGradient', property: 'edgeGradient' },
   { link: 'ColorWindow', property: 'colorWindow' },
   { link: 'ColorLevel', property: 'colorLevel' },
-  // { link: 'SliceVisibility', property: 'sliceVisibility' },
+  { link: 'Visibility', property: 'sliceVisibility' },
   { link: 'SliceX', property: 'xSlice' },
   { link: 'SliceY', property: 'ySlice' },
   { link: 'SliceZ', property: 'zSlice' },
@@ -20,12 +20,12 @@ const Geometry = [
     link: 'InterpolateScalarsBeforeMapping',
     property: 'interpolateScalarsBeforeMapping',
   },
-  { link: 'GeometryVisibility', property: 'visibility' },
+  { link: 'Visibility', property: 'visibility' },
   { link: 'PointSize', property: 'pointSize' },
 ];
 
 const Slice = [
-  // { link: 'SliceVisibility', property: 'visibility' },
+  { link: 'Visibility', property: 'visibility' },
   { link: 'ColorWindow', property: 'colorWindow' },
   { link: 'ColorLevel', property: 'colorLevel' },
 ];

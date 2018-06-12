@@ -1,3 +1,8 @@
+/* override vuetify */
+.datasetPanel :global(.expansion-panel__header) {
+  padding: 12px 24px 12px 6px;
+}
+
 .datasetHeader {
   user-select: none;
   /* handle overflowing names */
@@ -14,7 +19,7 @@
 }
 
 .headerMenuButton {
-  margin: 0;
+  margin: 0 8px;
 }
 
 /** should be moved to own component **/

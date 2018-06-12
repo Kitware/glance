@@ -104,22 +104,28 @@
             <v-icon>add_a_photo</v-icon>
           </v-btn>
         </v-tooltip>
-        <v-tooltip top open-delay="500">
+        <v-tooltip
+          top
+          open-delay="500"
+          v-if="actions.split"
+          >
           <span>Add view(s)</span>
           <v-btn slot="activator"
             icon
             v-on:click="splitScreen()"
-            v-if="actions.split"
           >
             <v-icon>library_add</v-icon>
           </v-btn>
         </v-tooltip>
-        <v-tooltip top open-delay="500">
+        <v-tooltip
+          top
+          open-delay="500"
+          v-if="actions.single"
+        >
           <span>Fullscreen</span>
           <v-btn slot="activator"
             icon
             v-on:click="singleView()"
-            v-if="actions.single"
           >
             <v-icon>fullscreen</v-icon>
           </v-btn>

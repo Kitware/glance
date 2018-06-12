@@ -1,6 +1,13 @@
 <v-card>
   <v-toolbar color="transparent" flat>
     <v-toolbar-title>Screenshots</v-toolbar-title>
+    <v-spacer />
+    <v-btn
+      icon
+      v-on:click="$emit('close')"
+    >
+      <v-icon>arrow_forward</v-icon>
+    </v-btn>
   </v-toolbar>
   <v-expansion-panel expand>
     <v-expansion-panel-content

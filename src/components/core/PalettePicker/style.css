@@ -4,15 +4,24 @@
   flex-wrap: wrap;
 }
 
-.bubble {
-  border-radius: 10%;
+.item {
+  position: relative;
+}
+
+.check {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  pointer-events: none;
+  mix-blend-mode: difference;
 }
 
 .selected {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-.circle {
+.blot {
   position: relative;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
   border-radius: 25%;
@@ -21,6 +30,6 @@
   transition: border 50ms;
 }
 
-.circle:hover {
+.blot:hover {
   border: 1px solid rgba(0, 0, 0, 0.8);
 }

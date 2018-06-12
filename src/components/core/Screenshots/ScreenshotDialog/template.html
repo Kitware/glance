@@ -12,7 +12,7 @@
           <v-card flat tile>
             <v-card-media
               :class="$style.imagePreview"
-              :src="screenshot.imgSrc"
+              :src="previewImageURL"
               contain
               height="250px"
             />
@@ -26,6 +26,14 @@
                   v-model="filename"
                   label="Filename"
                   value="Untitled.png"
+                />
+              </v-flex>
+            </v-layout>
+            <v-layout row>
+              <v-flex xs12>
+                <v-checkbox
+                  label="Transparent background"
+                  v-model="transparentBackground"
                 />
               </v-flex>
             </v-layout>

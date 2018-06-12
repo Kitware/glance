@@ -96,17 +96,17 @@ function proxyUpdated(fieldName, onChange, value) {
 // ----------------------------------------------------------------------------
 
 export function addWatchers(instance, fields, onChange) {
-  const subscritions = [];
+  const subscriptions = [];
   for (let i = 0; i < fields.length; i++) {
     const { name } = fields[i];
-    subscritions.push(
+    subscriptions.push(
       instance.$watch(
         name,
         proxyUpdated.bind(instance, name, onChange && onChange[name])
       )
     );
   }
-  return subscritions;
+  return subscriptions;
 }
 
 // ----------------------------------------------------------------------------
@@ -185,8 +185,8 @@ function generateComponent(
       return dataGenerator(fields);
     },
     created() {
-      this.subscritions = addWatchers(this, fields, options.onChange);
-      this.subscritions.push(
+      this.subscriptions = addWatchers(this, fields, options.onChange);
+      this.subscriptions.push(
         this.proxyManager.onProxyRegistrationChange(() => {
           this.updateDomains();
           this.updateData();
@@ -216,8 +216,8 @@ function generateComponent(
       if (dependOnLayout) {
         this.$globalBus.$off(Events.LAYOUT_CHANGE, this.$forceUpdate);
       }
-      while (this.subscritions.length) {
-        this.subscritions.pop()();
+      while (this.subscriptions.length) {
+        this.subscriptions.pop()();
       }
     },
   };

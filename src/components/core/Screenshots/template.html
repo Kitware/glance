@@ -22,7 +22,7 @@
             slot="activator"
             :class="$style.listItem"
             avatar
-            v-on:click="downloadScreenshot(name, i)"
+            v-on:click="viewScreenshot(name, i)"
           >
             <v-list-tile-avatar :class="$style.listAvatar">
               <v-icon>image</v-icon>
@@ -36,8 +36,10 @@
                   <v-flex xs4 :class="$style.listButtons">
                     <v-btn
                       icon
+                      :href="screenshot.image"
+                      :download="screenshot.filename"
                       :class="$style.listButton"
-                      v-on:click.stop="downloadScreenshot(name, i)"
+                      v-on:click.stop
                     >
                       <v-icon small>get_app</v-icon>
                     </v-btn>

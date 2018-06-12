@@ -19,7 +19,7 @@ function deleteScreenshot(viewName, index) {
   this.$emit('screenshot-count', totalCount);
 }
 
-function downloadScreenshot(viewName, index) {
+function viewScreenshot(viewName, index) {
   if (this.screenshots[viewName]) {
     const screenshot = this.screenshots[viewName][index];
     const image = new Image();
@@ -51,7 +51,7 @@ export default {
   methods: {
     addScreenshot,
     deleteScreenshot,
-    downloadScreenshot,
+    viewScreenshot,
     getTotalCount,
   },
 };

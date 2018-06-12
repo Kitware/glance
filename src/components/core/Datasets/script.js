@@ -26,7 +26,7 @@ function deleteDataset(proxy) {
 }
 
 export default {
-  name: 'App',
+  name: 'Datasets',
   inject: ['proxyManager'],
   data: () => ({
     datasets: [],

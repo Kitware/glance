@@ -1,18 +1,6 @@
-import { Events } from 'paraview-glance/src/constants';
+import ScreenshotDialog from 'paraview-glance/src/components/core/Screenshots/ScreenshotDialog';
 
-function onScreenshotTaken(screenshot) {
-  this.pendingScreenshot = screenshot;
-  this.dialogFilename = 'Untitled.png';
-  this.dialogVisible = true;
-}
-
-function addPendingScreenshot() {
-  const screenshot = {
-    filename: this.dialogFilename,
-    image: this.pendingScreenshot.imgSrc,
-  };
-
-  const viewName = this.pendingScreenshot.viewName;
+function addScreenshot(viewName, screenshot) {
   if (!(viewName in this.screenshots)) {
     this.$set(this.screenshots, viewName, []);
   }
@@ -39,25 +27,18 @@ function getTotalCount() {
 
 export default {
   name: 'Screenshots',
+  components: {
+    ScreenshotDialog,
+  },
   data() {
     return {
       // viewName::String -> [Screenshot]
       screenshots: {},
-      dialogVisible: false,
-      dialogFilename: '',
-      pendingScreenshot: null,
     };
   },
   methods: {
-    onScreenshotTaken,
-    addPendingScreenshot,
+    addScreenshot,
     deleteScreenshot,
     getTotalCount,
-  },
-  created() {
-    this.$globalBus.$on(Events.SCREENSHOT, this.onScreenshotTaken);
-  },
-  beforeDestory() {
-    this.$globalBus.$off(Events.SCREENSHOT, this.onScreenshotTaken);
   },
 };

@@ -61,59 +61,7 @@
     </v-expansion-panel-content>
   </v-expansion-panel>
 
-  <!-- save dialog -->
-  <v-dialog v-model="dialogVisible" max-width="60%">
-    <v-toolbar color="grey lighten-4" flat>
-      <v-toolbar-title>Save Screenshot</v-toolbar-title>
-    </v-toolbar>
-    <v-card
-      flat
-      v-if="pendingScreenshot"
-    >
-      <v-container>
-        <v-layout row>
-          <v-flex xs6>
-            <v-card flat tile>
-              <v-card-media
-                :class="$style.imagePreview"
-                :src="pendingScreenshot.imgSrc"
-                contain
-                height="250px"
-              />
-            </v-card>
-          </v-flex>
-          <v-flex xs6>
-            <v-container>
-              <v-layout row>
-                <v-flex xs12>
-                  <v-text-field
-                    v-model="dialogFilename"
-                    label="Filename"
-                    value="Untitled.png"
-                  />
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-flex>
-        </v-layout>
-      </v-container>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          flat
-          color="red"
-          @click.native="dialogVisible = false"
-        >
-          <span>Cancel</span>
-        </v-btn>
-        <v-btn
-          color="primary"
-          @click.native="dialogVisible = false; addPendingScreenshot()"
-        >
-          <span>Save</span>
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
+  <screenshot-dialog
+    v-on:save="addScreenshot"
+  />
 </v-card>

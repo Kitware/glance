@@ -1,4 +1,4 @@
-import PalettePicker from 'paraview-glance/src/components/core/PalettePicker';
+import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 import { Events } from 'paraview-glance/src/constants';
 

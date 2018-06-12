@@ -4,7 +4,7 @@ import {
   VIEW_TYPES,
 } from 'paraview-glance/src/components/core/VtkView/constants';
 
-import PalettePicker from 'paraview-glance/src/components/core/PalettePicker';
+import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import ToolbarSheet from 'paraview-glance/src/components/core/ToolbarSheet';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';

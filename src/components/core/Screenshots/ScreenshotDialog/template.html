@@ -21,11 +21,18 @@
         <v-flex xs6>
           <v-container>
             <v-layout row>
-              <v-flex xs12>
+              <v-flex xs9>
                 <v-text-field
                   v-model="filename"
                   label="Filename"
-                  value="Untitled.png"
+                />
+              </v-flex>
+              <v-flex xs3>
+                <v-select
+                  label="File type"
+                  single-line
+                  v-model="fileType"
+                  :items="fileTypes"
                 />
               </v-flex>
             </v-layout>

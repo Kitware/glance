@@ -1,8 +1,11 @@
 import { Events } from 'paraview-glance/src/constants';
 
+const FILE_TYPES = ['.png', '.jpeg', '.gif'];
+
 function onScreenshotTaken(screenshot) {
   this.screenshot = screenshot;
-  this.filename = 'Untitled.png';
+  this.filename = 'Untitled';
+  this.fileType = '.png';
   this.visible = true;
   this.generateImage();
 }
@@ -48,9 +51,10 @@ function backgroundToFillStyle(bg) {
 }
 
 function save() {
+  const imageType = `image/${this.fileType.substr(1)}`;
   this.$emit('save', this.screenshot.viewName, {
-    image: this.canvas.toDataURL(),
-    filename: this.filename,
+    image: this.canvas.toDataURL(imageType),
+    filename: this.filename + this.fileType,
   });
 }
 
@@ -63,6 +67,8 @@ export default {
       visible: false,
       previewImageURL: '',
       transparentBackground: false,
+      fileType: '',
+      fileTypes: FILE_TYPES,
     };
   },
   watch: {

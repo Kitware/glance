@@ -2,6 +2,10 @@ import { Events } from 'paraview-glance/src/constants';
 
 const FILE_TYPES = ['.png', '.jpeg', '.gif'];
 
+// ----------------------------------------------------------------------------
+// Component API
+// ----------------------------------------------------------------------------
+
 function onScreenshotTaken(screenshot) {
   this.screenshot = screenshot;
   this.filename = 'Untitled';
@@ -9,6 +13,8 @@ function onScreenshotTaken(screenshot) {
   this.visible = true;
   this.generateImage();
 }
+
+// ----------------------------------------------------------------------------
 
 function generateImage() {
   const img = new Image();
@@ -34,6 +40,8 @@ function generateImage() {
   img.src = this.screenshot.imgSrc;
 }
 
+// ----------------------------------------------------------------------------
+
 function backgroundToFillStyle(bg) {
   if (bg.startsWith('linear-gradient(')) {
     // parse out linear gradient, assumed to be top-bottom
@@ -50,6 +58,8 @@ function backgroundToFillStyle(bg) {
   return bg;
 }
 
+// ----------------------------------------------------------------------------
+
 function save() {
   const imageType = `image/${this.fileType.substr(1)}`;
   this.$emit('save', this.screenshot.viewName, {
@@ -57,6 +67,8 @@ function save() {
     filename: this.filename + this.fileType,
   });
 }
+
+// ----------------------------------------------------------------------------
 
 export default {
   name: 'ScreenshotDialog',

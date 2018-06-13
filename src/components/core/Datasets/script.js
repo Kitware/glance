@@ -4,6 +4,10 @@ import MoleculeWidget from 'paraview-glance/src/components/widgets/dataset/Molec
 import RepresentationWidget from 'paraview-glance/src/components/widgets/dataset/Representation';
 import SliceWidget from 'paraview-glance/src/components/widgets/dataset/SliceControl';
 
+// ----------------------------------------------------------------------------
+// Component API
+// ----------------------------------------------------------------------------
+
 function onMounted() {
   this.subscriptions = [
     this.proxyManager.onProxyRegistrationChange(({ proxyGroup }) => {
@@ -14,16 +18,22 @@ function onMounted() {
   ];
 }
 
+// ----------------------------------------------------------------------------
+
 function onBeforeDestroy() {
   while (this.subscriptions.length) {
     this.subscriptions.pop().unsubscribe();
   }
 }
 
+// ----------------------------------------------------------------------------
+
 function deleteDataset(proxy) {
   this.proxyManager.deleteProxy(proxy);
   this.proxyManager.renderAllViews();
 }
+
+// ----------------------------------------------------------------------------
 
 function getDatasetVisibility(source) {
   return this.proxyManager
@@ -31,6 +41,8 @@ function getDatasetVisibility(source) {
     .filter((r) => r.getInput() === source)[0]
     .isVisible();
 }
+
+// ----------------------------------------------------------------------------
 
 function toggleDatasetVisibility(source) {
   const visible = !this.getDatasetVisibility(source);
@@ -41,12 +53,16 @@ function toggleDatasetVisibility(source) {
   this.$forceUpdate();
 }
 
+// ----------------------------------------------------------------------------
+
 export default {
   name: 'Datasets',
   inject: ['proxyManager'],
-  data: () => ({
-    datasets: [],
-  }),
+  data() {
+    return {
+      datasets: [],
+    };
+  },
   created() {
     this.subscriptions = [];
   },

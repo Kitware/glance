@@ -78,14 +78,14 @@ function setAllViewBackgrounds(bg) {
 }
 
 // ----------------------------------------------------------------------------
-// Vue LifeCycle
-// ----------------------------------------------------------------------------
 
 function onMounted() {
   if (this.views.length === 0) {
     this.updateViews();
   }
 }
+
+// ----------------------------------------------------------------------------
 
 export default {
   inject: ['proxyManager'],

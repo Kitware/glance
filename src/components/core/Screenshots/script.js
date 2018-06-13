@@ -1,5 +1,9 @@
 import ScreenshotDialog from 'paraview-glance/src/components/core/Screenshots/ScreenshotDialog';
 
+// ----------------------------------------------------------------------------
+// Component API
+// ----------------------------------------------------------------------------
+
 function addScreenshot(viewName, screenshot) {
   if (!(viewName in this.screenshots)) {
     this.$set(this.screenshots, viewName, []);
@@ -10,6 +14,8 @@ function addScreenshot(viewName, screenshot) {
   this.$emit('screenshot-count', totalCount);
 }
 
+// ----------------------------------------------------------------------------
+
 function deleteScreenshot(viewName, index) {
   if (this.screenshots[viewName]) {
     this.screenshots[viewName].splice(index, 1);
@@ -18,6 +24,8 @@ function deleteScreenshot(viewName, index) {
   const totalCount = this.getTotalCount();
   this.$emit('screenshot-count', totalCount);
 }
+
+// ----------------------------------------------------------------------------
 
 function viewScreenshot(viewName, index) {
   if (this.screenshots[viewName]) {
@@ -31,11 +39,15 @@ function viewScreenshot(viewName, index) {
   }
 }
 
+// ----------------------------------------------------------------------------
+
 function getTotalCount() {
   return Object.values(this.screenshots)
     .map((s) => s.length)
     .reduce((total, value) => total + value);
 }
+
+// ----------------------------------------------------------------------------
 
 export default {
   name: 'Screenshots',

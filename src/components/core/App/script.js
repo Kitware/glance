@@ -8,11 +8,17 @@ import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Notification from 'paraview-glance/src/components/core/Notification';
 import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 
+// ----------------------------------------------------------------------------
+// Component API
+// ----------------------------------------------------------------------------
+
 function loadFiles(files) {
   return ReaderFactory.loadFiles(files).then((readers) => {
     ReaderFactory.registerReadersToProxyManager(readers, this.proxyManager);
   });
 }
+
+// ----------------------------------------------------------------------------
 
 function loadRemoteDataset(url, name, type) {
   if (!url || !name) {
@@ -41,6 +47,8 @@ function loadRemoteDataset(url, name, type) {
     });
 }
 
+// ----------------------------------------------------------------------------
+
 function openFile() {
   ReaderFactory.openFiles(
     // doesn't handle *.raw
@@ -62,16 +70,7 @@ function openFile() {
   );
 }
 
-const data = () => ({
-  loadingName: null,
-  loadingProgress: 0,
-  landing: true,
-  sidebar: true,
-  aboutDialog: false,
-  activeTab: 0,
-  screenshotsDrawer: false,
-  screenshotCount: 0,
-});
+// ----------------------------------------------------------------------------
 
 export default {
   name: 'App',
@@ -84,7 +83,18 @@ export default {
     Notification,
     Screenshots,
   },
-  data,
+  data() {
+    return {
+      loadingName: null,
+      loadingProgress: 0,
+      landing: true,
+      sidebar: true,
+      aboutDialog: false,
+      activeTab: 0,
+      screenshotsDrawer: false,
+      screenshotCount: 0,
+    };
+  },
   methods: {
     loadFiles,
     openFile,

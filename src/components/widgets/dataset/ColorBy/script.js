@@ -1,9 +1,10 @@
 import PiecewiseFunctionEditor from 'paraview-glance/src/components/widgets/PiecewiseFunctionEditor';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
+import TreeView from 'paraview-glance/src/components/widgets/TreeView';
 import { SPECTRAL } from 'paraview-glance/src/palette';
+import Presets from 'paraview-glance/src/config/ColorMaps';
 
 import vtkMath from 'vtk.js/Sources/Common/Core/Math';
-import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
 
 // ----------------------------------------------------------------------------
 // Global helpers
@@ -102,6 +103,25 @@ function convertArrays(arrays, addSolidColor = false) {
 }
 
 // ----------------------------------------------------------------------------
+
+function onChangePreset(preset) {
+  if (preset) {
+    this.presetName = preset.Name;
+  }
+  this.presetMenu = false;
+}
+
+// ----------------------------------------------------------------------------
+
+// Used to close the color preset dropdown menu
+function onEsc(ev) {
+  // ESC key
+  if (ev.keyCode === 27) {
+    this.presetMenu = false;
+  }
+}
+
+// ----------------------------------------------------------------------------
 // Add custom method
 // ----------------------------------------------------------------------------
 
@@ -111,6 +131,7 @@ export default {
   components: {
     PalettePicker,
     PiecewiseFunctionEditor,
+    TreeView,
   },
   data() {
     return {
@@ -125,7 +146,8 @@ export default {
       solidColor: '#ffffff',
       lutImage: '',
       presetName: '',
-      presets: vtkColorMaps.rgbPresetNames.map((name) => ({ text: name, value: name })),
+      presets: Presets,
+      presetMenu: false,
     };
   },
   watch: {
@@ -133,6 +155,8 @@ export default {
     presetName: setPreset,
   },
   methods: {
+    onChangePreset,
+    onEsc,
     setSolidColor,
     setPreset,
     updateLookupTableImage,
@@ -165,5 +189,10 @@ export default {
         }
       }
     }
+
+    document.addEventListener('keyup', this.onEsc);
   },
+  beforeDestroy() {
+    document.removeEventListener('keyup', this.onEsc);
+  }
 };

@@ -1,6 +1,10 @@
 import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
 
-const colorMaps = vtkColorMaps.rgbPresetNames.map(vtkColorMaps.getPresetByName);
+import Presets from 'paraview-glance/src/config/Presets.json';
+
+const defaultColorMaps = vtkColorMaps.rgbPresetNames.map(
+  vtkColorMaps.getPresetByName
+);
 
 // sorts case insensitively
 function comparator(a, b) {
@@ -9,6 +13,20 @@ function comparator(a, b) {
   return s1 > s2 ? 1 : -(s1 < s2);
 }
 
-colorMaps.sort(comparator);
+// register medical colormaps
+function registerPresets(presets) {
+  presets.forEach((preset) => {
+    if (preset.Children) {
+      registerPresets(preset.Children);
+    } else {
+      vtkColorMaps.addPreset(preset);
+    }
+  });
+}
 
-export default colorMaps;
+defaultColorMaps.sort(comparator);
+
+// add custom presets
+registerPresets(Presets);
+
+export default [].concat(Presets, defaultColorMaps);

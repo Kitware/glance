@@ -1,0 +1,27 @@
+<li :class="$style.node">
+  <div
+    :class="$style.header"
+    v-on:click="onItemClick"
+  >
+    <div
+      :class="$style.expander"
+      v-if="item[childrenKey]"
+    >
+      <v-icon
+        :class="{ [$style.arrow]: true, [$style.openArrow]: open || value }"
+      >
+        arrow_drop_down
+      </v-icon>
+    </div>
+    <span class="body-1" :class="$style.name">{{ item[labelKey] }}</span>
+  </div>
+  <ul v-if="item[childrenKey]" v-show="open || value">
+    <node
+      v-for="(item, index) in item[childrenKey]"
+      :key="index"
+      :item="item"
+      v-bind="{ open, labelKey, childrenKey }"
+      v-on:input="$emit('input', $event)"
+    />
+  </ul>
+</li>

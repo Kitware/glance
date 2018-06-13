@@ -33,18 +33,24 @@
           />
         </v-flex>
         <v-flex xs12 v-show="colorBy.length">
-          <v-select
-            :class="$style.noTopPadding"
-            dense
-            flat
-            hide-details
-
-            v-model="presetName"
-            :items="presets"
-          />
-        </v-flex>
-        <v-flex xs12 v-show="colorBy.length && available === 'geometry'">
-          <img :src="lutImage" :class="$style.lutImage" />
+          <v-menu
+            :close-on-content-click="false"
+            offset-y
+            v-model="presetMenu"
+          >
+            <div slot="activator">
+              <span class="body-1">{{ presetName }}</span>
+              <img :src="lutImage" :class="$style.lutImage" />
+            </div>
+            <tree-view
+              v-if="presetMenu"
+              :class="$style.dropdownMenu"
+              :tree="presets"
+              labelKey="Name"
+              childrenKey="Children"
+              v-on:input="onChangePreset"
+            />
+          </v-menu>
         </v-flex>
         <v-flex xs12 v-if="colorBy.length && piecewiseFunction">
           <piecewise-function-editor :piecewiseFunction="piecewiseFunction" :source="source" />

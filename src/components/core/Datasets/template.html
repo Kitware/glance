@@ -22,7 +22,7 @@
       <span class="body-2">{{ source.getName() }}</span>
       <v-spacer />
       <div v-on:click.stop> <!-- prevent panel expansion on menu click -->
-        <v-menu bottom left>
+        <v-menu offset-x>
           <v-btn
             slot="activator"
             :class="$style.headerMenuButton"

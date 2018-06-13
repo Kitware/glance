@@ -1,5 +1,4 @@
 import helper from 'paraview-glance/src/components/core/Datasets/helper';
-import macro from 'vtk.js/Sources/macro';
 
 const FIELDS = [
   { name: 'visibility', initialValue: false },
@@ -22,11 +21,13 @@ function isSliceAvailable(name) {
 
 // ----------------------------------------------------------------------------
 
-function updateCornerAnnotation(field, name) {
+function updateCornerAnnotation() {
   const views = this.proxyManager.getViews().filter((v) => v.getContainer());
   for (let i = 0; i < views.length; i++) {
     const view = views[i];
-    const representations = view.getRepresentations().filter((r) => r.getInput() === this.source);
+    const representations = view
+      .getRepresentations()
+      .filter((r) => r.getInput() === this.source);
     const annotations = {
       colorWindow: '(none)',
       colorLevel: '(none)',
@@ -40,9 +41,7 @@ function updateCornerAnnotation(field, name) {
         annotations.colorLevel = Math.round(representation.getColorLevel());
       }
       if (representation.getSlice) {
-        annotations.slice = Number(representation.getSlice()).toFixed(
-          2
-        );
+        annotations.slice = Number(representation.getSlice()).toFixed(2);
       }
     }
     view.updateCornerAnnotation(annotations);
@@ -60,7 +59,7 @@ const component = helper.generateComponent(FIELDS, true, {
     zSlice: 'updateCornerAnnotation',
     colorWindow: 'updateCornerAnnotation',
     colorLevel: 'updateCornerAnnotation',
-  }
+  },
 });
 Object.assign(component.methods, {
   isSliceAvailable,

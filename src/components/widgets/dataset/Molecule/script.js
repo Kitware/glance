@@ -13,5 +13,5 @@ export default helper.generateComponent(FIELDS, false, {
     bondRadius: 'updateData',
     atomicRadiusScaleFactor: 'updateData',
     // tolerance: 'updateData',
-  }
+  },
 });

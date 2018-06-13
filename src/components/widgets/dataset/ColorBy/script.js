@@ -29,8 +29,8 @@ function getLookupTableImage(lut, min, max, width) {
 function setSolidColor(value) {
   const color = vtkMath.hex2float(value);
   const myRepresentations = this.proxyManager
-      .getRepresentations()
-      .filter((r) => r.getInput() === this.source);
+    .getRepresentations()
+    .filter((r) => r.getInput() === this.source);
   for (let i = 0; i < myRepresentations.length; i++) {
     myRepresentations[i].setColor(...color);
   }
@@ -61,8 +61,8 @@ function setColorBy(value) {
 
   const args = value.split(':');
   const myRepresentations = this.proxyManager
-      .getRepresentations()
-      .filter((r) => r.getInput() === this.source);
+    .getRepresentations()
+    .filter((r) => r.getInput() === this.source);
   for (let i = 0; i < myRepresentations.length; i++) {
     myRepresentations[i].setColorBy(...args);
   }
@@ -79,7 +79,11 @@ function setColorBy(value) {
 function updateLookupTableImage() {
   const arrayName = this.colorBy.split(':')[0];
   const lutProxy = this.proxyManager.getLookupTable(arrayName);
-  this.lutImage = getLookupTableImage(lutProxy.getLookupTable(), ...lutProxy.getDataRange(), 256);
+  this.lutImage = getLookupTableImage(
+    lutProxy.getLookupTable(),
+    ...lutProxy.getDataRange(),
+    256
+  );
   this.presetName = lutProxy.getPresetName();
 
   this.piecewiseFunction = this.proxyManager.getPiecewiseFunction(arrayName);
@@ -138,9 +142,7 @@ export default {
       palette: SPECTRAL.concat('#ffffff'),
       available: '',
       colorBy: '',
-      arrays: [
-        { text: 'Solid color', value: '' },
-      ],
+      arrays: [{ text: 'Solid color', value: '' }],
       arrayName: '',
       piecewiseFunction: null,
       solidColor: '#ffffff',
@@ -166,13 +168,19 @@ export default {
       .getRepresentations()
       .filter((r) => r.getInput() === this.source);
     if (myRepresentations.length) {
-      const repGeometry = myRepresentations.find((r) => r.getProxyName() === 'Geometry');
-      const repVolume = myRepresentations.find((r) => r.getProxyName() === 'Volume');
+      const repGeometry = myRepresentations.find(
+        (r) => r.getProxyName() === 'Geometry'
+      );
+      const repVolume = myRepresentations.find(
+        (r) => r.getProxyName() === 'Volume'
+      );
       if (repGeometry) {
         const colorByValue = repGeometry.getColorBy();
         this.arrayName = colorByValue[0];
         this.colorBy = colorByValue.join(':');
-        const propUI = repGeometry.getReferenceByName('ui').find((item) => item.name === 'colorBy');
+        const propUI = repGeometry
+          .getReferenceByName('ui')
+          .find((item) => item.name === 'colorBy');
         if (propUI) {
           this.arrays = convertArrays(propUI.domain.arrays, true);
         }
@@ -183,7 +191,9 @@ export default {
         const colorByValue = repVolume.getColorBy();
         this.arrayName = colorByValue[0];
         this.colorBy = colorByValue.join(':');
-        const propUI = repVolume.getReferenceByName('ui').find((item) => item.name === 'colorBy');
+        const propUI = repVolume
+          .getReferenceByName('ui')
+          .find((item) => item.name === 'colorBy');
         if (propUI) {
           this.arrays = convertArrays(propUI.domain.arrays);
         }
@@ -194,5 +204,5 @@ export default {
   },
   beforeDestroy() {
     document.removeEventListener('keyup', this.onEsc);
-  }
+  },
 };

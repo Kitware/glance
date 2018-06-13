@@ -26,7 +26,7 @@
         "@fortawesome/fontawesome-free-webfonts": "^1.0.4",
         "copy-webpack-plugin": "^4.4.1",
         "http-server": "0.10.0",
-        "itk": "9.0.0",
+        "itk": "9.1.1",
         "kw-doc": "1.1.1",
         "kw-web-suite": "6.0.2",
         "lodash": "^4.17.4",

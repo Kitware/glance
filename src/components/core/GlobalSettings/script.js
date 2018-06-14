@@ -78,11 +78,11 @@ export default {
     pushGlobalSettings,
   },
   created() {
-    this.subscrition = this.proxyManager.onProxyRegistrationChange(() => {
+    this.subscription = this.proxyManager.onProxyRegistrationChange(() => {
       this.pushGlobalSettings();
     });
   },
   beforeDestroy() {
-    this.subscrition.unsubscribe();
+    this.subscription.unsubscribe();
   },
 };

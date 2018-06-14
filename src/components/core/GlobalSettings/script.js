@@ -7,6 +7,11 @@ const ORIENTATION_PRESETS = [
   { text: 'LPS', value: 'lps' },
 ];
 
+const AXIS_TYPES = [
+  { text: 'Cube', value: 'cube' },
+  { text: 'Arrows', value: 'arrow' },
+];
+
 // ----------------------------------------------------------------------------
 // Component API
 // ----------------------------------------------------------------------------
@@ -14,6 +19,15 @@ const ORIENTATION_PRESETS = [
 function setOrientationAxesVisible(visible) {
   this.proxyManager.getViews().forEach((view) => {
     view.setOrientationAxesVisibility(visible);
+    view.renderLater();
+  });
+}
+
+// ----------------------------------------------------------------------------
+
+function setAxisType(type) {
+  this.proxyManager.getViews().forEach((view) => {
+    view.setOrientationAxesType(type);
     view.renderLater();
   });
 }
@@ -63,15 +77,19 @@ export default {
       annotationOpacity: 1,
       orientationPreset: 'default',
       orientationPresets: ORIENTATION_PRESETS,
+      axisTypes: AXIS_TYPES,
+      axisType: 'cube',
     };
   },
   watch: {
     orientationAxis: setOrientationAxesVisible,
     orientationPreset: setPresetToOrientationAxes,
     annotationOpacity: setAnnotationOpacity,
+    axisType: setAxisType,
   },
   methods: {
     setBackgroundColor,
+    setAxisType,
     setOrientationAxesVisible,
     setAnnotationOpacity,
     setPresetToOrientationAxes,

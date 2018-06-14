@@ -59,5 +59,21 @@
         />
       </v-flex>
     </v-layout>
+    <v-layout row align-center :class="$style.lineTopPadding">
+      <v-flex xs6>
+        <span class="body-2">Axis type</span>
+      </v-flex>
+      <v-flex xs6>
+        <v-select
+          :class="$style.noTopPadding"
+          dense
+          flat
+          hide-details
+
+          v-model="axisType"
+          :items="axisTypes"
+        />
+      </v-flex>
+    </v-layout>
   </v-card>
 </v-container>

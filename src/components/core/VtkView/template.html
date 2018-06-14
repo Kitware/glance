@@ -20,7 +20,7 @@
         dark
         small
         v-on:click="toggleCrop()"
-        v-if="actions.crop"
+        v-if="getAvailableActions().crop"
       >
         <v-icon>crop</v-icon>
       </v-btn>
@@ -108,7 +108,7 @@
         </v-tooltip>
         <v-tooltip
           top
-          v-if="actions.split"
+          v-if="getAvailableActions().split"
           >
           <span>Add view(s)</span>
           <v-btn
@@ -122,7 +122,7 @@
         </v-tooltip>
         <v-tooltip
           top
-          v-if="actions.single"
+          v-if="getAvailableActions().single"
         >
           <span>Fullscreen</span>
           <v-btn

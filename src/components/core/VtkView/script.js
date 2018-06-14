@@ -32,6 +32,15 @@ function changeViewType(newType) {
 
 // ----------------------------------------------------------------------------
 
+function getAvailableActions() {
+  const actions = viewHelper.getViewActions(this.proxyManager);
+  actions.single = this.layoutCount > 1;
+  actions.split = this.layoutCount < 4;
+  return actions;
+}
+
+// ----------------------------------------------------------------------------
+
 function resetCamera() {
   if (this.view) {
     this.view.resetCamera();
@@ -180,17 +189,12 @@ export default {
     viewType() {
       return this.layoutViewType || viewHelper.getViewType(this.view);
     },
-    actions() {
-      const actions = viewHelper.getViewActions(this.proxyManager);
-      actions.single = this.layoutCount > 1;
-      actions.split = this.layoutCount < 4;
-      return actions;
-    },
   },
   methods: {
     onMounted,
     onBeforeDestroy,
     changeViewType,
+    getAvailableActions,
     resetCamera,
     toggleCrop,
     rollLeft,

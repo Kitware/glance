@@ -23,7 +23,7 @@
   },
   "author": "Kitware",
   "dependencies": {
-    "itk": "9.0.0",
+    "itk": "9.1.1",
     "material-design-icons-iconfont": "3.0.3",
     "@fortawesome/fontawesome": "1.1.8",
     "@fortawesome/fontawesome-free-regular": "5.0.13",

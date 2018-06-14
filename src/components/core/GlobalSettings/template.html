@@ -16,16 +16,7 @@
       <span class="body-2">Overlay</span>
     </div>
     <v-divider :class="$style.divider" />
-    <v-layout row wrap align-center>
-      <v-flex xs10>
-        <span class="body-2">Orientation Axis</span>
-      </v-flex>
-      <v-flex xs2>
-        <v-switch
-          v-model="orientationAxis"
-          hide-details
-        />
-      </v-flex>
+    <v-layout row align-center :class="$style.lineTopPadding">
       <v-flex xs6>
         <span class="body-2">Text opacity</span>
       </v-flex>
@@ -38,6 +29,33 @@
           :min="0"
           :max="1"
           :step="0.01"
+        />
+      </v-flex>
+    </v-layout>
+    <v-layout row align-center :class="$style.lineTopPadding">
+      <v-flex xs10>
+        <span class="body-2">Orientation Axis</span>
+      </v-flex>
+      <v-flex xs2>
+        <v-switch
+          v-model="orientationAxis"
+          hide-details
+        />
+      </v-flex>
+    </v-layout>
+    <v-layout row align-center :class="$style.lineTopPadding">
+      <v-flex xs6>
+        <span class="body-2">Axis presets</span>
+      </v-flex>
+      <v-flex xs6>
+        <v-select
+          :class="$style.noTopPadding"
+          dense
+          flat
+          hide-details
+
+          v-model="orientationPreset"
+          :items="orientationPresets"
         />
       </v-flex>
     </v-layout>

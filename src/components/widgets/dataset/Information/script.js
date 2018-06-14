@@ -11,4 +11,15 @@ export default {
     VtkMolecule,
     VtkPolyData,
   },
+  computed: {
+    available() {
+      if (this.source) {
+        const ds = this.source.getDataset();
+        if (ds && ds.isA) {
+          return ds.isA('vtkPolyData') || ds.isA('vtkImageData');
+        }
+      }
+      return false;
+    },
+  },
 };

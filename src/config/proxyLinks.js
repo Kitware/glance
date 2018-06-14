@@ -1,46 +1,59 @@
 const Volume = [
   // { link: 'ColorBy', property: 'colorBy' },
-  { link: 'Visibility', property: 'volumeVisibility' },
+  { link: 'Visibility', property: 'volumeVisibility', updateOnBind: true },
   // { link: 'UseShadow', property: 'useShadow' },
   // { link: 'SampleDistance', property: 'sampleDistance' },
   // { link: 'EdgeGradient', property: 'edgeGradient' },
-  { link: 'ColorWindow', property: 'colorWindow' },
-  { link: 'ColorLevel', property: 'colorLevel' },
-  { link: 'Visibility', property: 'sliceVisibility' },
-  { link: 'SliceX', property: 'xSlice' },
-  { link: 'SliceY', property: 'ySlice' },
-  { link: 'SliceZ', property: 'zSlice' },
+  { link: 'ColorWindow', property: 'colorWindow', updateOnBind: true },
+  { link: 'ColorLevel', property: 'colorLevel', updateOnBind: true },
+  { link: 'Visibility', property: 'sliceVisibility', updateOnBind: true },
+  { link: 'SliceX', property: 'xSlice', updateOnBind: true },
+  { link: 'SliceY', property: 'ySlice', updateOnBind: true },
+  { link: 'SliceZ', property: 'zSlice', updateOnBind: true },
 ];
 
 const Geometry = [
-  { link: 'GeometryColorBy', property: 'colorBy' },
-  { link: 'Representation', property: 'representation' },
-  { link: 'Opacity', property: 'opacity' },
+  { link: 'GeometryColorBy', property: 'colorBy', updateOnBind: true },
+  { link: 'Representation', property: 'representation', updateOnBind: true },
+  { link: 'Opacity', property: 'opacity', updateOnBind: true },
   {
     link: 'InterpolateScalarsBeforeMapping',
     property: 'interpolateScalarsBeforeMapping',
+    updateOnBind: true,
   },
-  { link: 'Visibility', property: 'visibility' },
-  { link: 'PointSize', property: 'pointSize' },
+  { link: 'Visibility', property: 'visibility', updateOnBind: true },
+  { link: 'PointSize', property: 'pointSize', updateOnBind: true },
 ];
 
 const Slice = [
-  { link: 'Visibility', property: 'visibility' },
-  { link: 'ColorWindow', property: 'colorWindow' },
-  { link: 'ColorLevel', property: 'colorLevel' },
+  { link: 'Visibility', property: 'visibility', updateOnBind: true },
+  { link: 'ColorWindow', property: 'colorWindow', updateOnBind: true },
+  { link: 'ColorLevel', property: 'colorLevel', updateOnBind: true },
 ];
 
 const Molecule = [
-  { link: 'Tolerance', property: 'tolerance' },
-  { link: 'AtomicRadiusScaleFactor', property: 'atomicRadiusScaleFactor' },
-  { link: 'BondRadius', property: 'bondRadius' },
-  { link: 'DeltaBondFactor', property: 'deltaBondFactor' },
-  { link: 'HideElements', property: 'hideElements' },
+  { link: 'Tolerance', property: 'tolerance', updateOnBind: true },
+  {
+    link: 'AtomicRadiusScaleFactor',
+    property: 'atomicRadiusScaleFactor',
+    updateOnBind: true,
+  },
+  { link: 'BondRadius', property: 'bondRadius', updateOnBind: true },
+  { link: 'DeltaBondFactor', property: 'deltaBondFactor', updateOnBind: true },
+  { link: 'HideElements', property: 'hideElements', updateOnBind: true },
 ];
 
-const Glyph = [{ link: 'GlyphEdgeVisibility', property: 'edgeVisibility' }];
+const Glyph = [
+  {
+    link: 'GlyphEdgeVisibility',
+    property: 'edgeVisibility',
+    updateOnBind: true,
+  },
+];
 
-const Skybox = [{ link: 'SkyboxPosition', property: 'position' }];
+const Skybox = [
+  { link: 'SkyboxPosition', property: 'position', updateOnBind: true },
+];
 
 export default {
   Volume,

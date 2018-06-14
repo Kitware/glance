@@ -26,16 +26,19 @@ function createDefaultView(classFactory, ui) {
         type: 'application',
         link: 'AnnotationOpacity',
         property: 'annotationOpacity',
+        updateOnBind: true,
       },
       {
         type: 'application',
         link: 'OrientationAxesVisibility',
         property: 'orientationAxesVisibility',
+        updateOnBind: true,
       },
       {
         type: 'application',
         link: 'OrientationAxesPreset',
         property: 'presetToOrientationAxes',
+        updateOnBind: true,
       },
     ])
   );

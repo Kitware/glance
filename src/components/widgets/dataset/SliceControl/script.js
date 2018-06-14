@@ -60,6 +60,7 @@ const component = helper.generateComponent(FIELDS, true, {
     colorWindow: 'updateCornerAnnotation',
     colorLevel: 'updateCornerAnnotation',
   },
+  onUpdate: ['updateCornerAnnotation'],
 });
 Object.assign(component.methods, {
   isSliceAvailable,

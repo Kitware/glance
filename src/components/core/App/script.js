@@ -2,6 +2,7 @@ import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 
 import { Events, Messages } from 'paraview-glance/src/constants';
 import Datasets from 'paraview-glance/src/components/core/Datasets';
+import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
 import GlobalSettings from 'paraview-glance/src/components/core/GlobalSettings';
 import Landing from 'paraview-glance/src/components/core/Landing';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
@@ -76,6 +77,7 @@ export default {
   inject: ['proxyManager'],
   components: {
     Datasets,
+    DragAndDrop,
     GlobalSettings,
     Landing,
     LayoutView,

@@ -1,123 +1,139 @@
-<v-app>
-  <v-navigation-drawer
-    :value="!landing && sidebar"
-    absolute
-    app
-    clipped
-    hide-overlay
-    stateless
-  >
-    <v-tabs
-      :class="$style.tabs"
-      v-model="activeTab"
-      color="grey lighten-4"
-      slider-color="green"
+<drag-and-drop
+  :enabled="!landing"
+  v-on:drop="loadFiles"
+>
+  <v-app slot-scope="{ dragHover }">
+    <v-navigation-drawer
+      :value="!landing && sidebar"
+      absolute
+      app
+      clipped
+      hide-overlay
+      stateless
     >
-      <v-tab>Datasets</v-tab>
-      <v-tab>Global</v-tab>
-      <v-tab-item>
-        <datasets />
-      </v-tab-item>
-      <v-tab-item>
-        <global-settings />
-      </v-tab-item>
-    </v-tabs>
-  </v-navigation-drawer>
-  <v-toolbar
-    clipped-left
-    app
-  >
-    <v-toolbar-side-icon
-      :disabled="landing"
-      @click.native.stop="sidebar = !sidebar"
-    />
-    <v-toolbar-title>ParaView Glance</v-toolbar-title>
-    <v-spacer />
-    <v-btn
-      :class="$style.toolbarButton"
-      :disabled="!!loadingName"
-      flat
-      v-on:click="openFile"
-    >
-      <v-icon>folder</v-icon>
-      <span>Open</span>
-    </v-btn>
-    <v-btn
-      :class="$style.toolbarButton"
-      :disabled="landing"
-      flat
-      v-on:click="screenshotsDrawer = true"
-    >
-      <v-icon>collections</v-icon>
-      <span>Screenshots ({{ screenshotCount }})</span>
-    </v-btn>
-    <v-btn
-      :class="$style.toolbarButton"
-      flat
-      v-on:click="aboutDialog = true"
-    >
-      <v-icon>help</v-icon>
-      <span>About</span>
-    </v-btn>
-  </v-toolbar>
-  <v-content :class="$style.appContent">
-    <div
-      :class="$style.loadingOverlay"
-      v-if="!!loadingName"
-    >
-      <div
-        :class="$style.overlayText"
+      <v-tabs
+        :class="$style.tabs"
+        v-model="activeTab"
+        color="grey lighten-4"
+        slider-color="green"
       >
-        <div class="display-2">Loading {{ loadingName }}...</div>
-        <v-progress-linear
-          :value="loadingProgress"
-          height="10"
-          color="info"
-        />
+        <v-tab>Datasets</v-tab>
+        <v-tab>Global</v-tab>
+        <v-tab-item>
+          <datasets />
+        </v-tab-item>
+        <v-tab-item>
+          <global-settings />
+        </v-tab-item>
+      </v-tabs>
+    </v-navigation-drawer>
+    <v-toolbar
+      clipped-left
+      app
+    >
+      <v-toolbar-side-icon
+        :disabled="landing"
+        @click.native.stop="sidebar = !sidebar"
+      />
+      <v-toolbar-title>ParaView Glance</v-toolbar-title>
+      <v-spacer />
+      <v-btn
+        :class="$style.toolbarButton"
+        :disabled="!!loadingName"
+        flat
+        v-on:click="openFile"
+      >
+        <v-icon>folder</v-icon>
+        <span>Open</span>
+      </v-btn>
+      <v-btn
+        :class="$style.toolbarButton"
+        :disabled="landing"
+        flat
+        v-on:click="screenshotsDrawer = true"
+      >
+        <v-icon>collections</v-icon>
+        <span>Screenshots ({{ screenshotCount }})</span>
+      </v-btn>
+      <v-btn
+        :class="$style.toolbarButton"
+        flat
+        v-on:click="aboutDialog = true"
+      >
+        <v-icon>help</v-icon>
+        <span>About</span>
+      </v-btn>
+    </v-toolbar>
+    <v-content :class="$style.appContent">
+      <div
+        :class="$style.overlay"
+        v-if="!!loadingName"
+      >
+        <div :class="$style.overlayText">
+          <div class="display-2">Loading {{ loadingName }}...</div>
+          <v-progress-linear
+            :value="loadingProgress"
+            height="10"
+            color="info"
+          />
+        </div>
+      </div>
+      <landing
+        v-if="landing"
+        v-on:open="openFile"
+        v-on:open-url="loadRemoteDataset"
+        v-on:open-files="loadFiles"
+      />
+      <layout-view v-if="!landing" />
+    </v-content>
+
+    <v-navigation-drawer
+      v-model="screenshotsDrawer"
+      absolute
+      right
+      temporary
+    >
+      <screenshots
+        v-on:screenshot-count="screenshotCount = $event"
+        v-on:close="screenshotsDrawer = false"
+      />
+    </v-navigation-drawer>
+
+    <!-- notifications manager -->
+    <notification />
+
+    <!-- dnd overlay -->
+    <div
+      :class="{ [$style.overlay]: true, [$style.overlayHidden]: !dragHover }"
+    >
+      <div :class="$style.overlayText">
+        <div class="display-3">Drop files here</div>
+        <v-icon class="display-4">publish</v-icon>
       </div>
     </div>
-    <landing
-      v-if="landing"
-      v-on:open="openFile"
-      v-on:open-url="loadRemoteDataset"
-      v-on:open-files="loadFiles"
-    />
-    <layout-view v-if="!landing" />
-  </v-content>
 
-  <v-navigation-drawer
-    v-model="screenshotsDrawer"
-    absolute
-    right
-    temporary
-  >
-    <screenshots
-      v-on:screenshot-count="screenshotCount = $event"
-      v-on:close="screenshotsDrawer = false"
-    />
-  </v-navigation-drawer>
-
-  <notification />
-  <v-dialog v-model="aboutDialog" max-width="50%">
-    <v-card>
-      <v-card-title>
-        <span class="title">About ParaView Glance</span>
-        <v-spacer />
-        <v-btn
-          flat
-          icon
-          v-on:click="aboutDialog = false"
-        >
-          <v-icon>close</v-icon>
-        </v-btn>
-      </v-card-title>
-      <v-card-text>
-        <p class="body-1">
-          ParaView Glance is a general purpose web application for visualizing
-          useful for visualizing many data types, as well as a framework for
-          building custom web-based visualization applications.
-        </p>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
-</v-app>
+    <!-- about dialog-->
+    <v-dialog v-model="aboutDialog" max-width="50%">
+      <v-card>
+        <v-card-title>
+          <span class="title">About ParaView Glance</span>
+          <v-spacer />
+          <v-btn
+            flat
+            icon
+            v-on:click="aboutDialog = false"
+          >
+            <v-icon>close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <p class="body-1">
+            ParaView Glance is a general purpose web application for visualizing
+            useful for visualizing many data types, as well as a framework for
+            building custom web-based visualization applications.
+          </p>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </v-app>
+</drag-and-drop>

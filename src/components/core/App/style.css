@@ -20,7 +20,7 @@
   margin-left: 4px;
 }
 
-.loadingOverlay {
+.overlay {
   position: absolute;
   z-index: 5;
   top: 0;
@@ -32,9 +32,13 @@
   user-select: none;
 }
 
+.overlayHidden {
+  visibility: hidden;
+}
+
 .overlayText {
   position: relative;
-  top: 40%;
+  top: 45%;
   transform: translateY(-50%);
   width: 80%;
   margin: auto;

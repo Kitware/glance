@@ -8,11 +8,11 @@ workboxSW.precache([
   },
   {
     "url": "glance-external-ITKReader.js",
-    "revision": "0489949b2c6976797a97479288a140a3"
+    "revision": "8a6878a66109d90d1c41ae9cff682578"
   },
   {
     "url": "glance-external-Workbox.js",
-    "revision": "d9de853d54e847cce66ae652b796086f"
+    "revision": "b7261f22e8c9de86b1f9ada53ddd426d"
   },
   {
     "url": "index.html",

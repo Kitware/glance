@@ -19,7 +19,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // extension
 var loadEmscriptenModule = function loadEmscriptenModule(itkModulesPath, modulesDirectory, moduleBaseName) {
   var prefix = itkModulesPath;
-  if (itkModulesPath[0] !== '/') {
+  if (itkModulesPath[0] !== '/' && !itkModulesPath.startsWith('http')) {
     prefix = '..';
   }
   var modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + '.js';

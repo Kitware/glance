@@ -1,24 +1,26 @@
-import WebworkerPromise from 'webworker-promise';
+import createWebworkerPromise from './createWebworkerPromise';
 import PromiseFileReader from 'promise-file-reader';
 
 import config from './itkConfig';
 
 var readMeshFile = function readMeshFile(webWorker, file) {
   var worker = webWorker;
-  if (!worker) {
-    worker = new window.Worker(config.itkModulesPath + '/WebWorkers/MeshIO.worker.js');
-  }
-  var promiseWorker = new WebworkerPromise(worker);
-  return PromiseFileReader.readAsArrayBuffer(file).then(function (arrayBuffer) {
-    return promiseWorker.postMessage({
-      operation: 'readMesh',
-      name: file.name,
-      type: file.type,
-      data: arrayBuffer,
-      config: config
-    }, [arrayBuffer]);
-  }).then(function (mesh) {
-    return Promise.resolve({ mesh: mesh, webWorker: worker });
+  return createWebworkerPromise('MeshIO', worker).then(function (_ref) {
+    var webworkerPromise = _ref.webworkerPromise,
+        usedWorker = _ref.worker;
+
+    worker = usedWorker;
+    return PromiseFileReader.readAsArrayBuffer(file).then(function (arrayBuffer) {
+      return webworkerPromise.postMessage({
+        operation: 'readMesh',
+        name: file.name,
+        type: file.type,
+        data: arrayBuffer,
+        config: config
+      }, [arrayBuffer]);
+    }).then(function (mesh) {
+      return Promise.resolve({ mesh: mesh, webWorker: worker });
+    });
   });
 };
 

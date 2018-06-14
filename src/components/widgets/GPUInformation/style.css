@@ -1,0 +1,23 @@
+.card {
+  padding: 18px 0;
+}
+
+.heading {
+  padding: 8px 0;
+}
+
+.divider {
+  margin-bottom: 16px;
+}
+
+.noTopPadding {
+  padding-top: 0;
+}
+
+.lineTopPadding {
+  padding-top: 5px;
+}
+
+.monitor {
+  position: relative;
+}

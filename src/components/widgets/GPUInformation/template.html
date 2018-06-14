@@ -1,0 +1,10 @@
+<v-card flat :class="$style.card">
+  <div :class="$style.heading">
+    <v-tooltip bottom>
+      <div class="body-2">{{vendor}}<br/>{{gpu}}<br/>WebGL {{webgl}}</div>
+      <span slot="activator" class="body-2">Rendering</span>
+    </v-tooltip>
+  </div>
+  <v-divider :class="$style.divider" />
+  <div :class="['js-monitor', $style.monitor]" />
+</v-card>

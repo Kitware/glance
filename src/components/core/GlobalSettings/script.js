@@ -1,3 +1,4 @@
+import GpuInformation from 'paraview-glance/src/components/widgets/GPUInformation';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 import { Events } from 'paraview-glance/src/constants';
@@ -69,6 +70,7 @@ export default {
   inject: ['proxyManager'],
   components: {
     PalettePicker,
+    GpuInformation,
   },
   data() {
     return {

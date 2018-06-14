@@ -52,7 +52,7 @@
             />
           </v-menu>
         </v-flex>
-        <v-flex xs12 v-if="colorBy.length && piecewiseFunction">
+        <v-flex xs12 v-if="available === 'volume' && piecewiseFunction">
           <piecewise-function-editor :piecewiseFunction="piecewiseFunction" :source="source" />
         </v-flex>
       </v-layout>

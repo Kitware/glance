@@ -19,22 +19,29 @@
           </v-card>
         </v-flex>
         <v-flex xs6 fill-height>
-          <div
-            :class="$style.fileUpload"
-            v-on:click.stop="$emit('open')"
+          <drag-and-drop
+            :class="$style.dnd"
+            v-on:drop="$emit('open-files', $event)"
           >
-            <div :class="['white--text body-2', $style.fileUploadContents]">
-              <v-btn
-                color="primary"
-                raised="false"
-                v-on:click.stop="$emit('open')"
-              >
-                <span :class="$style.buttonText">open a file</span>
-                <v-icon>folder_open</v-icon>
-              </v-btn>
-              <div>or drag it anywhere in this window to begin.</div>
+            <div
+              slot-scope="{ dragHover }"
+              :class="{ [$style.fileUpload]: true, [$style.fileUploadHover]: dragHover }"
+              v-on:click.stop="$emit('open')"
+            >
+              <div :class="['white--text body-2', $style.fileUploadContents]">
+                <v-btn
+                  color="primary"
+                  raised="false"
+                  v-on:click.stop="$emit('open')"
+                >
+                  <span v-if="dragHover" :class="$style.buttonText">drop your file</span>
+                  <span v-else :class="$style.buttonText">open a file</span>
+                  <v-icon>folder_open</v-icon>
+                </v-btn>
+                <div>or drag it anywhere in this window to begin.</div>
+              </div>
             </div>
-          </div>
+          </drag-and-drop>
         </v-flex>
       </v-layout>
     </v-container>

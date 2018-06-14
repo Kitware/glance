@@ -13,9 +13,21 @@ import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 // ----------------------------------------------------------------------------
 
 function loadFiles(files) {
-  return ReaderFactory.loadFiles(files).then((readers) => {
-    ReaderFactory.registerReadersToProxyManager(readers, this.proxyManager);
-  });
+  return ReaderFactory.loadFiles(files)
+    .then((readers) => {
+      ReaderFactory.registerReadersToProxyManager(readers, this.proxyManager);
+    })
+    .then(() => {
+      this.landing = false;
+    })
+    .catch((error) => {
+      if (error) {
+        this.$globalBus.$emit(Events.MSG_ERROR, Messages.OPEN_ERROR);
+      }
+      // TODO display popup for raw parsing
+      this.$globalBus.$emit(Events.MSG_INFO, 'TODO interpret as *.raw');
+      this.landing = false;
+    });
 }
 
 // ----------------------------------------------------------------------------
@@ -53,20 +65,7 @@ function openFile() {
   ReaderFactory.openFiles(
     // doesn't handle *.raw
     ReaderFactory.listSupportedExtensions(),
-    (files) => {
-      this.loadFiles(files)
-        .then(() => {
-          this.landing = false;
-        })
-        .catch((error) => {
-          if (error) {
-            this.$globalBus.$emit(Events.MSG_ERROR, Messages.OPEN_ERROR);
-          }
-          // TODO display popup for raw parsing
-          this.$globalBus.$emit(Events.MSG_INFO, 'TODO interpret as *.raw');
-          this.landing = false;
-        });
-    }
+    (files) => this.loadFiles(files)
   );
 }
 

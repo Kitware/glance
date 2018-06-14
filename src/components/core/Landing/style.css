@@ -5,6 +5,10 @@
   overflow-y: auto;
 }
 
+.dnd {
+  height: 100%;
+}
+
 .fileUpload {
   display: flex;
   flex-flow: row;
@@ -15,7 +19,7 @@
   background-color: #696969;
 }
 
-.fileUpload:hover {
+.fileUpload:hover, .fileUploadHover {
   background-color: #787878;
   cursor: pointer;
 }

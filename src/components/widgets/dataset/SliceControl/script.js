@@ -22,7 +22,7 @@ function isSliceAvailable(name) {
 // ----------------------------------------------------------------------------
 
 function updateCornerAnnotation() {
-  const views = this.proxyManager.getViews().filter((v) => v.getContainer());
+  const views = this.proxyManager.getViews();
   for (let i = 0; i < views.length; i++) {
     const view = views[i];
     const representations = view

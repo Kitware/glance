@@ -144,4 +144,17 @@ module.exports = {
       'paraview-glance': paths.root,
     },
   },
+  optimization: {
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          enforce: true,
+          chunks: 'all',
+        },
+      },
+    },
+  },
 };

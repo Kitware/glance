@@ -1,4 +1,5 @@
 import macro from 'vtk.js/Sources/macro';
+import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import { Events } from 'paraview-glance/src/constants';
 
 const MAX_SLIDER_STEPS = 500;
@@ -87,7 +88,6 @@ function proxyUpdated(fieldName, onChange, value) {
   while (proxies.length) {
     changeDetected = proxies.pop()[methodName](value) || changeDetected;
   }
-  this.proxyManager.autoAnimateViews();
   if (changeDetected && onChange && this[onChange]) {
     this[onChange](fieldName, value);
   }
@@ -163,6 +163,19 @@ function updateData() {
 }
 
 // ----------------------------------------------------------------------------
+
+function getProxyWithFields() {
+  const allProxies = new Set();
+  for (let i = 0; i < this.fields.length; i++) {
+    const { name } = this.fields[i];
+    const methodName = `get${macro.capitalize(name)}`;
+    const proxies = findProxiesWithMethod(this, methodName);
+    proxies.forEach((p) => allProxies.add(p));
+  }
+  return Array.from(allProxies);
+}
+
+// ----------------------------------------------------------------------------
 // Factory
 // ----------------------------------------------------------------------------
 
@@ -180,11 +193,17 @@ function generateComponent(
     methods: {
       updateDomains,
       updateData,
+      getProxyWithFields,
     },
     data: function data() {
       return dataGenerator(fields);
     },
     created() {
+      this.listenerHelper = vtkListenerHelper.newInstance(
+        () => this.updateData(),
+        () => this.getProxyWithFields()
+      );
+
       this.subscriptions = addWatchers(this, fields, options.onChange);
       this.subscriptions.push(
         this.proxyManager.onProxyRegistrationChange(() => {
@@ -195,6 +214,7 @@ function generateComponent(
               this[options.onUpdate[i]]();
             }
           }
+          this.listenerHelper.resetListeners();
         }).unsubscribe
       );
     },
@@ -213,6 +233,7 @@ function generateComponent(
       }
     },
     beforeDestroy() {
+      this.listenerHelper.removeListeners();
       if (dependOnLayout) {
         this.$globalBus.$off(Events.LAYOUT_CHANGE, this.$forceUpdate);
       }

@@ -18,6 +18,7 @@ import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
+import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 
 // Expose IO API to Glance global object
 export const {
@@ -50,6 +51,17 @@ export function createViewer(container, proxyConfig = null) {
   const proxyConfiguration = proxyConfig || activeProxyConfig || Config.Proxy;
 
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
+  const renderListener = vtkListenerHelper.newInstance(
+    proxyManager.autoAnimateViews,
+    () =>
+      [].concat(
+        proxyManager.getSources(),
+        proxyManager.getRepresentations(),
+        proxyManager.getViews()
+      )
+  );
+
+  proxyManager.onProxyRegistrationChange(renderListener.resetListeners);
 
   /* eslint-disable no-new */
   const vm = new Vue({

@@ -20,51 +20,10 @@ function isSliceAvailable(name) {
 }
 
 // ----------------------------------------------------------------------------
-
-function updateCornerAnnotation() {
-  const views = this.proxyManager.getViews();
-  for (let i = 0; i < views.length; i++) {
-    const view = views[i];
-    const representations = view
-      .getRepresentations()
-      .filter((r) => r.getInput() === this.source);
-    const annotations = {
-      colorWindow: '(none)',
-      colorLevel: '(none)',
-    };
-    while (representations.length) {
-      const representation = representations.pop();
-      if (representation.getColorWindow) {
-        annotations.colorWindow = Math.round(representation.getColorWindow());
-      }
-      if (representation.getColorLevel) {
-        annotations.colorLevel = Math.round(representation.getColorLevel());
-      }
-      if (representation.getSlice) {
-        annotations.slice = Number(representation.getSlice()).toFixed(2);
-      }
-    }
-    view.updateCornerAnnotation(annotations);
-  }
-}
-
-// ----------------------------------------------------------------------------
 // Add custom method
 // ----------------------------------------------------------------------------
 
-const component = helper.generateComponent(FIELDS, true, {
-  onChange: {
-    xSlice: 'updateCornerAnnotation',
-    ySlice: 'updateCornerAnnotation',
-    zSlice: 'updateCornerAnnotation',
-    colorWindow: 'updateCornerAnnotation',
-    colorLevel: 'updateCornerAnnotation',
-  },
-  onUpdate: ['updateCornerAnnotation'],
-});
-Object.assign(component.methods, {
-  isSliceAvailable,
-  updateCornerAnnotation,
-});
+const component = helper.generateComponent(FIELDS, true);
+Object.assign(component.methods, { isSliceAvailable });
 
 export default component;

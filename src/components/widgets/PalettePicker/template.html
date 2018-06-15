@@ -1,19 +1,21 @@
 <div :class="$style.wrapper">
   <div
-    :class="$style.item"
     v-for="color in palette"
     :key="color"
+    :class="$style.item"
   >
     <div
       :class="$style.blot"
       :style="getStyles(color)"
       v-on:click="$emit('input', color)"
-    />
-    <div
-      :class="$style.check"
-      v-if="color === value"
     >
-      <v-icon :size="size">check</v-icon>
+      <v-icon
+        v-if="color === value"
+        :class="$style.check"
+        :size="size"
+      >
+        check
+      </v-icon>
     </div>
   </div>
 </div>

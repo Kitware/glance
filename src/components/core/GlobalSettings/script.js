@@ -45,6 +45,7 @@ function setPresetToOrientationAxes(presetName) {
 // ----------------------------------------------------------------------------
 
 function setBackgroundColor(color) {
+  this.backgroundColor = color;
   this.$globalBus.$emit(Events.ALL_BACKGROUND_CHANGE, color);
 }
 
@@ -75,6 +76,7 @@ export default {
   data() {
     return {
       palette: BACKGROUND,
+      backgroundColor: '',
       orientationAxis: true,
       annotationOpacity: 1,
       orientationPreset: 'default',

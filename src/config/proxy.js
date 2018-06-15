@@ -43,6 +43,12 @@ function createDefaultView(classFactory, ui, options, props) {
           property: 'presetToOrientationAxes',
           updateOnBind: true,
         },
+        {
+          type: 'application',
+          link: 'OrientationAxesType',
+          property: 'orientationAxesType',
+          updateOnBind: true,
+        },
       ],
       options,
       props

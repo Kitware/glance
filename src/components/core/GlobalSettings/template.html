@@ -45,22 +45,6 @@
     </v-layout>
     <v-layout row align-center :class="$style.lineTopPadding">
       <v-flex xs6>
-        <span class="body-2">Axis presets</span>
-      </v-flex>
-      <v-flex xs6>
-        <v-select
-          :class="$style.noTopPadding"
-          dense
-          flat
-          hide-details
-
-          v-model="orientationPreset"
-          :items="orientationPresets"
-        />
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center :class="$style.lineTopPadding">
-      <v-flex xs6>
         <span class="body-2">Axis type</span>
       </v-flex>
       <v-flex xs6>
@@ -72,6 +56,22 @@
 
           v-model="axisType"
           :items="axisTypes"
+        />
+      </v-flex>
+    </v-layout>
+    <v-layout row align-center :class="$style.lineTopPadding" v-if="axisType == 'cube'">
+      <v-flex xs6>
+        <span class="body-2">Axis presets</span>
+      </v-flex>
+      <v-flex xs6>
+        <v-select
+          :class="$style.noTopPadding"
+          dense
+          flat
+          hide-details
+
+          v-model="orientationPreset"
+          :items="orientationPresets"
         />
       </v-flex>
     </v-layout>

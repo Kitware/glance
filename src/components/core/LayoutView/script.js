@@ -113,6 +113,20 @@ export default {
   components: {
     VtkView,
   },
+  created() {
+    this.subscriptions = [
+      // reset cameras when first source is added
+      this.proxyManager.onProxyRegistrationChange(({ action, proxyGroup }) => {
+        if (
+          proxyGroup === 'Sources' &&
+          action === 'register' &&
+          this.proxyManager.getSources().length === 1
+        ) {
+          this.proxyManager.resetCameraInAllViews();
+        }
+      }),
+    ];
+  },
   mounted() {
     this.$globalBus.$on(
       Events.ALL_BACKGROUND_CHANGE,
@@ -125,6 +139,10 @@ export default {
     this.proxyManager.resizeAllViews();
   },
   beforeDestroy() {
+    while (this.subscriptions.length) {
+      this.subscriptions.pop().unsubscribe();
+    }
+
     this.$globalBus.$off(
       Events.ALL_BACKGROUND_CHANGE,
       this.setAllViewBackgrounds

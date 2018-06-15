@@ -73,26 +73,27 @@
 
   <v-card light flat :class="$style.block">
     <v-card-title light flat :class="$style.blockTitle">
-      <v-layout row wrap>
-        <v-flex xs10>
-          <span class="body-2">Slices</span>
-        </v-flex>
-        <v-flex xs2>
-          <v-switch
-            v-model="sliceVisibility"
-            :class="$style.noTopPadding"
-            hide-details
-          />
-       </v-flex>
-      </v-layout>
+      <span class="body-2">Slices</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">
       <v-container fluid grid-list-md>
         <v-layout row wrap>
-          <v-flex xs3 :class="isSliceAvailable('x') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
-            <label :class="$style.smallLabel">X</label>
+          <v-flex xs2 :class="isSliceAvailable('x') || (isSliceAvailable('default') && xSliceVisibility) ? '' : $style.disable">
+            <div style="position: relative;">
+              <v-btn
+                :class="$style.button"
+                fab
+                small
+                :outline="!getToggleSliceX()"
+                :dark="getToggleSliceX()"
+                v-on:click.stop="setToggleSliceX()"
+                color="blue-grey"
+              >
+                <label :class="$style.smallLabel">X</label>
+              </v-btn>
+            </div>
           </v-flex>
-          <v-flex xs6 :class="isSliceAvailable('x') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
+          <v-flex xs7 :class="isSliceAvailable('x') || (isSliceAvailable('default') && xSliceVisibility) ? '' : $style.disable">
             <v-slider
               :class="$style.noTopPadding"
               hide-details
@@ -103,7 +104,7 @@
               :step="domains.xSlice.step"
             />
           </v-flex>
-          <v-flex xs3 :class="isSliceAvailable('x') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
+          <v-flex xs3 :class="isSliceAvailable('x') || (isSliceAvailable('default') && xSliceVisibility) ? '' : $style.disable">
             <v-text-field
               :class="$style.noTopPadding"
               hide-details
@@ -115,10 +116,22 @@
               :step="domains.xSlice.step"
             />
           </v-flex>
-          <v-flex xs3 :class="isSliceAvailable('y') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
-            <label :class="$style.smallLabel">Y</label>
+          <v-flex xs2 :class="isSliceAvailable('y') || (isSliceAvailable('default') && ySliceVisibility) ? '' : $style.disable">
+            <div style="position: relative;">
+              <v-btn
+                :class="$style.button"
+                fab
+                small
+                :outline="!getToggleSliceY()"
+                :dark="getToggleSliceY()"
+                v-on:click.stop="setToggleSliceY()"
+                color="blue-grey"
+              >
+                <label :class="$style.smallLabel">Y</label>
+              </v-btn>
+            </div>
           </v-flex>
-          <v-flex xs6 :class="isSliceAvailable('y') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
+          <v-flex xs7 :class="isSliceAvailable('y') || (isSliceAvailable('default') && ySliceVisibility) ? '' : $style.disable">
             <v-slider
               :class="$style.noTopPadding"
               hide-details
@@ -129,7 +142,7 @@
               :step="domains.ySlice.step"
             />
           </v-flex>
-          <v-flex xs3 :class="isSliceAvailable('y') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
+          <v-flex xs3 :class="isSliceAvailable('y') || (isSliceAvailable('default') && ySliceVisibility) ? '' : $style.disable">
             <v-text-field
               :class="$style.noTopPadding"
               hide-details
@@ -141,10 +154,22 @@
               :step="domains.ySlice.step"
             />
           </v-flex>
-          <v-flex xs3 :class="isSliceAvailable('z') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
-            <label :class="$style.smallLabel">Z</label>
+          <v-flex xs2 :class="isSliceAvailable('z') || (isSliceAvailable('default') && zSliceVisibility) ? '' : $style.disable">
+            <div style="position: relative;">
+              <v-btn
+                :class="$style.button"
+                fab
+                small
+                :outline="!getToggleSliceZ()"
+                :dark="getToggleSliceZ()"
+                v-on:click.stop="setToggleSliceZ()"
+                color="blue-grey"
+              >
+                <label :class="$style.smallLabel">Z</label>
+              </v-btn>
+            </div>
           </v-flex>
-          <v-flex xs6 :class="isSliceAvailable('z') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
+          <v-flex xs7 :class="isSliceAvailable('z') || (isSliceAvailable('default') && zSliceVisibility) ? '' : $style.disable">
             <v-slider
               :class="$style.noTopPadding"
               hide-details
@@ -155,7 +180,7 @@
               :step="domains.zSlice.step"
             />
           </v-flex>
-          <v-flex xs3 :class="isSliceAvailable('z') || (isSliceAvailable('default') && sliceVisibility) ? '' : $style.disable">
+          <v-flex xs3 :class="isSliceAvailable('z') || (isSliceAvailable('default') && zSliceVisibility) ? '' : $style.disable">
             <v-text-field
               :class="$style.noTopPadding"
               hide-details

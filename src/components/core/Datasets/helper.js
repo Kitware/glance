@@ -68,18 +68,32 @@ function findProxiesWithMethod(self, methodName) {
 function dataGenerator(fields) {
   const data = { fields, domains: {} };
   for (let i = 0; i < fields.length; i++) {
-    const { name, initialValue } = fields[i];
-    data[name] = initialValue;
+    const { name, initialValue, computed } = fields[i];
+    if (!computed) {
+      data[name] = initialValue;
+    }
   }
   return data;
 }
 
 // ----------------------------------------------------------------------------
 
+function computedGenerator(fields) {
+  const computedMethods = {};
+  for (let i = 0; i < fields.length; i++) {
+    const { name, computed } = fields[i];
+    if (computed) {
+      computedMethods[name] = computed;
+    }
+  }
+  return computedMethods;
+}
+// ----------------------------------------------------------------------------
+
 function proxyUpdated(fieldName, onChange, value) {
   const methodName = `set${macro.capitalize(fieldName)}`;
   const proxies = findProxiesWithMethod(this, methodName);
-  let changeDetected = false;
+  let changeDetected = !proxies.length;
   // console.log(
   //   `proxyUpdated (x${
   //     proxies.length
@@ -187,17 +201,24 @@ function generateComponent(
     onUpdate: [],
   }
 ) {
+  const computed = computedGenerator(fields);
+  const methods = {
+    updateDomains,
+    updateData,
+    getProxyWithFields,
+  };
+  Object.keys(computed).forEach((name) => {
+    methods[`get${macro.capitalize(name)}`] = computed[name].get;
+    methods[`set${macro.capitalize(name)}`] = computed[name].set;
+  });
   return {
     inject: ['proxyManager'],
     props: ['source'],
-    methods: {
-      updateDomains,
-      updateData,
-      getProxyWithFields,
-    },
+    methods,
     data: function data() {
       return dataGenerator(fields);
     },
+    computed,
     created() {
       this.listenerHelper = vtkListenerHelper.newInstance(
         () => this.updateData(),
@@ -248,4 +269,5 @@ function generateComponent(
 
 export default {
   generateComponent,
+  findProxiesWithMethod,
 };

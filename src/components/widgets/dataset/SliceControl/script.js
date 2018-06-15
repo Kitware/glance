@@ -1,5 +1,33 @@
 import helper from 'paraview-glance/src/components/core/Datasets/helper';
 
+// ----------------------------------------------------------------------------
+
+function generateSetGet(field) {
+  const setMethodName = `set${field}`;
+  const getMethodName = `get${field}`;
+
+  function get() {
+    let value = null;
+    helper.findProxiesWithMethod(this, getMethodName).forEach((proxy) => {
+      value = proxy[getMethodName]();
+    });
+    console.log(getMethodName, value);
+    return value;
+  }
+
+  function set() {
+    const visibility = !get.apply(this);
+    helper.findProxiesWithMethod(this, setMethodName).forEach((proxy) => {
+      proxy[setMethodName](visibility);
+    });
+    this.$forceUpdate();
+  }
+
+  return { get, set };
+}
+
+// ----------------------------------------------------------------------------
+
 const FIELDS = [
   { name: 'visibility', initialValue: false },
   { name: 'colorLevel', initialValue: 1024 },
@@ -7,7 +35,22 @@ const FIELDS = [
   { name: 'xSlice', initialValue: -1 },
   { name: 'ySlice', initialValue: -1 },
   { name: 'zSlice', initialValue: -1 },
-  { name: 'sliceVisibility', initialValue: false },
+  { name: 'xSliceVisibility', initialValue: false },
+  { name: 'ySliceVisibility', initialValue: false },
+  { name: 'zSliceVisibility', initialValue: false },
+  // Fake props that don't exist on proxy
+  {
+    name: 'toggleSliceX',
+    computed: generateSetGet('XSliceVisibility'),
+  },
+  {
+    name: 'toggleSliceY',
+    computed: generateSetGet('YSliceVisibility'),
+  },
+  {
+    name: 'toggleSliceZ',
+    computed: generateSetGet('ZSliceVisibility'),
+  },
 ];
 
 // ----------------------------------------------------------------------------
@@ -24,6 +67,8 @@ function isSliceAvailable(name) {
 // ----------------------------------------------------------------------------
 
 const component = helper.generateComponent(FIELDS, true);
-Object.assign(component.methods, { isSliceAvailable });
+Object.assign(component.methods, {
+  isSliceAvailable,
+});
 
 export default component;

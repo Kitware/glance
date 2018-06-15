@@ -80,3 +80,11 @@
   min-width: 300px;
   max-height: 500px;
 }
+
+.button {
+  position: absolute;
+  left: -7px;
+  top: -7px;
+  width: 30px !important;
+  height: 30px !important;
+}

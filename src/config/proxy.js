@@ -19,28 +19,34 @@ import proxyViewRepresentationMapping from 'paraview-glance/src/config/proxyView
 
 const { createProxyDefinition, activateOnCreate } = ConfigUtils;
 
-function createDefaultView(classFactory, ui) {
+function createDefaultView(classFactory, ui, options, props) {
   return activateOnCreate(
-    createProxyDefinition(classFactory, ui, [
-      {
-        type: 'application',
-        link: 'AnnotationOpacity',
-        property: 'annotationOpacity',
-        updateOnBind: true,
-      },
-      {
-        type: 'application',
-        link: 'OrientationAxesVisibility',
-        property: 'orientationAxesVisibility',
-        updateOnBind: true,
-      },
-      {
-        type: 'application',
-        link: 'OrientationAxesPreset',
-        property: 'presetToOrientationAxes',
-        updateOnBind: true,
-      },
-    ])
+    createProxyDefinition(
+      classFactory,
+      ui,
+      [
+        {
+          type: 'application',
+          link: 'AnnotationOpacity',
+          property: 'annotationOpacity',
+          updateOnBind: true,
+        },
+        {
+          type: 'application',
+          link: 'OrientationAxesVisibility',
+          property: 'orientationAxesVisibility',
+          updateOnBind: true,
+        },
+        {
+          type: 'application',
+          link: 'OrientationAxesPreset',
+          property: 'presetToOrientationAxes',
+          updateOnBind: true,
+        },
+      ],
+      options,
+      props
+    )
   );
 }
 
@@ -74,17 +80,23 @@ export default {
       SliceX: createProxyDefinition(
         vtkSliceRepresentationProxy,
         proxyUI.Slice,
-        [{ link: 'SliceX', property: 'slice' }].concat(proxyLinks.Slice)
+        [{ link: 'SliceX', property: 'slice', updateOnBind: true }].concat(
+          proxyLinks.Slice
+        )
       ),
       SliceY: createProxyDefinition(
         vtkSliceRepresentationProxy,
         proxyUI.Slice,
-        [{ link: 'SliceY', property: 'slice' }].concat(proxyLinks.Slice)
+        [{ link: 'SliceY', property: 'slice', updateOnBind: true }].concat(
+          proxyLinks.Slice
+        )
       ),
       SliceZ: createProxyDefinition(
         vtkSliceRepresentationProxy,
         proxyUI.Slice,
-        [{ link: 'SliceZ', property: 'slice' }].concat(proxyLinks.Slice)
+        [{ link: 'SliceZ', property: 'slice', updateOnBind: true }].concat(
+          proxyLinks.Slice
+        )
       ),
       Volume: createProxyDefinition(
         vtkVolumeRepresentationProxy,
@@ -105,9 +117,9 @@ export default {
     Views: {
       View3D: createDefaultView(vtkView, proxyUI.View3D),
       View2D: createDefaultView(vtk2DView, proxyUI.View2D),
-      View2D_X: createDefaultView(vtk2DView, proxyUI.View2D),
-      View2D_Y: createDefaultView(vtk2DView, proxyUI.View2D),
-      View2D_Z: createDefaultView(vtk2DView, proxyUI.View2D),
+      View2D_X: createDefaultView(vtk2DView, proxyUI.View2D, { axis: 0 }),
+      View2D_Y: createDefaultView(vtk2DView, proxyUI.View2D, { axis: 1 }),
+      View2D_Z: createDefaultView(vtk2DView, proxyUI.View2D, { axis: 2 }),
     },
   },
   representations: {

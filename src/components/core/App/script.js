@@ -10,50 +10,8 @@ import GlobalSettings from 'paraview-glance/src/components/core/GlobalSettings';
 import Landing from 'paraview-glance/src/components/core/Landing';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Notification from 'paraview-glance/src/components/core/Notification';
+import RawFileReader from 'paraview-glance/src/components/core/RawFileReader';
 import Screenshots from 'paraview-glance/src/components/core/Screenshots';
-
-const DATA_TYPES = [
-  {
-    label: 'Integer 8',
-    constructor: Int8Array,
-    size: 1,
-  },
-  {
-    label: 'Unsigned Integer 8',
-    constructor: Uint8Array,
-    size: 1,
-  },
-  {
-    label: 'Integer 16',
-    constructor: Int16Array,
-    size: 2,
-  },
-  {
-    label: 'Unsigned Integer 16',
-    constructor: Uint16Array,
-    size: 2,
-  },
-  {
-    label: 'Integer 32',
-    constructor: Int32Array,
-    size: 4,
-  },
-  {
-    label: 'Unsigned Integer 32',
-    constructor: Uint32Array,
-    size: 4,
-  },
-  {
-    label: 'Float',
-    constructor: Float32Array,
-    size: 4,
-  },
-  {
-    label: 'Double',
-    constructor: Float64Array,
-    size: 8,
-  },
-];
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -72,8 +30,8 @@ function loadFiles(files) {
         this.$globalBus.$emit(Events.MSG_ERROR, Messages.OPEN_ERROR);
       }
       // assume only one raw file being loaded for now
-      this.raw.file = files[0];
-      this.raw.dialog = true;
+      this.rawFile = files[0];
+      this.rawDialog = true;
     });
 }
 
@@ -116,31 +74,31 @@ function openFile() {
 
 // ----------------------------------------------------------------------------
 
-function loadPendingRawFile() {
+function loadPendingRawFile({ dimensions, spacing, dataType }) {
   return new Promise((resolve) => {
     const fio = new FileReader();
     fio.onload = function onFileReaderLoad() {
       const dataset = vtkImageData.newInstance({
-        spacing: this.raw.spacing,
+        spacing,
         extent: [
           0,
-          this.raw.dimensions[0] - 1,
+          dimensions[0] - 1,
           0,
-          this.raw.dimensions[1] - 1,
+          dimensions[1] - 1,
           0,
-          this.raw.dimensions[2] - 1,
+          dimensions[2] - 1,
         ],
       });
       const scalars = vtkDataArray.newInstance({
         name: 'Scalars',
-        values: new this.raw.dataType.constructor(fio.result),
+        values: new dataType.constructor(fio.result),
       });
       dataset.getPointData().setScalars(scalars);
 
       ReaderFactory.registerReadersToProxyManager(
         [
           {
-            name: this.raw.file.name,
+            name: this.rawFile.name,
             dataset,
           },
         ],
@@ -150,17 +108,18 @@ function loadPendingRawFile() {
       resolve();
     }.bind(this);
 
-    fio.readAsArrayBuffer(this.raw.file);
+    fio.readAsArrayBuffer(this.rawFile);
   }).then(() => {
     this.landing = false;
+    this.closeRawFileDialog();
   });
 }
 
 // ----------------------------------------------------------------------------
 
-function closeRawFile() {
-  this.raw.file = null;
-  this.raw.dialog = null;
+function closeRawFileDialog() {
+  this.rawFile = null;
+  this.rawDialog = null;
 }
 
 // ----------------------------------------------------------------------------
@@ -175,6 +134,7 @@ export default {
     Landing,
     LayoutView,
     Notification,
+    RawFileReader,
     Screenshots,
   },
   data() {
@@ -187,28 +147,15 @@ export default {
       activeTab: 0,
       screenshotsDrawer: false,
       screenshotCount: 0,
-      raw: {
-        file: null,
-        dialog: false,
-        allDataTypes: DATA_TYPES,
-        dataType: DATA_TYPES[0],
-        dimensions: [1, 1, 1],
-        spacing: [1, 1, 1],
-      },
+      rawDialog: false,
+      rawFile: null,
     };
-  },
-  computed: {
-    effectiveRawSize() {
-      return (
-        this.raw.dimensions.reduce((t, v) => t * v, 1) * this.raw.dataType.size
-      );
-    },
   },
   methods: {
     loadFiles,
     openFile,
     loadRemoteDataset,
     loadPendingRawFile,
-    closeRawFile,
+    closeRawFileDialog,
   },
 };

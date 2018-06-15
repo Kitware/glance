@@ -112,6 +112,93 @@
       </div>
     </div>
 
+    <!-- raw file dialog -->
+    <v-dialog v-model="raw.dialog" max-width="50%">
+      <v-card v-if="raw.file">
+        <v-card-title>
+          <span class="title">Load Raw File as Image Data</span>
+        </v-card-title>
+        <v-card-text>
+          <v-layout row align-center>
+            <v-flex xs3 class="body-2">Filename:</v-flex>
+            <v-flex xs9 class="body-1">{{ raw.file.name }}</v-flex>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs3 class="body-2">File size:</v-flex>
+            <v-flex xs9 class="body-1">{{ raw.file.size }} bytes</v-flex>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs3 class="body-2">Data type:</v-flex>
+            <v-flex xs9 class="body-1">
+              <v-select
+                :items="raw.allDataTypes"
+                v-model="raw.dataType"
+                item-text="label"
+                item-value="label"
+                single-line
+                return-object
+              />
+            </v-flex>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs3 class="body-2">Dimensions:</v-flex>
+            <v-flex
+              v-for="i in 3"
+              :key="i"
+              xs3
+              class="body-1"
+            >
+              <v-text-field
+                type="number"
+                min="1"
+                :max="raw.file.size"
+                v-model="raw.dimensions[i-1]"
+              />
+            </v-flex>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs3>Effective size:</v-flex>
+            <v-flex xs3>{{ effectiveRawSize }}</v-flex>
+            <v-flex xs6 v-if="effectiveRawSize !== raw.file.size">
+              <span class="red--text">Effective size does not match total size!</span>
+            </v-flex>
+          </v-layout>
+          </v-layout>
+          <v-layout row align-center>
+            <v-flex xs3 class="body-2">Spacing:</v-flex>
+            <v-flex
+              v-for="i in 3"
+              :key="i"
+              xs3
+              class="body-1"
+            >
+              <v-text-field
+                type="number"
+                min="1"
+                :max="raw.file.size"
+                v-model="raw.spacing[i-1]"
+              />
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            v-on:click="closeRawFile"
+          >
+            <span>Cancel</span>
+          </v-btn>
+          <v-btn
+            color="primary"
+            :disabled="effectiveRawSize !== raw.file.size"
+            v-on:click="loadPendingRawFile().then(closeRawFile)"
+          >
+            <span>Read</span>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <!-- about dialog-->
     <v-dialog v-model="aboutDialog" max-width="50%">
       <v-card>

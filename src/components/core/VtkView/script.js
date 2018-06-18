@@ -83,11 +83,20 @@ function screenCapture() {
 
 // ----------------------------------------------------------------------------
 
-function splitScreen() {
-  const newNbViews = this.layoutCount < 2 ? 2 : 4;
+function splitView() {
   this.$emit('layout-update', {
     index: this.layoutIndex,
-    count: newNbViews,
+    count: 2,
+    view: this.view,
+  });
+}
+
+// ----------------------------------------------------------------------------
+
+function quadView() {
+  this.$emit('layout-update', {
+    index: this.layoutIndex,
+    count: 4,
     view: this.view,
   });
 }
@@ -200,7 +209,8 @@ export default {
     rollLeft,
     rollRight,
     screenCapture,
-    splitScreen,
+    quadView,
+    splitView,
     singleView,
   },
   mounted() {

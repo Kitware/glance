@@ -1,7 +1,7 @@
 import { VIEW_TYPES } from 'paraview-glance/src/components/core/VtkView/constants';
 import VtkView from 'paraview-glance/src/components/core/VtkView';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
-import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
+import { BACKGROUND, DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 import { Events } from 'paraview-glance/src/constants';
 
 // ----------------------------------------------------------------------------
@@ -31,6 +31,8 @@ function updateLayout({ index, count, newType }) {
   } else if (index === 0 && count === 2) {
     // Current view should appear as second
     this.order = swapOrder(this.order, index, this.order[1]);
+  } else if (this.views.length === 4 && count === 2 && index !== 1) {
+    this.order = [this.order[2], this.order[3], this.order[0], this.order[1]];
   }
   this.updateViews(count);
   this.$globalBus.$emit(Events.LAYOUT_CHANGE);
@@ -49,7 +51,7 @@ function updateViews(count = 1) {
     if (!(viewId in this.viewData)) {
       this.viewData = Object.assign({}, this.viewData, {
         [viewId]: {
-          background: BACKGROUND[0],
+          background: DEFAULT_BACKGROUND,
         },
       });
     }

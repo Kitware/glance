@@ -11,7 +11,6 @@ function generateSetGet(field) {
     helper.findProxiesWithMethod(this, getMethodName).forEach((proxy) => {
       value = proxy[getMethodName]();
     });
-    console.log(getMethodName, value);
     return value;
   }
 

@@ -1,6 +1,9 @@
 import GpuInformation from 'paraview-glance/src/components/widgets/GPUInformation';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
-import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
+import {
+  BACKGROUND,
+  DEFAULT_BACKGROUND,
+} from 'paraview-glance/src/components/core/VtkView/palette';
 import { Events } from 'paraview-glance/src/constants';
 
 const ORIENTATION_PRESETS = [
@@ -76,7 +79,7 @@ export default {
   data() {
     return {
       palette: BACKGROUND,
-      backgroundColor: '',
+      backgroundColor: DEFAULT_BACKGROUND,
       orientationAxis: true,
       annotationOpacity: 1,
       orientationPreset: 'default',

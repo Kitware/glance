@@ -55,6 +55,7 @@
       fill-height
       :class="[$style.vtkView, 'js-view']"
       :style="{ background: viewData.background }"
+      v-on:mouseenter="view.activate()"
     />
     <div :class="$style.toolbarWrapper">
       <toolbar-sheet v-model="backgroundSheet">
@@ -72,7 +73,7 @@
           </v-card-text>
         </v-card>
       </toolbar-sheet>
-      <v-toolbar dark>
+      <v-toolbar dark :class="$style.smallToolbar">
         <v-select
           dense
           flat
@@ -108,23 +109,9 @@
         </v-tooltip>
         <v-tooltip
           top
-          v-if="getAvailableActions().split"
-          >
-          <span>Add view(s)</span>
-          <v-btn
-            slot="activator"
-            :class="$style.button"
-            icon
-            v-on:click="splitScreen()"
-          >
-            <v-icon>library_add</v-icon>
-          </v-btn>
-        </v-tooltip>
-        <v-tooltip
-          top
-          v-if="getAvailableActions().single"
+          v-if="layoutCount > 1"
         >
-          <span>Fullscreen</span>
+          <span>Single view</span>
           <v-btn
             slot="activator"
             :class="$style.button"
@@ -132,6 +119,34 @@
             v-on:click="singleView()"
           >
             <v-icon>fullscreen</v-icon>
+          </v-btn>
+        </v-tooltip>
+        <v-tooltip
+          top
+          v-if="layoutCount === 1 || layoutCount === 4 && layoutIndex % 2 === 1"
+          >
+          <span>Split view</span>
+          <v-btn
+            slot="activator"
+            :class="$style.button"
+            icon
+            v-on:click="splitView()"
+          >
+            <v-icon>flip</v-icon>
+          </v-btn>
+        </v-tooltip>
+        <v-tooltip
+          top
+          v-if="layoutCount === 2 && layoutIndex === 1"
+          >
+          <span>Quad view</span>
+          <v-btn
+            slot="activator"
+            :class="$style.button"
+            icon
+            v-on:click="quadView()"
+          >
+            <v-icon>widgets</v-icon>
           </v-btn>
         </v-tooltip>
       </v-toolbar>

@@ -35,3 +35,7 @@
   /* override vuetify */
   margin: 2px 4px;
 }
+
+.smallToolbar :global(.toolbar__content) {
+  height: 45px !important;
+}

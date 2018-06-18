@@ -46,18 +46,25 @@ function resetCamera() {
     this.view.resetCamera();
   }
 }
+// ----------------------------------------------------------------------------
+
+function deleteCropWidget() {
+  if (this.cropWidget) {
+    this.widgetManager.destroyWidget(Widgets.CROP, this.cropWidget);
+    this.cropWidget = null;
+  }
+}
 
 // ----------------------------------------------------------------------------
 
 function toggleCrop() {
   if (this.cropWidget) {
-    this.widgetManager.destroyWidget(Widgets.CROP, this.cropWidget);
-    this.cropWidget = null;
+    this.deleteCropWidget();
   } else {
     // target first image data source we get
     const source = this.proxyManager
       .getSources()
-      .filter((s) => s.getType() === 'vtkImageData')[0];
+      .find((s) => s.getType() === 'vtkImageData');
     if (!source) {
       // TODO warn user
       console.warn('Cannot enable crop: no image dataset');
@@ -66,9 +73,7 @@ function toggleCrop() {
 
     const volumeRep = this.proxyManager
       .getRepresentations()
-      .filter(
-        (r) => r.getInput() === source && r.getProxyName() === 'Volume'
-      )[0];
+      .find((r) => r.getInput() === source && r.getProxyName() === 'Volume');
 
     if (!volumeRep) {
       // TODO warn user
@@ -80,8 +85,14 @@ function toggleCrop() {
     this.cropWidget.setInteractor(this.view.getInteractor());
     this.cropWidget.setVolumeMapper(volumeRep.getMapper());
     this.cropWidget.setHandleSize(12);
+    this.cropWidgetRepresentationId = volumeRep.getProxyId();
 
     this.widgetManager.enable(Widgets.CROP, this.cropWidget);
+
+    // Auto render any view when editing widget
+    this.cropWidget.onModified(() => {
+      this.proxyManager.autoAnimateViews();
+    });
   }
 }
 
@@ -165,8 +176,17 @@ function onMounted() {
   // Capture event handler to release then at exit
   this.subscriptions = [
     () => window.removeEventListener('resize', this.resizeCurrentView),
-    this.proxyManager.onProxyRegistrationChange(() => this.$forceUpdate())
-      .unsubscribe,
+    this.proxyManager.onProxyRegistrationChange((e) => {
+      // Remove crop widget if its representation get deleted
+      if (
+        this.cropWidget &&
+        e.action === 'unregister' &&
+        e.proxyId === this.cropWidgetRepresentationId
+      ) {
+        this.deleteCropWidget();
+      }
+      this.$forceUpdate();
+    }).unsubscribe,
   ];
 
   // Initial setup
@@ -178,6 +198,7 @@ function onMounted() {
 function onBeforeDestroy() {
   if (this.view) {
     this.view.setContainer(null);
+    this.deleteCropWidget();
   }
   while (this.subscriptions.length) {
     this.subscriptions.pop()();
@@ -233,18 +254,19 @@ export default {
     },
   },
   methods: {
-    onMounted,
-    onBeforeDestroy,
     changeViewType,
+    deleteCropWidget,
     getAvailableActions,
+    onBeforeDestroy,
+    onMounted,
+    quadView,
     resetCamera,
-    toggleCrop,
     rollLeft,
     rollRight,
     screenCapture,
-    quadView,
-    splitView,
     singleView,
+    splitView,
+    toggleCrop,
   },
   mounted() {
     this.$nextTick(this.onMounted);

@@ -1,3 +1,4 @@
+import macro from 'vtk.js/Sources/macro';
 import vtkImageCroppingRegionsWidget from 'vtk.js/Sources/Interaction/Widgets/ImageCroppingRegionsWidget';
 import vtkImageCropFilter from 'vtk.js/Sources/Filters/General/ImageCropFilter';
 
@@ -22,10 +23,8 @@ const CropWidget = {
     if (!widget.getEnabled()) {
       widget.setEnabled(true);
 
-      if (this.widgets.length > 1) {
-        // use existing state
-        widget.updateWidgetState(this.state.widgetState);
-      } else {
+      // rewire volume mapper
+      if (!this.state.cropFilter) {
         // first widget, so set initial state
         this.state = {
           volumeMapper: widget.getVolumeMapper(),
@@ -43,19 +42,28 @@ const CropWidget = {
         this.state.cropFilter.setCroppingPlanes(this.state.widgetState.planes);
       }
 
-      this.subscription = widget.onModified(() =>
-        this.updateState({
-          widgetState: widget.getWidgetState(),
-        })
+      // Update widget with current state
+      widget.updateWidgetState(this.state.widgetState);
+
+      // Ensure any widget update will update state
+      const debouncedCallback = macro.debounce(
+        () =>
+          this.updateState({
+            widgetState: widget.getWidgetState(),
+          }),
+        100
       );
+      this.subscription = widget.onModified(debouncedCallback);
     }
   },
 
   disable(widget) {
     if (widget.getEnabled()) {
       widget.setEnabled(false);
-      this.subscription.unsubscribe();
-      this.subscription = null;
+      if (this.subscription) {
+        this.subscription.unsubscribe();
+        this.subscription = null;
+      }
     }
   },
 

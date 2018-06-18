@@ -85,6 +85,8 @@ function toggleCrop() {
     this.cropWidget.setInteractor(this.view.getInteractor());
     this.cropWidget.setVolumeMapper(volumeRep.getMapper());
     this.cropWidget.setHandleSize(12);
+
+    // Delete widget if representation get deleted
     this.cropWidgetRepresentationId = volumeRep.getProxyId();
 
     this.widgetManager.enable(Widgets.CROP, this.cropWidget);
@@ -185,6 +187,8 @@ function onMounted() {
       ) {
         this.deleteCropWidget();
       }
+
+      // When proxy change, just re-render widget
       this.$forceUpdate();
     }).unsubscribe,
   ];

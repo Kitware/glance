@@ -11,6 +11,7 @@ import FileLoader from './FileLoader';
 import Filters from './Filters';
 import Informations from './Informations';
 import PipelineEditor from './PipelineEditor';
+import ToolPanel from './ToolPanel';
 
 import style from '../pv-explorer.mcss';
 
@@ -59,6 +60,7 @@ export function getDefaultActiveTab() {
 registerControlTab('pipeline', PipelineEditor, 10, 'share-alt');
 registerControlTab('files', FileLoader, 5, 'file-alt', true); // Default active one
 registerControlTab('filters', Filters, 6, 'filter');
+registerControlTab('tools', ToolPanel, 4, 'wrench');
 registerControlTab('informations', Informations, 0, 'info');
 
 // ----------------------------------------------------------------------------

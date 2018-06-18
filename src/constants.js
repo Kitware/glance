@@ -11,7 +11,12 @@ export const Messages = {
   OPEN_ERROR: 'Specified file is currently unsupported',
 };
 
+export const Widgets = {
+  CROP: 'CROP',
+};
+
 export default {
   Events,
   Messages,
+  Widgets,
 };

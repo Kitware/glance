@@ -45,6 +45,8 @@ module.exports = {
       'no-param-reassign': ['error', {
         props: true,
         ignorePropertyModificationsFor: [
+          'publicAPI', // for vtkjs publicAPI
+          'model', // for vtkjs model
           'state', // for vuex state
           'acc', // for reduce accumulators
           'e' // for e.returnvalue

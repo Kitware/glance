@@ -1,4 +1,4 @@
-import { Events } from 'paraview-glance/src/constants';
+import { Events, Widgets } from 'paraview-glance/src/constants';
 import {
   DEFAULT_VIEW_TYPE,
   VIEW_TYPES,
@@ -50,7 +50,39 @@ function resetCamera() {
 // ----------------------------------------------------------------------------
 
 function toggleCrop() {
-  console.log('toggleCrop');
+  if (this.cropWidget) {
+    this.widgetManager.destroyWidget(Widgets.CROP, this.cropWidget);
+    this.cropWidget = null;
+  } else {
+    // target first image data source we get
+    const source = this.proxyManager
+      .getSources()
+      .filter((s) => s.getType() === 'vtkImageData')[0];
+    if (!source) {
+      // TODO warn user
+      console.warn('Cannot enable crop: no image dataset');
+      return;
+    }
+
+    const volumeRep = this.proxyManager
+      .getRepresentations()
+      .filter(
+        (r) => r.getInput() === source && r.getProxyName() === 'Volume'
+      )[0];
+
+    if (!volumeRep) {
+      // TODO warn user
+      console.warn('Cannot enable crop: no volume representation');
+      return;
+    }
+
+    this.cropWidget = this.widgetManager.newWidget(Widgets.CROP);
+    this.cropWidget.setInteractor(this.view.getInteractor());
+    this.cropWidget.setVolumeMapper(volumeRep.getMapper());
+    this.cropWidget.setHandleSize(12);
+
+    this.widgetManager.enable(Widgets.CROP, this.cropWidget);
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -157,7 +189,7 @@ function onBeforeDestroy() {
 // ----------------------------------------------------------------------------
 
 export default {
-  inject: ['proxyManager'],
+  inject: ['proxyManager', 'widgetManager'],
   components: {
     PalettePicker,
     ToolbarSheet,
@@ -192,6 +224,7 @@ export default {
       palette: BACKGROUND,
       viewTypes: VIEW_TYPES,
       backgroundSheet: false,
+      cropWidget: null,
     };
   },
   computed: {

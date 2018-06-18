@@ -18,7 +18,10 @@ import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
+import CropWidget from 'paraview-glance/src/vtkwidgets/CropWidget';
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
+import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
+import { Widgets } from 'paraview-glance/src/constants';
 
 // Expose IO API to Glance global object
 export const {
@@ -63,12 +66,16 @@ export function createViewer(container, proxyConfig = null) {
 
   proxyManager.onProxyRegistrationChange(renderListener.resetListeners);
 
+  const widgetManager = vtkWidgetManager.newInstance();
+  widgetManager.registerWidgetGroup(Widgets.CROP, CropWidget);
+
   /* eslint-disable no-new */
   const vm = new Vue({
     el: '#root-container',
     components: { App },
     provide: {
       proxyManager,
+      widgetManager,
     },
     template: '<App ref="app" />',
   });

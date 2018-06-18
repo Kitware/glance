@@ -53,31 +53,25 @@
       </v-flex>
     </v-layout>
   </v-container>
-  <v-container
-    grid-list-md
-  >
+  <v-container grid-list-xl>
     <v-layout row wrap>
       <v-flex
         v-for="(sample, i) in samples"
         :key="i"
-        d-flex
         xs4
       >
         <v-card
-          class="grey lighten-2"
           :class="$style.sampleData"
           flat
           tile
         >
-          <a
-            :class="$style.dataLink"
-            :href="sample.url"
-            v-on:click.prevent="$emit('open-url', sample.url, sample.name)"
-          >
-            <img :class="$style.image" :src="sample.image" />
-            <span class="body-2">{{ sample.name }}</span>
-            <div :class="$style.linkOverlay" />
-          </a>
+          <v-card-media
+            :src="sample.image"
+            height="256px"
+          />
+            <div :class="$style.linkOverlay" v-on:click.prevent="$emit('open-url', sample.url, sample.name)">
+              <div :class="$style.linkOverlayText" class="body-2">{{ sample.name }}</div>
+            </div>
         </v-card>
       </v-flex>
     </v-layout>

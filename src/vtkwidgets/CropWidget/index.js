@@ -78,12 +78,17 @@ const CropWidget = {
   },
 
   onStateChange(newState) {
+    if (this.inUpdate) {
+      return;
+    }
+    this.inUpdate = true;
     this.widgets.forEach((widget) =>
       widget.updateWidgetState(newState.widgetState)
     );
     if (this.state.widgetState.planes) {
       this.state.cropFilter.setCroppingPlanes(this.state.widgetState.planes);
     }
+    this.inUpdate = false;
   },
 };
 

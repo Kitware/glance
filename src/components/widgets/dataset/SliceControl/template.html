@@ -1,4 +1,7 @@
-<v-expansion-panel-content v-if="domains.colorWindow && domains.colorLevel">
+<v-expansion-panel-content
+  v-if="domains.colorWindow && domains.colorLevel"
+  class=""
+>
   <div
     :class="$style.subpanelHeader"
     slot="header"
@@ -7,7 +10,7 @@
     <span class="body-2">Slices</span>
   </div>
 
-  <v-card light flat :class="$style.block">
+  <v-card flat :class="$style.block">
     <v-card-title :class="$style.blockTitle">
       <span class="body-2">Window/Level</span>
     </v-card-title>
@@ -71,8 +74,8 @@
     </v-card-text>
   </v-card>
 
-  <v-card light flat :class="$style.block">
-    <v-card-title light flat :class="$style.blockTitle">
+  <v-card flat :class="$style.block">
+    <v-card-title flat :class="$style.blockTitle">
       <span class="body-2">Slices</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">

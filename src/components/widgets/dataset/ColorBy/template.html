@@ -1,4 +1,7 @@
-<v-expansion-panel-content v-if="available === 'geometry' || available === 'volume'">
+<v-expansion-panel-content
+  v-if="available === 'geometry' || available === 'volume'"
+  class=""
+>
   <div
     :class="$style.subpanelHeader"
     slot="header"
@@ -7,7 +10,7 @@
     <span class="body-2">Colors</span>
   </div>
 
-  <v-card light flat :class="$style.block">
+  <v-card flat :class="$style.block">
     <v-container fluid grid-list-md>
       <v-layout row wrap align-center>
         <v-flex xs3 v-show="available === 'geometry'">

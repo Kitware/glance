@@ -1,13 +1,16 @@
-<v-expansion-panel-content v-if="domains.representation || domains.opacity || domains.sampleDistance">
+<v-expansion-panel-content
+  v-if="domains.representation || domains.opacity || domains.sampleDistance"
+  class=""
+>
   <div
     :class="$style.subpanelHeader"
     slot="header"
   >
-    <v-icon>far fa-eye</v-icon>
+    <v-icon>brightness_medium</v-icon>
     <span class="body-2">Representation</span>
   </div>
 
-  <v-card light flat :class="$style.block" v-if="domains.representation">
+  <v-card flat :class="$style.block" v-if="domains.representation">
     <v-container fluid grid-list-md>
       <v-layout row wrap>
         <v-flex xs12>
@@ -24,8 +27,8 @@
       </v-layout>
     </v-container>
   </v-card>
-  <v-card light flat :class="$style.block" v-if="domains.opacity && domains.pointSize">
-    <v-card-title light flat :class="$style.blockTitle">
+  <v-card flat :class="$style.block" v-if="domains.opacity && domains.pointSize">
+    <v-card-title flat :class="$style.blockTitle">
       <span class="body-2">Mesh</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">
@@ -87,8 +90,8 @@
       </v-container>
     </v-card-text>
   </v-card>
-  <v-card light flat :class="$style.block" v-if="domains.sampleDistance && domains.edgeGradient">
-    <v-card-title light flat :class="$style.blockTitle">
+  <v-card flat :class="$style.block" v-if="domains.sampleDistance && domains.edgeGradient">
+    <v-card-title flat :class="$style.blockTitle">
       <span class="body-2">Shadow & Edge</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">

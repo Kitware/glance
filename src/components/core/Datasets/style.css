@@ -3,6 +3,14 @@
   padding: 12px 24px 12px 6px;
 }
 
+:global(.theme--dark) .datasetPanel :global(.expansion-panel__body) {
+  border-top: 1px solid hsla(0,0%,100%,.12);
+}
+
+:global(.theme--light) .datasetPanel :global(.expansion-panel__body) {
+  border-top: 1px solid rgba(0,0,0,.12);
+}
+
 .datasetHeader {
   user-select: none;
   /* handle overflowing names */
@@ -32,7 +40,7 @@
 .blockTitle {
   padding: 4px 0; /* override vuetify */
   margin: 8px 4px;
-  border-bottom: 1px solid #bbb;
+  /*border-bottom: 1px solid #bbb;*/
 }
 
 .blockContent {

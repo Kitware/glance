@@ -40,20 +40,22 @@ const CropWidget = {
         );
 
         this.state.cropFilter.setCroppingPlanes(this.state.widgetState.planes);
+
+        this.state.setCroppingPlanes = macro.debounce(
+          this.state.cropFilter.setCroppingPlanes,
+          100
+        );
       }
 
       // Update widget with current state
       widget.updateWidgetState(this.state.widgetState);
 
       // Ensure any widget update will update state
-      const debouncedCallback = macro.debounce(
-        () =>
-          this.updateState({
-            widgetState: widget.getWidgetState(),
-          }),
-        100
+      this.subscription = widget.onModified(() =>
+        this.updateState({
+          widgetState: widget.getWidgetState(),
+        })
       );
-      this.subscription = widget.onModified(debouncedCallback);
     }
   },
 
@@ -86,7 +88,8 @@ const CropWidget = {
       widget.updateWidgetState(newState.widgetState)
     );
     if (this.state.widgetState.planes) {
-      this.state.cropFilter.setCroppingPlanes(this.state.widgetState.planes);
+      // Used the debounced version
+      this.state.setCroppingPlanes(this.state.widgetState.planes);
     }
     this.inUpdate = false;
   },

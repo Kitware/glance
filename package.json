@@ -29,7 +29,7 @@
     "@fortawesome/fontawesome-free-regular": "5.0.13",
     "@fortawesome/fontawesome-free-solid": "5.0.13",
     "typeface-roboto": "0.0.54",
-    "vtk.js": "6.7.4",
+    "vtk.js": "6.7.5",
     "vue": "2.5.16",
     "vuetify": "1.0.19",
     "webworker-promise": "0.4.1",

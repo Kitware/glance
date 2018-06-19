@@ -39,9 +39,6 @@ function setSolidColor(value) {
     myRepresentations[i].setColor(...color);
   }
   this.proxyManager.renderAllViews();
-
-  // FIXME the checkmark does not work here...
-  console.log('FIXME: setSolidColor', value);
   this.solidColor = value;
 }
 

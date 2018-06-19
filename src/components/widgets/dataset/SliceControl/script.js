@@ -65,11 +65,7 @@ function isSliceAvailable(name) {
 // Add custom method
 // ----------------------------------------------------------------------------
 
-const component = helper.generateComponent(FIELDS, true, {
-  onChange: {
-    visibility: '$forceUpdate',
-  },
-});
+const component = helper.generateComponent(FIELDS, true);
 Object.assign(component.methods, {
   isSliceAvailable,
 });

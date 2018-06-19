@@ -221,7 +221,10 @@ function generateComponent(
     computed,
     created() {
       this.listenerHelper = vtkListenerHelper.newInstance(
-        () => this.updateData(),
+        () => {
+          this.updateData();
+          this.$nextTick(this.$forceUpdate);
+        },
         () => this.getProxyWithFields()
       );
 

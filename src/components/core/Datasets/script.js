@@ -1,3 +1,5 @@
+import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
+
 import ColorByWidget from 'paraview-glance/src/components/widgets/dataset/ColorBy';
 import InformationWidget from 'paraview-glance/src/components/widgets/dataset/Information';
 import MoleculeWidget from 'paraview-glance/src/components/widgets/dataset/Molecule';
@@ -14,6 +16,7 @@ function onMounted() {
       if (proxyGroup === 'Sources') {
         this.datasets = this.proxyManager.getSources();
       }
+      this.listenerHelper.resetListeners();
     }),
   ];
 }
@@ -21,6 +24,7 @@ function onMounted() {
 // ----------------------------------------------------------------------------
 
 function onBeforeDestroy() {
+  this.listenerHelper.removeListeners();
   while (this.subscriptions.length) {
     this.subscriptions.pop().unsubscribe();
   }
@@ -65,6 +69,12 @@ export default {
   },
   created() {
     this.subscriptions = [];
+    this.listenerHelper = vtkListenerHelper.newInstance(
+      () => {
+        this.$nextTick(this.$forceUpdate);
+      },
+      () => this.proxyManager.getRepresentations()
+    );
   },
   mounted() {
     this.$nextTick(this.onMounted);

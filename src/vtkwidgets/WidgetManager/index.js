@@ -4,35 +4,16 @@ import macro from 'vtk.js/Sources/macro';
 
 function vtkWidgetManager(publicAPI, model) {
   // group name -> array of widgets
-  model.groups = {};
-  model.subscriptions = [];
-
-  // --------------------------------------------------------------------------
-
-  publicAPI.getGroup = (name) => model.groups[name];
-
-  // --------------------------------------------------------------------------
-
-  publicAPI.updateState = (name, state) => {
-    if (model.groups[name]) {
-      const group = model.groups[name];
-      const oldState = group.state;
-      group.state = Object.assign({}, oldState, state);
-      if (group.onStateChange) {
-        group.onStateChange(group.state, oldState);
-      }
-    }
-  };
+  const groups = {};
+  const widgetToGroupNameAndContextId = new Map();
+  const subscriptions = [];
 
   // --------------------------------------------------------------------------
 
   publicAPI.registerWidgetGroup = (name, widgetSpec) => {
-    model.groups[name] = Object.assign(
+    groups[name] = Object.assign(
       {
-        representations: [],
-        widgets: [],
-        state: {},
-        updateState: (state) => publicAPI.updateState(name, state),
+        contexts: {},
       },
       widgetSpec
     );
@@ -40,11 +21,22 @@ function vtkWidgetManager(publicAPI, model) {
 
   // --------------------------------------------------------------------------
 
-  publicAPI.newWidget = (name, representation) => {
-    if (model.groups[name]) {
-      const widget = model.groups[name].new();
-      model.groups[name].widgets.push(widget);
-      model.groups[name].representations.push(representation.getProxyId());
+  publicAPI.newWidget = (name, proxyAsContext) => {
+    if (groups[name]) {
+      const widget = groups[name].newWidget();
+      const id = proxyAsContext.getProxyId();
+      if (!groups[name].contexts[id]) {
+        groups[name].contexts[id] = {
+          proxy: proxyAsContext,
+          widgets: [],
+          state: {},
+        };
+      }
+      const ctx = groups[name].contexts[id];
+      ctx.widgets.push({ widget, subscriptions: [] });
+
+      widgetToGroupNameAndContextId.set(widget, { name, id });
+
       return widget;
     }
     return null;
@@ -52,81 +44,82 @@ function vtkWidgetManager(publicAPI, model) {
 
   // --------------------------------------------------------------------------
 
-  publicAPI.destroyWidget = (name, widget) => {
-    if (model.groups[name]) {
-      const group = model.groups[name];
-      const index = group.widgets.indexOf(widget);
-      if (index > -1) {
-        if (group.onBeforeDestroy) {
-          model.groups[name].onBeforeDestroy(widget);
+  publicAPI.destroyWidget = (widget) => {
+    const { name, id } = widgetToGroupNameAndContextId.get(widget) || {};
+    const group = groups[name];
+    const ctx = group ? group.contexts[id] : null;
+    if (group && ctx) {
+      const entry = ctx.widgets.find((w) => w.widget === widget);
+      if (entry) {
+        // Remove listeners
+        while (entry.subscriptions.length) {
+          entry.subscriptions.pop().unsubscribe();
         }
-        model.groups[name].widgets.splice(index, 1);
-        model.groups[name].representations.splice(index, 1);
+
+        // Delete widget
+        if (group.onBeforeDestroy) {
+          group.onBeforeDestroy(widget);
+        }
+
+        // Update internal structures
+        ctx.widgets = ctx.widgets.filter((w) => w.widget !== widget);
+        widgetToGroupNameAndContextId.delete(widget);
       }
     }
   };
 
   // --------------------------------------------------------------------------
 
-  publicAPI.hasWidget = (name, widget) => {
-    if (model.groups[name]) {
-      const group = model.groups[name];
-      const index = group.widgets.indexOf(widget);
-      return index !== -1;
-    }
-    return false;
-  };
+  publicAPI.hasWidget = (widget) => widgetToGroupNameAndContextId.has(widget);
 
   // --------------------------------------------------------------------------
 
-  publicAPI.enable = (name, widget) => {
-    const group = model.groups[name];
+  publicAPI.enable = (widget) => {
+    const { name, id } = widgetToGroupNameAndContextId.get(widget) || {};
+    const group = groups[name];
+    const ctx = group ? group.contexts[id] : null;
     if (group && group.enable) {
-      const representationId =
-        group.representations[group.widgets.indexOf(widget)];
-      const representation = model.proxyManager.getProxyById(representationId);
-      model.groups[name].enable(widget, representation);
+      const entry = ctx.widgets.find((w) => w.widget === widget);
+      const newSubscriptions = [].concat(group.enable(widget, ctx));
+      newSubscriptions.forEach((s) => entry.subscriptions.push(s));
     }
   };
 
   // --------------------------------------------------------------------------
 
-  publicAPI.disable = (name, widget) => {
-    if (model.groups[name] && model.groups[name].disable) {
-      model.groups[name].disable(widget);
+  publicAPI.disable = (widget) => {
+    const { name } = widgetToGroupNameAndContextId.get(widget) || {};
+    const group = groups[name];
+    if (group && group.disable) {
+      group.disable(widget);
     }
   };
 
   // --------------------------------------------------------------------------
 
-  function gcWidgets(repId) {
-    let needMoreGc = false;
-    Object.keys(model.groups).forEach((name) => {
-      const { representations, widgets } = model.groups[name];
-      const index = representations.indexOf(repId);
-      if (index !== -1) {
-        publicAPI.destroyWidget(name, widgets[index]);
-        needMoreGc = true;
+  publicAPI.destroyWidgetFromContextProxy = (proxyId) => {
+    Object.keys(groups).forEach((name) => {
+      const { widgets } = groups[name].contexts[proxyId] || {};
+      if (widgets) {
+        widgets.map((w) => w.widget).forEach(publicAPI.destroyWidget);
       }
+      delete groups[name].contexts[proxyId];
     });
-    if (needMoreGc) {
-      gcWidgets(repId);
-    }
-  }
+  };
 
   // --------------------------------------------------------------------------
 
   function updateListeners() {
-    while (model.subscriptions.length) {
-      model.subscriptions.pop().unsubscribe();
+    while (subscriptions.length) {
+      subscriptions.pop().unsubscribe();
     }
 
     if (model.proxyManager) {
-      model.subscriptions.push(
+      subscriptions.push(
         model.proxyManager.onProxyRegistrationChange((e) => {
-          // Remove crop widget if its representation get deleted
+          // Remove any widget dependent of that proxy
           if (e.action === 'unregister') {
-            gcWidgets(e.proxyId);
+            publicAPI.destroyWidgetFromContextProxy(e.proxyId);
           }
         })
       );
@@ -145,17 +138,12 @@ function vtkWidgetManager(publicAPI, model) {
 
   const superDelete = publicAPI.delete;
   publicAPI.delete = () => {
-    const widgetsToDelete = [];
-    Object.keys(model.groups).forEach((name) => {
-      const { widgets } = model.groups[name];
-      for (let i = 0; i < widgets.length; i++) {
-        widgetsToDelete.push({ widget: widgets[i], name });
-      }
+    Object.keys(groups).forEach((name) => {
+      const group = groups[name];
+      Object.keys(group.contexts).forEach(
+        publicAPI.destroyWidgetFromContextProxy
+      );
     });
-    while (widgetsToDelete.length) {
-      const { name, widget } = widgetsToDelete.pop();
-      publicAPI.destroyWidget(name, widget);
-    }
     publicAPI.setProxyManager(null);
     superDelete();
   };

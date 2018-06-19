@@ -49,23 +49,23 @@ function resetCamera() {
 // ----------------------------------------------------------------------------
 
 function deleteCropWidget() {
-  if (this.cropWidget) {
-    this.widgetManager.destroyWidget(Widgets.CROP, this.cropWidget);
-    this.cropWidget = null;
+  const cropWidget = this.view.getReferenceByName('cropWidget');
+  if (cropWidget) {
+    this.widgetManager.destroyWidget(cropWidget);
+    this.view.set({ cropWidget: null }, true);
   }
 }
 
 // ----------------------------------------------------------------------------
 
 function toggleCrop() {
-  if (
-    this.cropWidget &&
-    !this.widgetManager.hasWidget(Widgets.CROP, this.cropWidget)
-  ) {
+  let cropWidget = this.view.getReferenceByName('cropWidget');
+  if (cropWidget && !this.widgetManager.hasWidget(cropWidget)) {
     this.deleteCropWidget();
+    cropWidget = null;
   }
 
-  if (this.cropWidget) {
+  if (cropWidget) {
     this.deleteCropWidget();
   } else {
     const volumeRep = this.proxyManager
@@ -78,17 +78,18 @@ function toggleCrop() {
       return;
     }
 
-    this.cropWidget = this.widgetManager.newWidget(Widgets.CROP, volumeRep);
-    this.cropWidget.setInteractor(this.view.getInteractor());
-    this.cropWidget.setVolumeMapper(volumeRep.getMapper());
-    this.cropWidget.setHandleSize(12);
+    cropWidget = this.widgetManager.newWidget(Widgets.CROP, volumeRep);
+    cropWidget.setInteractor(this.view.getInteractor());
+    cropWidget.setVolumeMapper(volumeRep.getMapper());
+    cropWidget.setHandleSize(12);
 
-    this.widgetManager.enable(Widgets.CROP, this.cropWidget);
+    this.widgetManager.enable(cropWidget);
 
     // Auto render any view when editing widget
-    this.cropWidget.onModified(() => {
+    cropWidget.onModified(() => {
       this.proxyManager.autoAnimateViews();
     });
+    this.view.set({ cropWidget }, true);
   }
 }
 
@@ -187,7 +188,6 @@ function onMounted() {
 function onBeforeDestroy() {
   if (this.view) {
     this.view.setContainer(null);
-    this.deleteCropWidget();
   }
   while (this.subscriptions.length) {
     this.subscriptions.pop()();
@@ -234,7 +234,6 @@ export default {
       palette: BACKGROUND,
       viewTypes: VIEW_TYPES,
       backgroundSheet: false,
-      cropWidget: null,
     };
   },
   computed: {

@@ -77,11 +77,11 @@ function setColorBy(value) {
 // ----------------------------------------------------------------------------
 
 function applyOpacity() {
+  const arrayName = this.colorBy.split(':')[0];
+  const pwfProxy = this.proxyManager.getPiecewiseFunction(arrayName);
   const preset = vtkColorMaps.getPresetByName(this.presetName);
-  if (this.usePresetOpacity && preset && preset.OpacityPoints) {
-    const arrayName = this.colorBy.split(':')[0];
-    const pwfProxy = this.proxyManager.getPiecewiseFunction(arrayName);
 
+  if (this.usePresetOpacity && preset && preset.OpacityPoints) {
     const points = [];
     for (let i = 0; i < preset.OpacityPoints.length; i += 2) {
       points.push([preset.OpacityPoints[i], preset.OpacityPoints[i + 1]]);
@@ -96,6 +96,8 @@ function applyOpacity() {
     min += this.shift;
     max += this.shift;
     pwfProxy.setDataRange(min, max);
+  } else {
+    pwfProxy.setDataRange(...this.dataRange);
   }
 }
 
@@ -111,6 +113,8 @@ function applyColorMap() {
     min += this.shift;
     max += this.shift;
     lutProxy.setDataRange(min, max);
+  } else {
+    lutProxy.setDataRange(...this.dataRange);
   }
 }
 
@@ -191,6 +195,7 @@ export default {
       presets: Presets,
       presetMenu: false,
       shift: 0, // simple transfer function shift
+      dataRange: [0, 0],
     };
   },
   computed: {
@@ -273,6 +278,7 @@ export default {
         const colorByValue = repVolume.getColorBy();
         this.arrayName = colorByValue[0];
         this.colorBy = colorByValue.join(':');
+        this.dataRange = repVolume.getDataArray().getRange();
         const propUI = repVolume
           .getReferenceByName('ui')
           .find((item) => item.name === 'colorBy');

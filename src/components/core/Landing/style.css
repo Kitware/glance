@@ -44,21 +44,6 @@
   /*max-width: 256px;*/
 }
 
-.dataLink {
-  position: relative;
-  display: flex;
-  flex-flow: column;
-  width: 100%;
-  align-items: center;
-  text-decoration: none;
-  color: black;
-  background: lightgray;
-}
-
-.image {
-  max-width: 100%;
-}
-
 .linkOverlay {
   position: absolute;
   top: 0;

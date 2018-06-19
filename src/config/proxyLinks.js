@@ -1,12 +1,11 @@
 const Volume = [
   // { link: 'ColorBy', property: 'colorBy' },
-  { link: 'Visibility', property: 'volumeVisibility', updateOnBind: true },
+  { link: 'Visibility', property: 'visibility', updateOnBind: true },
   // { link: 'UseShadow', property: 'useShadow' },
   // { link: 'SampleDistance', property: 'sampleDistance' },
   // { link: 'EdgeGradient', property: 'edgeGradient' },
   { link: 'ColorWindow', property: 'colorWindow', updateOnBind: true },
   { link: 'ColorLevel', property: 'colorLevel', updateOnBind: true },
-  { link: 'Visibility', property: 'sliceVisibility', updateOnBind: true },
   { link: 'SliceX', property: 'xSlice', updateOnBind: true },
   { link: 'SliceY', property: 'ySlice', updateOnBind: true },
   { link: 'SliceZ', property: 'zSlice', updateOnBind: true },

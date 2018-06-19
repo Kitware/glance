@@ -65,6 +65,7 @@ function setColorBy(value) {
     .filter((r) => r.getInput() === this.source);
   for (let i = 0; i < myRepresentations.length; i++) {
     myRepresentations[i].setColorBy(...args);
+    this.dataRange = myRepresentations[i].getDataArray().getRange();
   }
   this.proxyManager.renderAllViews();
 

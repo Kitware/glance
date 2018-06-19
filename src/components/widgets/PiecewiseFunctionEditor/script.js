@@ -6,6 +6,10 @@ function onOpacityChange() {
   const pwfproxy = this.piecewiseFunction;
   if (pwfproxy) {
     pwfproxy.setGaussians(this.piecewiseWidget.getReferenceByName('gaussians'));
+
+    // Use the opacity range as color range too
+    const newColorRange = this.piecewiseWidget.getOpacityRange();
+    pwfproxy.getLookupTableProxy().setDataRange(...newColorRange);
   }
 }
 
@@ -34,6 +38,10 @@ function updateWidget() {
     this.piecewiseWidget.setColorTransferFunction(lut);
     this.subscriptions.push(
       lut.onModified(() => {
+        // Use the opacity range as color range too
+        const newColorRange = this.piecewiseWidget.getOpacityRange();
+        pwfProxy.getLookupTableProxy().setDataRange(...newColorRange);
+
         this.piecewiseWidget.render();
       })
     );
@@ -86,6 +94,7 @@ function onMounted() {
   this.piecewiseWidget.setContainer(this.$el);
   this.piecewiseWidget.bindMouseListeners();
   this.updateWidget();
+  this.onOpacityChange();
 }
 
 // ----------------------------------------------------------------------------

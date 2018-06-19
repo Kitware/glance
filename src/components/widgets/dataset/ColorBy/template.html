@@ -56,8 +56,36 @@
             />
           </v-menu>
         </v-flex>
-        <v-flex xs12 v-if="available === 'volume' && piecewiseFunction">
+        <v-flex xs12 v-if="available === 'volume' && piecewiseFunction && !usePresetOpacity">
           <piecewise-function-editor :piecewiseFunction="piecewiseFunction" :source="source" />
+        </v-flex>
+        <v-flex xs12 v-if="usePresetOpacity">
+          <v-layout row align-center>
+            <v-flex xs3>
+              <span :class="$style.smallLabel">Shift</span>
+            </v-flex>
+            <v-flex xs6>
+              <v-slider
+                v-model="shift"
+                :min="shiftRange[0]"
+                :max="shiftRange[1]"
+                step="0"
+                hide-details
+                :class="$style.noTopPadding"
+              />
+            </v-flex>
+            <v-flex xs3>
+              <v-text-field
+                v-model="shift"
+                type="number"
+                :min="shiftRange[0]"
+                :max="shiftRange[1]"
+                step="1"
+                hide-details
+                :class="$style.noTopPadding"
+              />
+            </v-flex>
+          </v-layout>
         </v-flex>
       </v-layout>
     </v-container>

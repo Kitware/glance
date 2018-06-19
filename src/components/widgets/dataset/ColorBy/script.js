@@ -5,6 +5,10 @@ import { SPECTRAL } from 'paraview-glance/src/palette';
 import Presets from 'paraview-glance/src/config/ColorMaps';
 
 import vtkMath from 'vtk.js/Sources/Common/Core/Math';
+import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
+import PwfProxyConstants from 'vtk.js/Sources/Proxy/Core/PiecewiseFunctionProxy/Constants';
+
+const { Mode: PwfMode } = PwfProxyConstants;
 
 // ----------------------------------------------------------------------------
 // Global helpers
@@ -43,12 +47,11 @@ function setSolidColor(value) {
 
 // ----------------------------------------------------------------------------
 
-function setPreset(value) {
-  const arrayName = this.colorBy.split(':')[0];
-  const lutProxy = this.proxyManager.getLookupTable(arrayName);
-  lutProxy.setPresetName(value);
-  this.proxyManager.renderAllViews();
+function setPreset() {
+  this.applyColorMap();
+  this.applyOpacity();
   this.updateLookupTableImage();
+  this.proxyManager.renderAllViews();
 }
 
 // ----------------------------------------------------------------------------
@@ -71,6 +74,46 @@ function setColorBy(value) {
   // Update lutImage
   if (args.length) {
     this.updateLookupTableImage();
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+function applyOpacity() {
+  const preset = vtkColorMaps.getPresetByName(this.presetName);
+  if (this.usePresetOpacity && preset && preset.OpacityPoints) {
+    const arrayName = this.colorBy.split(':')[0];
+    const pwfProxy = this.proxyManager.getPiecewiseFunction(arrayName);
+
+    const points = [];
+    for (let i = 0; i < preset.OpacityPoints.length; i += 2) {
+      points.push([preset.OpacityPoints[i], preset.OpacityPoints[i + 1]]);
+    }
+
+    // shift range is range of OpacityPoints' "x" coordinate
+    let [min, max] = this.shiftRange;
+    const width = max - min;
+    const normPoints = points.map(([x, y]) => [(x - min) / width, y]);
+    pwfProxy.setPoints(normPoints);
+
+    min += this.shift;
+    max += this.shift;
+    pwfProxy.setDataRange(min, max);
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+function applyColorMap() {
+  const arrayName = this.colorBy.split(':')[0];
+  const lutProxy = this.proxyManager.getLookupTable(arrayName);
+  lutProxy.setPresetName(this.presetName);
+
+  if (this.usePresetOpacity) {
+    let [min, max] = this.shiftRange;
+    min += this.shift;
+    max += this.shift;
+    lutProxy.setDataRange(min, max);
   }
 }
 
@@ -150,17 +193,59 @@ export default {
       presetName: '',
       presets: Presets,
       presetMenu: false,
+      shift: 0, // simple transfer function shift
     };
+  },
+  computed: {
+    usePresetOpacity() {
+      const preset = vtkColorMaps.getPresetByName(this.presetName);
+      return preset && preset.OpacityPoints;
+    },
+    shiftRange() {
+      const preset = vtkColorMaps.getPresetByName(this.presetName);
+      if (preset) {
+        // shift range is original rgb/opacity range centered around 0
+        let min = Infinity;
+        let max = -Infinity;
+        for (let i = 0; i < preset.RGBPoints.length; i += 4) {
+          min = Math.min(min, preset.RGBPoints[i]);
+          max = Math.max(max, preset.RGBPoints[i]);
+        }
+
+        const center = (max - min) / 2;
+        return [-center, center];
+      }
+      return [0, 0];
+    },
   },
   watch: {
     colorBy: setColorBy,
-    presetName: setPreset,
+    presetName() {
+      if (this.shift) {
+        // changing shift value will call setPreset()
+        this.shift = 0;
+      } else {
+        this.setPreset();
+      }
+    },
+    shift: setPreset,
+    usePresetOpacity(value) {
+      const arrayName = this.colorBy.split(':')[0];
+      const pwfProxy = this.proxyManager.getPiecewiseFunction(arrayName);
+      if (value) {
+        pwfProxy.setMode(PwfMode.Points);
+      } else {
+        pwfProxy.setMode(PwfMode.Gaussians);
+      }
+    },
   },
   methods: {
     onChangePreset,
     onEsc,
     setSolidColor,
     setPreset,
+    applyOpacity,
+    applyColorMap,
     updateLookupTableImage,
   },
   mounted() {

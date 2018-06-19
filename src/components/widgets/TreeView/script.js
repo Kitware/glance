@@ -78,7 +78,6 @@ export default {
   },
   data() {
     return {
-      value: false, // TODO remove
       filterText: null,
     };
   },

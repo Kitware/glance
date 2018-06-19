@@ -1,7 +1,7 @@
 import { VIEW_TYPES } from 'paraview-glance/src/components/core/VtkView/constants';
 import VtkView from 'paraview-glance/src/components/core/VtkView';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
-import { BACKGROUND, DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
+import { DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 import { Events } from 'paraview-glance/src/constants';
 
 // ----------------------------------------------------------------------------

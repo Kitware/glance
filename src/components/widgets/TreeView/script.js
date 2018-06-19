@@ -6,7 +6,7 @@ import Node from 'paraview-glance/src/components/widgets/TreeView/Node';
 
 // Default filter function
 function indexOfFilterFunc(item, term) {
-  return item[this.labelKey].indexOf(term) > -1;
+  return item[this.labelKey].toLowerCase().indexOf(term.toLowerCase()) > -1;
 }
 
 // ----------------------------------------------------------------------------

@@ -66,7 +66,7 @@ export function createViewer(container, proxyConfig = null) {
 
   proxyManager.onProxyRegistrationChange(renderListener.resetListeners);
 
-  const widgetManager = vtkWidgetManager.newInstance();
+  const widgetManager = vtkWidgetManager.newInstance({ proxyManager });
   widgetManager.registerWidgetGroup(Widgets.CROP, CropWidget);
 
   /* eslint-disable no-new */

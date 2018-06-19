@@ -58,22 +58,19 @@ function deleteCropWidget() {
 // ----------------------------------------------------------------------------
 
 function toggleCrop() {
+  if (
+    this.cropWidget &&
+    !this.widgetManager.hasWidget(Widgets.CROP, this.cropWidget)
+  ) {
+    this.deleteCropWidget();
+  }
+
   if (this.cropWidget) {
     this.deleteCropWidget();
   } else {
-    // target first image data source we get
-    const source = this.proxyManager
-      .getSources()
-      .find((s) => s.getType() === 'vtkImageData');
-    if (!source) {
-      // TODO warn user
-      console.warn('Cannot enable crop: no image dataset');
-      return;
-    }
-
     const volumeRep = this.proxyManager
       .getRepresentations()
-      .find((r) => r.getInput() === source && r.getProxyName() === 'Volume');
+      .find((r) => r.getProxyName() === 'Volume');
 
     if (!volumeRep) {
       // TODO warn user
@@ -81,13 +78,10 @@ function toggleCrop() {
       return;
     }
 
-    this.cropWidget = this.widgetManager.newWidget(Widgets.CROP);
+    this.cropWidget = this.widgetManager.newWidget(Widgets.CROP, volumeRep);
     this.cropWidget.setInteractor(this.view.getInteractor());
     this.cropWidget.setVolumeMapper(volumeRep.getMapper());
     this.cropWidget.setHandleSize(12);
-
-    // Delete widget if representation get deleted
-    this.cropWidgetRepresentationId = volumeRep.getProxyId();
 
     this.widgetManager.enable(Widgets.CROP, this.cropWidget);
 
@@ -178,16 +172,7 @@ function onMounted() {
   // Capture event handler to release then at exit
   this.subscriptions = [
     () => window.removeEventListener('resize', this.resizeCurrentView),
-    this.proxyManager.onProxyRegistrationChange((e) => {
-      // Remove crop widget if its representation get deleted
-      if (
-        this.cropWidget &&
-        e.action === 'unregister' &&
-        e.proxyId === this.cropWidgetRepresentationId
-      ) {
-        this.deleteCropWidget();
-      }
-
+    this.proxyManager.onProxyRegistrationChange(() => {
       // When proxy change, just re-render widget
       this.$forceUpdate();
     }).unsubscribe,

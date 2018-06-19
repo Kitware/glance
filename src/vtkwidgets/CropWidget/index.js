@@ -1,6 +1,5 @@
 import macro from 'vtk.js/Sources/macro';
 import vtkImageCroppingRegionsWidget from 'vtk.js/Sources/Interaction/Widgets/ImageCroppingRegionsWidget';
-import vtkImageCropFilter from 'vtk.js/Sources/Filters/General/ImageCropFilter';
 
 const CropWidget = {
   subscription: null,
@@ -9,42 +8,29 @@ const CropWidget = {
     const widget = vtkImageCroppingRegionsWidget.newInstance();
 
     if (this.widgets.length === 0) {
-      this.state = {
-        volumeMapper: null,
-        widgetState: null,
-        cropFilter: null,
-      };
+      this.state = {};
     }
 
     return widget;
   },
 
-  enable(widget) {
+  enable(widget, representation) {
     if (!widget.getEnabled()) {
       widget.setEnabled(true);
 
-      // rewire volume mapper
-      if (!this.state.cropFilter) {
+      if (!this.state.representation) {
         // first widget, so set initial state
         this.state = {
+          representation,
           volumeMapper: widget.getVolumeMapper(),
           widgetState: widget.getWidgetState(),
+          setCroppingPlanes: macro.debounce(
+            representation.setCroppingPlanes,
+            100
+          ),
         };
 
-        // rewire volume mapper
-        this.state.cropFilter = vtkImageCropFilter.newInstance();
-        const imageData = this.state.volumeMapper.getInputData();
-        this.state.cropFilter.setInputData(imageData);
-        this.state.volumeMapper.setInputConnection(
-          this.state.cropFilter.getOutputPort()
-        );
-
-        this.state.cropFilter.setCroppingPlanes(this.state.widgetState.planes);
-
-        this.state.setCroppingPlanes = macro.debounce(
-          this.state.cropFilter.setCroppingPlanes,
-          100
-        );
+        this.state.setCroppingPlanes(this.state.widgetState.planes);
       }
 
       // Update widget with current state
@@ -88,7 +74,6 @@ const CropWidget = {
       widget.updateWidgetState(newState.widgetState)
     );
     if (this.state.widgetState.planes) {
-      // Used the debounced version
       this.state.setCroppingPlanes(this.state.widgetState.planes);
     }
     this.inUpdate = false;

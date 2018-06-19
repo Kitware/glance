@@ -59,7 +59,7 @@
         <v-flex xs12 v-if="available === 'volume' && piecewiseFunction && !usePresetOpacity">
           <piecewise-function-editor :piecewiseFunction="piecewiseFunction" :source="source" />
         </v-flex>
-        <v-flex xs12 v-if="usePresetOpacity">
+        <v-flex xs12 v-if="available === 'volume' && usePresetOpacity">
           <v-layout row align-center>
             <v-flex xs3>
               <span :class="$style.smallLabel">Shift</span>

@@ -46,15 +46,11 @@
       </v-layout>
     </v-container>
   </v-jumbotron>
-  <v-container style="flex-basis: 0">
-    <v-layout row>
+  <v-container grid-list-xl>
+    <v-layout row wrap>
       <v-flex xs12>
         <span class="title">Sample Data</span>
       </v-flex>
-    </v-layout>
-  </v-container>
-  <v-container grid-list-xl>
-    <v-layout row wrap>
       <v-flex
         v-for="(sample, i) in samples"
         :key="i"
@@ -67,10 +63,10 @@
         >
           <v-card-media
             :src="sample.image"
-            height="256px"
+            height="300px"
           />
             <div :class="$style.linkOverlay" v-on:click.prevent="$emit('open-url', sample.url, sample.name)">
-              <div :class="$style.linkOverlayText" class="body-2">{{ sample.name }}</div>
+              <div :class="$style.linkOverlayText" class="body-2">{{ sample.name }} ({{ sample.size }})</div>
             </div>
         </v-card>
       </v-flex>

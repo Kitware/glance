@@ -29,7 +29,7 @@
     "itk": "9.1.1",
     "material-design-icons-iconfont": "3.0.3",
     "typeface-roboto": "0.0.54",
-    "vtk.js": "6.7.9",
+    "vtk.js": "7.0.0",
     "vue": "2.5.16",
     "vuetify": "1.0.19",
     "webworker-promise": "0.4.1",

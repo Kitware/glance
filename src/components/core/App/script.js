@@ -47,7 +47,7 @@ function loadRemoteDataset(url, name, type) {
   this.loadingProgress = 0;
 
   const progressCb = (progress) => {
-    this.loadingProgress = Math.round(100 * progress.loaded / progress.total);
+    this.loadingProgress = Math.round((100 * progress.loaded) / progress.total);
   };
 
   return ReaderFactory.downloadDataset(name, url, progressCb)

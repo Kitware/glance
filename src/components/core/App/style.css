@@ -43,3 +43,8 @@
   width: 80%;
   margin: auto;
 }
+
+.aboutIcon {
+  width: 100%;
+  max-height: 80px;
+}

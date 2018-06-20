@@ -4,20 +4,23 @@
   "description": "Web application for Visualizing Scientific and Medical datasets",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kitware/pv-web-viewer.git"
+    "url": "git+https://github.com/kitware/paraview-glance.git"
   },
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/kitware/pv-web-viewer/issues"
+    "url": "https://github.com/kitware/paraview-glance/issues"
   },
-  "homepage": "https://github.com/kitware/pv-web-viewer#readme",
+  "homepage": "https://github.com/kitware/paraview-glance#readme",
   "scripts": {
     "validate": "prettier --config ./prettier.config.js --list-different \"src/**/*.js\"",
     "reformat": "prettier --config ./prettier.config.js --write \"src/**/*.js\"",
+    "doc": "kw-doc -c ./documentation/config.js",
+    "doc:www": "kw-doc -c ./documentation/config.js -s",
+    "doc:publish": "kw-doc -c ./documentation/config.js -mp",
     "build": "webpack --config build/webpack.dev.config.js",
     "build:release": "webpack --config build/webpack.prod.config.js -p",
     "dev": "webpack-dev-server --config build/webpack.dev.config.js",
-    "bundle": "inline-source --compress false --root ./Distribution ./Distribution/index.html ./Distribution/ParaViewGlance.html",
+    "bundle": "inline-source --compress false --root ./dist ./dist/index.html ./dist/ParaViewGlance.html",
     "commit": "git cz",
     "semantic-release": "semantic-release"
   },
@@ -25,9 +28,6 @@
   "dependencies": {
     "itk": "9.1.1",
     "material-design-icons-iconfont": "3.0.3",
-    "@fortawesome/fontawesome": "1.1.8",
-    "@fortawesome/fontawesome-free-regular": "5.0.13",
-    "@fortawesome/fontawesome-free-solid": "5.0.13",
     "typeface-roboto": "0.0.54",
     "vtk.js": "6.7.9",
     "vue": "2.5.16",
@@ -38,10 +38,10 @@
   },
   "devDependencies": {
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "copy-webpack-plugin": "4.4.1",
     "eslint-plugin-vue": "4.5.0",
-    "html-webpack-plugin": "^3.2.0",
-    "kw-web-suite": "6.1.0",
+    "kw-doc": "1.2.0",
+    "kw-web-suite": "6.2.0",
+    "paraview-glance": "1.1.42",
     "vue-loader": "15.2.4",
     "vue-style-loader": "4.1.0",
     "vue-template-compiler": "2.5.16",

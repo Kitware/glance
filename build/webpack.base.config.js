@@ -130,6 +130,9 @@ module.exports = {
         from: path.join(paths.node_modules, 'itk'),
         to: 'itk',
       },
+      {
+        from: path.join(paths.root, 'static'),
+      },
     ]),
     new WorkboxPlugin({
       globIgnores: ['serviceWorker.js'],

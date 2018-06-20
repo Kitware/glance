@@ -12,6 +12,7 @@ import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Notification from 'paraview-glance/src/components/core/Notification';
 import RawFileReader from 'paraview-glance/src/components/core/RawFileReader';
 import Screenshots from 'paraview-glance/src/components/core/Screenshots';
+import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -136,6 +137,7 @@ export default {
     Notification,
     RawFileReader,
     Screenshots,
+    SvgIcon,
   },
   data() {
     return {

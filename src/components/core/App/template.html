@@ -33,7 +33,8 @@
         :disabled="landing"
         @click.native.stop="sidebar = !sidebar"
       />
-      <v-toolbar-title>ParaView Glance</v-toolbar-title>
+      <!-- smaller than height of the toolbar -->
+      <svg-icon icon="paraview-glance" height="52px" />
       <v-spacer />
       <v-btn
         :class="$style.toolbarButton"
@@ -58,7 +59,8 @@
         flat
         v-on:click="aboutDialog = true"
       >
-        <v-icon>help</v-icon>
+        <!-- width of other icons in toolbar -->
+        <svg-icon icon="kitware" width="24px" />
         <span>About</span>
       </v-btn>
     </v-toolbar>

@@ -60,13 +60,10 @@ function deleteCropWidget() {
 
 function toggleCrop() {
   let cropWidget = this.view.getReferenceByName('cropWidget');
-  if (cropWidget && !this.widgetManager.hasWidget(cropWidget)) {
-    this.deleteCropWidget();
-    cropWidget = null;
-  }
 
   if (cropWidget) {
     this.deleteCropWidget();
+    this.isCropping = false;
   } else {
     const volumeRep = this.proxyManager
       .getRepresentations()
@@ -90,6 +87,7 @@ function toggleCrop() {
       this.proxyManager.autoAnimateViews();
     });
     this.view.set({ cropWidget }, true);
+    this.isCropping = true;
   }
 }
 
@@ -234,6 +232,7 @@ export default {
       palette: BACKGROUND,
       viewTypes: VIEW_TYPES,
       backgroundSheet: false,
+      isCropping: false,
     };
   },
   computed: {

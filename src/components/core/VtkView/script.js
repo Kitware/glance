@@ -111,10 +111,12 @@ function rollRight() {
 
 function screenCapture() {
   if (this.view) {
-    this.$globalBus.$emit(Events.SCREENSHOT, {
-      imgSrc: this.view.captureImage(),
-      viewName: this.view.getReferenceByName('name'),
-      viewData: this.viewData,
+    this.view.captureImage().then((imgSrc) => {
+      this.$globalBus.$emit(Events.SCREENSHOT, {
+        imgSrc,
+        viewName: this.view.getReferenceByName('name'),
+        viewData: this.viewData,
+      });
     });
   }
 }

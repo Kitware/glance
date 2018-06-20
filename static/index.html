@@ -14,6 +14,13 @@
         overflow: hidden !important;
       }
     </style>
+    <% for (key in htmlWebpackPlugin.files.js) { %>
+      <script
+        <% if (!htmlWebpackPlugin.files.js[key].startsWith('glance-external-')) { %> inline <% } %>
+        type="text/javascript"
+        src="<%= htmlWebpackPlugin.files.js[key] %>"
+      ></script>
+    <% } %>
   </head>
   <body>
     <div id="root-container"></div>

@@ -24,7 +24,7 @@ module.exports = merge(baseConfig, {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'static/index.html',
-      inject: 'head',
+      inject: false,
     }),
   ],
 });

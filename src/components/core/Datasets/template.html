@@ -1,10 +1,15 @@
 <v-expansion-panel expand>
   <v-expansion-panel-content
-    v-for="source in datasets"
+    v-for="(source, index) in datasets"
     :key="source.getProxyId()"
     :class="$style.datasetPanel"
     :value="true"
   >
+    <color-group
+      :index="index"
+      :visible="datasets.length > 1"
+      :top="52"
+    />
     <div
       slot="header"
       v-bind:title="source.getName()"

@@ -6,6 +6,8 @@ import MoleculeWidget from 'paraview-glance/src/components/widgets/dataset/Molec
 import RepresentationWidget from 'paraview-glance/src/components/widgets/dataset/Representation';
 import SliceWidget from 'paraview-glance/src/components/widgets/dataset/SliceControl';
 
+import ColorGroup from 'paraview-glance/src/components/widgets/ColorGroup';
+
 // ----------------------------------------------------------------------------
 // Component API
 // ----------------------------------------------------------------------------
@@ -88,6 +90,7 @@ export default {
     MoleculeWidget,
     RepresentationWidget,
     SliceWidget,
+    ColorGroup,
   },
   methods: {
     onMounted,

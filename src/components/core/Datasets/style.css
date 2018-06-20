@@ -1,3 +1,7 @@
+.datasetPanel {
+  position: relative;
+}
+
 /* override vuetify */
 .datasetPanel :global(.expansion-panel__header) {
   padding: 12px 24px 12px 6px;
@@ -12,6 +16,7 @@
 }
 
 .datasetHeader {
+  position: relative;
   user-select: none;
   /* handle overflowing names */
   overflow: hidden;

@@ -1,0 +1,8 @@
+.container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  z-index: 10;
+  background: gray;
+}

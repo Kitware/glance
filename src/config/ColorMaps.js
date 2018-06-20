@@ -1,6 +1,13 @@
 import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
-
 import Presets from 'paraview-glance/src/config/Presets.json';
+
+const DEFAULT_PRESET = Object.assign(
+  {},
+  vtkColorMaps.getPresetByName('Cool to Warm'),
+  {
+    Name: 'Default (Cool to Warm)',
+  }
+);
 
 // sorts case insensitively
 function comparator(a, b) {
@@ -30,9 +37,10 @@ function createGroup(name, childrenNames) {
 }
 
 // add custom presets
-registerPresets(Presets);
+registerPresets(Presets.concat(DEFAULT_PRESET));
 
 export default [].concat(
+  DEFAULT_PRESET,
   Presets,
   createGroup('ParaView', [
     '2hot',
@@ -42,6 +50,8 @@ export default [].concat(
     'Cool to Warm',
     'coolwarm',
     'Grayscale',
+    'Linear Blue (8_31f)',
+    'Linear YGB 1211g',
     'Rainbow Blended Black',
     'Rainbow Blended Grey',
     'Rainbow Blended White',
@@ -125,8 +135,6 @@ export default [].concat(
     'hue_L60',
     'Inferno (matplotlib)',
     'jet',
-    'Linear Blue (8_31f)',
-    'Linear YGB 1211g',
     'magenta',
     'Magma (matplotlib)',
     'Muted Blue-Green',
@@ -147,9 +155,6 @@ export default [].concat(
     'RdOrYl',
     'RdPu',
     'Red to Blue Rainbow',
-    'RED-PURPLE',
-    'RED_TEMPERATURE',
-    'Reds',
     'Spectral_lowBlue',
     'Viridis (matplotlib)',
     'X Ray',

@@ -1,0 +1,44 @@
+language: node_js
+os: linux
+dist: trusty
+
+addons:
+  chrome: stable
+
+node_js:
+  - '8'
+
+notifications:
+  email:
+    recipients:
+      - sebastien.jourdain@kitware.com
+      - forrest.li@kitware.com
+      - stephen.aylward@kitware.com
+    on_success: change
+    on_failure: always
+
+cache:
+  directories:
+    - node_modules
+    - documentation/build-tmp
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libgif-dev
+
+script:
+  - npm install
+  - npm run build:release
+  - npm run validate
+  - npm run bundle
+  - git config --global user.name "Travis CI"
+  - git config --global user.email "sebastien.jourdain@kitware.com"
+  - export GIT_PUBLISH_URL=https://${GH_TOKEN}@github.com/Kitware/paraview-glance.git
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then npm run doc:publish; fi
+
+after_success:
+  - npm run semantic-release
+
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"

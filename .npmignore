@@ -1,7 +1,0 @@
-.DS_Store
-.gitmodules
-.npmrc
-.sass-cache
-.travis.yml
-Documentation
-npm-debug.log

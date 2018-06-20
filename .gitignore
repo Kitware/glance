@@ -1,9 +1,0 @@
-.DS_Store
-*.swp
-.npm-packages
-.npmrc
-npm-debug.log
-node_modules
-Data
-Distribution/
-coverage/

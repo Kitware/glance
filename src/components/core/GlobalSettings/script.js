@@ -7,13 +7,13 @@ import {
 import { Events } from 'paraview-glance/src/constants';
 
 const ORIENTATION_PRESETS = [
-  { text: 'XYZ', value: 'default' },
   { text: 'LPS', value: 'lps' },
+  { text: 'XYZ', value: 'default' },
 ];
 
 const AXIS_TYPES = [
-  { text: 'Cube', value: 'cube' },
   { text: 'Arrows', value: 'arrow' },
+  { text: 'Cube', value: 'cube' },
 ];
 
 // ----------------------------------------------------------------------------
@@ -77,15 +77,16 @@ export default {
     GpuInformation,
   },
   data() {
+    const view = this.proxyManager.getViews()[0];
     return {
       palette: BACKGROUND,
       backgroundColor: DEFAULT_BACKGROUND,
       orientationAxis: true,
       annotationOpacity: 1,
-      orientationPreset: 'default',
+      orientationPreset: view ? view.getPresetToOrientationAxes() : 'lps',
       orientationPresets: ORIENTATION_PRESETS,
       axisTypes: AXIS_TYPES,
-      axisType: 'cube',
+      axisType: view ? view.getOrientationAxesType() : 'arrow',
     };
   },
   watch: {

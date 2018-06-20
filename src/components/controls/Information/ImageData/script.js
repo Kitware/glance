@@ -1,4 +1,4 @@
-import MatrixView from 'paraview-glance/src/components/widgets/dataset/Information/MatrixView';
+import MatrixView from 'paraview-glance/src/components/controls/Information/MatrixView';
 
 export default {
   name: 'ImageData',

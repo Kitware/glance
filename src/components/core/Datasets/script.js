@@ -1,10 +1,10 @@
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 
-import ColorByWidget from 'paraview-glance/src/components/widgets/dataset/ColorBy';
-import InformationWidget from 'paraview-glance/src/components/widgets/dataset/Information';
-import MoleculeWidget from 'paraview-glance/src/components/widgets/dataset/Molecule';
-import RepresentationWidget from 'paraview-glance/src/components/widgets/dataset/Representation';
-import SliceWidget from 'paraview-glance/src/components/widgets/dataset/SliceControl';
+import ColorByWidget from 'paraview-glance/src/components/controls/ColorBy';
+import InformationWidget from 'paraview-glance/src/components/controls/Information';
+import MoleculeWidget from 'paraview-glance/src/components/controls/Molecule';
+import RepresentationWidget from 'paraview-glance/src/components/controls/Representation';
+import SliceWidget from 'paraview-glance/src/components/controls/SliceControl';
 
 import ColorGroup from 'paraview-glance/src/components/widgets/ColorGroup';
 

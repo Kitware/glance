@@ -15,7 +15,7 @@ export default {
     },
     colors: {
       this: Array,
-      default: ['#e1002a', '#417dc0', '#1d9a57', '#e9bc2f', '#9b3880'],
+      default: () => ['#e1002a', '#417dc0', '#1d9a57', '#e9bc2f', '#9b3880'],
     },
   },
   computed: {

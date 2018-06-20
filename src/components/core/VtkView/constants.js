@@ -9,9 +9,9 @@ export const VIEW_TYPES = [
 
 export const VIEW_ORIENTATIONS = {
   default: {
-    axis: 2,
-    orientation: 1,
-    viewUp: [0, -1, 0],
+    axis: 1,
+    orientation: -1,
+    viewUp: [0, 0, 1],
   },
   x: {
     axis: 0,

@@ -125,6 +125,34 @@ function closeRawFileDialog() {
 
 // ----------------------------------------------------------------------------
 
+function recordError(err) {
+  this.errors.push(err);
+}
+
+// ----------------------------------------------------------------------------
+
+function isClipboardEnabled() {
+  try {
+    return document.queryCommandSupported('copy');
+  } catch (e) {
+    return false;
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+function copyErrorToClipboard() {
+  this.$refs.errorTextarea.select();
+  if (document.execCommand('copy')) {
+    this.copiedToClipboard = true;
+    window.setTimeout(() => {
+      this.copiedToClipboard = false;
+    }, 2000);
+  }
+}
+
+// ----------------------------------------------------------------------------
+
 export default {
   name: 'App',
   inject: ['proxyManager'],
@@ -151,7 +179,33 @@ export default {
       screenshotCount: 0,
       rawDialog: false,
       rawFile: null,
+      errors: [],
+      errorDialog: false,
+      copiedToClipboard: false,
     };
+  },
+  computed: {
+    readableErrors() {
+      return `\`\`\`
+${this.errors.join('\n\n----------next error----------\n\n')}
+\`\`\``;
+    },
+  },
+  mounted() {
+    window.addEventListener('error', this.recordError);
+    if (window.console) {
+      this.origConsoleError = window.console.error;
+      window.console.error = (...args) => {
+        this.recordError(args.join(' '));
+        return this.origConsoleError(...args);
+      };
+    }
+  },
+  beforeDestroy() {
+    window.removeEventListener('error', this.recordError);
+    if (this.origConsoleError) {
+      window.console.error = this.origConsoleError;
+    }
   },
   methods: {
     loadFiles,
@@ -159,5 +213,8 @@ export default {
     loadRemoteDataset,
     loadPendingRawFile,
     closeRawFileDialog,
+    recordError,
+    isClipboardEnabled,
+    copyErrorToClipboard,
   },
 };

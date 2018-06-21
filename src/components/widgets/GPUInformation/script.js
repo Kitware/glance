@@ -64,6 +64,7 @@ export default {
       vendor: 'Unknown',
       gpu: 'Unknown',
       webgl: 0,
+      infoDialog: false,
     };
   },
   methods: {

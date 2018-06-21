@@ -1,0 +1,94 @@
+{
+  "name": "itk",
+  "version": "9.1.1",
+  "description": "Read and write 2D, 3D, and ND images with the Insight Toolkit (ITK)",
+  "main": "./dist/itk.js",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "doc": "kw-doc -c ./doc/config.js",
+    "doc:www": "kw-doc -c ./doc/config.js -s",
+    "doc:publish": "kw-doc -c ./doc/config.js -mp",
+    "commit": "git cz",
+    "build": "node ./build.js",
+    "test": "./build/dockcross bash -c \"cd build && ctest -V\" && standard \"src/*.js\" \"test/**/*.js\" && ava \"test/*.js\" && npm run browser-test",
+    "browser-test": "karma start ./karma.conf.js",
+    "browser-test:debug": "karma start ./karma.conf.js --no-single-run"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InsightSoftwareConsortium/itk-js.git"
+  },
+  "keywords": [
+    "itk",
+    "imaging",
+    "io",
+    "medical",
+    "scientific"
+  ],
+  "author": "Insight Software Consortium",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/InsightSoftwareConsortium/itk-js/issues"
+  },
+  "homepage": "https://github.com/InsightSoftwareConsortium/itk-js#readme",
+  "devDependencies": {
+    "async": "^2.6.0",
+    "ava": "^0.22.0",
+    "babel-core": "^6.24.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2017": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browserify": "^16.1.1",
+    "commitizen": "2.9.6",
+    "condition-circle": "1.5.0",
+    "cz-conventional-changelog": "2.0.0",
+    "file-api": "^0.10.4",
+    "fs": "0.0.1-security",
+    "fs-extra": "^0.30.0",
+    "glob": "^7.0.6",
+    "json-loader": "^0.5.4",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-tap": "^3.1.1",
+    "karma-tap-pretty-reporter": "^3.0.5",
+    "karma-webpack": "2.0.4",
+    "kw-doc": "1.0.20",
+    "ramda": "^0.23.0",
+    "standard": "^11.0.1",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.8.0",
+    "uglifyify": "^3.0.4",
+    "webpack": "^3.10.0"
+  },
+  "dependencies": {
+    "axios": "^0.17.1",
+    "commander": "^2.15.1",
+    "mime-types": "^2.1.15",
+    "promise-file-reader": "^0.3.1",
+    "webworker-promise": "^0.4.1"
+  },
+  "bin": {
+    "itk-js": "./itk-js-cli.js"
+  },
+  "standard": {
+    "ignore": [
+      "src/loadEmscriptenModuleBrowser.js",
+      "src/itk-js-cli.js",
+      "itkJSImageIOPost.js",
+      "test/Browser/tests.js"
+    ]
+  }
+
+,"_resolved": "https://registry.npmjs.org/itk/-/itk-9.1.1.tgz"
+,"_integrity": "sha512-y3WjO6YL0TNkoqhwz/0zY6yn9kfua1DhjqyFIxydHlTjK914GLJzo+rTXhbVNyF4gtFLTkGkunY4SN9JdFgbyw=="
+,"_from": "itk@9.1.1"
+}

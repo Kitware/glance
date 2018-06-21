@@ -19,13 +19,16 @@ notifications:
 
 cache:
   directories:
-    - node_modules
+    - "$HOME/.npm"
     - documentation/build-tmp
 
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libgif-dev
   - npm i -g npm@6.0.1
+
+install:
+  - npm ci
 
 script:
   - npm install

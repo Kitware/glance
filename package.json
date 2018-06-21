@@ -2,6 +2,18 @@
   "name": "paraview-glance",
   "version": "0.0.0-semantically-release",
   "description": "Web application for Visualizing Scientific and Medical datasets",
+  "keywords": [
+    "3d",
+    "visualization",
+    "webgl",
+    "medical",
+    "scientific",
+    "vtk",
+    "paraview",
+    "geometry",
+    "point cloud",
+    "mesh"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kitware/paraview-glance.git"

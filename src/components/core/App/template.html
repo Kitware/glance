@@ -37,6 +37,17 @@
       <svg-icon icon="paraview-glance" height="52px" />
       <v-spacer />
       <v-btn
+        v-if="errors.length"
+        key="if-has-errors"
+        :class="$style.toolbarButton"
+        flat
+        color="error"
+        v-on:click="errorDialog = true"
+      >
+        <v-icon>error</v-icon>
+        <span>{{ errors.length }} error(s)</span>
+      </v-btn>
+      <v-btn
         :class="$style.toolbarButton"
         :disabled="!!loadingNames.length"
         flat
@@ -62,17 +73,6 @@
         <!-- width of other icons in toolbar -->
         <svg-icon icon="kitware-logo" width="24px" />
         <span>About</span>
-      </v-btn>
-      <v-btn
-        v-if="errors.length"
-        key="if-has-errors"
-        :class="$style.toolbarButton"
-        flat
-        color="error"
-        v-on:click="errorDialog = true"
-      >
-        <v-icon>error</v-icon>
-        <span>{{ errors.length }} error(s)</span>
       </v-btn>
     </v-toolbar>
     <v-content :class="$style.appContent">

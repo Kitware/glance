@@ -16,10 +16,15 @@
       </ul>
     </v-card-text>
     <v-card-actions>
+      <v-checkbox
+        v-model="suppressWarning"
+        label="Don't show again"
+        hide-details
+      />
       <v-spacer />
       <v-btn
         color="primary"
-        v-on:click="dialog = false"
+        v-on:click="closeDialog"
       >
         Okay
       </v-btn>

@@ -50,6 +50,42 @@
         <v-icon>rotate_right</v-icon>
       </v-btn>
     </v-tooltip>
+    <v-tooltip left v-if="view.getProxyName() === 'View3D'">
+      <span :class="$style.noSelect">Reset Camera to Orientation X</span>
+      <v-btn
+        slot="activator"
+        icon
+        dark
+        small
+        v-on:click="updateOrientation('x')"
+      >
+        X
+      </v-btn>
+    </v-tooltip>
+    <v-tooltip left v-if="view.getProxyName() === 'View3D'">
+      <span :class="$style.noSelect">Reset Camera to Orientation Y</span>
+      <v-btn
+        slot="activator"
+        icon
+        dark
+        small
+        v-on:click="updateOrientation('y')"
+      >
+        Y
+      </v-btn>
+    </v-tooltip>
+    <v-tooltip left v-if="view.getProxyName() === 'View3D'">
+      <span :class="$style.noSelect">Reset Camera to Orientation Z</span>
+      <v-btn
+        slot="activator"
+        icon
+        dark
+        small
+        v-on:click="updateOrientation('z')"
+      >
+        Z
+      </v-btn>
+    </v-tooltip>
   </v-layout>
   <v-layout column fill-height>
     <v-flex

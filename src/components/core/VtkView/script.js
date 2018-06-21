@@ -2,6 +2,7 @@ import { Events, Widgets } from 'paraview-glance/src/constants';
 import {
   DEFAULT_VIEW_TYPE,
   VIEW_TYPES,
+  VIEW_ORIENTATIONS,
 } from 'paraview-glance/src/components/core/VtkView/constants';
 
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
@@ -46,6 +47,24 @@ function resetCamera() {
     this.view.resetCamera();
   }
 }
+
+// ----------------------------------------------------------------------------
+
+function updateOrientation(mode) {
+  if (this.view) {
+    const { axis, orientation, viewUp } = VIEW_ORIENTATIONS[mode];
+    this.view.updateOrientation(axis, orientation, viewUp);
+    this.view.resetCamera();
+    // FIXME should happen at vtk level
+    const interactor = this.view.getInteractor();
+    const renderer = this.view.getRenderer();
+    if (interactor.getLightFollowCamera()) {
+      renderer.updateLightsGeometryToFollowCamera();
+    }
+    this.view.renderLater();
+  }
+}
+
 // ----------------------------------------------------------------------------
 
 function deleteCropWidget() {
@@ -256,6 +275,7 @@ export default {
     singleView,
     splitView,
     toggleCrop,
+    updateOrientation,
   },
   mounted() {
     this.$nextTick(this.onMounted);

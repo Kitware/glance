@@ -8,17 +8,50 @@
     <title>ParaView Glance</title>
     <meta name="description" content="Data Viewer in a browser">
     <link inline rel="icon" type="image/png" href="ParaView.png">
+    <style type="text/css">
+      /* override vuetify */
+      html {
+        overflow: hidden !important;
+      }
+    </style>
+    
+      <script
+         inline 
+        type="text/javascript"
+        src="runtime.js"
+      ></script>
+    
+      <script
+         inline 
+        type="text/javascript"
+        src="vendors.js"
+      ></script>
+    
+      <script
+         inline 
+        type="text/javascript"
+        src="glance.js"
+      ></script>
+    
+      <script
+        
+        type="text/javascript"
+        src="glance-external-ITKReader.js"
+      ></script>
+    
+      <script
+        
+        type="text/javascript"
+        src="glance-external-Workbox.js"
+      ></script>
+    
   </head>
   <body>
-    <div class="root-container"></div>
-    <script inline type="text/javascript" src="glance.js"></script>
-    <script type="text/javascript" src="glance-external-ITKReader.js"></script>
-    <script type="text/javascript" src="glance-external-Workbox.js"></script>
+    <div id="root-container"></div>
     <script type="text/javascript">
-      const container = document.querySelector('.root-container');
-      const viewer = Glance.createViewer(container);
-      viewer.processURLArgs();
-      // viewer.loadURL('volume.vti', 'https://data.kitware.com/api/v1/file/59e12e988d777f31ac6455c6/download');
+      const container = document.querySelector('#root-container');
+      const glanceInstance = Glance.createViewer(container);
+      glanceInstance.processURLArgs();
     </script>
   </body>
 </html>

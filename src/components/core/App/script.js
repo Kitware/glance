@@ -76,6 +76,9 @@ function loadRemoteDatasets(urls, names, types = []) {
         );
       });
     })
+    .catch(() => {
+      this.$globalBus.$emit(Events.MSG_ERROR, Messages.DOWNLOAD_FAILED);
+    })
     .finally(() => {
       this.loadingNames = [];
       this.loadingProgresses = [];

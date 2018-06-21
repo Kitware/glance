@@ -143,11 +143,17 @@ function downloadDataset(fileName, url, progressCallback) {
     const readerMapping = getReader({ name: fileName });
     if (readerMapping) {
       const { readMethod } = readerMapping;
-      FETCH_DATA[readMethod](url, progressCallback).then((rawData) => {
-        readRawData({ fileName, data: rawData })
-          .then((result) => resolve(result))
-          .catch((error) => reject(error));
-      });
+      FETCH_DATA[readMethod](url, progressCallback)
+        .then((rawData) => {
+          if (rawData) {
+            readRawData({ fileName, data: rawData })
+              .then((result) => resolve(result))
+              .catch((error) => reject(error));
+          } else {
+            throw new Error(`No data for ${fileName}`);
+          }
+        })
+        .catch(reject);
     } else {
       throw new Error(`No reader found for ${fileName}`);
     }

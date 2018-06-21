@@ -62,6 +62,15 @@
   opacity: 1;
 }
 
+.acknowledgement {
+  font-size: 80%;
+}
+
+.description {
+  font-size: 80%;
+  color: lightgray;
+}
+
 .linkOverlayText {
   position: absolute;
   bottom: 0px;

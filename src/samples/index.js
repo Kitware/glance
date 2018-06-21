@@ -6,6 +6,7 @@ export default [
     label: 'Lysozyme.pdb',
     image: Images.Lysozyme,
     size: '135 KB',
+    description: 'an enzyme that catalyzes the destruction of the cell walls of certain bacteria, occurring notably in tears and egg white.',
     datasets: [
       {
         name: 'Lysozyme.pdb',
@@ -105,6 +106,8 @@ export default [
     label: 'Backpack.vti',
     image: Images.Backpack,
     size: '8.3 MB',
+    description: "CT scan of a backpack filled with items.",
+    acknowledgement: "Kevin Kreeger, Viatronix Inc., USA",
     datasets: [
       {
         name: 'Backpack.vti',
@@ -116,6 +119,8 @@ export default [
     label: 'SinglePin.vtp',
     image: Images.SinglePin,
     size: '8.2 MB',
+    description: 'Mixing Vane inside reactor pin for cooling',
+    acknowledgement: "Simulation data from Hydra-TH",
     datasets: [
       {
         name: 'SinglePin.vtp',
@@ -127,6 +132,7 @@ export default [
     label: 'lidar.vtp',
     image: Images.Lidar,
     size: '5.3 MB',
+    description: 'Aerial LIDAR data',
     datasets: [
       {
         name: 'lidar.vtp',
@@ -135,10 +141,12 @@ export default [
     ],
   },
   {
-    label: '202-t',
+    label: '202-t + Edges',
     image: Images.CAD,
     url: 'https://kitware.github.io/vtk-js-datasets/data/vtp/202-t.vtp',
-    size: '82 KB',
+    size: '112 KB',
+    description: 'T-Handle, Flanged Base, Solid Bar',
+    acknowledgement: 'https://www.traceparts.com/',
     datasets: [
       {
         name: '202-t.vtp',

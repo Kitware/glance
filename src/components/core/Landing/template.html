@@ -74,6 +74,12 @@
             >
               <div :class="$style.linkOverlayText" class="body-2">
                 {{ sample.label }} ({{ sample.size }})
+                <div :class="$style.description" v-if="sample.description">
+                  {{ sample.description }}
+                </div>
+                <div :class="$style.acknowledgement" v-if="sample.acknowledgement">
+                  {{ sample.acknowledgement }}
+                </div>
               </div>
             </div>
         </v-card>

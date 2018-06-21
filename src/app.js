@@ -80,7 +80,10 @@ export function createViewer(container, proxyConfig = null) {
     processURLArgs() {
       const { name, url, type } = vtkURLExtract.extractURLParameters();
       if (name && url) {
-        vm.$refs.app.loadRemoteDataset(url, name, type);
+        const names = typeof name === 'string' ? [name] : name;
+        const urls = typeof url === 'string' ? [url] : url;
+        const types = typeof type === 'string' ? [type] : type || [];
+        vm.$refs.app.loadRemoteDatasets(urls, names, types);
       }
     },
   };

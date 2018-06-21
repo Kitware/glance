@@ -38,7 +38,7 @@
       <v-spacer />
       <v-btn
         :class="$style.toolbarButton"
-        :disabled="!!loadingName"
+        :disabled="!!loadingNames.length"
         flat
         v-on:click="openFile"
       >
@@ -78,12 +78,13 @@
     <v-content :class="$style.appContent">
       <div
         :class="$style.overlay"
-        v-if="!!loadingName"
+        v-if="loadingNames.length"
+        key="if-loading"
       >
         <div :class="$style.overlayText">
-          <div class="display-2">Loading {{ loadingName }}...</div>
+          <div class="display-2">Loading {{ loadingNames.join(', ') }}...</div>
           <v-progress-linear
-            :value="loadingProgress"
+            :value="totalLoadingProgress"
             height="10"
             color="info"
           />
@@ -91,11 +92,12 @@
       </div>
       <landing
         v-if="landing"
+        key="if-landing"
         v-on:open="openFile"
-        v-on:open-url="loadRemoteDataset"
+        v-on:open-url="openUrl"
         v-on:open-files="loadFiles"
       />
-      <layout-view v-if="!landing" />
+      <layout-view v-else key="if-landing" />
     </v-content>
 
     <v-navigation-drawer

@@ -38,30 +38,45 @@ function loadFiles(files) {
 
 // ----------------------------------------------------------------------------
 
-function loadRemoteDataset(url, name, type) {
-  if (!url || !name) {
-    return Promise.reject(new Error('No url or name provided'));
+function loadRemoteDatasets(urls, names, types = []) {
+  if (!urls || !urls.length || !names || !names.length) {
+    return Promise.reject(new Error('No urls or names provided'));
   }
 
-  this.loadingName = name;
-  this.loadingProgress = 0;
+  this.loadingNames = names;
+  this.loadingProgresses.splice(urls.length);
 
-  const progressCb = (progress) => {
-    this.loadingProgress = Math.round((100 * progress.loaded) / progress.total);
+  const progressCb = (index) => (progress) => {
+    this.$set(
+      this.loadingProgresses,
+      index,
+      (100 * progress.loaded) / progress.total / urls.length
+    );
   };
 
-  return ReaderFactory.downloadDataset(name, url, progressCb)
-    .then(({ reader, sourceType }) => {
-      ReaderFactory.registerReadersToProxyManager(
-        [{ reader, name, sourceType: type || sourceType }],
-        this.proxyManager
-      );
-    })
-    .then(() => {
+  const promises = [];
+  for (let i = 0; i < urls.length; ++i) {
+    promises.push(
+      ReaderFactory.downloadDataset(names[i], urls[i], progressCb(i))
+    );
+  }
+
+  return Promise.all(promises)
+    .then((results) => {
+      // show landing first, then actually load datasets
+      // so representations have a view to bind to.
       this.landing = false;
+
+      results.forEach(({ reader, sourceType }, i) => {
+        ReaderFactory.registerReadersToProxyManager(
+          [{ reader, name: names[i], sourceType: types[i] || sourceType }],
+          this.proxyManager
+        );
+      });
     })
     .finally(() => {
-      this.loadingName = null;
+      this.loadingNames = [];
+      this.loadingProgresses = [];
     });
 }
 
@@ -71,6 +86,12 @@ function openFile() {
   ReaderFactory.openFiles(ReaderFactory.listSupportedExtensions(), (files) =>
     this.loadFiles(files)
   );
+}
+
+// ----------------------------------------------------------------------------
+
+function openUrl(url, name) {
+  this.loadRemoteDatasets([url], [name]);
 }
 
 // ----------------------------------------------------------------------------
@@ -169,8 +190,8 @@ export default {
   },
   data() {
     return {
-      loadingName: null,
-      loadingProgress: 0,
+      loadingNames: [],
+      loadingProgresses: [],
       landing: true,
       sidebar: true,
       aboutDialog: false,
@@ -185,6 +206,9 @@ export default {
     };
   },
   computed: {
+    totalLoadingProgress() {
+      return this.loadingProgresses.reduce((sum, v) => sum + (v || 0), 0);
+    },
     readableErrors() {
       return `\`\`\`
 ${this.errors.join('\n\n----------next error----------\n\n')}
@@ -210,7 +234,8 @@ ${this.errors.join('\n\n----------next error----------\n\n')}
   methods: {
     loadFiles,
     openFile,
-    loadRemoteDataset,
+    openUrl,
+    loadRemoteDatasets,
     loadPendingRawFile,
     closeRawFileDialog,
     recordError,

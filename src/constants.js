@@ -9,7 +9,8 @@ export const Events = {
 
 export const Messages = {
   OPEN_ERROR: 'Specified file is currently unsupported',
-  DOWNLOAD_FAILED: 'Failed to download all specified datasets',
+  DOWNLOAD_FAILED:
+    'Failed to download all specified datasets (bad URLs or adblock is on)',
 };
 
 export const Widgets = {

@@ -65,7 +65,11 @@ function setColorBy(value) {
     .filter((r) => r.getInput() === this.source);
   for (let i = 0; i < myRepresentations.length; i++) {
     myRepresentations[i].setColorBy(...args);
-    this.dataRange = myRepresentations[i].getDataArray().getRange();
+    const dataArray = myRepresentations[i].getDataArray();
+    // solid coloring doesn't have a valid data array
+    if (dataArray) {
+      this.dataRange = dataArray.getRange();
+    }
   }
   this.proxyManager.renderAllViews();
 

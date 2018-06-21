@@ -1,14 +1,12 @@
 {
-  presets: [
-    ['env', {
-      targets: {
-        browsers: ['last 2 versions'],
-      },
-    }],
-    'react'],
-  env: {
-    test: {
-      plugins: ['istanbul'],
-    }
-  }
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["last 2 versions"]
+      }
+    }]
+  ],
+  "plugins": [
+    "syntax-dynamic-import"
+  ]
 }

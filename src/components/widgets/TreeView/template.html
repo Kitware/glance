@@ -1,0 +1,21 @@
+<div
+  :class="$style.wrapper"
+>
+  <v-text-field
+    ref="filterInput"
+    placeholder="Filter..."
+    clearable
+    hide-details
+    v-model="filterText"
+    v-on:keyup.enter="trySelect(filteredTree)"
+  />
+  <node
+    v-for="(item, index) in filteredTree"
+    :key="index"
+    :item="item"
+    :open="!!filterText"
+    :labelKey="labelKey"
+    :childrenKey="childrenKey"
+    v-on:input="onSelect"
+  />
+</div>

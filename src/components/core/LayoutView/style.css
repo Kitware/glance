@@ -1,0 +1,18 @@
+.container {
+  height: 100%;
+  padding: 0;
+}
+
+.grid {
+  height: 100%;
+  display: grid;
+  grid-column-gap: 2px;
+  grid-row-gap: 2px;
+  grid-template-areas: none;
+}
+
+.viewContainer {
+  /* prevent view from overflowing our app during resize */
+  min-height: 0;
+  min-width: 0;
+}

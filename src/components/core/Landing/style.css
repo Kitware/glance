@@ -1,0 +1,84 @@
+.root {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.dnd {
+  height: 100%;
+}
+
+.fileUpload {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  height: 100%;
+  border: 3px #aaa dashed;
+  border-radius: 5px;
+  background-color: #696969;
+}
+
+.fileUpload:hover, .fileUploadHover {
+  background-color: #787878;
+  cursor: pointer;
+}
+
+.fileUploadContents {
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+}
+
+.buttonText {
+  margin-right: 8px;
+  text-transform: uppercase;
+}
+
+.sampleData {
+  flex: 1;
+  border-radius: 5px;
+  overflow: hidden;
+  background: black !important;
+  cursor: pointer;
+  /*max-width: 256px;*/
+}
+
+.linkOverlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 1;
+  opacity: 0;
+  background: rgba(255,255,255,0.2);
+  font-size: 300%;
+  text-align: center;
+  font-weight: bolder;
+  color: white;
+}
+
+.linkOverlay:hover {
+  opacity: 1;
+}
+
+.acknowledgement {
+  font-size: 80%;
+}
+
+.description {
+  font-size: 80%;
+  color: lightgray;
+}
+
+.linkOverlayText {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  background: rgba(0,0,0,0.4);
+  padding: 10px;
+}
+
+.noSelect {
+  user-select: none;
+}

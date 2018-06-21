@@ -1,0 +1,69 @@
+<v-dialog v-model="visible" max-width="60%">
+  <v-toolbar color="grey lighten-4" flat>
+    <v-toolbar-title>Save Screenshot</v-toolbar-title>
+  </v-toolbar>
+  <v-card
+    flat
+    v-if="screenshot"
+  >
+    <v-container>
+      <v-layout row>
+        <v-flex xs6>
+          <v-card flat tile>
+            <v-card-media
+              :class="$style.imagePreview"
+              :src="previewImageURL"
+              contain
+              height="250px"
+            />
+          </v-card>
+        </v-flex>
+        <v-flex xs6>
+          <v-container>
+            <v-layout row>
+              <v-flex xs8>
+                <v-text-field
+                  v-model="filename"
+                  label="Filename"
+                  v-on:keyup.enter="visible = false; save()"
+                />
+              </v-flex>
+              <v-flex xs4>
+                <v-select
+                  label="File type"
+                  single-line
+                  v-model="fileType"
+                  :items="fileTypes"
+                />
+              </v-flex>
+            </v-layout>
+            <v-layout row>
+              <v-flex xs12>
+                <v-checkbox
+                  label="Transparent background"
+                  v-model="transparentBackground"
+                />
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    <v-card-actions>
+      <v-spacer />
+      <v-btn
+        flat
+        color="red"
+        @click.native="visible = false"
+      >
+        <span>Cancel</span>
+      </v-btn>
+      <v-btn
+        color="primary"
+        @click.native="visible = false; save()"
+      >
+        <span>Save</span>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>

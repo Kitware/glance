@@ -1,0 +1,30 @@
+.container {
+  position: relative;
+  padding-right: 50px;
+  border-radius: 5px;
+  padding-left: 5px;
+  left: -10px;
+}
+
+.activeContainer {
+  composes: container;
+  cursor: pointer;
+}
+
+.activeContainer:hover {
+  background: lightgray;
+  transition: 1s cubic-bezier(.25,.8,.5,1);
+}
+
+.icon {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  bottom: 0;
+  transform: translateY(-25px);
+}
+
+.activeContainer:hover .icon {
+  display: block;
+}

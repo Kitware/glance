@@ -1,0 +1,157 @@
+<v-expansion-panel-content
+  v-if="domains.representation || domains.opacity || domains.sampleDistance"
+  class=""
+  :value="true"
+>
+  <div
+    :class="$style.subpanelHeader"
+    slot="header"
+  >
+    <v-icon>brightness_medium</v-icon>
+    <span class="body-2">Representation</span>
+  </div>
+
+  <v-card flat :class="$style.block" v-if="domains.representation">
+    <v-container fluid grid-list-md>
+      <v-layout row wrap>
+        <v-flex xs12>
+          <v-select
+            dense
+            flat
+            hide-details
+            label="Type"
+
+            v-model="representation"
+            :items="domains.representation.items"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-card>
+  <v-card flat :class="$style.block" v-if="domains.opacity && domains.pointSize">
+    <v-card-title flat :class="$style.blockTitle">
+      <span class="body-2">Mesh</span>
+    </v-card-title>
+    <v-card-text :class="$style.blockContent">
+      <v-container fluid grid-list-md>
+        <v-layout row wrap>
+          <v-flex xs3>
+            <label :class="$style.smallLabel">Point Size</label>
+          </v-flex>
+          <v-flex xs6>
+            <v-slider
+              :class="$style.noTopPadding"
+              hide-details
+
+              v-model="pointSize"
+              :min="domains.pointSize.min"
+              :max="domains.pointSize.max"
+              :step="domains.pointSize.step"
+            />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field
+              :class="$style.noTopPadding"
+              hide-details
+              type="number"
+
+              v-model="pointSize"
+              :min="domains.pointSize.min"
+              :max="domains.pointSize.max"
+              :step="domains.pointSize.step"
+            />
+          </v-flex>
+          <v-flex xs3>
+            <label :class="$style.smallLabel">Opacity</label>
+          </v-flex>
+          <v-flex xs6>
+            <v-slider
+              :class="$style.noTopPadding"
+              hide-details
+
+              v-model="opacity"
+              :min="domains.opacity.min"
+              :max="domains.opacity.max"
+              :step="domains.opacity.step"
+            />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field
+              :class="$style.noTopPadding"
+              hide-details
+              type="number"
+
+              v-model="opacity"
+              :min="domains.opacity.min"
+              :max="domains.opacity.max"
+              :step="domains.opacity.step"
+            />
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card-text>
+  </v-card>
+  <v-card flat :class="$style.block" v-if="domains.sampleDistance && domains.edgeGradient">
+    <v-card-title flat :class="$style.blockTitle">
+      <span class="body-2">Shadow & Edge</span>
+    </v-card-title>
+    <v-card-text :class="$style.blockContent">
+      <v-container fluid grid-list-md>
+        <v-layout row wrap>
+          <v-flex xs3>
+            <label :class="$style.smallLabel">Sample Distance</label>
+          </v-flex>
+          <v-flex xs6>
+            <v-slider
+              :class="$style.noTopPadding"
+              hide-details
+
+              v-model="sampleDistance"
+              :min="domains.sampleDistance.min"
+              :max="domains.sampleDistance.max"
+              :step="domains.sampleDistance.step"
+            />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field
+              :class="$style.noTopPadding"
+              hide-details
+              type="number"
+
+              v-model="sampleDistance"
+              :min="domains.sampleDistance.min"
+              :max="domains.sampleDistance.max"
+              :step="domains.sampleDistance.step"
+            />
+          </v-flex>
+          <v-flex xs3>
+            <label :class="$style.smallLabel">Edge Gradient</label>
+          </v-flex>
+          <v-flex xs6>
+            <v-slider
+              :class="$style.noTopPadding"
+              hide-details
+
+              v-model="edgeGradient"
+              :min="domains.edgeGradient.min"
+              :max="domains.edgeGradient.max"
+              :step="domains.edgeGradient.step"
+            />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field
+              :class="$style.noTopPadding"
+              hide-details
+              type="number"
+
+              v-model="edgeGradient"
+              :min="domains.edgeGradient.min"
+              :max="domains.edgeGradient.max"
+              :step="domains.edgeGradient.step"
+            />
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card-text>
+  </v-card>
+</v-expansion-panel-content>

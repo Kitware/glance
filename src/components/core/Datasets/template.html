@@ -1,0 +1,60 @@
+<v-expansion-panel expand>
+  <v-expansion-panel-content
+    v-for="(source, index) in datasets"
+    :key="source.getProxyId()"
+    :class="$style.datasetPanel"
+    :value="true"
+  >
+    <color-group
+      :index="index"
+      :visible="datasets.length > 1"
+      :top="52"
+    />
+    <div
+      slot="header"
+      v-bind:title="source.getName()"
+      :class="$style.datasetHeader"
+    >
+      <v-btn
+        :class="$style.headerMenuButton"
+        icon
+        small
+        v-on:click.stop="toggleDatasetVisibility(source)"
+      >
+        <v-icon>
+          {{ getDatasetVisibility(source) ? 'visibility' : 'visibility_off' }}
+        </v-icon>
+      </v-btn>
+      <span class="body-2">{{ source.getName() }}</span>
+      <v-spacer />
+      <div v-on:click.stop> <!-- prevent panel expansion on menu click -->
+        <v-menu offset-x>
+          <v-btn
+            slot="activator"
+            :class="$style.headerMenuButton"
+            icon
+            small
+          >
+            <v-icon>more_vert</v-icon>
+          </v-btn>
+          <v-list dense>
+            <v-list-tile
+              v-on:click="deleteDataset(source)"
+            >
+              <v-list-tile-title>Delete</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+      </div>
+    </div>
+    <v-card>
+      <v-expansion-panel expand>
+        <representation-widget v-bind:source="source" />
+        <color-by-widget v-bind:source="source" />
+        <slice-widget v-bind:source="source" />
+        <molecule-widget v-bind:source="source" />
+        <information-widget v-bind:source="source" />
+      </v-expansion-panel>
+    </v-card>
+  </v-expansion-panel-content>
+</v-expansion-panel>

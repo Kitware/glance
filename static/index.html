@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google" value="notranslate">
+    <title>ParaView Glance</title>
+    <meta name="description" content="Data Viewer in a browser">
+    <link inline rel="icon" type="image/png" href="ParaView.png">
+    <style type="text/css">
+      /* override vuetify */
+      html {
+        overflow: hidden !important;
+      }
+    </style>
+    <% for (key in htmlWebpackPlugin.files.js) { %>
+      <script
+        <% if (!htmlWebpackPlugin.files.js[key].startsWith('glance-external-')) { %> inline <% } %>
+        type="text/javascript"
+        src="<%= htmlWebpackPlugin.files.js[key] %>"
+      ></script>
+    <% } %>
+  </head>
+  <body>
+    <div id="root-container"></div>
+    <script type="text/javascript">
+      const container = document.querySelector('#root-container');
+      const glanceInstance = Glance.createViewer(container);
+      glanceInstance.processURLArgs();
+    </script>
+  </body>
+</html>

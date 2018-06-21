@@ -1,0 +1,83 @@
+<v-card>
+  <v-card-title>
+    <span class="title">Load Raw File as Image Data</span>
+  </v-card-title>
+  <v-card-text>
+    <v-layout row align-center>
+      <v-flex xs3 class="body-2">Filename:</v-flex>
+      <v-flex xs9 class="body-1">{{ file.name }}</v-flex>
+    </v-layout>
+    <v-layout row align-center>
+      <v-flex xs3 class="body-2">File size:</v-flex>
+      <v-flex xs9 class="body-1">{{ file.size }} bytes</v-flex>
+    </v-layout>
+    <v-layout row align-center>
+      <v-flex xs3 class="body-2">Data type:</v-flex>
+      <v-flex xs9 class="body-1">
+        <v-select
+          :items="allDataTypes"
+          v-model="dataType"
+          item-text="label"
+          item-value="label"
+          single-line
+          return-object
+        />
+      </v-flex>
+    </v-layout>
+    <v-layout row align-center>
+      <v-flex xs3 class="body-2">Dimensions:</v-flex>
+      <v-flex
+        v-for="i in 3"
+        :key="i"
+        xs3
+        class="body-1"
+      >
+        <v-text-field
+          type="number"
+          min="1"
+          :max="file.size"
+          v-model="dimensions[i-1]"
+        />
+      </v-flex>
+    </v-layout>
+    <v-layout row align-center>
+      <v-flex xs3>Effective size:</v-flex>
+      <v-flex xs3>{{ effectiveSize }}</v-flex>
+      <v-flex xs6 v-if="effectiveSize !== file.size">
+        <span class="red--text">Effective size does not match total size!</span>
+      </v-flex>
+    </v-layout>
+    </v-layout>
+    <v-layout row align-center>
+      <v-flex xs3 class="body-2">Spacing:</v-flex>
+      <v-flex
+        v-for="i in 3"
+        :key="i"
+        xs3
+        class="body-1"
+      >
+        <v-text-field
+          type="number"
+          min="1"
+          :max="file.size"
+          v-model="spacing[i-1]"
+        />
+      </v-flex>
+    </v-layout>
+  </v-card-text>
+  <v-card-actions>
+    <v-spacer />
+    <v-btn
+      v-on:click="$emit('cancel')"
+    >
+      <span>Cancel</span>
+    </v-btn>
+    <v-btn
+      color="primary"
+      :disabled="effectiveSize !== file.size"
+      v-on:click="$emit('read', dataSpec)"
+    >
+      <span>Read</span>
+    </v-btn>
+  </v-card-actions>
+</v-card>

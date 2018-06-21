@@ -1,0 +1,203 @@
+<v-expansion-panel-content
+  v-if="domains.colorWindow && domains.colorLevel"
+  class=""
+  :value="true"
+>
+  <div
+    :class="$style.subpanelHeader"
+    slot="header"
+  >
+    <v-icon>tune</v-icon>
+    <span class="body-2">Slices</span>
+  </div>
+
+  <v-card flat :class="$style.block">
+    <v-card-title :class="$style.blockTitle">
+      <span class="body-2">Window/Level</span>
+    </v-card-title>
+    <v-card-text :class="$style.blockContent">
+      <v-container fluid grid-list-md>
+        <v-layout row wrap>
+          <v-flex xs3>
+            <label :class="$style.smallLabel">Window</label>
+          </v-flex>
+          <v-flex xs6>
+            <v-slider
+              :class="$style.noTopPadding"
+              hide-details
+
+              v-model="colorWindow"
+              :min="domains.colorWindow.min"
+              :max="domains.colorWindow.max"
+              :step="domains.colorWindow.step"
+            />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field
+              :class="$style.noTopPadding"
+              hide-details
+              type="number"
+
+              v-model="colorWindow"
+              :min="domains.colorWindow.min"
+              :max="domains.colorWindow.max"
+              :step="domains.colorWindow.step"
+            />
+          </v-flex>
+          <v-flex xs3>
+            <label :class="$style.smallLabel">Level</label>
+          </v-flex>
+          <v-flex xs6>
+            <v-slider
+              :class="$style.noTopPadding"
+              hide-details
+
+              v-model="colorLevel"
+              :min="domains.colorLevel.min"
+              :max="domains.colorLevel.max"
+              :step="domains.colorLevel.step"
+            />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field
+              :class="$style.noTopPadding"
+              hide-details
+              type="number"
+
+              v-model="colorLevel"
+              :min="domains.colorLevel.min"
+              :max="domains.colorLevel.max"
+              :step="domains.colorLevel.step"
+            />
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card-text>
+  </v-card>
+
+  <v-card flat :class="$style.block">
+    <v-card-title flat :class="$style.blockTitle">
+      <span class="body-2">Slices</span>
+    </v-card-title>
+    <v-card-text :class="$style.blockContent">
+      <v-container fluid grid-list-md>
+        <v-layout row wrap>
+          <v-flex xs2 :class="isSliceAvailable('x') || (isSliceAvailable('default') && xSliceVisibility) ? '' : $style.disable">
+            <div style="position: relative;">
+              <v-btn
+                :class="$style.button"
+                fab
+                small
+                :outline="!getToggleSliceX()"
+                :dark="getToggleSliceX()"
+                v-on:click.stop="setToggleSliceX()"
+                color="blue-grey"
+              >
+                <label :class="$style.smallLabel">X</label>
+              </v-btn>
+            </div>
+          </v-flex>
+          <v-flex xs7 :class="isSliceAvailable('x') || (isSliceAvailable('default') && xSliceVisibility) ? '' : $style.disable">
+            <v-slider
+              :class="$style.noTopPadding"
+              hide-details
+
+              v-model="xSlice"
+              :min="domains.xSlice.min"
+              :max="domains.xSlice.max"
+              :step="domains.xSlice.step"
+            />
+          </v-flex>
+          <v-flex xs3 :class="isSliceAvailable('x') || (isSliceAvailable('default') && xSliceVisibility) ? '' : $style.disable">
+            <v-text-field
+              :class="$style.noTopPadding"
+              hide-details
+              type="number"
+
+              v-model="xSlice"
+              :min="domains.xSlice.min"
+              :max="domains.xSlice.max"
+              :step="domains.xSlice.step"
+            />
+          </v-flex>
+          <v-flex xs2 :class="isSliceAvailable('y') || (isSliceAvailable('default') && ySliceVisibility) ? '' : $style.disable">
+            <div style="position: relative;">
+              <v-btn
+                :class="$style.button"
+                fab
+                small
+                :outline="!getToggleSliceY()"
+                :dark="getToggleSliceY()"
+                v-on:click.stop="setToggleSliceY()"
+                color="blue-grey"
+              >
+                <label :class="$style.smallLabel">Y</label>
+              </v-btn>
+            </div>
+          </v-flex>
+          <v-flex xs7 :class="isSliceAvailable('y') || (isSliceAvailable('default') && ySliceVisibility) ? '' : $style.disable">
+            <v-slider
+              :class="$style.noTopPadding"
+              hide-details
+
+              v-model="ySlice"
+              :min="domains.ySlice.min"
+              :max="domains.ySlice.max"
+              :step="domains.ySlice.step"
+            />
+          </v-flex>
+          <v-flex xs3 :class="isSliceAvailable('y') || (isSliceAvailable('default') && ySliceVisibility) ? '' : $style.disable">
+            <v-text-field
+              :class="$style.noTopPadding"
+              hide-details
+              type="number"
+
+              v-model="ySlice"
+              :min="domains.ySlice.min"
+              :max="domains.ySlice.max"
+              :step="domains.ySlice.step"
+            />
+          </v-flex>
+          <v-flex xs2 :class="isSliceAvailable('z') || (isSliceAvailable('default') && zSliceVisibility) ? '' : $style.disable">
+            <div style="position: relative;">
+              <v-btn
+                :class="$style.button"
+                fab
+                small
+                :outline="!getToggleSliceZ()"
+                :dark="getToggleSliceZ()"
+                v-on:click.stop="setToggleSliceZ()"
+                color="blue-grey"
+              >
+                <label :class="$style.smallLabel">Z</label>
+              </v-btn>
+            </div>
+          </v-flex>
+          <v-flex xs7 :class="isSliceAvailable('z') || (isSliceAvailable('default') && zSliceVisibility) ? '' : $style.disable">
+            <v-slider
+              :class="$style.noTopPadding"
+              hide-details
+
+              v-model="zSlice"
+              :min="domains.zSlice.min"
+              :max="domains.zSlice.max"
+              :step="domains.zSlice.step"
+            />
+          </v-flex>
+          <v-flex xs3 :class="isSliceAvailable('z') || (isSliceAvailable('default') && zSliceVisibility) ? '' : $style.disable">
+            <v-text-field
+              :class="$style.noTopPadding"
+              hide-details
+              type="number"
+
+              v-model="zSlice"
+              :min="domains.zSlice.min"
+              :max="domains.zSlice.max"
+              :step="domains.zSlice.step"
+            />
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card-text>
+  </v-card>
+</v-expansion-panel-content>

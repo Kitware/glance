@@ -1,0 +1,45 @@
+<v-card flat :class="$style.card">
+  <v-layout row align-center>
+    <span class="body-2">Rendering</span>
+    <v-spacer />
+    <v-tooltip bottom>
+      <span>More info</span>
+      <v-btn
+        slot="activator"
+        icon
+        small
+        v-on:click="infoDialog = true"
+      >
+        <v-icon small>help</v-icon>
+      </v-btn>
+    </v-tooltip>
+  </v-layout>
+  <v-divider :class="$style.divider" />
+  <div :class="['js-monitor', $style.monitor]" />
+
+  <v-dialog v-model="infoDialog" max-width="50%">
+    <v-card>
+      <v-card-title>
+        <span class="title">GPU Info</span>
+        <v-spacer />
+        <v-btn
+          flat
+          icon
+          v-on:click="infoDialog = false"
+        >
+          <v-icon>close</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+        <v-layout row wrap>
+          <v-flex xs4 class="body-2">WebGL Version</v-flex>
+          <v-flex xs8 class="body-1">{{ webgl }}</v-flex>
+          <v-flex xs4 class="body-2">Vendor</v-flex>
+          <v-flex xs8 class="body-1">{{ vendor }}</v-flex>
+          <v-flex xs4 class="body-2">GPU</v-flex>
+          <v-flex xs8 class="body-1">{{ gpu }}</v-flex>
+        </v-layout>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+</v-card>

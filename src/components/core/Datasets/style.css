@@ -1,0 +1,112 @@
+.datasetPanel {
+  position: relative;
+}
+
+/* override vuetify */
+.datasetPanel :global(.expansion-panel__header) {
+  padding: 12px 24px 12px 6px;
+  user-select: none;
+}
+
+:global(.theme--dark) .datasetPanel :global(.expansion-panel__body) {
+  border-top: 1px solid hsla(0,0%,100%,.12);
+}
+
+:global(.theme--light) .datasetPanel :global(.expansion-panel__body) {
+  border-top: 1px solid rgba(0,0,0,.12);
+}
+
+.datasetHeader {
+  position: relative;
+  user-select: none;
+  /* handle overflowing names */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+
+.subpanelHeader {
+  margin-left: 1em;
+}
+
+.headerMenuButton {
+  margin: 0 8px;
+}
+
+/** should be moved to own component **/
+
+.block {
+  padding: 4px 10px 4px 16px;
+  margin-left: 6px;
+}
+
+.blockTitle {
+  padding: 4px 0; /* override vuetify */
+  margin: 8px 4px;
+  /*border-bottom: 1px solid #bbb;*/
+}
+
+.blockContent {
+  padding: 4px;
+}
+
+.blockRow {
+  margin: 4px 0;
+}
+
+.noTopPadding {
+  padding-top: 0;
+}
+
+.noSelect {
+  user-select: none;
+}
+
+.smallLabel {
+  font-size: 12px;
+}
+
+.noMargin {
+  margin: 0;
+}
+
+.active {
+  color: rgba(0,0,0,0.54) !important;
+}
+
+.inactive {
+  color: rgba(0,0,0,0.25) !important;
+}
+
+.matrix {
+  padding: 0;
+}
+
+.disable {
+  opacity: 0.25;
+}
+
+.lutImage {
+  width: 100%;
+  height: 20px;
+  border: solid 1px #eee;
+}
+
+.dropdownMenu {
+  min-width: 300px;
+  max-height: 500px;
+}
+
+.button {
+  position: absolute;
+  left: -7px;
+  top: -7px;
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.click {
+  cursor: pointer;
+}

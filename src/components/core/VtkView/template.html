@@ -1,0 +1,192 @@
+<v-container fluid :class="$style.container">
+  <v-layout column :class="$style.floatToolbar">
+    <v-tooltip left>
+      <span :class="$style.noSelect">Reset camera</span>
+      <v-btn
+        slot="activator"
+        icon
+        dark
+        small
+        v-on:click="resetCamera()"
+      >
+        <v-icon>filter_center_focus</v-icon>
+      </v-btn>
+    </v-tooltip>
+    <v-tooltip left>
+      <span :class="$style.noSelect">Crop</span>
+      <v-btn
+        slot="activator"
+        icon
+        dark
+        small
+        v-on:click="toggleCrop()"
+        v-if="getAvailableActions().crop"
+        :class="{ [$style.activeButton]: isCropping }"
+      >
+        <v-icon>crop</v-icon>
+      </v-btn>
+    </v-tooltip>
+    <v-tooltip left>
+      <span :class="$style.noSelect">Rotate left 90°</span>
+      <v-btn
+        slot="activator"
+        icon
+        dark
+        small
+        v-on:click="rollLeft()"
+      >
+        <v-icon>rotate_left</v-icon>
+      </v-btn>
+    </v-tooltip>
+    <v-tooltip left>
+      <span :class="$style.noSelect">Rotate right 90°</span>
+      <v-btn
+        slot="activator"
+        icon
+        dark
+        small
+        v-on:click="rollRight()"
+      >
+        <v-icon>rotate_right</v-icon>
+      </v-btn>
+    </v-tooltip>
+    <v-tooltip left v-if="view.getProxyName() === 'View3D'">
+      <span :class="$style.noSelect">Reset Camera to Orientation X</span>
+      <v-btn
+        slot="activator"
+        icon
+        dark
+        small
+        v-on:click="updateOrientation('x')"
+      >
+        X
+      </v-btn>
+    </v-tooltip>
+    <v-tooltip left v-if="view.getProxyName() === 'View3D'">
+      <span :class="$style.noSelect">Reset Camera to Orientation Y</span>
+      <v-btn
+        slot="activator"
+        icon
+        dark
+        small
+        v-on:click="updateOrientation('y')"
+      >
+        Y
+      </v-btn>
+    </v-tooltip>
+    <v-tooltip left v-if="view.getProxyName() === 'View3D'">
+      <span :class="$style.noSelect">Reset Camera to Orientation Z</span>
+      <v-btn
+        slot="activator"
+        icon
+        dark
+        small
+        v-on:click="updateOrientation('z')"
+      >
+        Z
+      </v-btn>
+    </v-tooltip>
+  </v-layout>
+  <v-layout column fill-height>
+    <v-flex
+      fill-height
+      :class="[$style.vtkView, 'js-view']"
+      :style="{ background: viewData.background }"
+      v-on:mouseenter="view.activate()"
+    />
+    <div :class="$style.toolbarWrapper">
+      <toolbar-sheet v-model="backgroundSheet">
+        <v-card dark>
+          <v-card-text :class="$style.smallCardText">
+            <v-layout row>
+              <v-spacer />
+              <palette-picker
+                :size="20"
+                :palette="palette"
+                :value="viewData.background"
+                v-on:input="backgroundSheet = false; $emit('bg-change', $event)"
+              />
+            </v-layout>
+          </v-card-text>
+        </v-card>
+      </toolbar-sheet>
+      <v-toolbar dark :class="$style.smallToolbar">
+        <v-select
+          dense
+          flat
+          dark
+          :class="$style.viewTypeSelector"
+          :items="viewTypes"
+          :value="viewType"
+          @change="changeViewType"
+        />
+        <v-spacer />
+        <v-tooltip top>
+          <span :class="$style.noSelect">Background color</span>
+          <v-btn
+            slot="activator"
+            :class="$style.button"
+            icon
+            :disabled="backgroundSheet || !view"
+            v-on:click="backgroundSheet = !backgroundSheet"
+          >
+            <v-icon>palette</v-icon>
+          </v-btn>
+        </v-tooltip>
+        <v-tooltip top>
+          <span :class="$style.noSelect">Screenshot</span>
+          <v-btn
+            slot="activator"
+            :class="$style.button"
+            icon
+            v-on:click="screenCapture()"
+          >
+            <v-icon>add_a_photo</v-icon>
+          </v-btn>
+        </v-tooltip>
+        <v-tooltip
+          top
+          v-if="layoutCount > 1"
+        >
+          <span :class="$style.noSelect">Single view</span>
+          <v-btn
+            slot="activator"
+            :class="$style.button"
+            icon
+            v-on:click="singleView()"
+          >
+            <v-icon>fullscreen</v-icon>
+          </v-btn>
+        </v-tooltip>
+        <v-tooltip
+          top
+          v-if="layoutCount === 1 || layoutCount === 4 && layoutIndex % 2 === 1"
+          >
+          <span :class="$style.noSelect">Split view</span>
+          <v-btn
+            slot="activator"
+            :class="$style.button"
+            icon
+            v-on:click="splitView()"
+          >
+            <v-icon>flip</v-icon>
+          </v-btn>
+        </v-tooltip>
+        <v-tooltip
+          top
+          v-if="layoutCount === 2 && layoutIndex === 1"
+          >
+          <span :class="$style.noSelect">Quad view</span>
+          <v-btn
+            slot="activator"
+            :class="$style.button"
+            icon
+            v-on:click="quadView()"
+          >
+            <v-icon>widgets</v-icon>
+          </v-btn>
+        </v-tooltip>
+      </v-toolbar>
+    </div>
+  </v-layout>
+</v-container>

@@ -1,0 +1,48 @@
+.wrapper {
+  display: block;
+  padding: 4px 16px;
+  box-sizing: border-box;
+  background: white;
+  min-width: 300px;
+  overflow: auto;
+}
+
+.node {
+  list-style: none;
+  margin-left: 16px;
+}
+
+.arrow {
+  transform: rotateZ(-90deg);
+}
+
+.openArrow {
+  transform: rotateZ(0deg);
+}
+
+.header {
+  position: relative;
+  display: flex;
+  flex-flow: row;
+  padding: 4px 8px;
+  margin: 3px 0;
+  transition: background-color 300ms;
+  cursor: pointer;
+  user-select: none;
+}
+
+.header:hover {
+  background-color: #dfdfdf;
+}
+
+.expander {
+  position: absolute;
+  left: -24px;
+  width: 16px;
+  flex: 0 0 auto;
+  padding: 0 4px;
+}
+
+.name {
+  flex: 1 1 auto;
+}

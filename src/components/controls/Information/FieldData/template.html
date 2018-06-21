@@ -1,0 +1,33 @@
+<v-card
+  flat
+  :class="$style.block"
+  v-if="hasFieldData()"
+>
+  <v-card-text :class="$style.blockContent">
+    <v-select
+      :label="name || type"
+      v-model="activeFieldName"
+      :items="this.getFieldData().getArrays().map((a) => a.getName())"
+      dense
+      flat
+      hide-details
+      :class="$style.noSelect"
+    />
+    <v-layout row v-if="!!activeFieldName">
+      <v-flex xs6 class="body-1">Type:</v-flex>
+      <v-flex xs6 class="body-1">{{ getActiveArray().getDataType() }}</v-flex>
+    </v-layout>
+    <v-layout row v-if="!!activeFieldName">
+        <v-flex xs6 class="body-1">Min value:</v-flex>
+        <v-flex xs6 class="body-1">{{ getActiveArray().getRange()[0] }}</v-flex>
+      </v-layout>
+      <v-layout row v-if="!!activeFieldName">
+        <v-flex xs6 class="body-1">Max value:</v-flex>
+        <v-flex xs6 class="body-1">{{ getActiveArray().getRange()[1] }}</v-flex>
+      </v-layout>
+      <v-layout row v-if="!!activeFieldName">
+        <v-flex xs6 class="body-1"># of components:</v-flex>
+        <v-flex xs6 class="body-1">{{ getActiveArray().getNumberOfComponents() }}</v-flex>
+      </v-layout>
+    </v-card-text>
+</v-card>

@@ -1,0 +1,89 @@
+<div :class="['grey lighten-3', $style.root]">
+  <v-jumbotron color="grey darken-3" height="250px">
+    <v-container fill-height>
+      <v-layout row align-center>
+        <v-flex xs6>
+          <v-card flat dark>
+            <v-card-title class="display-1">Visualize your data with Glance</v-card-title>
+            <v-card-text>
+              A general purpose standalone web application by
+              <a
+                class="indigo--text text--lighten-3"
+                href="https://www.kitware.com/"
+                rel="noopener noreferrer"
+              >Kitware, Inc.</a>
+              that can be used to visualize many data types.
+              It is also a great framework for building custom
+              viewers on the web which can involve remote services.
+            </v-card-text>
+          </v-card>
+        </v-flex>
+        <v-flex xs6 fill-height>
+          <drag-and-drop
+            enabled
+            :class="$style.dnd"
+            v-on:drop="$emit('open-files', $event)"
+          >
+            <div
+              slot-scope="{ dragHover }"
+              :class="{ [$style.fileUpload]: true, [$style.fileUploadHover]: dragHover }"
+              v-on:click.stop="$emit('open')"
+            >
+              <div :class="['white--text body-2', $style.fileUploadContents]">
+                <v-btn
+                  color="primary"
+                  raised="false"
+                  v-on:click.stop="$emit('open')"
+                >
+                  <span v-if="dragHover" :class="$style.buttonText">drop your file</span>
+                  <span v-else :class="$style.buttonText">open a file</span>
+                  <v-icon>folder_open</v-icon>
+                </v-btn>
+                <div :class="$style.noSelect">
+                  or drag it anywhere in this window to begin.
+                </div>
+              </div>
+            </div>
+          </drag-and-drop>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-jumbotron>
+  <v-container grid-list-xl>
+    <v-layout row wrap>
+      <v-flex xs12>
+        <span class="title">Sample Data</span>
+      </v-flex>
+      <v-flex
+        v-for="(sample, i) in samples"
+        :key="i"
+        xs4
+      >
+        <v-card
+          :class="$style.sampleData"
+          flat
+          tile
+        >
+          <v-card-media
+            :src="sample.image"
+            height="300px"
+          />
+            <div
+              :class="$style.linkOverlay"
+              v-on:click.stop="openSample(sample)"
+            >
+              <div :class="$style.linkOverlayText" class="body-2">
+                {{ sample.label }} ({{ sample.size }})
+                <div :class="$style.description" v-if="sample.description">
+                  {{ sample.description }}
+                </div>
+                <div :class="$style.acknowledgement" v-if="sample.acknowledgement">
+                  {{ sample.acknowledgement }}
+                </div>
+              </div>
+            </div>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
+</div>

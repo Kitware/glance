@@ -1,51 +1,59 @@
-var prettierConf = require('./prettier.config.js');
+const prettierConf = require('./prettier.config');
 
 module.exports = {
-  extends: ['airbnb', 'prettier'],
-  rules: {
-    'prettier/prettier': ['error', prettierConf],
+    root: true,
+    parserOptions: {
+      parser: 'babel-eslint'
+    },
+    env: {
+      browser: true,
+    },
+    // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
+    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
+    extends: [
+      'airbnb-base',
+      'plugin:vue/recommended',
+      'plugin:prettier/recommended',
+    ],
+    // required to lint *.vue files
+    plugins: [
+      'vue',
+      'prettier',
+    ],
+    // check if imports actually resolve
+    settings: {
+      'import/resolver': {
+        webpack: {
+          config: 'build/webpack.dev.config.js'
+        }
+      }
+    },
+    rules: {
+      'prettier/prettier': ['error', prettierConf],
 
-    // But we want the following
-    'no-multi-spaces': ["error", { exceptions: { "ImportDeclaration": true } }],
-    'no-param-reassign': ["error", { props: false }],
-    'no-unused-vars': ["error", { args: 'none' }],
-    'prefer-destructuring': ["error", { VariableDeclarator: { array: false, object: true }, AssignmentExpression: { array: false, object: false } }, { enforceForRenamedProperties: false }],
-    'import/no-extraneous-dependencies': 0, // Needed for tests
-    // 'no-mixed-operators': 'error', // Wish we can put it back with prettier
+      'no-console': 0,
+      'prefer-destructuring': 0,
+      'no-plusplus': 0,
 
-    // Not for us
-    'jsx-a11y/label-has-for': 0,
-    'no-console': 0,
-    'no-plusplus': 0,
-    'import/no-named-as-default': 0,
-    'import/no-named-as-default-member': 0,
-    'prefer-destructuring': 0, // Can have unwanted side effect
-
-    // Not for use / react
-    'react/jsx-filename-extension': 0,
-
-    // Introduced with new eslint
-    // and no time to fix them...
-    'jsx-a11y/no-noninteractive-element-interactions': 0,
-    'jsx-a11y/click-events-have-key-events': 0,
-    'jsx-a11y/no-static-element-interactions': 0,
-    'react/no-unused-state': 0,
-    'react/forbid-prop-types': 0,
-
-    'linebreak-style': 0,
-  },
-  plugins: [
-    'prettier'
-  ],
-  globals: {
-    __BASE_PATH__: false,
-    VRFrameData: true,
-  },
-  'settings': {
-    'import/resolver': 'webpack'
-  },
-  env: {
-    es6: true,
-    browser: true,
-  },
-};
+      // don't require .vue extension when importing
+      'import/extensions': ['error', 'always', {
+        js: 'never',
+        vue: 'never'
+      }],
+      // disallow reassignment of function parameters
+      // disallow parameter object manipulation except for specific exclusions
+      'no-param-reassign': ['error', {
+        props: true,
+        ignorePropertyModificationsFor: [
+          'publicAPI', // for vtkjs publicAPI
+          'model', // for vtkjs model
+          'state', // for vuex state
+          'acc', // for reduce accumulators
+          'e' // for e.returnvalue
+        ]
+      }],
+      // allow debugger during development
+      'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    }
+  }
+  

@@ -1,0 +1,28 @@
+<v-expansion-panel-content
+  v-if="available"
+  class=""
+  :value="true"
+>
+  <div
+    :class="$style.subpanelHeader"
+    slot="header"
+  >
+    <v-icon>help_outline</v-icon>
+    <span class="body-2">Information</span>
+  </div>
+
+  <vtk-image-data :dataset="source.getDataset()" />
+  <vtk-molecule :dataset="source.getDataset()" />
+  <vtk-poly-data :dataset="source.getDataset()" />
+  <vtk-field-data
+    :dataset="source.getDataset()"
+    name="Point Data"
+    type="PointData"
+  />
+  <vtk-field-data
+    :dataset="source.getDataset()"
+    name="Cell Data"
+    type="CellData"
+  />
+
+</v-expansion-panel-content>

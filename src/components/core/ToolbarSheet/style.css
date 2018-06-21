@@ -1,0 +1,17 @@
+.sheet {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transition: visibility 0s 200ms;
+}
+
+.slotWrapper {
+  transition: transform 200ms;
+}
+
+.visible {
+  visibility: visible;
+  transition-delay: 0s;
+}

@@ -1,0 +1,7 @@
+<div
+  v-on:dragover.prevent="onDragOver"
+  v-on:dragleave="onDragLeave"
+  v-on:drop.prevent="onDrop"
+>
+  <slot :dragHover="dragHover" />
+</div>

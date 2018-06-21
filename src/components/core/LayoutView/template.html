@@ -1,0 +1,23 @@
+<v-container fluid :class="$style.container">
+  <div
+    :class="$style.grid"
+    :style="{ gridTemplateRows, gridTemplateColumns }"
+  >
+    <div
+      :class="$style.viewContainer"
+      v-for="(view, index) in views"
+      v-bind:key="`${index}::${view.getProxyId()}`"
+    >
+      <vtk-view
+        v-on:layout-update="updateLayout"
+        v-bind:view="view"
+        v-bind:layout-index="index"
+        v-bind:layout-count="views.length"
+        v-bind:layout-view-type="order[index]"
+        v-bind:viewData="viewData[view.getProxyId()]"
+        v-on:bg-change="setViewBackground(view, $event)"
+        layoutManager
+      />
+    </div>
+  </div>
+</v-container>

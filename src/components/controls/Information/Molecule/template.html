@@ -1,0 +1,10 @@
+<v-card
+  flat
+  :class="$style.block"
+  v-if="dataset.isA('vtkMolecule')"
+>
+  <v-card-title :class="$style.blockTitle">
+    <span class="body-2">vtkMolecule</span>
+  </v-card-title>
+  <v-card-text :class="$style.blockContent" />
+</v-card>

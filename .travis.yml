@@ -1,6 +1,7 @@
 language: node_js
 os: linux
 dist: trusty
+group: travis_lts
 
 addons:
   chrome: stable
@@ -19,21 +20,24 @@ notifications:
 
 cache:
   directories:
-    - node_modules
-    - Documentation/build-tmp
+    - "$HOME/.npm"
+    - documentation/build-tmp
 
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libgif-dev
+  - npm i -g npm@6.0.1
+
+install:
+  - npm ci
 
 script:
-  - npm install
   - npm run build:release
   - npm run validate
   - npm run bundle
   - git config --global user.name "Travis CI"
   - git config --global user.email "sebastien.jourdain@kitware.com"
-  - export GIT_PUBLISH_URL=https://${GH_TOKEN}@github.com/Kitware/pv-web-viewer.git
+  - export GIT_PUBLISH_URL=https://${GH_TOKEN}@github.com/Kitware/paraview-glance.git
   - if [ "$TRAVIS_BRANCH" == "master" ]; then npm run doc:publish; fi
 
 after_success:

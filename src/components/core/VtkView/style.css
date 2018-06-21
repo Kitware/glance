@@ -1,0 +1,50 @@
+.container {
+  position: relative;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.vtkView {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.viewTypeSelector {
+  max-width: 140px;
+  min-width: 140px;
+  user-select: none;
+}
+
+.floatToolbar {
+  position: absolute;
+  z-index: 1;
+  right: 10px;
+  top: 10px;
+}
+
+.activeButton {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.toolbarWrapper {
+  position: relative;
+}
+
+.smallCardText {
+  padding: 5px;
+}
+
+.button {
+  /* override vuetify */
+  margin: 2px 4px;
+}
+
+.smallToolbar :global(.toolbar__content) {
+  height: 45px !important;
+}
+
+.noSelect {
+  user-select: none;
+}

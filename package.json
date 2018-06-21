@@ -1,68 +1,55 @@
 {
-    "name": "paraview-glance",
-    "version": "0.0.0-semantically-release",
-    "description": "Web application for Visualizing Scientific and Medical datasets",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/kitware/pv-web-viewer.git"
-    },
-    "license": "BSD-3-Clause",
-    "bugs": {
-        "url": "https://github.com/kitware/pv-web-viewer/issues"
-    },
-    "homepage": "https://github.com/kitware/pv-web-viewer#readme",
-    "main": "./Distribution/glance.js",
-    "dependencies": {
-        "font-awesome": "4.5.0",
-        "monologue.js": "0.3.5",
-        "mout": "1.0.0",
-        "normalize.css": "^8.0.0",
-        "paraviewweb": "3.0.13",
-        "react-toastify": "^4.0.0-rc.5",
-        "shelljs": "0.7.8",
-        "vtk.js": "6.4.19"
-    },
-    "devDependencies": {
-        "@fortawesome/fontawesome-free-webfonts": "^1.0.4",
-        "copy-webpack-plugin": "^4.4.1",
-        "http-server": "0.10.0",
-        "itk": "9.1.1",
-        "kw-doc": "1.1.1",
-        "kw-web-suite": "6.0.2",
-        "lodash": "^4.17.4",
-        "paraview-glance": "1.1.42",
-        "postcss-variables": "1.1.1",
-        "rc-dropdown": "^2.1.0",
-        "rc-progress": "^2.2.5",
-        "rc-tabs": "^9.2.4",
-        "rc-tree-select": "^1.12.9",
-        "react": "16.1.1",
-        "react-dom": "16.1.1",
-        "react-modal": "3.4.1",
-        "webpack-bundle-analyzer": "2.9.1",
-        "webworker-promise": "^0.4.1",
-        "workbox-sw": "^2.1.2",
-        "workbox-webpack-plugin": "^2.1.2"
-    },
-    "scripts": {
-        "validate": "prettier --config ./prettier.config.js --list-different \"Sources/**/*.js\"",
-        "reformat": "prettier --config ./prettier.config.js --write \"Sources/**/*.js\"",
-        "reformat-only": "prettier --single-quote --trailing-comma es5 --print-width 80 --arrow-parens always --write",
-        "doc": "kw-doc -c ./Documentation/config.js",
-        "doc:www": "kw-doc -c ./Documentation/config.js -s",
-        "doc:publish": "kw-doc -c ./Documentation/config.js -mp",
-        "start": "webpack-dev-server --mode development",
-        "build": "webpack --progress --colors --mode development",
-        "build:debug": "webpack --progress --colors --display-modules --mode development",
-        "build:release": "webpack --progress --colors --mode production",
-        "server": "http-server ./Distribution -p 9998",
-        "bundle": "inline-source --compress false --root ./Distribution ./Distribution/index.html ./Distribution/ParaViewGlance.html",
-        "commit": "git cz",
-        "semantic-release": "semantic-release"
-    },
-    "config": {
-        "commitizen": {
-            "path": "node_modules/cz-conventional-changelog"
-        }
+  "name": "paraview-glance",
+  "version": "0.0.0-semantically-release",
+  "description": "Web application for Visualizing Scientific and Medical datasets",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kitware/paraview-glance.git"
+  },
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/kitware/paraview-glance/issues"
+  },
+  "homepage": "https://github.com/kitware/paraview-glance#readme",
+  "scripts": {
+    "validate": "prettier --config ./prettier.config.js --list-different \"src/**/*.js\"",
+    "reformat": "prettier --config ./prettier.config.js --write \"src/**/*.js\"",
+    "doc": "kw-doc -c ./documentation/config.js",
+    "doc:www": "kw-doc -c ./documentation/config.js -s",
+    "doc:publish": "kw-doc -c ./documentation/config.js -mp",
+    "build": "webpack --config build/webpack.dev.config.js",
+    "build:release": "webpack --config build/webpack.prod.config.js -p",
+    "dev": "webpack-dev-server --config build/webpack.dev.config.js",
+    "bundle": "inline-source --compress false --root ./dist ./dist/index.html ./dist/ParaViewGlance.html",
+    "commit": "git cz",
+    "semantic-release": "semantic-release"
+  },
+  "author": "Kitware",
+  "dependencies": {
+    "itk": "9.1.1",
+    "material-design-icons-iconfont": "3.0.3",
+    "typeface-roboto": "0.0.54",
+    "vtk.js": "7.0.0",
+    "vue": "2.5.16",
+    "vuetify": "1.0.19",
+    "webworker-promise": "0.4.1",
+    "workbox-sw": "2.1.2",
+    "workbox-webpack-plugin": "2.1.2"
+  },
+  "devDependencies": {
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "eslint-plugin-vue": "4.5.0",
+    "kw-doc": "1.2.0",
+    "kw-web-suite": "6.2.0",
+    "paraview-glance": "1.1.42",
+    "vue-loader": "15.2.4",
+    "vue-style-loader": "4.1.0",
+    "vue-template-compiler": "2.5.16",
+    "webpack-merge": "4.1.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
     }
+  }
 }

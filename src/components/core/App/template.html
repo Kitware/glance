@@ -1,0 +1,175 @@
+<drag-and-drop
+  :enabled="!landing"
+  v-on:drop="loadFiles"
+>
+  <v-app slot-scope="{ dragHover }">
+    <v-navigation-drawer
+      :value="!landing && sidebar"
+      absolute
+      app
+      clipped
+      hide-overlay
+      stateless
+    >
+      <v-tabs
+        :class="$style.tabs"
+        v-model="activeTab"
+      >
+        <v-tab>Datasets</v-tab>
+        <v-tab>Global</v-tab>
+        <v-tab-item>
+          <datasets />
+        </v-tab-item>
+        <v-tab-item>
+          <global-settings />
+        </v-tab-item>
+      </v-tabs>
+    </v-navigation-drawer>
+    <v-toolbar
+      clipped-left
+      app
+    >
+      <v-toolbar-side-icon
+        :disabled="landing"
+        @click.native.stop="sidebar = !sidebar"
+      />
+      <!-- smaller than height of the toolbar -->
+      <svg-icon icon="paraview-glance" height="52px" />
+      <v-spacer />
+      <v-btn
+        v-if="errors.length"
+        key="if-has-errors"
+        :class="$style.toolbarButton"
+        flat
+        color="error"
+        v-on:click="errorDialog = true"
+      >
+        <v-icon>error</v-icon>
+        <span>{{ errors.length }} error(s)</span>
+      </v-btn>
+      <v-btn
+        :class="$style.toolbarButton"
+        :disabled="!!loadingNames.length"
+        flat
+        v-on:click="openFile"
+      >
+        <v-icon>folder</v-icon>
+        <span>Open</span>
+      </v-btn>
+      <v-btn
+        :class="$style.toolbarButton"
+        :disabled="landing"
+        flat
+        v-on:click="screenshotsDrawer = true"
+      >
+        <v-icon>collections</v-icon>
+        <span>Screenshots ({{ screenshotCount }})</span>
+      </v-btn>
+      <v-btn
+        :class="$style.toolbarButton"
+        flat
+        v-on:click="aboutDialog = true"
+      >
+        <!-- width of other icons in toolbar -->
+        <svg-icon icon="kitware-logo" width="24px" />
+        <span>About</span>
+      </v-btn>
+    </v-toolbar>
+    <v-content :class="$style.appContent">
+      <div
+        :class="$style.overlay"
+        v-if="loadingNames.length"
+        key="if-loading"
+      >
+        <div :class="$style.overlayText">
+          <div class="display-2">Loading {{ loadingNames.join(', ') }}...</div>
+          <v-progress-linear
+            :value="totalLoadingProgress"
+            height="10"
+            color="info"
+          />
+        </div>
+      </div>
+      <landing
+        v-if="landing"
+        key="if-landing"
+        v-on:open="openFile"
+        v-on:open-urls="loadRemoteDatasets"
+        v-on:open-files="loadFiles"
+      />
+      <layout-view v-else key="if-landing" />
+    </v-content>
+
+    <v-navigation-drawer
+      v-model="screenshotsDrawer"
+      absolute
+      right
+      temporary
+    >
+      <screenshots
+        v-on:screenshot-count="screenshotCount = $event"
+        v-on:close="screenshotsDrawer = false"
+      />
+    </v-navigation-drawer>
+
+    <!-- notifications manager -->
+    <notification />
+
+    <!-- dnd overlay -->
+    <div
+      :class="{ [$style.overlay]: true, [$style.overlayHidden]: !dragHover }"
+    >
+      <div :class="$style.overlayText">
+        <div class="display-3">Drop files here</div>
+        <v-icon class="display-4">publish</v-icon>
+      </div>
+    </div>
+
+    <!-- browser issues -->
+    <browser-issues />
+
+    <!-- raw file dialog -->
+    <v-dialog v-model="rawDialog" max-width="50%">
+      <raw-file-reader
+        v-if="rawFile"
+        :file="rawFile"
+        v-on:cancel="closeRawFileDialog"
+        v-on:read="loadPendingRawFile"
+      />
+    </v-dialog>
+
+    <!-- about dialog -->
+    <v-dialog v-model="aboutDialog" max-width="50%">
+      <about-box v-on:close="aboutDialog = false" />
+    </v-dialog>
+
+    <!-- error dialog-->
+    <v-dialog v-model="errorDialog" max-width="50%">
+      <v-card>
+        <v-card-title class="title">Application errors</v-card-title>
+        <v-card-text>
+          <p>
+            The following is debug output for errors that have occurred. Please
+            copy and paste the below text and post it to our
+            <a href="https://github.com/Kitware/pv-web-viewer/issues">issue tracker</a>.
+          </p>
+          <textarea ref="errorTextarea" readonly :class="$style.errorTextarea">{{ readableErrors }}</textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn v-on:click="errorDialog = false">Cancel</v-btn>
+          <v-btn
+            v-if="isClipboardEnabled()"
+            key="if-clipboard-enabled"
+            color="info"
+            :loading="copiedToClipboard"
+            v-on:click="copyErrorToClipboard"
+          >
+            <span>Copy to clipboard</span>
+            <span slot="loader">Copied!</span>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-app>
+</drag-and-drop>

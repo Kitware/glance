@@ -4,6 +4,7 @@ import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 
 import { Events, Messages } from 'paraview-glance/src/constants';
+import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import Datasets from 'paraview-glance/src/components/core/Datasets';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
 import GlobalSettings from 'paraview-glance/src/components/core/GlobalSettings';
@@ -178,6 +179,7 @@ export default {
   name: 'App',
   inject: ['proxyManager'],
   components: {
+    AboutBox,
     Datasets,
     DragAndDrop,
     GlobalSettings,

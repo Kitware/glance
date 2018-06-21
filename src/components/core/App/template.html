@@ -135,54 +135,9 @@
       />
     </v-dialog>
 
-    <!-- about dialog-->
+    <!-- about dialog -->
     <v-dialog v-model="aboutDialog" max-width="50%">
-      <v-card>
-        <v-card-title>
-          <span class="title">About</span>
-          <v-spacer />
-          <v-btn
-            flat
-            icon
-            v-on:click="aboutDialog = false"
-          >
-            <v-icon>close</v-icon>
-          </v-btn>
-        </v-card-title>
-        <hr>
-        <v-card-text>
-          <svg-icon icon="paraview-glance" />
-          <p class="body-1">
-            <a href="https://kitware.github.io/paraview-glance/">ParaView Glance</a>
-            is a general purpose web application for visualizing useful for
-            visualizing many data types, as well as a framework for building
-            custom web-based visualization applications.
-          </p>
-          <p class="body-1">
-            <span>Find us on </span>
-            <a href="https://github.com/Kitware/paraview-glance">Github!</a>
-          </p>
-          <v-layout row wrap class="text-xs-center" align-end>
-            <v-flex xs4>
-              <a href="https://www.kitware.com">
-                <svg-icon icon="kitware" :class="$style.aboutIcon" />
-              </a>
-            </v-flex>
-            <v-flex xs4>
-              <div>&nbsp;</div>
-              <a href="https://kitware.github.io/vtk-js/">
-                <svg-icon icon="vtkjs" :class="$style.aboutIcon" />
-              </a>
-            </v-flex>
-            <v-flex xs4>
-              <div>&nbsp;</div>
-              <a href="http://insightsoftwareconsortium.github.io/itk-js/">
-                <svg-icon icon="itkjs" :class="$style.aboutIcon" />
-              </a>
-            </v-flex>
-          </v-layout>
-        </v-card-text>
-      </v-card>
+      <about-box v-on:close="aboutDialog = false" />
     </v-dialog>
 
     <!-- error dialog-->

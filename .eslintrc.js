@@ -34,6 +34,7 @@ module.exports = {
       'no-console': 0,
       'prefer-destructuring': 0,
       'no-plusplus': 0,
+      'import/no-extraneous-dependencies': 0, // paraview-glance alias
 
       // don't require .vue extension when importing
       'import/extensions': ['error', 'always', {
@@ -56,4 +57,4 @@ module.exports = {
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
     }
   }
-  
+

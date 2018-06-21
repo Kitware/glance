@@ -184,7 +184,7 @@ export default {
   },
   data() {
     return {
-      palette: SPECTRAL.concat('#ffffff'),
+      palette: SPECTRAL.concat('#ffffff', '#000000'),
       available: '',
       colorBy: '',
       arrays: [{ text: 'Solid color', value: '' }],

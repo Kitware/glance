@@ -1,0 +1,28 @@
+<v-dialog v-model="dialog" max-width="50%">
+  <v-card>
+    <v-card-title class="title">Browser Issues</v-card-title>
+    <v-card-text>
+      <p>
+        We've detected several issues that may affect the performance of this
+        application on your browser.
+      </p>
+      <ul :class="$style.list">
+        <li
+          v-for="(issue, i) in issues"
+          :key="i"
+        >
+          {{ issue }}
+        </li>
+      </ul>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer />
+      <v-btn
+        color="primary"
+        v-on:click="dialog = false"
+      >
+        Okay
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>

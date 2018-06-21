@@ -5,6 +5,7 @@ import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 
 import { Events, Messages } from 'paraview-glance/src/constants';
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
+import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
 import Datasets from 'paraview-glance/src/components/core/Datasets';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
 import GlobalSettings from 'paraview-glance/src/components/core/GlobalSettings';
@@ -174,6 +175,7 @@ export default {
   inject: ['proxyManager'],
   components: {
     AboutBox,
+    BrowserIssues,
     Datasets,
     DragAndDrop,
     GlobalSettings,

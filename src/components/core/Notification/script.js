@@ -17,7 +17,6 @@ function onBeforeDestroy() {
 // ----------------------------------------------------------------------------
 
 function showError(msg) {
-  console.log(msg);
   this.show('error', msg);
 }
 

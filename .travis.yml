@@ -1,6 +1,7 @@
 language: node_js
 os: linux
 dist: trusty
+group: travis_lts
 
 addons:
   chrome: stable
@@ -31,7 +32,6 @@ install:
   - npm ci
 
 script:
-  - npm install
   - npm run build:release
   - npm run validate
   - npm run bundle

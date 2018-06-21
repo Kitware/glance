@@ -53,7 +53,7 @@ export default [
   },
   {
     name: 'Head MRI CISS.vti',
-    image: Images.Aneurism,
+    image: Images.Head,
     url: 'https://kitware.github.io/vtk-js-datasets/data/vti/mri_ventricles.vti',
     size: '5.1 MB',
     acknowledgement: 'Dirk Bartz, VCM, University of Tübingen, Germany',
@@ -61,7 +61,7 @@ export default [
   },
   {
     name: 'Skull.vti',
-    image: Images.Aneurism,
+    image: Images.Skull,
     url: 'https://kitware.github.io/vtk-js-datasets/data/vti/skull.vti',
     size: '9.9 MB',
     acknowledgement: 'Siemens Medical Solutions, Forchheim, Germany',
@@ -69,7 +69,7 @@ export default [
   },
   {
     name: 'Engine.vti',
-    image: Images.Aneurism,
+    image: Images.Engine,
     url: 'https://kitware.github.io/vtk-js-datasets/data/vti/engine.vti',
     size: '3.1 MB',
     acknowledgement: 'General Electric',
@@ -109,9 +109,9 @@ export default [
     ],
   },
   {
-    name: '[cad.vtp,edges.vtp]',
-    image: Images.Lidar,
-    url: '[https://kitware.github.io/vtk-js-datasets/data/vtp/202-t.vtp,https://kitware.github.io/vtk-js-datasets/data/vtp/202-t-edges.vtp]',
-    size: '5.3 MB',
+    name: '202-t.vtp',
+    image: Images.CAD,
+    url: 'https://kitware.github.io/vtk-js-datasets/data/vtp/202-t.vtp',
+    size: '82 KB',
   },
 ];

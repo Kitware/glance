@@ -14,7 +14,7 @@ export default [
     ],
   },
   {
-    label: 'LIDC2.vti',
+    label: 'LIDC2',
     image: Images.LIDC2,
     size: '2 MB',
     datasets: [
@@ -36,47 +36,73 @@ export default [
     ],
   },
   {
-    name: 'Foot.vti',
+    label: 'Foot',
     image: Images.Foot,
     url: 'https://kitware.github.io/vtk-js-datasets/data/vti/foot.vti',
     size: '4.3 MB',
+    datasets: [
+      {
+        name: 'Foot.vti',
+        url: 'https://kitware.github.io/vtk-js-datasets/data/vti/foot.vti',
+      },
+    ],
     acknowledgement: 'Philips Research, Hamburg, Germany',
     description: 'Rotational C-arm x-ray scan of a human foot. Tissue and bone are present in the dataset.',
   },
   {
-    name: 'Aneurism.vti',
+    label: 'Aneurism.vti',
     image: Images.Aneurism,
-    url: 'https://kitware.github.io/vtk-js-datasets/data/vti/aneurism.vti',
     size: '348 KB',
+    datasets: [
+      {
+        name: 'Aneurism.vti',
+        url: 'https://kitware.github.io/vtk-js-datasets/data/vti/aneurism.vti',
+      },
+    ],
     acknowledgement: 'Philips Research, Hamburg, Germany',
     description: 'Rotational C-arm x-ray scan of the arteries of the right half of a human head. A contrast agent was injected into the blood and an aneurism is present.',
   },
   {
-    name: 'Head MRI CISS.vti',
+    label: 'Head MRI CISS',
     image: Images.Head,
-    url: 'https://kitware.github.io/vtk-js-datasets/data/vti/mri_ventricles.vti',
     size: '5.1 MB',
+    datasets: [
+      {
+        name: 'Head.vti',
+        url: 'https://kitware.github.io/vtk-js-datasets/data/vti/mri_ventricles.vti',
+      },
+    ],
     acknowledgement: 'Dirk Bartz, VCM, University of Tübingen, Germany',
     description: '1.5T MRT 3D CISS dataset of a human head that highlights the CSF (Cerebro-Spinal-Fluid) filled cavities of the head.',
   },
   {
-    name: 'Skull.vti',
+    label: 'Skull',
     image: Images.Skull,
-    url: 'https://kitware.github.io/vtk-js-datasets/data/vti/skull.vti',
     size: '9.9 MB',
+    datasets: [
+      {
+        name: 'skull.vti',
+        url: 'https://kitware.github.io/vtk-js-datasets/data/vti/skull.vti',
+      },
+    ],
     acknowledgement: 'Siemens Medical Solutions, Forchheim, Germany',
     description: 'Rotational C-arm x-ray scan of phantom of a human skull.',
   },
   {
-    name: 'Engine.vti',
+    label: 'Engine',
     image: Images.Engine,
-    url: 'https://kitware.github.io/vtk-js-datasets/data/vti/engine.vti',
     size: '3.1 MB',
+    datasets: [
+      {
+        name: 'Engine.vti',
+        url: 'https://kitware.github.io/vtk-js-datasets/data/vti/engine.vti',
+      },
+    ],
     acknowledgement: 'General Electric',
     description: 'CT scan of two cylinders of an engine block.',
   },
   {
-    name: 'Backpack.vti',
+    label: 'Backpack.vti',
     image: Images.Backpack,
     size: '8.3 MB',
     datasets: [
@@ -109,9 +135,19 @@ export default [
     ],
   },
   {
-    name: '202-t.vtp',
+    label: '202-t',
     image: Images.CAD,
     url: 'https://kitware.github.io/vtk-js-datasets/data/vtp/202-t.vtp',
     size: '82 KB',
+    datasets: [
+      {
+        name: '202-t.vtp',
+        url: 'https://kitware.github.io/vtk-js-datasets/data/vtp/202-t.vtp',
+      },
+      {
+        name: '202-t-edges.vtp',
+        url: 'https://kitware.github.io/vtk-js-datasets/data/vtp/202-t-edges.vtp',
+      },
+    ],
   },
 ];

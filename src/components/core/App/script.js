@@ -212,9 +212,13 @@ export default {
       return this.loadingProgresses.reduce((sum, v) => sum + (v || 0), 0);
     },
     readableErrors() {
-      return `\`\`\`
-${this.errors.join('\n\n----------next error----------\n\n')}
-\`\`\``;
+      const errorStrings = this.errors.map((err) => {
+        if (err instanceof ErrorEvent) {
+          return err.message;
+        }
+        return err;
+      });
+      return `\`\`\`\n${errorStrings}\n\`\`\``;
     },
   },
   mounted() {

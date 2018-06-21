@@ -16,7 +16,6 @@ export default {
       const urls = [];
       const names = [];
       for (let i = 0; i < sample.datasets.length; ++i) {
-        console.log(sample.datasets[i]);
         urls.push(sample.datasets[i].url);
         names.push(sample.datasets[i].name);
       }

@@ -21,3 +21,7 @@
 .lineTopPadding {
   padding-top: 5px;
 }
+
+.noSelect {
+  user-select: none;
+}

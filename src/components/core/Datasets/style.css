@@ -5,6 +5,7 @@
 /* override vuetify */
 .datasetPanel :global(.expansion-panel__header) {
   padding: 12px 24px 12px 6px;
+  user-select: none;
 }
 
 :global(.theme--dark) .datasetPanel :global(.expansion-panel__body) {
@@ -27,7 +28,6 @@
 }
 
 .subpanelHeader {
-  user-select: none;
   margin-left: 1em;
 }
 
@@ -58,6 +58,10 @@
 
 .noTopPadding {
   padding-top: 0;
+}
+
+.noSelect {
+  user-select: none;
 }
 
 .smallLabel {

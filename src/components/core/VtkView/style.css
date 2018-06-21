@@ -14,6 +14,7 @@
 .viewTypeSelector {
   max-width: 140px;
   min-width: 140px;
+  user-select: none;
 }
 
 .floatToolbar {
@@ -42,4 +43,8 @@
 
 .smallToolbar :global(.toolbar__content) {
   height: 45px !important;
+}
+
+.noSelect {
+  user-select: none;
 }

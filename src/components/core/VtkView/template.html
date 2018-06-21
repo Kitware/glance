@@ -1,7 +1,7 @@
 <v-container fluid :class="$style.container">
   <v-layout column :class="$style.floatToolbar">
     <v-tooltip left>
-      <span>Reset camera</span>
+      <span :class="$style.noSelect">Reset camera</span>
       <v-btn
         slot="activator"
         icon
@@ -13,7 +13,7 @@
       </v-btn>
     </v-tooltip>
     <v-tooltip left>
-      <span>Crop</span>
+      <span :class="$style.noSelect">Crop</span>
       <v-btn
         slot="activator"
         icon
@@ -27,7 +27,7 @@
       </v-btn>
     </v-tooltip>
     <v-tooltip left>
-      <span>Rotate left 90°</span>
+      <span :class="$style.noSelect">Rotate left 90°</span>
       <v-btn
         slot="activator"
         icon
@@ -39,7 +39,7 @@
       </v-btn>
     </v-tooltip>
     <v-tooltip left>
-      <span>Rotate right 90°</span>
+      <span :class="$style.noSelect">Rotate right 90°</span>
       <v-btn
         slot="activator"
         icon
@@ -86,7 +86,7 @@
         />
         <v-spacer />
         <v-tooltip top>
-          <span>Background color</span>
+          <span :class="$style.noSelect">Background color</span>
           <v-btn
             slot="activator"
             :class="$style.button"
@@ -98,7 +98,7 @@
           </v-btn>
         </v-tooltip>
         <v-tooltip top>
-          <span>Screenshot</span>
+          <span :class="$style.noSelect">Screenshot</span>
           <v-btn
             slot="activator"
             :class="$style.button"
@@ -112,7 +112,7 @@
           top
           v-if="layoutCount > 1"
         >
-          <span>Single view</span>
+          <span :class="$style.noSelect">Single view</span>
           <v-btn
             slot="activator"
             :class="$style.button"
@@ -126,7 +126,7 @@
           top
           v-if="layoutCount === 1 || layoutCount === 4 && layoutIndex % 2 === 1"
           >
-          <span>Split view</span>
+          <span :class="$style.noSelect">Split view</span>
           <v-btn
             slot="activator"
             :class="$style.button"
@@ -140,7 +140,7 @@
           top
           v-if="layoutCount === 2 && layoutIndex === 1"
           >
-          <span>Quad view</span>
+          <span :class="$style.noSelect">Quad view</span>
           <v-btn
             slot="activator"
             :class="$style.button"

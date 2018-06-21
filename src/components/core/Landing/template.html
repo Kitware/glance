@@ -39,7 +39,9 @@
                   <span v-else :class="$style.buttonText">open a file</span>
                   <v-icon>folder_open</v-icon>
                 </v-btn>
-                <div>or drag it anywhere in this window to begin.</div>
+                <div :class="$style.noSelect">
+                  or drag it anywhere in this window to begin.
+                </div>
               </div>
             </div>
           </drag-and-drop>

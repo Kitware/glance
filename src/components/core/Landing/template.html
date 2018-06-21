@@ -20,6 +20,7 @@
         </v-flex>
         <v-flex xs6 fill-height>
           <drag-and-drop
+            enabled
             :class="$style.dnd"
             v-on:drop="$emit('open-files', $event)"
           >

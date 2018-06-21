@@ -66,8 +66,13 @@
             :src="sample.image"
             height="300px"
           />
-            <div :class="$style.linkOverlay" v-on:click.prevent="$emit('open-url', sample.url, sample.name)">
-              <div :class="$style.linkOverlayText" class="body-2">{{ sample.name }} ({{ sample.size }})</div>
+            <div
+              :class="$style.linkOverlay"
+              v-on:click.stop="openSample(sample)"
+            >
+              <div :class="$style.linkOverlayText" class="body-2">
+                {{ sample.label }} ({{ sample.size }})
+              </div>
             </div>
         </v-card>
       </v-flex>

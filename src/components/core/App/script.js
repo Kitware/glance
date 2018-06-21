@@ -91,12 +91,6 @@ function openFile() {
 
 // ----------------------------------------------------------------------------
 
-function openUrl(url, name) {
-  this.loadRemoteDatasets([url], [name]);
-}
-
-// ----------------------------------------------------------------------------
-
 function loadPendingRawFile({ dimensions, spacing, dataType }) {
   return new Promise((resolve) => {
     const fio = new FileReader();
@@ -240,7 +234,6 @@ export default {
   methods: {
     loadFiles,
     openFile,
-    openUrl,
     loadRemoteDatasets,
     loadPendingRawFile,
     closeRawFileDialog,

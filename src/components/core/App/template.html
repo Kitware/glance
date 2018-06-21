@@ -94,7 +94,7 @@
         v-if="landing"
         key="if-landing"
         v-on:open="openFile"
-        v-on:open-url="openUrl"
+        v-on:open-urls="loadRemoteDatasets"
         v-on:open-files="loadFiles"
       />
       <layout-view v-else key="if-landing" />

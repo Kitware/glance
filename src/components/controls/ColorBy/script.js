@@ -77,6 +77,20 @@ function setColorBy(value) {
 
 // ----------------------------------------------------------------------------
 
+function setInterpolateScalarsBeforeMapping(value) {
+  const myRepresentations = this.proxyManager
+    .getRepresentations()
+    .filter((r) => r.getInput() === this.source);
+  for (let i = 0; i < myRepresentations.length; i++) {
+    if (myRepresentations[i].setInterpolateScalarsBeforeMapping) {
+      myRepresentations[i].setInterpolateScalarsBeforeMapping(value);
+    }
+  }
+  this.proxyManager.renderAllViews();
+}
+
+// ----------------------------------------------------------------------------
+
 function applyOpacity() {
   const arrayName = this.colorBy.split(':')[0];
   const pwfProxy = this.proxyManager.getPiecewiseFunction(arrayName);
@@ -197,6 +211,7 @@ export default {
       presetMenu: false,
       shift: 0, // simple transfer function shift
       dataRange: [0, 0],
+      interpolateScalarsBeforeMapping: true,
     };
   },
   computed: {
@@ -222,6 +237,7 @@ export default {
     },
   },
   watch: {
+    interpolateScalarsBeforeMapping: setInterpolateScalarsBeforeMapping,
     colorBy: setColorBy,
     presetName() {
       if (this.shift) {

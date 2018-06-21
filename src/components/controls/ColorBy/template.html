@@ -87,6 +87,21 @@
             </v-flex>
           </v-layout>
         </v-flex>
+        <v-flex xs12 v-if="available === 'geometry' && colorBy.length">
+          <v-layout row align-center>
+            <v-flex xs2>
+              <v-icon
+                :class="$style.click"
+                v-on:click.stop="interpolateScalarsBeforeMapping = !interpolateScalarsBeforeMapping"
+              >
+                {{ interpolateScalarsBeforeMapping ? 'check_box' : 'check_box_outline_blank' }}
+              </v-icon>
+            </v-flex>
+            <v-flex xs10>
+              <span class="body-1">Interpolate scalar before mapping</span>
+            </v-flex>
+          </v-layout>
+        </v-flex>
       </v-layout>
     </v-container>
   </v-card>

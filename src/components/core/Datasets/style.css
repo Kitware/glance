@@ -106,3 +106,7 @@
   width: 30px !important;
   height: 30px !important;
 }
+
+.click {
+  cursor: pointer;
+}

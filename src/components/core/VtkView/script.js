@@ -10,6 +10,8 @@ import ToolbarSheet from 'paraview-glance/src/components/core/ToolbarSheet';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 
+const ROTATION_STEP = 2;
+
 // ----------------------------------------------------------------------------
 // Component API
 // ----------------------------------------------------------------------------
@@ -37,6 +39,18 @@ function getAvailableActions() {
   const actions = viewHelper.getViewActions(this.proxyManager);
   actions.single = this.layoutCount > 1;
   actions.split = this.layoutCount < 4;
+
+  if (actions.crop) {
+    actions.resetCrop = false;
+    const volumeRep = this.proxyManager
+      .getRepresentations()
+      .find((r) => r.getProxyName() === 'Volume');
+
+    if (volumeRep && volumeRep.getCropFilter) {
+      actions.resetCrop = volumeRep.getCropFilter().isResetAvailable();
+    }
+  }
+
   return actions;
 }
 
@@ -50,18 +64,32 @@ function resetCamera() {
 
 // ----------------------------------------------------------------------------
 
-function updateOrientation(mode) {
-  if (this.view) {
-    const { axis, orientation, viewUp } = VIEW_ORIENTATIONS[mode];
-    this.view.updateOrientation(axis, orientation, viewUp);
-    this.view.resetCamera();
-    // FIXME should happen at vtk level
-    const interactor = this.view.getInteractor();
-    const renderer = this.view.getRenderer();
-    if (interactor.getLightFollowCamera()) {
-      renderer.updateLightsGeometryToFollowCamera();
+function resetCrop() {
+  const volumeRep = this.proxyManager
+    .getRepresentations()
+    .find((r) => r.getProxyName() === 'Volume');
+
+  if (volumeRep && volumeRep.getCropFilter) {
+    const filter = volumeRep.getCropFilter();
+    if (filter && filter.reset) {
+      filter.reset();
+      this.$forceUpdate();
+      // FIXME - NEED to reset widget state with correct new bounds
+      filter.update();
+      this.view.renderLater();
     }
-    this.view.renderLater();
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+function updateOrientation(mode) {
+  if (this.view && !this.inAnimation) {
+    this.inAnimation = true;
+    const { axis, orientation, viewUp } = VIEW_ORIENTATIONS[mode];
+    this.view.updateOrientation(axis, orientation, viewUp, 100).then(() => {
+      this.inAnimation = false;
+    });
   }
 }
 
@@ -107,6 +135,15 @@ function toggleCrop() {
     });
     this.view.set({ cropWidget }, true);
     this.isCropping = true;
+
+    // Add subscription to monitor crop change
+    if (this.subscriptions.length === 2 && volumeRep.getCropFilter) {
+      this.subscriptions.push(
+        volumeRep
+          .getCropFilter()
+          .onModified(() => this.$nextTick(this.$forceUpdate)).unsubscribe
+      );
+    }
   }
 }
 
@@ -114,7 +151,19 @@ function toggleCrop() {
 
 function rollLeft() {
   if (this.view) {
-    this.view.rotate(+90);
+    this.view.setAnimation(true, this);
+    let count = 0;
+    let intervalId = null;
+    const rotate = () => {
+      if (count < 90) {
+        count += ROTATION_STEP;
+        this.view.rotate(+ROTATION_STEP);
+      } else {
+        clearInterval(intervalId);
+        this.view.setAnimation(false, this);
+      }
+    };
+    intervalId = setInterval(rotate, 1);
   }
 }
 
@@ -122,7 +171,19 @@ function rollLeft() {
 
 function rollRight() {
   if (this.view) {
-    this.view.rotate(-90);
+    this.view.setAnimation(true, this);
+    let count = 0;
+    let intervalId = null;
+    const rotate = () => {
+      if (count < 90) {
+        count += ROTATION_STEP;
+        this.view.rotate(-ROTATION_STEP);
+      } else {
+        clearInterval(intervalId);
+        this.view.setAnimation(false, this);
+      }
+    };
+    intervalId = setInterval(rotate, 1);
   }
 }
 
@@ -254,6 +315,7 @@ export default {
       viewTypes: VIEW_TYPES,
       backgroundSheet: false,
       isCropping: false,
+      inAnimation: false,
     };
   },
   computed: {
@@ -269,6 +331,7 @@ export default {
     onMounted,
     quadView,
     resetCamera,
+    resetCrop,
     rollLeft,
     rollRight,
     screenCapture,

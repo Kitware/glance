@@ -28,6 +28,16 @@
   background: rgba(255, 255, 255, 0.25);
 }
 
+.relative {
+  position: relative;
+}
+
+.altButton {
+  position: absolute;
+  left: -40px;
+  top: -40px;
+}
+
 .toolbarWrapper {
   position: relative;
 }

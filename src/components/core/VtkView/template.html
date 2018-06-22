@@ -12,20 +12,35 @@
         <v-icon>filter_center_focus</v-icon>
       </v-btn>
     </v-tooltip>
-    <v-tooltip left>
-      <span :class="$style.noSelect">Crop</span>
-      <v-btn
-        slot="activator"
-        icon
-        dark
-        small
-        v-on:click="toggleCrop()"
-        v-if="getAvailableActions().crop"
-        :class="{ [$style.activeButton]: isCropping }"
-      >
-        <v-icon>crop</v-icon>
-      </v-btn>
-    </v-tooltip>
+    <div :class="$style.relative">
+      <v-tooltip left>
+        <span :class="$style.noSelect">Crop</span>
+        <v-btn
+          slot="activator"
+          icon
+          dark
+          small
+          v-on:click="toggleCrop()"
+          v-if="getAvailableActions().crop"
+          :class="{ [$style.activeButton]: isCropping }"
+        >
+          <v-icon>crop</v-icon>
+        </v-btn>
+      </v-tooltip>
+      <v-tooltip left v-if="getAvailableActions().resetCrop">
+        <span :class="$style.noSelect">Reset Crop</span>
+        <v-btn
+          slot="activator"
+          icon
+          dark
+          small
+          v-on:click="resetCrop()"
+          :class="$style.altButton"
+        >
+          <v-icon>crop_free</v-icon>
+        </v-btn>
+      </v-tooltip>
+    </div>
     <v-tooltip left>
       <span :class="$style.noSelect">Rotate left 90°</span>
       <v-btn

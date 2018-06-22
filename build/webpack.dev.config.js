@@ -8,6 +8,7 @@ const PORT = process.env.PORT && Number(process.env.PORT);
 
 module.exports = merge(baseConfig, {
   mode: 'development',
+  // devtool: 'inline-cheap-module-source-map',
   devServer: {
     contentBase: baseConfig.output.path,
     host: HOST || '0.0.0.0',

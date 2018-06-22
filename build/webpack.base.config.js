@@ -117,7 +117,6 @@ module.exports = {
     new CopyPlugin([
       {
         from: path.join(
-          __dirname,
           'node_modules',
           'workbox-sw',
           'build',

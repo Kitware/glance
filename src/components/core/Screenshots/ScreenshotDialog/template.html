@@ -12,7 +12,7 @@
           <v-card flat tile>
             <v-card-media
               :class="$style.imagePreview"
-              :src="previewImageURL"
+              :src="imageUrl"
               contain
               height="250px"
             />
@@ -59,10 +59,18 @@
         <span>Cancel</span>
       </v-btn>
       <v-btn
-        color="primary"
+        color="secondary"
         @click.native="visible = false; save()"
       >
         <span>Save</span>
+      </v-btn>
+      <v-btn
+        color="primary"
+        :href="imageUrl"
+        :download="filename + fileType"
+        @click.native="visible = false"
+      >
+        <span>Download</span>
       </v-btn>
     </v-card-actions>
   </v-card>

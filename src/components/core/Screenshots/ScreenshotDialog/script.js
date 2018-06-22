@@ -34,7 +34,8 @@ function generateImage() {
 
     ctx.drawImage(img, 0, 0);
 
-    this.previewImageURL = this.canvas.toDataURL();
+    const imageType = `image/${this.fileType.substr(1)}`;
+    this.imageUrl = this.canvas.toDataURL();
   });
 
   img.src = this.screenshot.imgSrc;
@@ -61,9 +62,8 @@ function backgroundToFillStyle(bg) {
 // ----------------------------------------------------------------------------
 
 function save() {
-  const imageType = `image/${this.fileType.substr(1)}`;
   this.$emit('save', this.screenshot.viewName, {
-    image: this.canvas.toDataURL(imageType),
+    image: this.imageUrl,
     filename: this.filename + this.fileType,
   });
 }
@@ -77,7 +77,7 @@ export default {
       screenshot: null,
       filename: '',
       visible: false,
-      previewImageURL: '',
+      imageUrl: '',
       transparentBackground: false,
       fileType: '',
       fileTypes: FILE_TYPES,

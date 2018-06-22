@@ -29,12 +29,12 @@ function getBrowserIssues() {
       this.issues.push(
         `Detected GPU "${
           UNMASKED_RENDERER.value
-        }". Dedicated GPU would offer better performances.`
+        }". Dedicated GPU would offer better performance.`
       );
     }
     if (strToTest.indexOf('angle') !== -1) {
       this.issues.push(
-        `ANGLE is used to translate OpenGL for your hardware. (Slower rendering)`
+        `ANGLE is used to translate OpenGL for your hardware, so expect slower rendering.`
       );
     }
   }

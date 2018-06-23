@@ -41,7 +41,7 @@
     "itk": "9.1.1",
     "material-design-icons-iconfont": "3.0.3",
     "typeface-roboto": "0.0.54",
-    "vtk.js": "7.0.1",
+    "vtk.js": "7.0.2",
     "vue": "2.5.16",
     "vuetify": "1.0.19",
     "webworker-promise": "0.4.1",
@@ -49,7 +49,7 @@
     "workbox-webpack-plugin": "2.1.2"
   },
   "devDependencies": {
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-plugin-syntax-dynamic-import": "6.18.0",
     "eslint-plugin-vue": "4.5.0",
     "kw-doc": "1.2.0",
     "kw-web-suite": "6.2.0",

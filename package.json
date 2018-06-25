@@ -23,6 +23,7 @@
     "url": "https://github.com/kitware/paraview-glance/issues"
   },
   "homepage": "https://github.com/kitware/paraview-glance#readme",
+  "main": "./dist/glance.js",
   "scripts": {
     "validate": "prettier --config ./prettier.config.js --list-different \"src/**/*.js\"",
     "reformat": "prettier --config ./prettier.config.js --write \"src/**/*.js\"",
@@ -31,6 +32,7 @@
     "doc:publish": "kw-doc -c ./documentation/config.js -mp",
     "build": "webpack --config build/webpack.dev.config.js",
     "build:release": "webpack --config build/webpack.prod.config.js -p",
+    "build:lib": "webpack --config build/webpack.lib.config.js -p",
     "version": "node ./build/writeVersion.js",
     "dev": "webpack-dev-server --config build/webpack.dev.config.js",
     "bundle": "inline-source --compress false --root ./dist ./dist/index.html ./dist/ParaViewGlance.html",

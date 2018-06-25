@@ -1,9 +1,10 @@
-import { mapState } from 'vuex';
-
 import GpuInformation from 'paraview-glance/src/components/widgets/GPUInformation';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
-import { SET_GLOBAL_BG } from 'paraview-glance/src/stores/mutation-types';
+import {
+  SET_GLOBAL_BG,
+  SET_GLOBAL_ORIENT_AXIS,
+} from 'paraview-glance/src/stores/mutation-types';
 
 const ORIENTATION_PRESETS = [
   { text: 'XYZ', value: 'default' },
@@ -46,12 +47,6 @@ function setPresetToOrientationAxes(presetName) {
 
 // ----------------------------------------------------------------------------
 
-function setBackgroundColor(color) {
-  this.$store.commit(SET_GLOBAL_BG, color);
-}
-
-// ----------------------------------------------------------------------------
-
 function setAnnotationOpacity(opacity) {
   this.proxyManager
     .getViews()
@@ -78,7 +73,6 @@ export default {
     const view = this.proxyManager.getViews()[0];
     return {
       palette: BACKGROUND,
-      orientationAxis: true,
       annotationOpacity: 1,
       orientationPreset: view ? view.getPresetToOrientationAxes() : 'default',
       orientationPresets: ORIENTATION_PRESETS,
@@ -86,9 +80,24 @@ export default {
       axisType: view ? view.getOrientationAxesType() : 'arrow',
     };
   },
-  computed: mapState({
-    backgroundColor: (state) => state.global.backgroundColor,
-  }),
+  computed: {
+    backgroundColor: {
+      get() {
+        return this.$store.state.global.backgroundColor;
+      },
+      set(color) {
+        this.$store.commit(SET_GLOBAL_BG, color);
+      },
+    },
+    orientationAxis: {
+      get() {
+        return this.$store.state.global.orientationAxis;
+      },
+      set(flag) {
+        this.$store.commit(SET_GLOBAL_ORIENT_AXIS, flag);
+      },
+    },
+  },
   watch: {
     orientationAxis: setOrientationAxesVisible,
     orientationPreset: setPresetToOrientationAxes,
@@ -96,7 +105,6 @@ export default {
     axisType: setAxisType,
   },
   methods: {
-    setBackgroundColor,
     setAxisType,
     setOrientationAxesVisible,
     setAnnotationOpacity,

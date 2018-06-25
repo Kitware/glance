@@ -1,7 +1,8 @@
+import { mapState } from 'vuex';
+
 import { VIEW_TYPES } from 'paraview-glance/src/components/core/VtkView/constants';
 import VtkView from 'paraview-glance/src/components/core/VtkView';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
-import { DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 import { Events } from 'paraview-glance/src/constants';
 
 // ----------------------------------------------------------------------------
@@ -51,7 +52,7 @@ function updateViews(count = 1) {
     if (!(viewId in this.viewData)) {
       this.viewData = Object.assign({}, this.viewData, {
         [viewId]: {
-          background: DEFAULT_BACKGROUND,
+          background: this.globalBackgroundColor,
         },
       });
     }
@@ -72,15 +73,6 @@ function setViewBackground(view, bg) {
 
 // ----------------------------------------------------------------------------
 
-function setAllViewBackgrounds(bg) {
-  this.proxyManager
-    .getViews()
-    .forEach((view) => this.setViewBackground(view, bg));
-  this.$forceUpdate();
-}
-
-// ----------------------------------------------------------------------------
-
 function onMounted() {
   if (this.views.length === 0) {
     this.updateViews();
@@ -97,12 +89,21 @@ export default {
     viewData: {},
     order: VIEW_TYPES.map((v) => v.value),
   }),
-  computed: {
+  computed: mapState({
     gridTemplateRows() {
       return this.views.length < 4 ? '1fr' : '1fr 1fr';
     },
     gridTemplateColumns() {
       return this.views.length < 2 ? '1fr' : '1fr 1fr';
+    },
+    globalBackgroundColor: (state) => state.global.backgroundColor,
+  }),
+  watch: {
+    globalBackgroundColor(color) {
+      this.proxyManager
+        .getViews()
+        .forEach((view) => this.setViewBackground(view, color));
+      this.$forceUpdate();
     },
   },
   methods: {
@@ -110,7 +111,6 @@ export default {
     updateLayout,
     updateViews,
     setViewBackground,
-    setAllViewBackgrounds,
   },
   components: {
     VtkView,
@@ -130,11 +130,6 @@ export default {
     ];
   },
   mounted() {
-    this.$globalBus.$on(
-      Events.ALL_BACKGROUND_CHANGE,
-      this.setAllViewBackgrounds
-    );
-
     this.$nextTick(this.onMounted);
   },
   updated() {
@@ -144,10 +139,5 @@ export default {
     while (this.subscriptions.length) {
       this.subscriptions.pop().unsubscribe();
     }
-
-    this.$globalBus.$off(
-      Events.ALL_BACKGROUND_CHANGE,
-      this.setAllViewBackgrounds
-    );
   },
 };

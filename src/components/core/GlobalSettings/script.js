@@ -1,10 +1,9 @@
+import { mapState } from 'vuex';
+
 import GpuInformation from 'paraview-glance/src/components/widgets/GPUInformation';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
-import {
-  BACKGROUND,
-  DEFAULT_BACKGROUND,
-} from 'paraview-glance/src/components/core/VtkView/palette';
-import { Events } from 'paraview-glance/src/constants';
+import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
+import { SET_GLOBAL_BG } from 'paraview-glance/src/stores/mutation-types';
 
 const ORIENTATION_PRESETS = [
   { text: 'XYZ', value: 'default' },
@@ -48,8 +47,7 @@ function setPresetToOrientationAxes(presetName) {
 // ----------------------------------------------------------------------------
 
 function setBackgroundColor(color) {
-  this.backgroundColor = color;
-  this.$globalBus.$emit(Events.ALL_BACKGROUND_CHANGE, color);
+  this.$store.commit(SET_GLOBAL_BG, color);
 }
 
 // ----------------------------------------------------------------------------
@@ -80,7 +78,6 @@ export default {
     const view = this.proxyManager.getViews()[0];
     return {
       palette: BACKGROUND,
-      backgroundColor: DEFAULT_BACKGROUND,
       orientationAxis: true,
       annotationOpacity: 1,
       orientationPreset: view ? view.getPresetToOrientationAxes() : 'default',
@@ -89,6 +86,9 @@ export default {
       axisType: view ? view.getOrientationAxesType() : 'arrow',
     };
   },
+  computed: mapState({
+    backgroundColor: (state) => state.global.backgroundColor,
+  }),
   watch: {
     orientationAxis: setOrientationAxesVisible,
     orientationPreset: setPresetToOrientationAxes,

@@ -32,43 +32,50 @@
         />
       </v-flex>
     </v-layout>
+  </v-card>
+  <v-card flat :class="$style.card">
+    <div :class="$style.heading">
+      <v-layout row align-center>
+        <v-flex xs10>
+          <span class="body-2">Orientation Axis</span>
+        </v-flex>
+        <v-flex xs2>
+          <v-switch
+            v-model="orientationAxis"
+            hide-details
+          />
+        </v-flex>
+      </v-layout>
+    </div>
+    <v-divider :class="$style.divider" />
     <v-layout row align-center :class="$style.lineTopPadding">
-      <v-flex xs10>
-        <span class="body-2">Orientation Axis</span>
+      <v-flex xs3>
+        <span class="body-2">Type</span>
       </v-flex>
-      <v-flex xs2>
-        <v-switch
-          v-model="orientationAxis"
-          hide-details
-        />
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center :class="$style.lineTopPadding">
-      <v-flex xs6>
-        <span class="body-2">Axis type</span>
-      </v-flex>
-      <v-flex xs6>
+      <v-flex xs9>
         <v-select
           :class="[$style.noTopPadding, $style.noSelect]"
           dense
           flat
           hide-details
+          :disabled="!orientationAxis"
 
           v-model="axisType"
           :items="axisTypes"
         />
       </v-flex>
     </v-layout>
-    <v-layout row align-center :class="$style.lineTopPadding" v-if="axisType == 'cube'">
-      <v-flex xs6>
-        <span class="body-2">Axis presets</span>
+    <v-layout row align-center :class="$style.lineTopPadding">
+      <v-flex xs3>
+        <span class="body-2">Preset</span>
       </v-flex>
-      <v-flex xs6>
+      <v-flex xs9>
         <v-select
           :class="[$style.noTopPadding, $style.noSelect]"
           dense
           flat
           hide-details
+          :disabled="!orientationAxis || axisType != 'cube'"
 
           v-model="orientationPreset"
           :items="orientationPresets"

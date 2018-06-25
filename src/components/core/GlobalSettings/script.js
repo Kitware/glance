@@ -7,7 +7,7 @@ import {
 import { Events } from 'paraview-glance/src/constants';
 
 const ORIENTATION_PRESETS = [
-  { text: 'LPS', value: 'lps' },
+  { text: 'Axial/Coronal/Saggital', value: 'lps' },
   { text: 'XYZ', value: 'default' },
 ];
 

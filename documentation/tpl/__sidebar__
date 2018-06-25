@@ -1,4 +1,7 @@
-docs:
+doc:
   getting_started:
     overview: index.html
+    readers: readers.html
+    keyboard: keyboard_shortcuts.html
+
 

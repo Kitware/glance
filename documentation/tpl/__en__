@@ -1,4 +1,5 @@
 menu:
+  documentation: Documentation
   gallery: Gallery
   app: Stable
   nightly: Nightly
@@ -17,7 +18,9 @@ page:
   last_updated: "Last updated: %s"
 
 sidebar:
-  docs:
+  doc:
     getting_started: Getting Started
     overview: Overview
+    readers: Supported formats
+    keyboard: Keyboard shortcuts
 

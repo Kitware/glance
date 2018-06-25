@@ -84,6 +84,7 @@
         <span>About</span>
       </v-btn>
     </v-toolbar>
+
     <v-content :class="$style.appContent">
       <div
         :class="$style.overlay"
@@ -154,31 +155,7 @@
 
     <!-- error dialog-->
     <v-dialog v-model="errorDialog" max-width="50%">
-      <v-card>
-        <v-card-title class="title">Application errors</v-card-title>
-        <v-card-text>
-          <p>
-            The following is debug output for errors that have occurred. Please
-            copy and paste the below text and post it to our
-            <a href="https://github.com/Kitware/pv-web-viewer/issues">issue tracker</a>.
-          </p>
-          <textarea ref="errorTextarea" readonly :class="$style.errorTextarea">{{ readableErrors }}</textarea>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn v-on:click="errorDialog = false">Cancel</v-btn>
-          <v-btn
-            v-if="isClipboardEnabled()"
-            key="if-clipboard-enabled"
-            color="info"
-            :loading="copiedToClipboard"
-            v-on:click="copyErrorToClipboard"
-          >
-            <span>Copy to clipboard</span>
-            <span slot="loader">Copied!</span>
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+      <error-box :errors="errors" v-on:close="errorDialog = false" />
     </v-dialog>
   </v-app>
 </drag-and-drop>

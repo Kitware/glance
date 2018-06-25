@@ -10,6 +10,7 @@ import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
 import ControlsDrawer from 'paraview-glance/src/components/core/ControlsDrawer';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
+import ErrorBox from 'paraview-glance/src/components/core/ErrorBox';
 import Landing from 'paraview-glance/src/components/core/Landing';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Notification from 'paraview-glance/src/components/core/Notification';
@@ -201,28 +202,6 @@ function recordError(err) {
 
 // ----------------------------------------------------------------------------
 
-function isClipboardEnabled() {
-  try {
-    return document.queryCommandSupported('copy');
-  } catch (e) {
-    return false;
-  }
-}
-
-// ----------------------------------------------------------------------------
-
-function copyErrorToClipboard() {
-  this.$refs.errorTextarea.select();
-  if (document.execCommand('copy')) {
-    this.copiedToClipboard = true;
-    window.setTimeout(() => {
-      this.copiedToClipboard = false;
-    }, 2000);
-  }
-}
-
-// ----------------------------------------------------------------------------
-
 export default {
   name: 'App',
   inject: ['proxyManager'],
@@ -231,6 +210,7 @@ export default {
     BrowserIssues,
     ControlsDrawer,
     DragAndDrop,
+    ErrorBox,
     Landing,
     LayoutView,
     Notification,
@@ -244,28 +224,18 @@ export default {
       loadingProgresses: [],
       landing: true,
       aboutDialog: false,
+      errorDialog: false,
       controlsDrawer: true,
       screenshotsDrawer: false,
       screenshotCount: 0,
       rawDialog: false,
       rawFile: null,
       errors: [],
-      errorDialog: false,
-      copiedToClipboard: false,
     };
   },
   computed: {
     totalLoadingProgress() {
       return this.loadingProgresses.reduce((sum, v) => sum + (v || 0), 0);
-    },
-    readableErrors() {
-      const errorStrings = this.errors.map((err) => {
-        if (err instanceof ErrorEvent) {
-          return err.message;
-        }
-        return err;
-      });
-      return `${navigator.userAgent}\n\n\`\`\`\n${errorStrings}\n\`\`\``;
     },
   },
   mounted() {

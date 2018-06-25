@@ -8,9 +8,8 @@ import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import { Events, Messages } from 'paraview-glance/src/constants';
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
-import Datasets from 'paraview-glance/src/components/core/Datasets';
+import ControlsDrawer from 'paraview-glance/src/components/core/ControlsDrawer';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
-import GlobalSettings from 'paraview-glance/src/components/core/GlobalSettings';
 import Landing from 'paraview-glance/src/components/core/Landing';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Notification from 'paraview-glance/src/components/core/Notification';
@@ -230,9 +229,8 @@ export default {
   components: {
     AboutBox,
     BrowserIssues,
-    Datasets,
+    ControlsDrawer,
     DragAndDrop,
-    GlobalSettings,
     Landing,
     LayoutView,
     Notification,
@@ -245,9 +243,8 @@ export default {
       loadingNames: [],
       loadingProgresses: [],
       landing: true,
-      sidebar: true,
       aboutDialog: false,
-      activeTab: 0,
+      controlsDrawer: true,
       screenshotsDrawer: false,
       screenshotCount: 0,
       rawDialog: false,

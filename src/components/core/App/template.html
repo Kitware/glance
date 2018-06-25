@@ -4,34 +4,23 @@
 >
   <v-app slot-scope="{ dragHover }">
     <v-navigation-drawer
-      :value="!landing && sidebar"
+      :value="!landing && controlsDrawer"
       absolute
       app
       clipped
       hide-overlay
       stateless
     >
-      <v-tabs
-        :class="$style.tabs"
-        v-model="activeTab"
-      >
-        <v-tab>Datasets</v-tab>
-        <v-tab>Global</v-tab>
-        <v-tab-item>
-          <datasets />
-        </v-tab-item>
-        <v-tab-item>
-          <global-settings />
-        </v-tab-item>
-      </v-tabs>
+      <controls-drawer />
     </v-navigation-drawer>
+
     <v-toolbar
       clipped-left
       app
     >
       <v-toolbar-side-icon
         :disabled="landing"
-        @click.native.stop="sidebar = !sidebar"
+        @click.native.stop="controlsDrawer = !controlsDrawer"
       />
       <!-- smaller than height of the toolbar -->
       <svg-icon icon="paraview-glance" height="52px" />

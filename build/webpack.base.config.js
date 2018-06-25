@@ -3,6 +3,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
 const externals = require('./externals.js');
@@ -116,6 +117,11 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new WriteFilePlugin(),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'static/index.html',
+      inject: false,
+    }),
     new CopyPlugin([
       {
         from: path.join(

@@ -1,5 +1,4 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('webpack-merge');
 
 const baseConfig = require('./webpack.base.config');
@@ -34,11 +33,4 @@ module.exports = merge(baseConfig, {
       }),
     ],
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'static/index.html',
-      inject: false,
-    }),
-  ],
 });

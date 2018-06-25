@@ -4,6 +4,8 @@ import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette'
 import {
   SET_GLOBAL_BG,
   SET_GLOBAL_ORIENT_AXIS,
+  SET_GLOBAL_ORIENT_PRESET,
+  SET_GLOBAL_AXIS_TYPE,
 } from 'paraview-glance/src/stores/mutation-types';
 
 const ORIENTATION_PRESETS = [
@@ -32,8 +34,9 @@ function setOrientationAxesVisible(visible) {
 function setAxisType(type) {
   this.proxyManager.getViews().forEach((view) => {
     view.setOrientationAxesType(type);
-    view.renderLater();
   });
+  // will call view.renderLater()
+  this.setPresetToOrientationAxes(this.orientationPreset);
 }
 
 // ----------------------------------------------------------------------------
@@ -70,14 +73,11 @@ export default {
     GpuInformation,
   },
   data() {
-    const view = this.proxyManager.getViews()[0];
     return {
       palette: BACKGROUND,
       annotationOpacity: 1,
-      orientationPreset: view ? view.getPresetToOrientationAxes() : 'default',
       orientationPresets: ORIENTATION_PRESETS,
       axisTypes: AXIS_TYPES,
-      axisType: view ? view.getOrientationAxesType() : 'arrow',
     };
   },
   computed: {
@@ -95,6 +95,22 @@ export default {
       },
       set(flag) {
         this.$store.commit(SET_GLOBAL_ORIENT_AXIS, flag);
+      },
+    },
+    orientationPreset: {
+      get() {
+        return this.$store.state.global.orientationPreset;
+      },
+      set(preset) {
+        this.$store.commit(SET_GLOBAL_ORIENT_PRESET, preset);
+      },
+    },
+    axisType: {
+      get() {
+        return this.$store.state.global.axisType;
+      },
+      set(axisType) {
+        this.$store.commit(SET_GLOBAL_AXIS_TYPE, axisType);
       },
     },
   },

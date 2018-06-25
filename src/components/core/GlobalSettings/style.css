@@ -2,6 +2,10 @@
   padding: 0;
 }
 
+.container * {
+  user-select: none;
+}
+
 .card {
   padding: 8px 16px;
 }

@@ -47,7 +47,7 @@
         </v-menu>
       </div>
     </div>
-    <v-card>
+    <v-card :class="$style.datasetControls">
       <v-expansion-panel expand>
         <representation-widget v-bind:source="source" />
         <color-by-widget v-bind:source="source" />

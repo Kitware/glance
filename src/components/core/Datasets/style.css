@@ -2,9 +2,18 @@
   position: relative;
 }
 
+.datasetPanel * {
+  user-select: none;
+}
+
 /* override vuetify */
 .datasetPanel :global(.expansion-panel__header) {
   padding: 12px 24px 12px 6px;
+  user-select: none;
+}
+
+.datasetPanel .datasetControls :global(.expansion-panel__header) {
+  padding: 6px 24px 6px 6px;
   user-select: none;
 }
 
@@ -25,6 +34,10 @@
   display: flex;
   flex-flow: row;
   align-items: center;
+}
+
+:global(.expansion-panel__header) {
+  padding: 4px 12px 4px 6px;
 }
 
 .subpanelHeader {
@@ -62,6 +75,10 @@
 
 .noSelect {
   user-select: none;
+}
+
+.canSelect {
+  user-select: text;
 }
 
 .smallLabel {

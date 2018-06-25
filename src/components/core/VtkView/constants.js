@@ -7,6 +7,13 @@ export const VIEW_TYPES = [
   { text: 'Orientation Z', value: 'View2D_Z:z' },
 ];
 
+export const VIEW_TYPES_LPS = [
+  { text: 'View 3D', value: 'View3D:default' },
+  { text: 'Saggital', value: 'View2D_Y:y' },
+  { text: 'Coronal', value: 'View2D_X:x' },
+  { text: 'Axial', value: 'View2D_Z:z' },
+];
+
 export const VIEW_ORIENTATIONS = {
   default: {
     axis: 1,

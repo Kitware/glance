@@ -2,6 +2,7 @@ import { Events, Widgets } from 'paraview-glance/src/constants';
 import {
   DEFAULT_VIEW_TYPE,
   VIEW_TYPES,
+  VIEW_TYPES_LPS,
   VIEW_ORIENTATIONS,
 } from 'paraview-glance/src/components/core/VtkView/constants';
 
@@ -137,7 +138,7 @@ function toggleCrop() {
     this.isCropping = true;
 
     // Add subscription to monitor crop change
-    if (this.subscriptions.length === 2 && volumeRep.getCropFilter) {
+    if (this.subscriptions.length === 3 && volumeRep.getCropFilter) {
       this.subscriptions.push(
         volumeRep
           .getCropFilter()
@@ -232,6 +233,22 @@ function singleView() {
 }
 
 // ----------------------------------------------------------------------------
+
+function orientationLabels() {
+  return this.view.getPresetToOrientationAxes() === 'lps'
+    ? ['L', 'P', 'S']
+    : ['X', 'Y', 'Z'];
+}
+
+// ----------------------------------------------------------------------------
+
+function viewTypes() {
+  return this.view.getPresetToOrientationAxes() === 'lps'
+    ? VIEW_TYPES_LPS
+    : VIEW_TYPES;
+}
+
+// ----------------------------------------------------------------------------
 // Vue LifeCycle
 // ----------------------------------------------------------------------------
 
@@ -255,6 +272,10 @@ function onMounted() {
     () => window.removeEventListener('resize', this.resizeCurrentView),
     this.proxyManager.onProxyRegistrationChange(() => {
       // When proxy change, just re-render widget
+      viewHelper.updateViewsAnnotation(this.proxyManager);
+      this.$forceUpdate();
+    }).unsubscribe,
+    this.view.onModified(() => {
       this.$forceUpdate();
     }).unsubscribe,
   ];
@@ -312,7 +333,6 @@ export default {
   data() {
     return {
       palette: BACKGROUND,
-      viewTypes: VIEW_TYPES,
       backgroundSheet: false,
       isCropping: false,
       inAnimation: false,
@@ -329,6 +349,7 @@ export default {
     getAvailableActions,
     onBeforeDestroy,
     onMounted,
+    orientationLabels,
     quadView,
     resetCamera,
     resetCrop,
@@ -339,6 +360,7 @@ export default {
     splitView,
     toggleCrop,
     updateOrientation,
+    viewTypes,
   },
   mounted() {
     this.$nextTick(this.onMounted);

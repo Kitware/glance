@@ -7,8 +7,8 @@ import {
 import { Events } from 'paraview-glance/src/constants';
 
 const ORIENTATION_PRESETS = [
-  { text: 'Axial/Coronal/Saggital', value: 'lps' },
   { text: 'XYZ', value: 'default' },
+  { text: 'LPS', value: 'lps' },
 ];
 
 const AXIS_TYPES = [
@@ -83,7 +83,7 @@ export default {
       backgroundColor: DEFAULT_BACKGROUND,
       orientationAxis: true,
       annotationOpacity: 1,
-      orientationPreset: view ? view.getPresetToOrientationAxes() : 'lps',
+      orientationPreset: view ? view.getPresetToOrientationAxes() : 'default',
       orientationPresets: ORIENTATION_PRESETS,
       axisTypes: AXIS_TYPES,
       axisType: view ? view.getOrientationAxesType() : 'arrow',

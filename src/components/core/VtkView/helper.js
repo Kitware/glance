@@ -66,6 +66,9 @@ function getView(proxyManager, viewType, container) {
 
     // set background to transparent
     view.setBackground(0, 0, 0, 0);
+
+    // FIXME: Use storage to choose defaults
+    view.setPresetToOrientationAxes('default');
   }
 
   if (container) {
@@ -74,6 +77,30 @@ function getView(proxyManager, viewType, container) {
   }
 
   return view;
+}
+
+// ----------------------------------------------------------------------------
+
+function updateViewsAnnotation(proxyManager) {
+  const hasImageData = proxyManager
+    .getSources()
+    .find((s) => s.getDataset().isA && s.getDataset().isA('vtkImageData'));
+  const views = proxyManager.getViews();
+
+  for (let i = 0; i < views.length; i++) {
+    const view = views[i];
+    view.setCornerAnnotation('se', '');
+    if (view.getProxyName().indexOf('2D') !== -1 && hasImageData) {
+      /* eslint-disable */
+      view.setCornerAnnotation(
+        'nw',
+        'CW ${colorWindow} - CL ${colorLevel}<br>Slice ${slice}'
+      );
+      /* eslint-enable */
+    } else {
+      view.setCornerAnnotation('nw', '');
+    }
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -90,4 +117,5 @@ export default {
   getView,
   getViewActions,
   getNumberOfVisibleViews,
+  updateViewsAnnotation,
 };

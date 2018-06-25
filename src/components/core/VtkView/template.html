@@ -42,7 +42,7 @@
       </v-tooltip>
     </div>
     <v-tooltip left>
-      <span :class="$style.noSelect">Rotate left 90°</span>
+      <span :class="$style.noSelect">Rotate camera left 90°</span>
       <v-btn
         slot="activator"
         icon
@@ -54,7 +54,7 @@
       </v-btn>
     </v-tooltip>
     <v-tooltip left>
-      <span :class="$style.noSelect">Rotate right 90°</span>
+      <span :class="$style.noSelect">Rotate camera right 90°</span>
       <v-btn
         slot="activator"
         icon
@@ -66,7 +66,7 @@
       </v-btn>
     </v-tooltip>
     <v-tooltip left v-if="view.getProxyName() === 'View3D'">
-      <span :class="$style.noSelect">Reset Camera to Orientation X</span>
+      <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[0]}}</span>
       <v-btn
         slot="activator"
         icon
@@ -74,11 +74,11 @@
         small
         v-on:click="updateOrientation('x')"
       >
-        X
+        {{orientationLabels()[0]}}
       </v-btn>
     </v-tooltip>
     <v-tooltip left v-if="view.getProxyName() === 'View3D'">
-      <span :class="$style.noSelect">Reset Camera to Orientation Y</span>
+      <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[1]}}</span>
       <v-btn
         slot="activator"
         icon
@@ -86,11 +86,11 @@
         small
         v-on:click="updateOrientation('y')"
       >
-        Y
+        {{orientationLabels()[1]}}
       </v-btn>
     </v-tooltip>
     <v-tooltip left v-if="view.getProxyName() === 'View3D'">
-      <span :class="$style.noSelect">Reset Camera to Orientation Z</span>
+      <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[2]}}</span>
       <v-btn
         slot="activator"
         icon
@@ -98,7 +98,7 @@
         small
         v-on:click="updateOrientation('z')"
       >
-        Z
+        {{orientationLabels()[2]}}
       </v-btn>
     </v-tooltip>
   </v-layout>
@@ -131,7 +131,7 @@
           flat
           dark
           :class="$style.viewTypeSelector"
-          :items="viewTypes"
+          :items="viewTypes()"
           :value="viewType"
           @change="changeViewType"
         />

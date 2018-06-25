@@ -217,7 +217,7 @@ export default {
         }
         return err;
       });
-      return `\`\`\`\n${errorStrings}\n\`\`\``;
+      return `${navigator.userAgent}\n\n\`\`\`\n${errorStrings}\n\`\`\``;
     },
   },
   mounted() {

@@ -2,15 +2,15 @@
 <html lang="en">
 <head prefix="og: http://ogp.me/ns#">
   <meta charset="utf-8">
-  <title>Gallery | ParaView Glance</title>
+  <title>Supported file formats | ParaView Glance</title>
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://kitware.github.io/paraview-glance/gallery/index.html">
+  <link rel="canonical" href="https://kitware.github.io/paraview-glance/doc/readers.html">
   <!-- Alternative links -->
   
     
-      <link rel="alternative" hreflang="en" href="https://kitware.github.io/paraview-glance/gallery/index.html">
+      <link rel="alternative" hreflang="en" href="https://kitware.github.io/paraview-glance/doc/readers.html">
     
   
   <!-- Icon -->
@@ -39,38 +39,17 @@
   <!-- RSS -->
   <link rel="alternate" href="/paraview-glance/atom.xml" title="ParaView Glance">
   <!-- Open Graph -->
-  <meta name="description" content=".gallery img {     width: 50%;     display: inline-block;     padding: 2px;   }   .gallery br {     display: none;   }">
+  <meta name="description" content="ParaView Glance comes loaded with ITK.js image data readers as well as VTK.js image and geometry readers. When used online, depending on the file that gets loaded, if it is a format provided by ITK, t">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Gallery">
-<meta property="og:url" content="https://kitware.github.io/paraview-glance/gallery/index.html">
+<meta property="og:title" content="Supported file formats">
+<meta property="og:url" content="https://kitware.github.io/paraview-glance/doc/readers.html">
 <meta property="og:site_name" content="ParaView Glance">
-<meta property="og:description" content=".gallery img {     width: 50%;     display: inline-block;     padding: 2px;   }   .gallery br {     display: none;   }">
+<meta property="og:description" content="ParaView Glance comes loaded with ITK.js image data readers as well as VTK.js image and geometry readers. When used online, depending on the file that gets loaded, if it is a format provided by ITK, t">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/01-glance-welcome.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/02-glance-about.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/03-glance-sample-datasets.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/04-glance-sample-datasets-hover.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/13-glance-vessel.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/15-single-pin.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/16-glance-unc-powerplant.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/14-glance-reactor-mesh.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/21-molecule_screenshot.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/22-molecule_screenshot_overview.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/05-skull-quad-crop.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/06-skull-screenshot.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/07-skull-quad-fullscreen.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/10-skull-split-fullscreen.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/17-medical-split-view.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/18-foot-quad.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/19-tooth.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/20-Head_MRI_CISS_quad.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/11-glance-earth.jpg">
-<meta property="og:image" content="https://kitware.github.io/paraview-glance/gallery/12-glance-earth-fullscreen.jpg">
-<meta property="og:updated_time" content="2018-06-22T03:32:04.692Z">
+<meta property="og:updated_time" content="2018-06-25T21:31:49.426Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Gallery">
-<meta name="twitter:description" content=".gallery img {     width: 50%;     display: inline-block;     padding: 2px;   }   .gallery br {     display: none;   }">
-<meta name="twitter:image" content="https://kitware.github.io/paraview-glance/gallery/01-glance-welcome.jpg">
+<meta name="twitter:title" content="Supported file formats">
+<meta name="twitter:description" content="ParaView Glance comes loaded with ITK.js image data readers as well as VTK.js image and geometry readers. When used online, depending on the file that gets loaded, if it is a format provided by ITK, t">
   <!-- Google Analytics -->
   
 <script>
@@ -118,27 +97,147 @@
           <div class="article">
             <div class="inner">
               <header class="article-header">
-                <h1 class="article-title" itemprop="name">Gallery</h1>
+                <h1 class="article-title" itemprop="name">Supported file formats</h1>
               </header>
               <div class="article-content" itemprop="articleBody">
-                <style>
-  .gallery img {
-    width: 50%;
-    display: inline-block;
-    padding: 2px;
-  }
-  .gallery br {
-    display: none;
-  }
+                <p>ParaView Glance comes loaded with ITK.js image data readers as well as VTK.js image and geometry readers. When used online, depending on the file that gets loaded, if it is a format provided by ITK, the appropriate reader module will be downloaded and cached locally for any subsequent usage. But because of that dynamic mechanism, the readers provided by ITK are not yet available with the standalone single file HTML version that you can run from your desktop.</p>
+<p>The following set of tables list the supported format and which library is defining the reader.</p>
+<style>
+table {
+  width: 100%;
+}
 </style>
 
-<div class="gallery"><br><img src="01-glance-welcome.jpg" alt="ParaView Glance - Welcome page"><br><img src="02-glance-about.jpg" alt="ParaView Glance - About"><br><img src="03-glance-sample-datasets.jpg" alt="ParaView Glance - Sample Datasets"><br><img src="04-glance-sample-datasets-hover.jpg" alt="ParaView Glance - Sample Datasets"><br><img src="13-glance-vessel.jpg" alt="ParaView Glance - Flow in Vessel visualization"><br><img src="15-single-pin.jpg" alt="ParaView Glance - Mixing van simluation"><br><img src="16-glance-unc-powerplant.jpg" alt="ParaView Glance - UNC Power plant"><br><img src="14-glance-reactor-mesh.jpg" alt="ParaView Glance - Nuclear reactor mesh"><br><img src="21-molecule_screenshot.jpg" alt="ParaView Glance - PDB Reader / Molecule visualization"><br><img src="22-molecule_screenshot_overview.jpg" alt="ParaView Glance - PDB Reader / Molecule visualization"><br><img src="05-skull-quad-crop.jpg" alt="ParaView Glance - Quad View"><br><img src="06-skull-screenshot.jpg" alt="ParaView Glance - Screenshot overlay"><br><img src="07-skull-quad-fullscreen.jpg" alt="ParaView Glance - Fullscreen"><br><img src="10-skull-split-fullscreen.jpg" alt="ParaView Glance - Slit View fullscreen"><br><img src="17-medical-split-view.jpg" alt="ParaView Glance - Torso"><br><img src="18-foot-quad.jpg" alt="ParaView Glance - Foot"><br><img src="19-tooth.jpg" alt="ParaView Glance - Tooth"><br><img src="20-Head_MRI_CISS_quad.jpg" alt="ParaView Glance - Head"><br><img src="11-glance-earth.jpg" alt="ParaView Glance - Earth"><br><img src="12-glance-earth-fullscreen.jpg" alt="ParaView Glance - Earth"><br></div>
-
+<h2 id="VTK-js" class="article-heading"><a href="#VTK-js" class="headerlink" title="VTK.js"></a>VTK.js<a class="article-anchor" href="#VTK-js" aria-hidden="true"></a></h2><table>
+<thead>
+<tr>
+<th>Extension</th>
+<th>Description</th>
+<th>Format specificity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*.vtp</td>
+<td>VTK Polydata</td>
+<td>ASCII or binary or appended with or without compression (ZLib only)</td>
+</tr>
+<tr>
+<td>*.vti</td>
+<td>VTK ImageData</td>
+<td>ASCII or binary or appended with or without compression (ZLib only)</td>
+</tr>
+<tr>
+<td>*.stl</td>
+<td>Stereol lithography</td>
+<td>ASCII or binary</td>
+</tr>
+<tr>
+<td>*.obj</td>
+<td>Wavefront</td>
+<td>Geometry without the material file.</td>
+</tr>
+<tr>
+<td>*.pdb</td>
+<td>Protein Data Bank</td>
+<td>Molecule representation</td>
+</tr>
+<tr>
+<td>*.glyph</td>
+<td><strong>Custom/Internal</strong></td>
+<td>Custom format to define vtk.js source setting and Glyph positioning</td>
+</tr>
+<tr>
+<td>*.skybox</td>
+<td><strong>Custom/Internal</strong></td>
+<td>Zip bundle of a set of textures for an infinit cube box</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ITK-js" class="article-heading"><a href="#ITK-js" class="headerlink" title="ITK.js"></a>ITK.js<a class="article-anchor" href="#ITK-js" aria-hidden="true"></a></h2><p>The only structure that can be loaded by ITK.js are vtkImageData.<br>This means that the <code>Legacy VTK (*.vtk)</code> format won’t work for vtkPolyData, vtkUnstructuredGrid…</p>
+<table>
+<thead>
+<tr>
+<th>Extension</th>
+<th>Module</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*.bmp</td>
+<td>itkBMPImage</td>
+</tr>
+<tr>
+<td>*.dcm</td>
+<td>itkDCMTKImage</td>
+</tr>
+<tr>
+<td>*.gipl, gipl.gz</td>
+<td>itkGiplImage</td>
+</tr>
+<tr>
+<td>*.hdf5</td>
+<td>itkHDF5Image</td>
+</tr>
+<tr>
+<td><em>.jpg, </em>.jpeg</td>
+<td>itkJPEGImage</td>
+</tr>
+<tr>
+<td>*.json</td>
+<td>itkJSONImage</td>
+</tr>
+<tr>
+<td>*.lsm</td>
+<td>itkLSMImage</td>
+</tr>
+<tr>
+<td><em>.mnc, </em>.mnc2</td>
+<td>itkMINCImage</td>
+</tr>
+<tr>
+<td><em>.mgh, </em>.mgz</td>
+<td>itkMGHImage</td>
+</tr>
+<tr>
+<td><em>.mha, </em>.mhd</td>
+<td>itkMetaImage</td>
+</tr>
+<tr>
+<td>*.mrc</td>
+<td>itkMRCImage</td>
+</tr>
+<tr>
+<td><em>.nia, </em>.nii, *.hdr</td>
+<td>itkNiftiImage</td>
+</tr>
+<tr>
+<td><em>.nrrd, </em>.nhdr</td>
+<td>itkNrrdImage</td>
+</tr>
+<tr>
+<td>*.png</td>
+<td>itkPNGImage</td>
+</tr>
+<tr>
+<td>*.pic</td>
+<td>itkBioRadImage</td>
+</tr>
+<tr>
+<td><em>.tif, </em>.tiff</td>
+<td>itkTIFFImage</td>
+</tr>
+<tr>
+<td>*.vtk</td>
+<td>itkVTKImage</td>
+</tr>
+</tbody>
+</table>
 
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2018-06-22T03:32:04.692Z" itemprop="dateModified">Last updated: 2018-06-22</time>
-                
+                <time class="article-footer-updated" datetime="2018-06-25T21:31:49.426Z" itemprop="dateModified">Last updated: 2018-06-25</time>
+                <a href="index.html" class="article-footer-prev" title="Overview"><i class="fa fa-chevron-left"></i><span>Prev</span></a><a href="keyboard_shortcuts.html" class="article-footer-next" title="Keyboard shortcuts"><span>Next</span><i class="fa fa-chevron-right"></i></a>
               </footer>
               
             </div>
@@ -146,14 +245,14 @@
           <aside id="article-toc" role="navigation">
             <div id="article-toc-inner">
               <strong class="sidebar-title">Contents</strong>
-              
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#VTK-js"><span class="toc-text">VTK.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ITK-js"><span class="toc-text">ITK.js</span></a></li></ol>
               <a href="#" id="article-toc-top">Back to Top</a>
             </div>
           </aside>
         </div>
       </article>
       <aside id="sidebar" role="navigation">
-  <div class="inner"></div>
+  <div class="inner"><strong class="sidebar-title">Getting Started</strong><a href="index.html" class="sidebar-link">Overview</a><a href="readers.html" class="sidebar-link current">Supported formats</a><a href="keyboard_shortcuts.html" class="sidebar-link">Keyboard shortcuts</a></div>
 </aside>
     </div>
   </div>
@@ -181,7 +280,7 @@
       </li>
     </ul>
     
-      
+      <strong class="mobile-nav-title">Getting Started</strong><a href="index.html" class="mobile-nav-link">Overview</a><a href="readers.html" class="mobile-nav-link current">Supported formats</a><a href="keyboard_shortcuts.html" class="mobile-nav-link">Keyboard shortcuts</a>
     
   </div>
   <div id="mobile-lang-select-wrap">

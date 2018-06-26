@@ -82,13 +82,13 @@ export default [
     ],
   },
   {
-    label: 'Skull',
+    label: 'Skull.nrrd',
     image: Images.Skull,
-    size: '9.9 MB',
+    size: '10.1 MB',
     datasets: [
       {
-        name: 'skull.vti',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/vti/skull.vti',
+        name: 'skull.nrrd',
+        url: 'https://kitware.github.io/vtk-js-datasets/data/nrrd/skull.nrrd',
       },
     ],
     acknowledgement: 'Siemens Medical Solutions, Forchheim, Germany',

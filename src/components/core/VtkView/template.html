@@ -107,7 +107,11 @@
       fill-height
       :class="[$style.vtkView, 'js-view']"
       :style="{ background: viewData.background }"
-      v-on:mouseenter="view.activate()"
+      v-on:click="view.activate()"
+    />
+    <div
+      :class="$style.activeView"
+      v-if="proxyManager.getActiveView() === view"
     />
     <div :class="$style.toolbarWrapper">
       <toolbar-sheet v-model="backgroundSheet">
@@ -129,7 +133,6 @@
         <v-select
           dense
           flat
-          dark
           :class="$style.viewTypeSelector"
           :items="viewTypes()"
           :value="viewType"

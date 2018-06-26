@@ -58,3 +58,12 @@
 .noSelect {
   user-select: none;
 }
+
+.activeView {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 50%,rgba(255,255,255,0) 51%);
+}

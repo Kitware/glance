@@ -138,7 +138,10 @@ function toggleCrop() {
     this.isCropping = true;
 
     // Add subscription to monitor crop change
-    if (this.subscriptions.length === 3 && volumeRep.getCropFilter) {
+    if (
+      this.subscriptions.length === this.initialSubscriptionLength &&
+      volumeRep.getCropFilter
+    ) {
       this.subscriptions.push(
         volumeRep
           .getCropFilter()
@@ -278,7 +281,11 @@ function onMounted() {
     this.view.onModified(() => {
       this.$forceUpdate();
     }).unsubscribe,
+    this.proxyManager.onActiveViewChange(() => {
+      this.$forceUpdate();
+    }).unsubscribe,
   ];
+  this.initialSubscriptionLength = this.subscriptions.length;
 
   // Initial setup
   this.resizeCurrentView();

@@ -75,7 +75,7 @@ export default {
       () => {
         this.$nextTick(this.$forceUpdate);
       },
-      () => this.proxyManager.getRepresentations()
+      () => [this.proxyManager].concat(this.proxyManager.getRepresentations())
     );
   },
   mounted() {

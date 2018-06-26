@@ -8,7 +8,7 @@
     <color-group
       :index="index"
       :visible="datasets.length > 1"
-      :top="52"
+      :top="53"
     />
     <div
       slot="header"
@@ -25,8 +25,22 @@
           {{ getDatasetVisibility(source) ? 'visibility' : 'visibility_off' }}
         </v-icon>
       </v-btn>
-      <span class="body-2">{{ source.getName() }}</span>
-      <v-spacer />
+      <div
+        class="body-2"
+        :class="$style.source"
+      >{{ source.getName() }}</div>
+      <v-tooltip top v-if="proxyManager.getSources().length > 1">
+        <span :class="$style.noSelect">Activate source</span>
+        <v-btn
+          slot="activator"
+          :class="$style.headerMenuButton"
+          icon
+          small
+          v-on:click.stop="source.activate()"
+        >
+          <v-icon>{{ proxyManager.getActiveSource() === source ? 'bookmark' : 'bookmark_border' }}</v-icon>
+        </v-btn>
+      </v-tooltip>
       <div v-on:click.stop> <!-- prevent panel expansion on menu click -->
         <v-menu offset-x>
           <v-btn

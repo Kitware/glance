@@ -8,12 +8,11 @@
 
 /* override vuetify */
 .datasetPanel :global(.expansion-panel__header) {
-  padding: 12px 24px 12px 6px;
   user-select: none;
 }
 
 .datasetPanel .datasetControls :global(.expansion-panel__header) {
-  padding: 6px 24px 6px 6px;
+  padding: 6px 10px 6px 6px;
   user-select: none;
 }
 
@@ -37,7 +36,7 @@
 }
 
 :global(.expansion-panel__header) {
-  padding: 4px 12px 4px 6px;
+  padding: 4px 10px 4px 4px;
 }
 
 .subpanelHeader {
@@ -46,6 +45,11 @@
 
 .headerMenuButton {
   margin: 0 8px;
+}
+
+.source {
+  flex: 1;
+  padding: 12px 0;
 }
 
 /** should be moved to own component **/

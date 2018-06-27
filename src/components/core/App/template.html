@@ -56,6 +56,26 @@
         <v-icon>folder</v-icon>
         <span>Open</span>
       </v-btn>
+<!--
+      <v-btn
+        :class="$style.toolbarButton"
+        :disabled="!!loadingNames.length"
+        flat
+        v-on:click="saveState()"
+      >
+        <v-icon>cloud_upload</v-icon>
+        <span>Save state</span>
+      </v-btn>
+      <v-btn
+        :class="$style.toolbarButton"
+        :disabled="!!loadingNames.length"
+        flat
+        v-on:click="loadState()"
+      >
+        <v-icon>cloud_download</v-icon>
+        <span>Load state</span>
+      </v-btn>
+-->
       <v-btn
         :class="$style.toolbarButton"
         :disabled="landing"

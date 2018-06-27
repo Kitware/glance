@@ -28,11 +28,11 @@ const Volume = [
     domain: { min: 0, max: 1, step: 0.01 },
   },
   {
-    name: 'colorWindow',
+    name: 'windowWidth',
     domain: { min: 0, max: 255, step: 1 },
   },
   {
-    name: 'colorLevel',
+    name: 'windowLevel',
     domain: { min: 0, max: 255, step: 1 },
   },
   {
@@ -93,11 +93,11 @@ const Slice = [
     name: 'visibility',
   },
   {
-    name: 'colorWindow',
+    name: 'windowWidth',
     domain: { min: 0, max: 255, step: 1 },
   },
   {
-    name: 'colorLevel',
+    name: 'windowLevel',
     domain: { min: 0, max: 255, step: 1 },
   },
   {

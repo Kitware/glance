@@ -14,6 +14,11 @@ export const VIEW_TYPES_LPS = [
   { text: 'Axial', value: 'View2D_Z:z' },
 ];
 
+/* eslint-disable  no-template-curly-in-string */
+export const ANNOTATION_WW_WL_SLICE =
+  'WW ${windowWidth} - WL ${windowLevel}<br>Slice ${slice}';
+/* eslint-enable /* eslint-disable */
+
 export const VIEW_ORIENTATIONS = {
   default: {
     axis: 1,

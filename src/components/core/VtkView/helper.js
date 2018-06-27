@@ -1,4 +1,7 @@
-import { VIEW_ORIENTATIONS } from 'paraview-glance/src/components/core/VtkView/constants';
+import {
+  VIEW_ORIENTATIONS,
+  ANNOTATION_WW_WL_SLICE,
+} from 'paraview-glance/src/components/core/VtkView/constants';
 
 // ----------------------------------------------------------------------------
 
@@ -92,10 +95,7 @@ function updateViewsAnnotation(proxyManager) {
     view.setCornerAnnotation('se', '');
     if (view.getProxyName().indexOf('2D') !== -1 && hasImageData) {
       /* eslint-disable */
-      view.setCornerAnnotation(
-        'nw',
-        'CW ${colorWindow} - CL ${colorLevel}<br>Slice ${slice}'
-      );
+      view.setCornerAnnotation('nw', ANNOTATION_WW_WL_SLICE);
       /* eslint-enable */
     } else {
       view.setCornerAnnotation('nw', '');

@@ -31,8 +31,12 @@
           >
             <div slot="header" class="body-2">
               {{ file.name }}
-              <v-icon v-show="file.issue">error</v-icon>
-              <!-- TODO add delete capability-->
+              <v-icon
+                v-show="file.issue"
+                :class="$style.icon"
+              >
+                error
+              </v-icon>
             </div>
             <template v-if="file.name.endsWith('.raw')">
               <raw-file-reader

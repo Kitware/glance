@@ -26,10 +26,16 @@
 
 .card {
   width: 75%;
+  max-height: 80vh;
+  overflow: auto;
 }
 
 .loadingText {
   text-align: center;
+}
+
+.icon {
+  margin: 0 4px;
 }
 
 /* should be after .overlay for precedence */

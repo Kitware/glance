@@ -34,7 +34,7 @@ function getViewActions(proxyManager) {
 // ----------------------------------------------------------------------------
 
 function getViewType(view) {
-  return `${view.getProxyName()}:${view.getReferenceByName('name')}`;
+  return `${view.getProxyName()}:${view.getName()}`;
 }
 
 // ----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ function getView(proxyManager, viewType, container) {
   for (let i = 0; i < views.length; i++) {
     if (views[i].getProxyName() === type) {
       if (name) {
-        if (views[i].getReferenceByName('name') === name) {
+        if (views[i].getName() === name) {
           view = views[i];
         }
       } else {

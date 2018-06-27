@@ -58,7 +58,7 @@ function isSliceAvailable(name) {
   return !!this.proxyManager
     .getViews()
     .filter((v) => v.getContainer())
-    .filter((v) => v.getReferenceByName('name') === name).length;
+    .filter((v) => v.getName() === name).length;
 }
 
 // ----------------------------------------------------------------------------

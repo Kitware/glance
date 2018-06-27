@@ -153,17 +153,17 @@ function loadFiles() {
 
   const promises = this.files.map((file) => {
     if (file.rawInfo) {
-      return readRawFile(file.file, file.rawInfo).then((ds) => {
+      return readRawFile(file.file, file.rawInfo).then((dataset) =>
         ReaderFactory.registerReadersToProxyManager(
           [
             {
               name: file.name,
-              ds,
+              dataset,
             },
           ],
           this.proxyManager
-        );
-      });
+        )
+      );
     }
 
     return ReaderFactory.loadFiles([file.file]).then((readers) =>

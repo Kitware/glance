@@ -15,8 +15,17 @@ export const VIEW_TYPES_LPS = [
 ];
 
 /* eslint-disable  no-template-curly-in-string */
-export const ANNOTATION_WW_WL_SLICE =
-  'Thickness:&nbsp;${sliceThickness}&nbsp;mm Location:&nbsp;${sliceLocation}&nbsp;mm<br>WL:&nbsp;${windowLevel} WW:&nbsp;${windowWidth}';
+export const CURSOR_ANNOTATIONS = {
+  se:
+    '${valueArCursor}<br>${cursorIJK}&nbsp;/&nbsp;${cursorXYZ}<br>WL:&nbsp;${windowLevel}&nbsp;/&nbsp;WW:&nbsp;${windowWidth}',
+};
+
+export const ANNOTATIONS = {
+  sw: 'Image&nbsp;size:&nbsp;${sliceWidth}&nbsp;x&nbsp;${sliceHeight}',
+  nw:
+    'Origin:&nbsp;${sliceOrigin}<br>Spacing:&nbsp;${sliceSpacing}&nbsp;mm<br>${sliceIndex}&nbsp;of&nbsp;${sliceCount}',
+  se: 'WL:&nbsp;${windowLevel}&nbsp;/&nbsp;WW:&nbsp;${windowWidth}',
+};
 /* eslint-enable /* eslint-disable */
 
 export const VIEW_ORIENTATIONS = {

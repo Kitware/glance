@@ -70,15 +70,10 @@ function resetCrop() {
     .getRepresentations()
     .find((r) => r.getProxyName() === 'Volume');
 
-  if (volumeRep && volumeRep.getCropFilter) {
-    const filter = volumeRep.getCropFilter();
-    if (filter && filter.reset) {
-      filter.reset();
-      this.$forceUpdate();
-      // FIXME - NEED to reset widget state with correct new bounds
-      filter.update();
-      this.view.renderLater();
-    }
+  if (volumeRep) {
+    this.widgetManager.resetWidget(Widgets.CROP, volumeRep);
+    this.$forceUpdate();
+    this.view.renderLater();
   }
 }
 

@@ -53,26 +53,15 @@
         <v-icon>folder</v-icon>
         <span>Open</span>
       </v-btn>
-<!--
       <v-btn
         :class="$style.toolbarButton"
-        :disabled="!!loadingNames.length"
+        :disabled="landing"
         flat
-        v-on:click="saveState()"
-      >
-        <v-icon>cloud_upload</v-icon>
-        <span>Save state</span>
-      </v-btn>
-      <v-btn
-        :class="$style.toolbarButton"
-        :disabled="!!loadingNames.length"
-        flat
-        v-on:click="loadState()"
+        v-on:click="saveState"
       >
         <v-icon>cloud_download</v-icon>
-        <span>Load state</span>
+        <span>Save state</span>
       </v-btn>
--->
       <v-btn
         :class="$style.toolbarButton"
         :disabled="landing"
@@ -121,6 +110,9 @@
 
     <!-- file loader -->
     <file-loader v-on:load="landing = false" />
+
+    <!-- state generator -->
+    <state-file-generator />
 
     <!-- dnd overlay -->
     <div

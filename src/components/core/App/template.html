@@ -23,7 +23,16 @@
         @click.native.stop="controlsDrawer = !controlsDrawer"
       />
       <!-- smaller than height of the toolbar -->
-      <svg-icon icon="paraview-glance" height="52px" />
+      <v-tooltip bottom :disabled="landing">
+        <a
+          slot="activator"
+          href="#"
+          v-on:click.prevent="landing = true"
+        >
+          <svg-icon icon="paraview-glance" height="52px" />
+        </a>
+        <span>Back to landing page</span>
+      </v-tooltip>
       <v-spacer />
       <v-btn
         v-if="errors.length"

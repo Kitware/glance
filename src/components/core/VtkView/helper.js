@@ -1,6 +1,6 @@
 import {
   VIEW_ORIENTATIONS,
-  ANNOTATION_WW_WL_SLICE,
+  ANNOTATIONS,
 } from 'paraview-glance/src/components/core/VtkView/constants';
 
 // ----------------------------------------------------------------------------
@@ -94,9 +94,7 @@ function updateViewsAnnotation(proxyManager) {
     const view = views[i];
     view.setCornerAnnotation('se', '');
     if (view.getProxyName().indexOf('2D') !== -1 && hasImageData) {
-      /* eslint-disable */
-      view.setCornerAnnotation('nw', ANNOTATION_WW_WL_SLICE);
-      /* eslint-enable */
+      view.setCornerAnnotations(ANNOTATIONS, true);
     } else {
       view.setCornerAnnotation('nw', '');
     }

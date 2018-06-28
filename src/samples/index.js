@@ -95,13 +95,13 @@ export default [
     description: 'Rotational C-arm x-ray scan of phantom of a human skull.',
   },
   {
-    label: 'LIDC2',
+    label: 'LIDC2.mha',
     image: Images.LIDC2,
-    size: '2 MB',
+    size: '1.5 MB',
     datasets: [
       {
-        name: 'LIDC2.vti',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/vti/LIDC2.vti',
+        name: 'LIDC2.mha',
+        url: 'https://kitware.github.io/vtk-js-datasets/data/mha/LIDC2.mha',
       },
     ],
   },

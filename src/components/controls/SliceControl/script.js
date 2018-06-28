@@ -29,8 +29,8 @@ function generateSetGet(field) {
 
 const FIELDS = [
   { name: 'visibility', initialValue: false },
-  { name: 'colorLevel', initialValue: 1024 },
-  { name: 'colorWindow', initialValue: 2048 },
+  { name: 'windowLevel', initialValue: 1024 },
+  { name: 'windowWidth', initialValue: 2048 },
   { name: 'xSlice', initialValue: -1 },
   { name: 'ySlice', initialValue: -1 },
   { name: 'zSlice', initialValue: -1 },
@@ -58,7 +58,7 @@ function isSliceAvailable(name) {
   return !!this.proxyManager
     .getViews()
     .filter((v) => v.getContainer())
-    .filter((v) => v.getReferenceByName('name') === name).length;
+    .filter((v) => v.getName() === name).length;
 }
 
 // ----------------------------------------------------------------------------

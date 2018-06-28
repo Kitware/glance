@@ -1,4 +1,7 @@
-import { VIEW_ORIENTATIONS } from 'paraview-glance/src/components/core/VtkView/constants';
+import {
+  VIEW_ORIENTATIONS,
+  ANNOTATIONS,
+} from 'paraview-glance/src/components/core/VtkView/constants';
 
 // ----------------------------------------------------------------------------
 
@@ -31,7 +34,7 @@ function getViewActions(proxyManager) {
 // ----------------------------------------------------------------------------
 
 function getViewType(view) {
-  return `${view.getProxyName()}:${view.getReferenceByName('name')}`;
+  return `${view.getProxyName()}:${view.getName()}`;
 }
 
 // ----------------------------------------------------------------------------
@@ -43,7 +46,7 @@ function getView(proxyManager, viewType, container) {
   for (let i = 0; i < views.length; i++) {
     if (views[i].getProxyName() === type) {
       if (name) {
-        if (views[i].getReferenceByName('name') === name) {
+        if (views[i].getName() === name) {
           view = views[i];
         }
       } else {
@@ -91,12 +94,7 @@ function updateViewsAnnotation(proxyManager) {
     const view = views[i];
     view.setCornerAnnotation('se', '');
     if (view.getProxyName().indexOf('2D') !== -1 && hasImageData) {
-      /* eslint-disable */
-      view.setCornerAnnotation(
-        'nw',
-        'CW ${colorWindow} - CL ${colorLevel}<br>Slice ${slice}'
-      );
-      /* eslint-enable */
+      view.setCornerAnnotations(ANNOTATIONS, true);
     } else {
       view.setCornerAnnotation('nw', '');
     }

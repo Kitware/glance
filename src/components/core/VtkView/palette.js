@@ -1,6 +1,6 @@
 import { SPECTRAL } from 'paraview-glance/src/palette';
 
-export const DEFAULT_BACKGROUND = 'linear-gradient(#333, #eee)';
+export const DEFAULT_BACKGROUND = 'linear-gradient(#333, #999)';
 
 // Specifications for vtkview background colors, images, and gradients
 export const BACKGROUND = [

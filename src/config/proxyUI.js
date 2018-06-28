@@ -1,16 +1,6 @@
-import ColorMaps from 'paraview-glance/src/config/ColorMaps';
-
 const Volume = [
   {
     name: 'colorBy',
-    domain: {},
-  },
-  {
-    name: 'lookupTableProxy',
-    domain: { colormaps: ColorMaps },
-  },
-  {
-    name: 'piecewiseFunctionProxy',
     domain: {},
   },
   {
@@ -28,11 +18,11 @@ const Volume = [
     domain: { min: 0, max: 1, step: 0.01 },
   },
   {
-    name: 'colorWindow',
+    name: 'windowWidth',
     domain: { min: 0, max: 255, step: 1 },
   },
   {
-    name: 'colorLevel',
+    name: 'windowLevel',
     domain: { min: 0, max: 255, step: 1 },
   },
   {
@@ -56,10 +46,6 @@ const Geometry = [
   {
     name: 'colorBy',
     domain: {},
-  },
-  {
-    name: 'lookupTableProxy',
-    domain: { colormaps: ColorMaps },
   },
   {
     name: 'representation',
@@ -93,11 +79,11 @@ const Slice = [
     name: 'visibility',
   },
   {
-    name: 'colorWindow',
+    name: 'windowWidth',
     domain: { min: 0, max: 255, step: 1 },
   },
   {
-    name: 'colorLevel',
+    name: 'windowLevel',
     domain: { min: 0, max: 255, step: 1 },
   },
   {
@@ -135,6 +121,7 @@ const Glyph = [
 ];
 
 const View3D = [
+  { name: 'name' },
   {
     name: 'background',
     domain: {
@@ -153,6 +140,7 @@ const View3D = [
 ];
 
 const View2D = [
+  { name: 'name' },
   {
     name: 'background',
     domain: {

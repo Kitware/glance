@@ -1,3 +1,5 @@
+import JSZip from 'jszip';
+
 import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
@@ -36,6 +38,55 @@ function loadFiles(files) {
       this.rawFile = files[0];
       this.rawDialog = true;
     });
+}
+
+// ----------------------------------------------------------------------------
+
+function saveState() {
+  const userData = { layout: 'Something...', settings: { bg: 'white' } };
+  const options = { recycleViews: true };
+  const zip = new JSZip();
+  zip.file(
+    'state.json',
+    JSON.stringify(this.proxyManager.saveState(options, userData), null, 2)
+  );
+  console.log('zip entry added, start compression...');
+  zip
+    .generateAsync({
+      type: 'blob',
+      compression: 'DEFLATE',
+      compressionOptions: {
+        level: 6,
+      },
+    })
+    .then((blob) => {
+      console.log('blob generated', blob);
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.setAttribute('href', url);
+      anchor.setAttribute('download', 'state.glance');
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    });
+}
+
+// ----------------------------------------------------------------------------
+
+function loadState() {
+  ReaderFactory.openFiles(['glance'], (files) => {
+    const zip = new JSZip();
+    zip.loadAsync(files[0]).then(() => {
+      zip.forEach((relativePath, zipEntry) => {
+        if (relativePath.match(/state\.json$/i)) {
+          zipEntry.async('string').then((txt) => {
+            const userData = this.proxyManager.loadState(JSON.parse(txt));
+            this.landing = false;
+            console.log(JSON.stringify(userData, null, 2));
+          });
+        }
+      });
+    });
+  });
 }
 
 // ----------------------------------------------------------------------------
@@ -237,13 +288,15 @@ export default {
     }
   },
   methods: {
-    loadFiles,
-    openFile,
-    loadRemoteDatasets,
-    loadPendingRawFile,
     closeRawFileDialog,
-    recordError,
-    isClipboardEnabled,
     copyErrorToClipboard,
+    isClipboardEnabled,
+    loadFiles,
+    loadPendingRawFile,
+    loadRemoteDatasets,
+    openFile,
+    recordError,
+    saveState,
+    loadState,
   },
 };

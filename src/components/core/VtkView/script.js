@@ -198,7 +198,7 @@ function screenCapture() {
     this.view.captureImage().then((imgSrc) => {
       this.$globalBus.$emit(Events.SCREENSHOT, {
         imgSrc,
-        viewName: this.view.getReferenceByName('name'),
+        viewName: this.view.getName(),
         viewData: this.viewData,
       });
     });

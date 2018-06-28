@@ -1,5 +1,5 @@
 <v-expansion-panel-content
-  v-if="domains.colorWindow && domains.colorLevel"
+  v-if="domains.windowWidth && domains.windowLevel"
   class=""
   :value="true"
 >
@@ -26,10 +26,10 @@
               :class="$style.noTopPadding"
               hide-details
 
-              v-model="colorWindow"
-              :min="domains.colorWindow.min"
-              :max="domains.colorWindow.max"
-              :step="domains.colorWindow.step"
+              v-model="windowWidth"
+              :min="domains.windowWidth.min"
+              :max="domains.windowWidth.max"
+              :step="domains.windowWidth.step"
             />
           </v-flex>
           <v-flex xs3>
@@ -38,10 +38,10 @@
               hide-details
               type="number"
 
-              v-model="colorWindow"
-              :min="domains.colorWindow.min"
-              :max="domains.colorWindow.max"
-              :step="domains.colorWindow.step"
+              v-model="windowWidth"
+              :min="domains.windowWidth.min"
+              :max="domains.windowWidth.max"
+              :step="domains.windowWidth.step"
             />
           </v-flex>
           <v-flex xs3>
@@ -52,10 +52,10 @@
               :class="$style.noTopPadding"
               hide-details
 
-              v-model="colorLevel"
-              :min="domains.colorLevel.min"
-              :max="domains.colorLevel.max"
-              :step="domains.colorLevel.step"
+              v-model="windowLevel"
+              :min="domains.windowLevel.min"
+              :max="domains.windowLevel.max"
+              :step="domains.windowLevel.step"
             />
           </v-flex>
           <v-flex xs3>
@@ -64,10 +64,10 @@
               hide-details
               type="number"
 
-              v-model="colorLevel"
-              :min="domains.colorLevel.min"
-              :max="domains.colorLevel.max"
-              :step="domains.colorLevel.step"
+              v-model="windowLevel"
+              :min="domains.windowLevel.min"
+              :max="domains.windowLevel.max"
+              :step="domains.windowLevel.step"
             />
           </v-flex>
         </v-layout>

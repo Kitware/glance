@@ -1,8 +1,17 @@
 import vtkPiecewiseGaussianWidget from 'vtk.js/Sources/Interaction/Widgets/PiecewiseGaussianWidget';
 
+// Act as a semaphore. Only one widget should be the source of changes
+// to prevent conflicting update with several instance of that widget
+// which would try to adjust to their data range...
+let activeWidget = null;
+
 // ----------------------------------------------------------------------------
 
 function onOpacityChange() {
+  if (activeWidget) {
+    return;
+  }
+  activeWidget = this.piecewiseWidget;
   const pwfproxy = this.piecewiseFunction;
   if (pwfproxy) {
     pwfproxy.setGaussians(this.piecewiseWidget.getReferenceByName('gaussians'));
@@ -11,6 +20,7 @@ function onOpacityChange() {
     const newColorRange = this.piecewiseWidget.getOpacityRange();
     pwfproxy.getLookupTableProxy().setDataRange(...newColorRange);
   }
+  activeWidget = null;
 }
 
 // ----------------------------------------------------------------------------
@@ -19,6 +29,7 @@ function updateWidget() {
   const pwfProxy = this.piecewiseFunction;
   if (pwfProxy) {
     const lut = pwfProxy.getLookupTableProxy().getLookupTable();
+    const pwf = pwfProxy.getPiecewiseFunction();
     this.piecewiseWidget.setGaussians(pwfProxy.getGaussians());
 
     if (this.source) {
@@ -37,12 +48,23 @@ function updateWidget() {
 
     this.piecewiseWidget.setColorTransferFunction(lut);
     this.subscriptions.push(
+      pwf.onModified(() => {
+        this.piecewiseWidget.setGaussians(pwfProxy.getGaussians());
+        this.piecewiseWidget.render();
+      })
+    );
+    this.subscriptions.push(
       lut.onModified(() => {
+        if (activeWidget) {
+          return;
+        }
+        activeWidget = this.piecewiseWidget;
         // Use the opacity range as color range too
         const newColorRange = this.piecewiseWidget.getOpacityRange();
         pwfProxy.getLookupTableProxy().setDataRange(...newColorRange);
 
         this.piecewiseWidget.render();
+        activeWidget = null;
       })
     );
     this.piecewiseWidget.render();

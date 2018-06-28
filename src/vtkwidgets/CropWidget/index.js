@@ -68,6 +68,19 @@ function disable(widget) {
 
 // ----------------------------------------------------------------------------
 
+function reset(ctx) {
+  // get reset planes from filter, since widget.resetWidgetState will be
+  // incorrect.
+  const filter = ctx.proxy.getCropFilter();
+  filter.reset();
+
+  const planes = filter.getCroppingPlanes();
+  ctx.state.widgetState = Object.assign({}, ctx.state.widgetState, { planes });
+  update(ctx);
+}
+
+// ----------------------------------------------------------------------------
+
 function onBeforeDestroy(widget) {
   disable(widget);
   widget.delete();
@@ -79,5 +92,6 @@ export default {
   newWidget,
   enable,
   disable,
+  reset,
   onBeforeDestroy,
 };

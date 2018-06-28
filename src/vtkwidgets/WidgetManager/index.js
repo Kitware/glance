@@ -44,6 +44,17 @@ function vtkWidgetManager(publicAPI, model) {
 
   // --------------------------------------------------------------------------
 
+  publicAPI.resetWidget = (name, proxyAsContext) => {
+    if (groups[name] && groups[name].reset) {
+      const id = proxyAsContext.getProxyId();
+      if (groups[name].contexts[id]) {
+        groups[name].reset(groups[name].contexts[id]);
+      }
+    }
+  };
+
+  // --------------------------------------------------------------------------
+
   publicAPI.destroyWidget = (widget) => {
     const { name, id } = widgetToGroupNameAndContextId.get(widget) || {};
     const group = groups[name];

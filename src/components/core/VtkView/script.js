@@ -373,7 +373,4 @@ export default {
       this.changeViewType(DEFAULT_VIEW_TYPE);
     }
   },
-  updated() {
-    this.view.setContainer(this.$el.querySelector('.js-view'));
-  },
 };

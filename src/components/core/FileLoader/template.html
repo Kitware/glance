@@ -1,0 +1,98 @@
+<div :class="{ [$style.overlay]: true, [$style.visible]: !!stage }">
+  <div :class="$style.dialog">
+    <v-card raised :class="$style.card">
+      <v-card-text
+        v-if="stage === 'load'"
+        key="if-stage"
+      >
+        <div :class="$style.loadingText">
+          <span class="display-1">
+            Loading {{ files.map(({ name }) => name).join(', ') }}
+          </span>
+        </div>
+        <v-progress-linear
+          :value="totalProgress"
+          height="10"
+          color="info"
+        />
+      </v-card-text>
+      <v-card-text
+        v-else-if="stage === 'preload'"
+        key="if-stage"
+      >
+        <v-card-title class="title">
+          Please review your files before loading:
+        </v-card-title>
+        <v-expansion-panel expand>
+          <v-expansion-panel-content
+            v-for="(file, i) in files"
+            :key="i"
+            :hide-actions="!file.issue"
+          >
+            <div slot="header" class="body-2">
+              {{ file.name }}
+              <v-icon
+                v-show="file.issue"
+                :class="$style.icon"
+              >
+                error
+              </v-icon>
+            </div>
+            <template v-if="file.name.endsWith('.raw')">
+              <raw-file-reader
+                :file="file.file"
+                v-on:change="file.rawInfo = arguments[0]; file.issue = !arguments[1]"
+              />
+            </template>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-card-text>
+      <v-card-text
+        v-else-if="stage === 'error'"
+        key="if-stage"
+      >
+        <v-card-title class="title">
+          The following files errored while loading:
+        </v-card-title>
+        <v-expansion-panel expand>
+          <v-expansion-panel-content
+            v-for="(file, i) in files"
+            :key="i"
+            :hide-actions="!file.error"
+          >
+            <div slot="header" class="body-2">
+              {{ file.name }}
+              <v-icon v-show="!!file.error" color="red">error</v-icon>
+              <v-icon v-show="!file.error" color="green">check_circle</v-icon>
+            </div>
+            <v-card v-if="file.error">
+              <v-card-text>
+                Error: {{ file.error.message || 'Unknown or bad file' }}
+              </v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-card-text>
+      <v-card-actions v-if="stage === 'preload'" key="if-actions">
+        <v-spacer />
+        <v-btn v-on:click="stage = ''">Cancel</v-btn>
+        <v-btn
+          color="primary"
+          :disabled="!preloadCanLoad()"
+          v-on:click="loadFiles"
+        >
+          Load files
+        </v-btn>
+      </v-card-actions>
+      <v-card-actions v-else-if="stage === 'error'" key="if-actions">
+        <v-spacer />
+        <v-btn
+          color="primary"
+          v-on:click="closeAndLoad"
+        >
+          ok
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </div>
+</div>

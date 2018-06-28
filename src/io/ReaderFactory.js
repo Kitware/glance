@@ -121,7 +121,7 @@ function readFile(file) {
       };
       io[readMethod](file);
     } else {
-      reject();
+      reject(new Error('No reader mapping'));
     }
   });
 }

@@ -1,0 +1,46 @@
+.overlay {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  user-select: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 100ms, visibility 0s 100ms;
+}
+
+.dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 11;
+}
+
+.card {
+  width: 75%;
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.loadingText {
+  text-align: center;
+}
+
+.icon {
+  margin: 0 4px;
+}
+
+/* should be after .overlay for precedence */
+.visible {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}

@@ -4,7 +4,6 @@ export const Events = {
   MSG_ERROR: 'MSG_ERROR',
   SCREENSHOT: 'SCREENSHOT',
   LAYOUT_CHANGE: 'LAYOUT_CHANGE',
-  ALL_BACKGROUND_CHANGE: 'ALL_BACKGROUND_CHANGE',
 };
 
 export const Messages = {

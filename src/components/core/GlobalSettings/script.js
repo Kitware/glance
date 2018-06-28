@@ -1,10 +1,12 @@
 import GpuInformation from 'paraview-glance/src/components/widgets/GPUInformation';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
+import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 import {
-  BACKGROUND,
-  DEFAULT_BACKGROUND,
-} from 'paraview-glance/src/components/core/VtkView/palette';
-import { Events } from 'paraview-glance/src/constants';
+  SET_GLOBAL_BG,
+  SET_GLOBAL_ORIENT_AXIS,
+  SET_GLOBAL_ORIENT_PRESET,
+  SET_GLOBAL_AXIS_TYPE,
+} from 'paraview-glance/src/stores/mutation-types';
 
 const ORIENTATION_PRESETS = [
   { text: 'XYZ', value: 'default' },
@@ -32,8 +34,9 @@ function setOrientationAxesVisible(visible) {
 function setAxisType(type) {
   this.proxyManager.getViews().forEach((view) => {
     view.setOrientationAxesType(type);
-    view.renderLater();
   });
+  // will call view.renderLater()
+  this.setPresetToOrientationAxes(this.orientationPreset);
 }
 
 // ----------------------------------------------------------------------------
@@ -43,13 +46,6 @@ function setPresetToOrientationAxes(presetName) {
     view.setPresetToOrientationAxes(presetName);
     view.renderLater();
   });
-}
-
-// ----------------------------------------------------------------------------
-
-function setBackgroundColor(color) {
-  this.backgroundColor = color;
-  this.$globalBus.$emit(Events.ALL_BACKGROUND_CHANGE, color);
 }
 
 // ----------------------------------------------------------------------------
@@ -77,17 +73,46 @@ export default {
     GpuInformation,
   },
   data() {
-    const view = this.proxyManager.getViews()[0];
     return {
       palette: BACKGROUND,
-      backgroundColor: DEFAULT_BACKGROUND,
-      orientationAxis: true,
       annotationOpacity: 1,
-      orientationPreset: view ? view.getPresetToOrientationAxes() : 'default',
       orientationPresets: ORIENTATION_PRESETS,
       axisTypes: AXIS_TYPES,
-      axisType: view ? view.getOrientationAxesType() : 'arrow',
     };
+  },
+  computed: {
+    backgroundColor: {
+      get() {
+        return this.$store.state.global.backgroundColor;
+      },
+      set(color) {
+        this.$store.commit(SET_GLOBAL_BG, color);
+      },
+    },
+    orientationAxis: {
+      get() {
+        return this.$store.state.global.orientationAxis;
+      },
+      set(flag) {
+        this.$store.commit(SET_GLOBAL_ORIENT_AXIS, flag);
+      },
+    },
+    orientationPreset: {
+      get() {
+        return this.$store.state.global.orientationPreset;
+      },
+      set(preset) {
+        this.$store.commit(SET_GLOBAL_ORIENT_PRESET, preset);
+      },
+    },
+    axisType: {
+      get() {
+        return this.$store.state.global.axisType;
+      },
+      set(axisType) {
+        this.$store.commit(SET_GLOBAL_AXIS_TYPE, axisType);
+      },
+    },
   },
   watch: {
     orientationAxis: setOrientationAxesVisible,
@@ -96,7 +121,6 @@ export default {
     axisType: setAxisType,
   },
   methods: {
-    setBackgroundColor,
     setAxisType,
     setOrientationAxesVisible,
     setAnnotationOpacity,

@@ -43,6 +43,20 @@ const DATA_TYPES = [
 
 // ----------------------------------------------------------------------------
 
+function onChange() {
+  this.$emit(
+    'change',
+    {
+      dimensions: this.dimensions,
+      spacing: this.spacing,
+      dataType: this.dataType,
+    },
+    this.effectiveSize === this.file.size
+  );
+}
+
+// ----------------------------------------------------------------------------
+
 export default {
   name: 'RawFileReader',
   props: {
@@ -59,16 +73,14 @@ export default {
       spacing: [1, 1, 1],
     };
   },
+  watch: {
+    dimensions: onChange,
+    spacing: onChange,
+    dataType: onChange,
+  },
   computed: {
     effectiveSize() {
       return this.dimensions.reduce((t, v) => t * v, 1) * this.dataType.size;
-    },
-    dataSpec() {
-      return {
-        dimensions: this.dimensions,
-        spacing: this.spacing,
-        dataType: this.dataType,
-      };
     },
   },
 };

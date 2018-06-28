@@ -15,6 +15,7 @@ import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
 import CropWidget from 'paraview-glance/src/vtkwidgets/CropWidget';
+import Store from 'paraview-glance/src/stores';
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
 import { Widgets } from 'paraview-glance/src/constants';
@@ -68,6 +69,7 @@ export function createViewer(container, proxyConfig = null) {
   /* eslint-disable no-new */
   const vm = new Vue({
     el: '#root-container',
+    store: Store,
     components: { App },
     provide: {
       proxyManager,

@@ -1,37 +1,26 @@
 <drag-and-drop
   :enabled="!landing"
-  v-on:drop="loadFiles"
+  v-on:drop="openFiles"
 >
   <v-app slot-scope="{ dragHover }">
     <v-navigation-drawer
-      :value="!landing && sidebar"
+      :value="!landing && controlsDrawer"
       absolute
       app
       clipped
       hide-overlay
       stateless
     >
-      <v-tabs
-        :class="$style.tabs"
-        v-model="activeTab"
-      >
-        <v-tab>Datasets</v-tab>
-        <v-tab>Global</v-tab>
-        <v-tab-item>
-          <datasets />
-        </v-tab-item>
-        <v-tab-item>
-          <global-settings />
-        </v-tab-item>
-      </v-tabs>
+      <controls-drawer />
     </v-navigation-drawer>
+
     <v-toolbar
       clipped-left
       app
     >
       <v-toolbar-side-icon
         :disabled="landing"
-        @click.native.stop="sidebar = !sidebar"
+        @click.native.stop="controlsDrawer = !controlsDrawer"
       />
       <!-- smaller than height of the toolbar -->
       <svg-icon icon="paraview-glance" height="52px" />
@@ -49,9 +38,8 @@
       </v-btn>
       <v-btn
         :class="$style.toolbarButton"
-        :disabled="!!loadingNames.length"
         flat
-        v-on:click="openFile"
+        v-on:click="promptUserFiles"
       >
         <v-icon>folder</v-icon>
         <span>Open</span>
@@ -95,27 +83,14 @@
         <span>About</span>
       </v-btn>
     </v-toolbar>
+
     <v-content :class="$style.appContent">
-      <div
-        :class="$style.overlay"
-        v-if="loadingNames.length"
-        key="if-loading"
-      >
-        <div :class="$style.overlayText">
-          <div class="display-2">Loading {{ loadingNames.join(', ') }}...</div>
-          <v-progress-linear
-            :value="totalLoadingProgress"
-            height="10"
-            color="info"
-          />
-        </div>
-      </div>
       <landing
         v-if="landing"
         key="if-landing"
-        v-on:open="openFile"
-        v-on:open-urls="loadRemoteDatasets"
-        v-on:open-files="loadFiles"
+        v-on:open="promptUserFiles"
+        v-on:open-urls="openUrls"
+        v-on:open-files="openFiles"
       />
       <layout-view v-else key="if-landing" />
     </v-content>
@@ -135,28 +110,26 @@
     <!-- notifications manager -->
     <notification />
 
+    <!-- file loader -->
+    <file-loader v-on:load="landing = false" />
+
     <!-- dnd overlay -->
     <div
-      :class="{ [$style.overlay]: true, [$style.overlayHidden]: !dragHover }"
+      :class="{ [$style.overlay]: true, [$style.overlayVisible]: dragHover }"
     >
       <div :class="$style.overlayText">
         <div class="display-3">Drop files here</div>
-        <v-icon class="display-4">publish</v-icon>
+        <v-icon
+          class="display-4"
+          :class="$style.noTransition"
+        >
+          publish
+        </v-icon>
       </div>
     </div>
 
     <!-- browser issues -->
     <browser-issues />
-
-    <!-- raw file dialog -->
-    <v-dialog v-model="rawDialog" max-width="50%">
-      <raw-file-reader
-        v-if="rawFile"
-        :file="rawFile"
-        v-on:cancel="closeRawFileDialog"
-        v-on:read="loadPendingRawFile"
-      />
-    </v-dialog>
 
     <!-- about dialog -->
     <v-dialog v-model="aboutDialog" max-width="50%">
@@ -165,31 +138,7 @@
 
     <!-- error dialog-->
     <v-dialog v-model="errorDialog" max-width="50%">
-      <v-card>
-        <v-card-title class="title">Application errors</v-card-title>
-        <v-card-text>
-          <p>
-            The following is debug output for errors that have occurred. Please
-            copy and paste the below text and post it to our
-            <a href="https://github.com/Kitware/pv-web-viewer/issues">issue tracker</a>.
-          </p>
-          <textarea ref="errorTextarea" readonly :class="$style.errorTextarea">{{ readableErrors }}</textarea>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn v-on:click="errorDialog = false">Cancel</v-btn>
-          <v-btn
-            v-if="isClipboardEnabled()"
-            key="if-clipboard-enabled"
-            color="info"
-            :loading="copiedToClipboard"
-            v-on:click="copyErrorToClipboard"
-          >
-            <span>Copy to clipboard</span>
-            <span slot="loader">Copied!</span>
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+      <error-box :errors="errors" v-on:close="errorDialog = false" />
     </v-dialog>
   </v-app>
 </drag-and-drop>

@@ -1,6 +1,6 @@
 <v-card>
   <v-card-title>
-    <span class="title">Load Raw File as Image Data</span>
+    <span class="body-2">Enter your raw data specs below:</span>
   </v-card-title>
   <v-card-text>
     <v-layout row align-center>
@@ -65,19 +65,4 @@
       </v-flex>
     </v-layout>
   </v-card-text>
-  <v-card-actions>
-    <v-spacer />
-    <v-btn
-      v-on:click="$emit('cancel')"
-    >
-      <span>Cancel</span>
-    </v-btn>
-    <v-btn
-      color="primary"
-      :disabled="effectiveSize !== file.size"
-      v-on:click="$emit('read', dataSpec)"
-    >
-      <span>Read</span>
-    </v-btn>
-  </v-card-actions>
 </v-card>

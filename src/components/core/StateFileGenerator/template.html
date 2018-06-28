@@ -1,0 +1,6 @@
+<div :class="fileGenerationInProgress ? $style.visible : $style.hidden">
+  <v-progress-circular indeterminate color="green" :size="70" :width="7"></v-progress-circular>
+  <label :class="$style.label">
+    Compressing...<br>{{fileName}}
+  </label>
+</div>

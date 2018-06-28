@@ -1,3 +1,5 @@
+import JSZip from 'jszip';
+
 import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
@@ -73,6 +75,7 @@ function openFiles(files) {
     name: file.name,
     file,
     issue: file.name.endsWith('.raw'),
+    extension: file.name.split('.').pop(),
   }));
 
   let hasIssue = false;
@@ -142,8 +145,29 @@ function openRemoteDatasets(urls, names, types = []) {
 // ----------------------------------------------------------------------------
 
 function promptForFiles() {
-  const exts = ['raw'].concat(ReaderFactory.listSupportedExtensions());
+  const exts = ['raw', 'glance'].concat(
+    ReaderFactory.listSupportedExtensions()
+  );
   ReaderFactory.openFiles(exts, this.openFiles);
+}
+
+// ----------------------------------------------------------------------------
+
+function loadState(file) {
+  return new Promise((resolve) => {
+    const zip = new JSZip();
+    zip.loadAsync(file).then(() => {
+      zip.forEach((relativePath, zipEntry) => {
+        if (relativePath.match(/state\.json$/i)) {
+          zipEntry.async('string').then((txt) => {
+            const userData = this.proxyManager.loadState(JSON.parse(txt));
+            console.log(JSON.stringify(userData, null, 2));
+            resolve(userData);
+          });
+        }
+      });
+    });
+  });
 }
 
 // ----------------------------------------------------------------------------
@@ -152,6 +176,7 @@ function loadFiles() {
   this.stage = 'load';
 
   const promises = this.files.map((file) => {
+    // Handle raw
     if (file.rawInfo) {
       return readRawFile(file.file, file.rawInfo).then((dataset) =>
         ReaderFactory.registerReadersToProxyManager(
@@ -164,6 +189,11 @@ function loadFiles() {
           this.proxyManager
         )
       );
+    }
+
+    // Handle state file
+    if (file.extension === 'glance') {
+      return this.loadState(file.file);
     }
 
     return ReaderFactory.loadFiles([file.file]).then((readers) =>
@@ -218,6 +248,7 @@ export default {
     openRemoteDatasets,
     promptForFiles,
     loadFiles,
+    loadState,
     preloadCanLoad() {
       return this.files.reduce((flag, { issue }) => flag && !issue, true);
     },

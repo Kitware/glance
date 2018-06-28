@@ -1,0 +1,27 @@
+.hidden {
+  display: none;
+}
+
+.visible {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  top: 50%;
+  width: 450px;
+  transform: translate(-50%, -50%);
+
+  background: rgba(128,128,128,0.9);
+  border-radius: 10px;
+  text-align: center;
+  padding: 50px;
+  border: solid 1px #333;
+  box-shadow: rgba(0,0,0,0.5) 5px 5px 10px;
+}
+
+.label {
+  display: block;
+  font-weight: bolder;
+  color: white;
+  font-size: 25px;
+  margin-top: 30px;
+}

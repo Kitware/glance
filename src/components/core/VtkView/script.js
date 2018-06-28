@@ -279,6 +279,16 @@ function onMounted() {
     this.proxyManager.onActiveViewChange(() => {
       this.$forceUpdate();
     }).unsubscribe,
+    this.proxyManager.onActiveSourceChange(() => {
+      if (this.view.bindRepresentationToManipulator) {
+        const activeSource = this.proxyManager.getActiveSource();
+        const representation = this.view
+          .getRepresentations()
+          .find((r) => r.getInput() === activeSource);
+        this.view.bindRepresentationToManipulator(representation);
+        this.view.updateWidthHeightAnnotation();
+      }
+    }).unsubscribe,
   ];
   this.initialSubscriptionLength = this.subscriptions.length;
 

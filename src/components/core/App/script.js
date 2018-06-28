@@ -67,6 +67,11 @@ function loadState() {
 
 // ----------------------------------------------------------------------------
 
+function navigate() {
+}
+
+// ----------------------------------------------------------------------------
+
 export default {
   name: 'App',
   components: {
@@ -93,8 +98,15 @@ export default {
       errors: [],
     };
   },
+  watch: {
+    landing(landing) {
+      window.location.hash = landing ? '' : '#app';
+    },
+  },
   mounted() {
+    window.addEventListener('hashchange', this.navigate);
     window.addEventListener('error', this.recordError);
+
     if (window.console) {
       this.origConsoleError = window.console.error;
       window.console.error = (...args) => {
@@ -104,7 +116,9 @@ export default {
     }
   },
   beforeDestroy() {
+    window.removeEventListener('hashchange', this.navigate);
     window.removeEventListener('error', this.recordError);
+
     if (this.origConsoleError) {
       window.console.error = this.origConsoleError;
     }
@@ -112,6 +126,9 @@ export default {
   methods: {
     saveState,
     loadState,
+    navigate() {
+      this.landing = window.location.hash !== '#app';
+    },
     recordError(error) {
       this.errors.push(error);
     },

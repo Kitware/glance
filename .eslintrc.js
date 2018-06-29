@@ -35,6 +35,7 @@ module.exports = {
       'prefer-destructuring': 0,
       'no-plusplus': 0,
       'import/no-extraneous-dependencies': 0, // paraview-glance alias
+      'linebreak-style': 0,
 
       // don't require .vue extension when importing
       'import/extensions': ['error', 'always', {

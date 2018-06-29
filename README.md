@@ -54,6 +54,7 @@ If you wish to view, enhance, or adapt this application in any way, you can acce
 $ git clone https://github.com/Kitware/paraview-glance.git
 $ cd paraview-glance/
 $ npm install
+$ npm run build
 $ npm run dev
 ```
 

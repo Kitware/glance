@@ -46,8 +46,7 @@
     "vuetify": "1.0.19",
     "vuex": "^3.0.1",
     "webworker-promise": "0.4.1",
-    "workbox-sw": "2.1.2",
-    "workbox-webpack-plugin": "2.1.2"
+    "workbox-sw": "2.1.2"
   },
   "devDependencies": {
     "babel-plugin-syntax-dynamic-import": "6.18.0",
@@ -58,7 +57,9 @@
     "vue-loader": "15.2.4",
     "vue-style-loader": "4.1.0",
     "vue-template-compiler": "2.5.16",
-    "webpack-merge": "4.1.2"
+    "webpack-merge": "4.1.2",
+    "workbox-webpack-plugin": "2.1.2",
+    "write-file-webpack-plugin": "^4.3.2"
   },
   "config": {
     "commitizen": {

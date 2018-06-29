@@ -2,6 +2,7 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const WriteFilePlugin = require('write-file-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
 const externals = require('./externals.js');
@@ -114,6 +115,7 @@ module.exports = {
   },
   plugins: [
     new VueLoaderPlugin(),
+    new WriteFilePlugin(),
     new CopyPlugin([
       {
         from: path.join(

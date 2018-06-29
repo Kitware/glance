@@ -45,16 +45,27 @@ Visit these URLs to run the [stable][] and [nightly][] release of ParaView Glanc
 Building
 ========
 
+The prerequisites are [git][] and [node.js + npm][].
+
 If you wish to view, enhance, or adapt this application in any way, you can access and run the freely available source code from any platform using the following commands:
+
 
 ```
 $ git clone https://github.com/Kitware/paraview-glance.git
 $ cd paraview-glance/
 $ npm install
-$ npm run start
+$ npm run dev
 ```
 
-The prerequesits are [git][] and [node.js-npm][].
+This will run a development build and you can visit the application at `http://localhost:9999`.
+
+To generate a production build, use the following commands:
+
+```
+$ npm run build:release
+```
+
+This will output the final bundle and assets to `dist/`.
 
 [git]: https://git-scm.com
 [node.js-npm]: https://nodejs.org/en

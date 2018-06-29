@@ -1,10 +1,10 @@
 <drag-and-drop
-  :enabled="!landing"
+  :enabled="!landingVisible"
   v-on:drop="openFiles"
 >
   <v-app slot-scope="{ dragHover }">
     <v-navigation-drawer
-      :value="!landing && controlsDrawer"
+      :value="!landingVisible && controlsDrawer"
       absolute
       app
       clipped
@@ -19,15 +19,15 @@
       app
     >
       <v-toolbar-side-icon
-        :disabled="landing"
+        :disabled="landingVisible"
         @click.native.stop="controlsDrawer = !controlsDrawer"
       />
       <!-- smaller than height of the toolbar -->
-      <v-tooltip bottom :disabled="landing">
+      <v-tooltip bottom :disabled="landingVisible">
         <a
           slot="activator"
           href="#"
-          v-on:click.prevent="landing = true"
+          v-on:click.prevent="showLanding"
         >
           <svg-icon icon="paraview-glance" height="52px" />
         </a>
@@ -55,7 +55,7 @@
       </v-btn>
       <v-btn
         :class="$style.toolbarButton"
-        :disabled="landing"
+        :disabled="landingVisible"
         flat
         v-on:click="saveState"
       >
@@ -64,7 +64,7 @@
       </v-btn>
       <v-btn
         :class="$style.toolbarButton"
-        :disabled="landing"
+        :disabled="landingVisible"
         flat
         v-on:click="screenshotsDrawer = true"
       >
@@ -84,7 +84,7 @@
 
     <v-content :class="$style.appContent">
       <landing
-        v-if="landing"
+        v-if="landingVisible"
         key="if-landing"
         v-on:open="promptUserFiles"
         v-on:open-urls="openUrls"
@@ -109,7 +109,7 @@
     <notification />
 
     <!-- file loader -->
-    <file-loader v-on:load="landing = false" />
+    <file-loader v-on:load="showApp" />
 
     <!-- state generator -->
     <state-file-generator />

@@ -31,9 +31,16 @@ export default {
     StateFileGenerator,
     SvgIcon,
   },
+  props: {
+    route: {
+      type: String,
+      required: false,
+    },
+  },
   data() {
     return {
-      landing: true,
+      // start with landing as default
+      internalRoute: this.route || 'landing',
       aboutDialog: false,
       errorDialog: false,
       controlsDrawer: true,
@@ -42,13 +49,28 @@ export default {
       errors: [],
     };
   },
-  watch: {
-    landing(landing) {
-      window.location.hash = landing ? '' : '#app';
+  computed: {
+    landingVisible() {
+      return this.internalRoute === 'landing';
     },
   },
+  watch: {
+    route(val) {
+      this.internalRoute = val;
+    },
+    internalRoute(val) {
+      if (this.internalRoute !== this.route) {
+        this.$emit('route', val);
+      }
+    },
+  },
+  // watch: {
+  //   landing(landing) {
+  //     window.location.hash = landing ? '' : '#app';
+  //   },
+  // },
   mounted() {
-    window.addEventListener('hashchange', this.navigate);
+    // window.addEventListener('hashchange', this.navigate);
     window.addEventListener('error', this.recordError);
 
     if (window.console) {
@@ -60,7 +82,7 @@ export default {
     }
   },
   beforeDestroy() {
-    window.removeEventListener('hashchange', this.navigate);
+    // window.removeEventListener('hashchange', this.navigate);
     window.removeEventListener('error', this.recordError);
 
     if (this.origConsoleError) {
@@ -68,9 +90,15 @@ export default {
     }
   },
   methods: {
-    navigate() {
-      this.landing = window.location.hash !== '#app';
+    showLanding() {
+      this.internalRoute = 'landing';
     },
+    showApp() {
+      this.internalRoute = 'app';
+    },
+    // navigate() {
+    //   this.landing = window.location.hash !== '#app';
+    // },
     recordError(error) {
       this.errors.push(error);
     },

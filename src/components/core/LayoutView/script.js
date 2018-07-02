@@ -83,6 +83,7 @@ function onMounted() {
 
 export default {
   name: 'LayoutView',
+  inject: ['$globalBus'],
   props: {
     proxyManager: { required: true },
     widgetManager: { required: true },

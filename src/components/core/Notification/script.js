@@ -37,6 +37,7 @@ function show(color, msg) {
 // ----------------------------------------------------------------------------
 
 const Notification = {
+  inject: ['$globalBus'],
   data: () => ({
     snackbar: false,
     text: '',

@@ -201,6 +201,7 @@ function generateComponent(
     methods[`set${macro.capitalize(name)}`] = computed[name].set;
   });
   return {
+    inject: ['$globalBus'],
     props: {
       proxyManager: { required: true },
       source: Object,

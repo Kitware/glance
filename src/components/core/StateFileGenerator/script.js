@@ -43,6 +43,7 @@ function saveState(fileNameToUse) {
 
 export default {
   name: 'StateFileGenerator',
+  inject: ['$globalBus'],
   props: {
     proxyManager: { required: true },
   },

@@ -1,5 +1,7 @@
+import Vue from 'vue';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
+import Config from 'paraview-glance/src/config';
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
 import ControlsDrawer from 'paraview-glance/src/components/core/ControlsDrawer';
@@ -16,6 +18,8 @@ import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
 import { Widgets } from 'paraview-glance/src/constants';
+
+const $globalBus = new Vue();
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -36,6 +40,9 @@ export default {
     Screenshots,
     StateFileGenerator,
     SvgIcon,
+  },
+  provide: {
+    $globalBus,
   },
   props: {
     route: {
@@ -123,16 +130,16 @@ export default {
       this.errors.push(error);
     },
     promptUserFiles() {
-      this.$globalBus.$emit('prompt-user-files');
+      $globalBus.$emit('prompt-user-files');
     },
     openUrls(urls, names) {
-      this.$globalBus.$emit('open-remote-files', urls, names);
+      $globalBus.$emit('open-remote-files', urls, names);
     },
     openFiles(files) {
-      this.$globalBus.$emit('open-files', files);
+      $globalBus.$emit('open-files', files);
     },
     saveState() {
-      this.$globalBus.$emit('save-state');
+      $globalBus.$emit('save-state');
     },
   },
 };

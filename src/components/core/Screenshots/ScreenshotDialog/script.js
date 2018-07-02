@@ -72,6 +72,7 @@ function save() {
 
 export default {
   name: 'ScreenshotDialog',
+  inject: ['$globalBus'],
   data() {
     return {
       screenshot: null,

@@ -220,6 +220,7 @@ export default {
   components: {
     RawFileReader,
   },
+  inject: ['$globalBus'],
   props: {
     proxyManager: { required: true },
   },

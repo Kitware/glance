@@ -312,6 +312,8 @@ function onBeforeDestroy() {
 // ----------------------------------------------------------------------------
 
 export default {
+  name: 'VtkView',
+  inject: ['$globalBus'],
   components: {
     PalettePicker,
     ToolbarSheet,

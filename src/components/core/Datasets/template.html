@@ -63,11 +63,11 @@
     </div>
     <v-card :class="$style.datasetControls">
       <v-expansion-panel expand>
-        <representation-widget v-bind:source="source" />
-        <color-by-widget v-bind:source="source" />
-        <slice-widget v-bind:source="source" />
-        <molecule-widget v-bind:source="source" />
-        <information-widget v-bind:source="source" />
+        <representation-widget v-bind:source="source" :proxyManager="proxyManager" />
+        <color-by-widget v-bind:source="source" :proxyManager="proxyManager" />
+        <slice-widget v-bind:source="source" :proxyManager="proxyManager" />
+        <molecule-widget v-bind:source="source" :proxyManager="proxyManager" />
+        <information-widget v-bind:source="source" :proxyManager="proxyManager" />
       </v-expansion-panel>
     </v-card>
   </v-expansion-panel-content>

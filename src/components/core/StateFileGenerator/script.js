@@ -43,7 +43,9 @@ function saveState(fileNameToUse) {
 
 export default {
   name: 'StateFileGenerator',
-  inject: ['proxyManager'],
+  props: {
+    proxyManager: { required: true },
+  },
   data() {
     return {
       fileGenerationInProgress: false,

@@ -52,11 +52,13 @@ function onBeforeDestroy() {
 // ----------------------------------------------------------------------------
 
 export default {
-  inject: ['proxyManager'],
   props: {
     width: {
       default: 268,
       type: Number,
+    },
+    proxyManager: {
+      required: true,
     },
   },
   data() {

@@ -312,7 +312,6 @@ function onBeforeDestroy() {
 // ----------------------------------------------------------------------------
 
 export default {
-  inject: ['proxyManager', 'widgetManager'],
   components: {
     PalettePicker,
     ToolbarSheet,
@@ -340,6 +339,12 @@ export default {
     viewData: {
       required: true,
       type: Object,
+    },
+    proxyManager: {
+      required: true,
+    },
+    widgetManager: {
+      required: true,
     },
   },
   data() {

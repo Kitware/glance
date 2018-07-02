@@ -69,13 +69,16 @@ export function createViewer(container, proxyConfig = null) {
   /* eslint-disable no-new */
   const vm = new Vue({
     el: '#root-container',
-    store: Store,
     components: { App },
-    provide: {
-      proxyManager,
-      widgetManager,
+    store: Store,
+    data() {
+      return {
+        proxyManager,
+        widgetManager,
+      };
     },
-    template: '<App ref="app" />',
+    template:
+      '<App ref="app" :proxyManager="proxyManager" :widgetManager="widgetManager" />',
   });
 
   return {

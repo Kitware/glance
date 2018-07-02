@@ -36,6 +36,12 @@ export default {
       type: String,
       required: false,
     },
+    proxyManager: {
+      required: true,
+    },
+    widgetManager: {
+      required: true,
+    },
   },
   data() {
     return {

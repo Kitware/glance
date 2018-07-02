@@ -201,8 +201,10 @@ function generateComponent(
     methods[`set${macro.capitalize(name)}`] = computed[name].set;
   });
   return {
-    inject: ['proxyManager'],
-    props: ['source'],
+    props: {
+      proxyManager: { required: true },
+      source: Object,
+    },
     methods,
     data: function data() {
       return dataGenerator(fields);

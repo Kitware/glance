@@ -57,7 +57,9 @@ function closeDialog() {
 
 export default {
   name: 'BrowserIssues',
-  inject: ['proxyManager'],
+  props: {
+    proxyManager: { required: true },
+  },
   data() {
     return {
       issues: [],

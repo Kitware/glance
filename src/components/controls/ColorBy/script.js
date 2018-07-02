@@ -193,8 +193,10 @@ function onEsc(ev) {
 // ----------------------------------------------------------------------------
 
 export default {
-  inject: ['proxyManager'],
-  props: ['source'],
+  props: {
+    source: Object,
+    proxyManager: { required: true },
+  },
   components: {
     PalettePicker,
     PiecewiseFunctionEditor,

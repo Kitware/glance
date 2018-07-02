@@ -5,9 +5,9 @@
   <v-tab>Datasets</v-tab>
   <v-tab>Global</v-tab>
   <v-tab-item>
-    <datasets />
+    <datasets :proxyManager="proxyManager" />
   </v-tab-item>
   <v-tab-item>
-    <global-settings />
+    <global-settings :proxyManager="proxyManager" />
   </v-tab-item>
 </v-tabs>

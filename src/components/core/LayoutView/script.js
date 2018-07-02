@@ -82,8 +82,11 @@ function onMounted() {
 // ----------------------------------------------------------------------------
 
 export default {
-  inject: ['proxyManager'],
   name: 'LayoutView',
+  props: {
+    proxyManager: { required: true },
+    widgetManager: { required: true },
+  },
   data: () => ({
     views: [],
     viewData: {},

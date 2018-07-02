@@ -217,9 +217,11 @@ function loadFiles() {
 
 export default {
   name: 'FileLoader',
-  inject: ['proxyManager'],
   components: {
     RawFileReader,
+  },
+  props: {
+    proxyManager: { required: true },
   },
   data() {
     return {

@@ -67,10 +67,12 @@ function pushGlobalSettings() {
 
 export default {
   name: 'GlobalSettings',
-  inject: ['proxyManager'],
   components: {
     PalettePicker,
     GpuInformation,
+  },
+  props: {
+    proxyManager: { required: true },
   },
   data() {
     return {

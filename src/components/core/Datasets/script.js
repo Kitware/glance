@@ -63,7 +63,9 @@ function toggleDatasetVisibility(source) {
 
 export default {
   name: 'Datasets',
-  inject: ['proxyManager'],
+  props: {
+    proxyManager: { required: true },
+  },
   data() {
     return {
       datasets: [],

@@ -17,6 +17,8 @@
         v-bind:viewData="viewData[view.getProxyId()]"
         v-on:bg-change="setViewBackground(view, $event)"
         layoutManager
+        :proxyManager="proxyManager"
+        :widgetManager="widgetManager"
       />
     </div>
   </div>

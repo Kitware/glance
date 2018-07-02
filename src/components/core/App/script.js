@@ -1,6 +1,9 @@
+import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
+
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
 import ControlsDrawer from 'paraview-glance/src/components/core/ControlsDrawer';
+import CropWidget from 'paraview-glance/src/vtkwidgets/CropWidget';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
 import ErrorBox from 'paraview-glance/src/components/core/ErrorBox';
 import FileLoader from 'paraview-glance/src/components/core/FileLoader';
@@ -10,6 +13,9 @@ import Notification from 'paraview-glance/src/components/core/Notification';
 import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 import StateFileGenerator from 'paraview-glance/src/components/core/StateFileGenerator';
 import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
+import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
+import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
+import { Widgets } from 'paraview-glance/src/constants';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -37,16 +43,34 @@ export default {
       required: false,
     },
     proxyManager: {
-      required: true,
-    },
-    widgetManager: {
-      required: true,
+      required: false,
     },
   },
   data() {
+    let proxyManager = this.proxyManager;
+    if (!proxyManager) {
+      proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
+    }
+
+    const renderListener = vtkListenerHelper.newInstance(
+      proxyManager.autoAnimateViews,
+      () =>
+        [].concat(
+          proxyManager.getSources(),
+          proxyManager.getRepresentations(),
+          proxyManager.getViews()
+        )
+    );
+    proxyManager.onProxyRegistrationChange(renderListener.resetListeners);
+
+    const widgetManager = vtkWidgetManager.newInstance({ proxyManager });
+    widgetManager.registerWidgetGroup(Widgets.CROP, CropWidget);
+
     return {
       // start with landing as default
       internalRoute: this.route || 'landing',
+      internalProxyManager: proxyManager,
+      widgetManager,
       aboutDialog: false,
       errorDialog: false,
       controlsDrawer: true,
@@ -70,13 +94,7 @@ export default {
       }
     },
   },
-  // watch: {
-  //   landing(landing) {
-  //     window.location.hash = landing ? '' : '#app';
-  //   },
-  // },
   mounted() {
-    // window.addEventListener('hashchange', this.navigate);
     window.addEventListener('error', this.recordError);
 
     if (window.console) {
@@ -88,7 +106,6 @@ export default {
     }
   },
   beforeDestroy() {
-    // window.removeEventListener('hashchange', this.navigate);
     window.removeEventListener('error', this.recordError);
 
     if (this.origConsoleError) {
@@ -102,9 +119,6 @@ export default {
     showApp() {
       this.internalRoute = 'app';
     },
-    // navigate() {
-    //   this.landing = window.location.hash !== '#app';
-    // },
     recordError(error) {
       this.errors.push(error);
     },

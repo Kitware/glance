@@ -14,11 +14,7 @@ import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
-import CropWidget from 'paraview-glance/src/vtkwidgets/CropWidget';
 import Store from 'paraview-glance/src/stores';
-import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
-import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
-import { Widgets } from 'paraview-glance/src/constants';
 
 // Expose IO API to Glance global object
 export const {
@@ -51,20 +47,6 @@ export function createViewer(container, proxyConfig = null) {
   const proxyConfiguration = proxyConfig || activeProxyConfig || Config.Proxy;
 
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
-  const renderListener = vtkListenerHelper.newInstance(
-    proxyManager.autoAnimateViews,
-    () =>
-      [].concat(
-        proxyManager.getSources(),
-        proxyManager.getRepresentations(),
-        proxyManager.getViews()
-      )
-  );
-
-  proxyManager.onProxyRegistrationChange(renderListener.resetListeners);
-
-  const widgetManager = vtkWidgetManager.newInstance({ proxyManager });
-  widgetManager.registerWidgetGroup(Widgets.CROP, CropWidget);
 
   /* eslint-disable no-new */
   const vm = new Vue({
@@ -74,11 +56,9 @@ export function createViewer(container, proxyConfig = null) {
     data() {
       return {
         proxyManager,
-        widgetManager,
       };
     },
-    template:
-      '<App ref="app" :proxyManager="proxyManager" :widgetManager="widgetManager" />',
+    template: '<App ref="app" :proxyManager="proxyManager" />',
   });
 
   return {

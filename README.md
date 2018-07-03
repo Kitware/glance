@@ -69,7 +69,7 @@ $ npm run build:release
 This will output the final bundle and assets to `dist/`.
 
 [git]: https://git-scm.com
-[node.js-npm]: https://nodejs.org/en
+[node.js + npm]: https://nodejs.org/en
 
 
 Reporting Bugs and Making Contributions

@@ -19,7 +19,7 @@ import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
 import { Widgets } from 'paraview-glance/src/constants';
 
-const $globalBus = new Vue();
+export const $globalBus = new Vue();
 
 // ----------------------------------------------------------------------------
 // Component API

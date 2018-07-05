@@ -221,9 +221,6 @@ export default {
     RawFileReader,
   },
   inject: ['$globalBus'],
-  props: {
-    proxyManager: { required: true },
-  },
   data() {
     return {
       stage: '',
@@ -232,6 +229,9 @@ export default {
     };
   },
   computed: {
+    proxyManager() {
+      return this.$store.state.proxyManager;
+    },
     totalProgress() {
       return this.progresses.reduce((sum, v) => sum + (v || 0), 0);
     },

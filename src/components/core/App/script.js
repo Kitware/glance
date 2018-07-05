@@ -1,7 +1,5 @@
 import Vue from 'vue';
-import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
-import Config from 'paraview-glance/src/config';
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
 import ControlsDrawer from 'paraview-glance/src/components/core/ControlsDrawer';
@@ -49,35 +47,21 @@ export default {
       type: String,
       required: false,
     },
-    proxyManager: {
+    widgetManager: {
       required: false,
+      default() {
+        const widgetManager = vtkWidgetManager.newInstance({
+          proxyManager: this.proxyManager,
+        });
+        widgetManager.registerWidgetGroup(Widgets.CROP, CropWidget);
+        return widgetManager;
+      },
     },
   },
   data() {
-    let proxyManager = this.proxyManager;
-    if (!proxyManager) {
-      proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
-    }
-
-    const renderListener = vtkListenerHelper.newInstance(
-      proxyManager.autoAnimateViews,
-      () =>
-        [].concat(
-          proxyManager.getSources(),
-          proxyManager.getRepresentations(),
-          proxyManager.getViews()
-        )
-    );
-    proxyManager.onProxyRegistrationChange(renderListener.resetListeners);
-
-    const widgetManager = vtkWidgetManager.newInstance({ proxyManager });
-    widgetManager.registerWidgetGroup(Widgets.CROP, CropWidget);
-
     return {
       // start with landing as default
       internalRoute: this.route || 'landing',
-      internalProxyManager: proxyManager,
-      widgetManager,
       aboutDialog: false,
       errorDialog: false,
       controlsDrawer: true,
@@ -89,6 +73,9 @@ export default {
   computed: {
     landingVisible() {
       return this.internalRoute === 'landing';
+    },
+    proxyManager() {
+      return this.$store.state.proxyManager;
     },
   },
   watch: {
@@ -102,6 +89,19 @@ export default {
     },
   },
   mounted() {
+    this.renderListener = vtkListenerHelper.newInstance(
+      this.proxyManager.autoAnimateViews,
+      () =>
+        [].concat(
+          this.proxyManager.getSources(),
+          this.proxyManager.getRepresentations(),
+          this.proxyManager.getViews()
+        )
+    );
+    this.pxmSub = this.proxyManager.onProxyRegistrationChange(
+      this.renderListener.resetListeners
+    );
+
     window.addEventListener('error', this.recordError);
 
     if (window.console) {
@@ -118,6 +118,9 @@ export default {
     if (this.origConsoleError) {
       window.console.error = this.origConsoleError;
     }
+
+    this.pxmSub.unsubscribe();
+    this.renderListener.removeListeners();
   },
   methods: {
     showLanding() {

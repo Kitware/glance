@@ -342,9 +342,6 @@ export default {
       required: true,
       type: Object,
     },
-    proxyManager: {
-      required: true,
-    },
     widgetManager: {
       required: true,
     },
@@ -358,6 +355,9 @@ export default {
     };
   },
   computed: {
+    proxyManager() {
+      return this.$store.state.proxyManager;
+    },
     viewType() {
       return this.layoutViewType || viewHelper.getViewType(this.view);
     },

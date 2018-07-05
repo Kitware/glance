@@ -1,3 +1,4 @@
+import { mapState } from 'vuex';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { DEFAULT_VIEW_TYPE } from 'paraview-glance/src/components/core/VtkView/constants';
 
@@ -57,9 +58,6 @@ function closeDialog() {
 
 export default {
   name: 'BrowserIssues',
-  props: {
-    proxyManager: { required: true },
-  },
   data() {
     return {
       issues: [],
@@ -68,6 +66,7 @@ export default {
       suppressWarning: false,
     };
   },
+  computed: mapState(['proxyManager']),
   created() {
     if (window.localStorage) {
       this.suppressWarning = !!window.localStorage.getItem(WARNING_KEY);

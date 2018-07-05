@@ -1,4 +1,5 @@
 import JSZip from 'jszip';
+import { mapState } from 'vuex';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -44,15 +45,13 @@ function saveState(fileNameToUse) {
 export default {
   name: 'StateFileGenerator',
   inject: ['$globalBus'],
-  props: {
-    proxyManager: { required: true },
-  },
   data() {
     return {
       fileGenerationInProgress: false,
       fileName: '',
     };
   },
+  computed: mapState(['proxyManager']),
   created() {
     this.$globalBus.$on('save-state', this.saveState);
   },

@@ -1,14 +1,25 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
+import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
-import global from './globalSettings';
+import Config from 'paraview-glance/src/config';
+import global from 'paraview-glance/src/stores/globalSettings';
 
-Vue.use(Vuex);
+function createStore(proxyManager = null) {
+  let pxm = proxyManager;
+  if (!proxyManager) {
+    pxm = vtkProxyManager.newInstance({
+      proxyConfiguration: Config.Proxy,
+    });
+  }
 
-const store = new Vuex.Store({
-  modules: {
-    global,
-  },
-});
+  return new Vuex.Store({
+    state: {
+      proxyManager: pxm,
+    },
+    modules: {
+      global,
+    },
+  });
+}
 
-export default store;
+export default createStore;

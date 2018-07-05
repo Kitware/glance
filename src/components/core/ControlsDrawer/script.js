@@ -9,9 +9,6 @@ export default {
     Datasets,
     GlobalSettings,
   },
-  props: {
-    proxyManager: { required: true },
-  },
   data() {
     return {
       activeTab: 0,

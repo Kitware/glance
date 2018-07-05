@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import Vue from 'vue';
+import Vuex from 'vuex';
 import Vuetify from 'vuetify';
 
 import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
@@ -14,7 +15,7 @@ import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App, { $globalBus } from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
-import Store from 'paraview-glance/src/stores';
+import createStore from 'paraview-glance/src/stores';
 
 // Expose IO API to Glance global object
 export const {
@@ -26,6 +27,7 @@ export const {
   registerReadersToProxyManager,
 } = ReaderFactory;
 
+Vue.use(Vuex);
 Vue.use(Vuetify);
 
 let activeProxyConfig = null;
@@ -42,20 +44,16 @@ export function setActiveProxyConfiguration(config) {
 
 export function createViewer(container, proxyConfig = null) {
   const proxyConfiguration = proxyConfig || activeProxyConfig || Config.Proxy;
-
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
+
+  const store = createStore(proxyManager);
 
   /* eslint-disable no-new */
   new Vue({
     el: '#root-container',
     components: { App },
-    store: Store,
-    data() {
-      return {
-        proxyManager,
-      };
-    },
-    template: '<App ref="app" :proxyManager="proxyManager" />',
+    store,
+    template: '<App />',
   });
 
   return {

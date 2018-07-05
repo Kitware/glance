@@ -193,10 +193,7 @@ function onEsc(ev) {
 // ----------------------------------------------------------------------------
 
 export default {
-  props: {
-    source: Object,
-    proxyManager: { required: true },
-  },
+  props: ['source'],
   components: {
     PalettePicker,
     PiecewiseFunctionEditor,
@@ -221,6 +218,9 @@ export default {
     };
   },
   computed: {
+    proxyManager() {
+      return this.$store.state.proxyManager;
+    },
     usePresetOpacity() {
       const preset = vtkColorMaps.getPresetByName(this.presetName);
       return preset && preset.OpacityPoints;

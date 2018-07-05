@@ -71,9 +71,6 @@ export default {
     PalettePicker,
     GpuInformation,
   },
-  props: {
-    proxyManager: { required: true },
-  },
   data() {
     return {
       palette: BACKGROUND,
@@ -83,6 +80,9 @@ export default {
     };
   },
   computed: {
+    proxyManager() {
+      return this.$store.state.proxyManager;
+    },
     backgroundColor: {
       get() {
         return this.$store.state.global.backgroundColor;

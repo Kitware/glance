@@ -1,3 +1,4 @@
+import { mapState } from 'vuex';
 import macro from 'vtk.js/Sources/macro';
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import { Events } from 'paraview-glance/src/constants';
@@ -202,15 +203,12 @@ function generateComponent(
   });
   return {
     inject: ['$globalBus'],
-    props: {
-      proxyManager: { required: true },
-      source: Object,
-    },
+    props: ['source'],
     methods,
     data: function data() {
       return dataGenerator(fields);
     },
-    computed,
+    computed: Object.assign(computed, mapState(['proxyManager'])),
     created() {
       this.listenerHelper = vtkListenerHelper.newInstance(
         () => {

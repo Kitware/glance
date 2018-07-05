@@ -85,7 +85,6 @@ export default {
   name: 'LayoutView',
   inject: ['$globalBus'],
   props: {
-    proxyManager: { required: true },
     widgetManager: { required: true },
   },
   data: () => ({
@@ -94,6 +93,7 @@ export default {
     order: VIEW_TYPES.map((v) => v.value),
   }),
   computed: mapState({
+    proxyManager: 'proxyManager',
     gridTemplateRows() {
       return this.views.length < 4 ? '1fr' : '1fr 1fr';
     },

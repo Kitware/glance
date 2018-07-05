@@ -11,7 +11,7 @@
       hide-overlay
       stateless
     >
-      <controls-drawer :proxyManager="proxyManager" />
+      <controls-drawer />
     </v-navigation-drawer>
 
     <v-toolbar
@@ -93,7 +93,6 @@
       <layout-view
         v-else
         key="if-landing"
-        :proxyManager="proxyManager"
         :widgetManager="widgetManager"
       />
     </v-content>
@@ -114,13 +113,10 @@
     <notification />
 
     <!-- file loader -->
-    <file-loader
-      v-on:load="showApp"
-      :proxyManager="proxyManager"
-    />
+    <file-loader v-on:load="showApp" />
 
     <!-- state generator -->
-    <state-file-generator :proxyManager="proxyManager" />
+    <state-file-generator />
 
     <!-- dnd overlay -->
     <div
@@ -138,7 +134,7 @@
     </div>
 
     <!-- browser issues -->
-    <browser-issues :proxyManager="proxyManager" />
+    <browser-issues />
 
     <!-- about dialog -->
     <v-dialog v-model="aboutDialog" max-width="50%">

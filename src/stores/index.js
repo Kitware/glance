@@ -3,6 +3,7 @@ import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
 import Config from 'paraview-glance/src/config';
 import global from 'paraview-glance/src/stores/globalSettings';
+import files from 'paraview-glance/src/stores/fileLoader';
 import mTypes from 'paraview-glance/src/stores/mutation-types';
 
 function createStore(proxyManager = null) {
@@ -20,6 +21,7 @@ function createStore(proxyManager = null) {
     },
     modules: {
       global,
+      files,
     },
     mutations: {
       [mTypes.SHOW_LANDING](state) {

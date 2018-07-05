@@ -118,13 +118,13 @@ export default {
       this.errors.push(error);
     },
     promptUserFiles() {
-      $globalBus.$emit('prompt-user-files');
+      this.$store.dispatch('files/promptForFiles');
     },
     openUrls(urls, names) {
-      $globalBus.$emit('open-remote-files', urls, names);
+      this.$store.dispatch('files/openRemoteFiles', { urls, names });
     },
     openFiles(files) {
-      $globalBus.$emit('open-files', files);
+      this.$store.dispatch('files/openFiles', files);
     },
     saveState() {
       $globalBus.$emit('save-state');

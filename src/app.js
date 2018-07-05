@@ -13,7 +13,7 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
-import App, { $globalBus } from 'paraview-glance/src/components/core/App';
+import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
 import createStore from 'paraview-glance/src/stores';
 
@@ -63,7 +63,7 @@ export function createViewer(container, proxyConfig = null) {
         const names = typeof name === 'string' ? [name] : name;
         const urls = typeof url === 'string' ? [url] : url;
         const types = typeof type === 'string' ? [type] : type || [];
-        $globalBus.$emit('open-remote-files', urls, names, types);
+        store.dispatch('files/openRemoteFiles', { urls, names, types });
       }
     },
   };

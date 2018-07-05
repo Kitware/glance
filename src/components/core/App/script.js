@@ -16,6 +16,7 @@ import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
 import { Widgets } from 'paraview-glance/src/constants';
+import mTypes from 'paraview-glance/src/stores/mutation-types';
 
 export const $globalBus = new Vue();
 
@@ -43,10 +44,6 @@ export default {
     $globalBus,
   },
   props: {
-    route: {
-      type: String,
-      required: false,
-    },
     widgetManager: {
       required: false,
       default() {
@@ -60,8 +57,6 @@ export default {
   },
   data() {
     return {
-      // start with landing as default
-      internalRoute: this.route || 'landing',
       aboutDialog: false,
       errorDialog: false,
       controlsDrawer: true,
@@ -71,21 +66,11 @@ export default {
     };
   },
   computed: {
-    landingVisible() {
-      return this.internalRoute === 'landing';
-    },
     proxyManager() {
       return this.$store.state.proxyManager;
     },
-  },
-  watch: {
-    route(val) {
-      this.internalRoute = val;
-    },
-    internalRoute(val) {
-      if (this.internalRoute !== this.route) {
-        this.$emit('route', val);
-      }
+    landingVisible() {
+      return this.$store.state.route === 'landing';
     },
   },
   mounted() {
@@ -123,11 +108,11 @@ export default {
     this.renderListener.removeListeners();
   },
   methods: {
-    showLanding() {
-      this.internalRoute = 'landing';
-    },
     showApp() {
-      this.internalRoute = 'app';
+      this.$store.commit(mTypes.SHOW_APP);
+    },
+    showLanding() {
+      this.$store.commit(mTypes.SHOW_LANDING);
     },
     recordError(error) {
       this.errors.push(error);

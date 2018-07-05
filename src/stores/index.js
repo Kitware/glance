@@ -3,6 +3,7 @@ import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
 import Config from 'paraview-glance/src/config';
 import global from 'paraview-glance/src/stores/globalSettings';
+import mTypes from 'paraview-glance/src/stores/mutation-types';
 
 function createStore(proxyManager = null) {
   let pxm = proxyManager;
@@ -15,9 +16,18 @@ function createStore(proxyManager = null) {
   return new Vuex.Store({
     state: {
       proxyManager: pxm,
+      route: 'landing', // valid values: landing, app
     },
     modules: {
       global,
+    },
+    mutations: {
+      [mTypes.SHOW_LANDING](state) {
+        state.route = 'landing';
+      },
+      [mTypes.SHOW_APP](state) {
+        state.route = 'app';
+      },
     },
   });
 }

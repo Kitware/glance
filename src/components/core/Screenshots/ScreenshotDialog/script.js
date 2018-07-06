@@ -1,19 +1,9 @@
-import { Events } from 'paraview-glance/src/constants';
+import { mapState } from 'vuex';
 
 const FILE_TYPES = ['.png', '.jpeg', '.gif'];
 
 // ----------------------------------------------------------------------------
 // Component API
-// ----------------------------------------------------------------------------
-
-function onScreenshotTaken(screenshot) {
-  this.screenshot = screenshot;
-  this.filename = 'Untitled';
-  this.fileType = '.png';
-  this.visible = true;
-  this.generateImage();
-}
-
 // ----------------------------------------------------------------------------
 
 function generateImage() {
@@ -35,7 +25,7 @@ function generateImage() {
     ctx.drawImage(img, 0, 0);
 
     const imageType = `image/${this.fileType.substr(1)}`;
-    this.imageUrl = this.canvas.toDataURL();
+    this.imageUrl = this.canvas.toDataURL(imageType);
   });
 
   img.src = this.screenshot.imgSrc;
@@ -72,32 +62,38 @@ function save() {
 
 export default {
   name: 'ScreenshotDialog',
-  inject: ['$globalBus'],
   data() {
     return {
-      screenshot: null,
       filename: '',
-      visible: false,
       imageUrl: '',
       transparentBackground: false,
       fileType: '',
       fileTypes: FILE_TYPES,
     };
   },
+  computed: mapState('screenshots', {
+    screenshot: 'currentScreenshot',
+    showDialog: 'showDialog',
+  }),
   watch: {
     transparentBackground: generateImage,
+    showDialog(val) {
+      if (val) {
+        this.filename = 'Untitled';
+        this.fileType = '.png';
+        this.generateImage();
+      }
+    },
   },
   methods: {
-    onScreenshotTaken,
     generateImage,
     backgroundToFillStyle,
     save,
+    close() {
+      this.$store.commit('screenshots/closeDialog');
+    },
   },
   created() {
     this.canvas = document.createElement('canvas');
-    this.$globalBus.$on(Events.SCREENSHOT, this.onScreenshotTaken);
-  },
-  beforeDestory() {
-    this.$globalBus.$off(Events.SCREENSHOT, this.onScreenshotTaken);
   },
 };

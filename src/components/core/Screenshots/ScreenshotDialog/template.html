@@ -1,4 +1,4 @@
-<v-dialog v-model="visible" max-width="60%">
+<v-dialog :value="showDialog" @input="close" max-width="60%">
   <v-toolbar color="grey lighten-4" flat>
     <v-toolbar-title>Save Screenshot</v-toolbar-title>
   </v-toolbar>
@@ -25,7 +25,7 @@
                 <v-text-field
                   v-model="filename"
                   label="Filename"
-                  v-on:keyup.enter="visible = false; save()"
+                  v-on:keyup.enter="save(); close()"
                 />
               </v-flex>
               <v-flex xs4>
@@ -54,13 +54,13 @@
       <v-btn
         flat
         color="red"
-        @click.native="visible = false"
+        @click.native="close"
       >
         <span>Cancel</span>
       </v-btn>
       <v-btn
         color="secondary"
-        @click.native="visible = false; save()"
+        @click.native="save(); close()"
       >
         <span>Save</span>
       </v-btn>
@@ -68,7 +68,7 @@
         color="primary"
         :href="imageUrl"
         :download="filename + fileType"
-        @click.native="visible = false"
+        @click.native="close"
       >
         <span>Download</span>
       </v-btn>

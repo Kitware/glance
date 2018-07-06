@@ -1,4 +1,4 @@
-import { Events, Widgets } from 'paraview-glance/src/constants';
+import { Widgets } from 'paraview-glance/src/constants';
 import {
   DEFAULT_VIEW_TYPE,
   VIEW_TYPES,
@@ -191,7 +191,7 @@ function rollRight() {
 function screenCapture() {
   if (this.view) {
     this.view.captureImage().then((imgSrc) => {
-      this.$globalBus.$emit(Events.SCREENSHOT, {
+      this.takeScreenshot({
         imgSrc,
         viewName: this.view.getName(),
         viewData: this.viewData,
@@ -244,6 +244,12 @@ function viewTypes() {
   return this.view.getPresetToOrientationAxes() === 'lps'
     ? VIEW_TYPES_LPS
     : VIEW_TYPES;
+}
+
+// ----------------------------------------------------------------------------
+
+function takeScreenshot(screenshot) {
+  this.$store.commit('screenshots/takeScreenshot', screenshot);
 }
 
 // ----------------------------------------------------------------------------
@@ -313,7 +319,6 @@ function onBeforeDestroy() {
 
 export default {
   name: 'VtkView',
-  inject: ['$globalBus'],
   components: {
     PalettePicker,
     ToolbarSheet,
@@ -380,6 +385,7 @@ export default {
     toggleCrop,
     updateOrientation,
     viewTypes,
+    takeScreenshot,
   },
   mounted() {
     this.$nextTick(this.onMounted);

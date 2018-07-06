@@ -15,7 +15,7 @@
         v-bind:layout-count="views.length"
         v-bind:layout-view-type="order[index]"
         v-bind:viewData="viewData[view.getProxyId()]"
-        v-on:bg-change="setViewBackground(view, $event)"
+        v-on:bg-change="setViewBackground(view, arguments[0])"
         layoutManager
         :widgetManager="widgetManager"
       />

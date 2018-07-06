@@ -1,7 +1,6 @@
 import { mapState } from 'vuex';
 import macro from 'vtk.js/Sources/macro';
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
-import { Events } from 'paraview-glance/src/constants';
 
 const MAX_SLIDER_STEPS = 500;
 
@@ -202,13 +201,25 @@ function generateComponent(
     methods[`set${macro.capitalize(name)}`] = computed[name].set;
   });
   return {
-    inject: ['$globalBus'],
     props: ['source'],
     methods,
     data: function data() {
       return dataGenerator(fields);
     },
-    computed: Object.assign(computed, mapState(['proxyManager'])),
+    computed: Object.assign(
+      computed,
+      mapState({
+        proxyManager: 'proxyManager',
+        viewOrder: (state) => state.views.viewOrder,
+      })
+    ),
+    watch: {
+      viewOrder() {
+        if (dependOnLayout) {
+          this.$nextTick(this.$forceUpdate);
+        }
+      },
+    },
     created() {
       this.listenerHelper = vtkListenerHelper.newInstance(
         () => {
@@ -240,17 +251,9 @@ function generateComponent(
           this[options.onUpdate[i]]();
         }
       }
-      if (dependOnLayout) {
-        this.$globalBus.$on(Events.LAYOUT_CHANGE, () => {
-          this.$nextTick(this.$forceUpdate);
-        });
-      }
     },
     beforeDestroy() {
       this.listenerHelper.removeListeners();
-      if (dependOnLayout) {
-        this.$globalBus.$off(Events.LAYOUT_CHANGE, this.$forceUpdate);
-      }
       while (this.subscriptions.length) {
         this.subscriptions.pop()();
       }

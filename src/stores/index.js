@@ -5,6 +5,7 @@ import Config from 'paraview-glance/src/config';
 import global from 'paraview-glance/src/stores/globalSettings';
 import files from 'paraview-glance/src/stores/fileLoader';
 import screenshots from 'paraview-glance/src/stores/screenshots';
+import views from 'paraview-glance/src/stores/views';
 import mTypes from 'paraview-glance/src/stores/mutation-types';
 
 function createStore(proxyManager = null) {
@@ -24,6 +25,7 @@ function createStore(proxyManager = null) {
       global,
       files,
       screenshots,
+      views,
     },
     mutations: {
       [mTypes.SHOW_LANDING](state) {

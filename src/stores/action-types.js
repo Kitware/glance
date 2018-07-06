@@ -1,0 +1,7 @@
+const UPDATE_VIEWS = 'UPDATE_VIEWS';
+const UPDATE_LAYOUT = 'UPDATE_LAYOUT';
+
+export default {
+  UPDATE_LAYOUT,
+  UPDATE_VIEWS,
+};

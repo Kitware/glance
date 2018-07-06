@@ -2,7 +2,6 @@
 export const Events = {
   MSG_INFO: 'MSG_INFO',
   MSG_ERROR: 'MSG_ERROR',
-  LAYOUT_CHANGE: 'LAYOUT_CHANGE',
 };
 
 export const Messages = {

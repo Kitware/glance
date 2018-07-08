@@ -1,3 +1,4 @@
+import JSZip from 'jszip';
 import Vuex from 'vuex';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
@@ -7,6 +8,7 @@ import files from 'paraview-glance/src/stores/fileLoader';
 import screenshots from 'paraview-glance/src/stores/screenshots';
 import views from 'paraview-glance/src/stores/views';
 import mTypes from 'paraview-glance/src/stores/mutation-types';
+import aTypes from 'paraview-glance/src/stores/action-types';
 
 function createStore(proxyManager = null) {
   let pxm = proxyManager;
@@ -20,6 +22,7 @@ function createStore(proxyManager = null) {
     state: {
       proxyManager: pxm,
       route: 'landing', // valid values: landing, app
+      savingStateName: null,
     },
     modules: {
       global,
@@ -33,6 +36,52 @@ function createStore(proxyManager = null) {
       },
       [mTypes.SHOW_APP](state) {
         state.route = 'app';
+      },
+      [mTypes.SAVING_STATE](state, name = null) {
+        state.savingStateName = name;
+      },
+    },
+    actions: {
+      [aTypes.SAVE_STATE]({ commit, state }, fileNameToUse) {
+        const t = new Date();
+        const fileName =
+          fileNameToUse ||
+          `${t.getFullYear()}${t.getMonth() +
+            1}${t.getDate()}_${t.getHours()}-${t.getMinutes()}-${t.getSeconds()}.glance`;
+
+        commit(mTypes.SAVING_STATE, fileName);
+
+        const userData = { layout: 'Something...', settings: { bg: 'white' } };
+        const options = { recycleViews: true };
+        const zip = new JSZip();
+        zip.file(
+          'state.json',
+          JSON.stringify(
+            state.proxyManager.saveState(options, userData),
+            null,
+            2
+          )
+        );
+        console.log('zip entry added, start compression...');
+        zip
+          .generateAsync({
+            type: 'blob',
+            compression: 'DEFLATE',
+            compressionOptions: {
+              level: 6,
+            },
+          })
+          .then((blob) => {
+            console.log('file generated', this.fileName, blob.size);
+            const url = URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.setAttribute('href', url);
+            anchor.setAttribute('download', fileName);
+            anchor.click();
+            setTimeout(() => URL.revokeObjectURL(url), 60000);
+
+            commit(mTypes.SAVING_STATE, null);
+          });
       },
     },
   });

@@ -1,7 +1,11 @@
 const UPDATE_VIEWS = 'UPDATE_VIEWS';
 const UPDATE_LAYOUT = 'UPDATE_LAYOUT';
 
+const SAVE_STATE = 'SAVE_STATE';
+
 export default {
   UPDATE_LAYOUT,
   UPDATE_VIEWS,
+
+  SAVE_STATE,
 };

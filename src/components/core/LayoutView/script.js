@@ -34,7 +34,7 @@ export default {
       gridTemplateColumns(state) {
         return state.views.views.length < 2 ? '1fr' : '1fr 1fr';
       },
-    }),
+    })
   ),
   methods: Object.assign(
     {
@@ -43,7 +43,7 @@ export default {
     mapActions({
       updateViews: aTypes.UPDATE_VIEWS,
       updateLayout: aTypes.UPDATE_LAYOUT,
-    }),
+    })
   ),
   components: {
     VtkView,

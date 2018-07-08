@@ -17,6 +17,7 @@ import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
 import { Widgets } from 'paraview-glance/src/constants';
 import mTypes from 'paraview-glance/src/stores/mutation-types';
+import aTypes from 'paraview-glance/src/stores/action-types';
 
 export const $globalBus = new Vue();
 
@@ -127,7 +128,7 @@ export default {
       this.$store.dispatch('files/openFiles', files);
     },
     saveState() {
-      $globalBus.$emit('save-state');
+      this.$store.dispatch(aTypes.SAVE_STATE);
     },
   },
 };

@@ -1,4 +1,4 @@
-<div :class="{ [$style.overlay]: true, [$style.visible]: !!stage }">
+<div :class="{ [$style.overlay]: true, [$style.visible]: stage !== 'idle' }">
   <div :class="$style.dialog">
     <v-card raised :class="$style.card">
       <v-card-text
@@ -11,6 +11,7 @@
           </span>
         </div>
         <v-progress-linear
+          :indeterminate="indeterminateProgress"
           :value="totalProgress"
           height="10"
           color="info"
@@ -27,21 +28,21 @@
           <v-expansion-panel-content
             v-for="(file, i) in files"
             :key="i"
-            :hide-actions="!file.issue"
+            :hide-actions="!file.isRaw"
           >
             <div slot="header" class="body-2">
               {{ file.name }}
               <v-icon
-                v-show="file.issue"
+                v-show="file.isRaw"
                 :class="$style.icon"
               >
                 error
               </v-icon>
             </div>
-            <template v-if="file.name.endsWith('.raw')">
+            <template v-if="file.isRaw">
               <raw-file-reader
                 :file="file.file"
-                v-on:change="file.rawInfo = arguments[0]; file.issue = !arguments[1]"
+                v-on:change="setFileRawInfo(i, arguments[0])"
               />
             </template>
           </v-expansion-panel-content>
@@ -75,11 +76,11 @@
       </v-card-text>
       <v-card-actions v-if="stage === 'preload'" key="if-actions">
         <v-spacer />
-        <v-btn v-on:click="stage = ''">Cancel</v-btn>
+        <v-btn v-on:click="cancel">Cancel</v-btn>
         <v-btn
           color="primary"
-          :disabled="!preloadCanLoad()"
-          v-on:click="loadFiles"
+          :disabled="!preloadCanLoad"
+          v-on:click="readFiles"
         >
           Load files
         </v-btn>
@@ -88,7 +89,7 @@
         <v-spacer />
         <v-btn
           color="primary"
-          v-on:click="closeAndLoad"
+          v-on:click="closeAndTryToLoad"
         >
           ok
         </v-btn>

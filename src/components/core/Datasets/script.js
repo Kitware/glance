@@ -1,3 +1,5 @@
+import { mapState } from 'vuex';
+
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 
 import ColorByWidget from 'paraview-glance/src/components/controls/ColorBy';
@@ -63,12 +65,12 @@ function toggleDatasetVisibility(source) {
 
 export default {
   name: 'Datasets',
-  inject: ['proxyManager'],
   data() {
     return {
       datasets: [],
     };
   },
+  computed: mapState(['proxyManager']),
   created() {
     this.subscriptions = [];
     this.listenerHelper = vtkListenerHelper.newInstance(

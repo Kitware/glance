@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import Vue from 'vue';
+import Vuex from 'vuex';
 import Vuetify from 'vuetify';
 
 import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
@@ -14,11 +15,8 @@ import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
-import CropWidget from 'paraview-glance/src/vtkwidgets/CropWidget';
-import Store from 'paraview-glance/src/stores';
-import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
-import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
-import { Widgets } from 'paraview-glance/src/constants';
+import createStore from 'paraview-glance/src/stores';
+import { Mutations } from 'paraview-glance/src/stores/types';
 
 // Expose IO API to Glance global object
 export const {
@@ -30,10 +28,8 @@ export const {
   registerReadersToProxyManager,
 } = ReaderFactory;
 
+Vue.use(Vuex);
 Vue.use(Vuetify);
-
-// setup event bus
-Vue.prototype.$globalBus = new Vue();
 
 let activeProxyConfig = null;
 /**
@@ -49,34 +45,42 @@ export function setActiveProxyConfiguration(config) {
 
 export function createViewer(container, proxyConfig = null) {
   const proxyConfiguration = proxyConfig || activeProxyConfig || Config.Proxy;
-
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
-  const renderListener = vtkListenerHelper.newInstance(
-    proxyManager.autoAnimateViews,
-    () =>
-      [].concat(
-        proxyManager.getSources(),
-        proxyManager.getRepresentations(),
-        proxyManager.getViews()
-      )
-  );
 
-  proxyManager.onProxyRegistrationChange(renderListener.resetListeners);
-
-  const widgetManager = vtkWidgetManager.newInstance({ proxyManager });
-  widgetManager.registerWidgetGroup(Widgets.CROP, CropWidget);
+  const store = createStore(proxyManager);
 
   /* eslint-disable no-new */
-  const vm = new Vue({
+  new Vue({
     el: '#root-container',
-    store: Store,
     components: { App },
-    provide: {
-      proxyManager,
-      widgetManager,
-    },
-    template: '<App ref="app" />',
+    store,
+    template: '<App />',
   });
+
+  // support history-based navigation
+  function onRoute(event) {
+    console.log('route', event.state);
+    const state = event.state || {};
+    if (state.app) {
+      store.commit(Mutations.SHOW_APP);
+    } else {
+      store.commit(Mutations.SHOW_LANDING);
+    }
+  }
+  store.watch(
+    (state) => state.route,
+    (route) => {
+      const state = window.history.state || {};
+      if (route === 'landing' && state.app) {
+        window.history.back();
+      }
+      if (route === 'app' && !state.app) {
+        window.history.pushState({ app: true }, '');
+      }
+    }
+  );
+  window.history.replaceState({ app: false }, '');
+  window.addEventListener('popstate', onRoute);
 
   return {
     processURLArgs() {
@@ -85,7 +89,7 @@ export function createViewer(container, proxyConfig = null) {
         const names = typeof name === 'string' ? [name] : name;
         const urls = typeof url === 'string' ? [url] : url;
         const types = typeof type === 'string' ? [type] : type || [];
-        vm.$refs.app.loadRemoteDatasets(urls, names, types);
+        store.dispatch('files/openRemoteFiles', { urls, names, types });
       }
     },
   };

@@ -138,7 +138,6 @@ function onBeforeDestroy() {
 // ----------------------------------------------------------------------------
 
 export default {
-  inject: ['proxyManager'],
   props: {
     source: {
       type: Object,
@@ -146,6 +145,9 @@ export default {
     piecewiseFunction: {
       required: true,
       type: Object,
+    },
+    proxyManager: {
+      required: true,
     },
   },
   data() {

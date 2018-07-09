@@ -20,6 +20,9 @@ export const Actions = objEnum([
   // views
   'UPDATE_LAYOUT',
   'UPDATE_VIEWS',
+
+  // screenshots
+  'TAKE_SCREENSHOT',
 ]);
 
 export const Getters = objEnum([
@@ -59,7 +62,7 @@ export const Mutations = objEnum([
   'VIEWS_INIT_DATA', // private
 
   // screenshots
-  'TAKE_SCREENSHOT',
+  'OPEN_SCREENSHOT_DIALOG',
   'CLOSE_SCREENSHOT_DIALOG',
 ]);
 

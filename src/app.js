@@ -16,6 +16,7 @@ import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
 import createStore from 'paraview-glance/src/stores';
+import { Mutations } from 'paraview-glance/src/stores/types';
 
 // Expose IO API to Glance global object
 export const {
@@ -55,6 +56,31 @@ export function createViewer(container, proxyConfig = null) {
     store,
     template: '<App />',
   });
+
+  // support history-based navigation
+  function onRoute(event) {
+    console.log('route', event.state);
+    const state = event.state || {};
+    if (state.app) {
+      store.commit(Mutations.SHOW_APP);
+    } else {
+      store.commit(Mutations.SHOW_LANDING);
+    }
+  }
+  store.watch(
+    (state) => state.route,
+    (route) => {
+      const state = window.history.state || {};
+      if (route === 'landing' && state.app) {
+        window.history.back();
+      }
+      if (route === 'app' && !state.app) {
+        window.history.pushState({ app: true }, '');
+      }
+    }
+  );
+  window.history.replaceState({ app: false }, '');
+  window.addEventListener('popstate', onRoute);
 
   return {
     processURLArgs() {

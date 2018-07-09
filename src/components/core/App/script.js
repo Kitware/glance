@@ -9,7 +9,6 @@ import ErrorBox from 'paraview-glance/src/components/core/ErrorBox';
 import FileLoader from 'paraview-glance/src/components/core/FileLoader';
 import Landing from 'paraview-glance/src/components/core/Landing';
 import LayoutView from 'paraview-glance/src/components/core/LayoutView';
-import Notification from 'paraview-glance/src/components/core/Notification';
 import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 import StateFileGenerator from 'paraview-glance/src/components/core/StateFileGenerator';
 import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
@@ -18,8 +17,6 @@ import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
 import { Widgets } from 'paraview-glance/src/constants';
 import mTypes from 'paraview-glance/src/stores/mutation-types';
 import aTypes from 'paraview-glance/src/stores/action-types';
-
-export const $globalBus = new Vue();
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -36,13 +33,9 @@ export default {
     FileLoader,
     Landing,
     LayoutView,
-    Notification,
     Screenshots,
     StateFileGenerator,
     SvgIcon,
-  },
-  provide: {
-    $globalBus,
   },
   props: {
     widgetManager: {

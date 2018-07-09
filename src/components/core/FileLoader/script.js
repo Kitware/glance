@@ -1,7 +1,7 @@
-import { mapState } from 'vuex';
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 
 import RawFileReader from 'paraview-glance/src/components/core/RawFileReader';
-import mTypes from 'paraview-glance/src/stores/mutation-types';
+import { Actions, Getters, Mutations } from 'paraview-glance/src/stores/types';
 
 // ----------------------------------------------------------------------------
 
@@ -10,38 +10,37 @@ export default {
   components: {
     RawFileReader,
   },
-  computed: mapState('files', {
-    stage: 'stage',
-    files: 'files',
-    totalProgress() {
-      return this.$store.getters['files/totalProgress'];
-    },
-    preloadCanLoad() {
-      return this.$store.getters['files/rawFilesLoadable'];
-    },
-    indeterminateProgress() {
-      return this.$store.getters['files/indeterminateProgress'];
-    },
-  }),
-  methods: {
-    setFileRawInfo(fileIndex, rawInfo) {
-      this.$store.commit('files/setFileRawInfo', { fileIndex, rawInfo });
-    },
-    cancel() {
-      this.$store.commit('files/idle');
-    },
-    readFiles() {
-      this.$store.dispatch('files/readFiles');
-    },
-    closeAndTryToLoad() {
-      const allFilesErrored = this.files.reduce(
-        (flag, { error }) => flag && error,
-        true
-      );
-      if (!allFilesErrored) {
-        this.$store.commit(mTypes.SHOW_APP);
-      }
-      this.$store.commit('files/idle');
-    },
-  },
+  computed: Object.assign(
+    mapState({
+      stage: (state) => state.files.stage,
+      files: (state) => state.files.files,
+    }),
+    mapGetters({
+      totalProgress: Getters.FILE_TOTAL_PROGRESS,
+      preloadCanLoad: Getters.FILE_RAW_FILES_LOADABLE,
+      indeterminateProgress: Getters.FILE_INDETERMINATE_PROGRESS,
+    })
+  ),
+  methods: Object.assign(
+    mapMutations({
+      setFileRawInfo: (commit, fileIndex, rawInfo) =>
+        commit(Mutations.FILE_SET_RAW_INFO, { fileIndex, rawInfo }),
+
+      cancel: Mutations.FILE_IDLE,
+
+      closeAndTryToLoad(commit) {
+        const allFilesErrored = this.files.reduce(
+          (flag, { error }) => flag && error,
+          true
+        );
+        if (!allFilesErrored) {
+          commit(Mutations.SHOW_APP);
+        }
+        commit(Mutations.FILE_IDLE);
+      },
+    }),
+    mapActions({
+      readFiles: Actions.READ_FILES,
+    })
+  ),
 };

@@ -7,8 +7,7 @@ import global from 'paraview-glance/src/stores/globalSettings';
 import files from 'paraview-glance/src/stores/fileLoader';
 import screenshots from 'paraview-glance/src/stores/screenshots';
 import views from 'paraview-glance/src/stores/views';
-import mTypes from 'paraview-glance/src/stores/mutation-types';
-import aTypes from 'paraview-glance/src/stores/action-types';
+import { Mutations } from 'paraview-glance/src/stores/types';
 
 function createStore(proxyManager = null) {
   let pxm = proxyManager;
@@ -31,25 +30,25 @@ function createStore(proxyManager = null) {
       views,
     },
     mutations: {
-      [mTypes.SHOW_LANDING](state) {
+      SHOW_LANDING(state) {
         state.route = 'landing';
       },
-      [mTypes.SHOW_APP](state) {
+      SHOW_APP(state) {
         state.route = 'app';
       },
-      [mTypes.SAVING_STATE](state, name = null) {
+      SAVING_STATE(state, name = null) {
         state.savingStateName = name;
       },
     },
     actions: {
-      [aTypes.SAVE_STATE]({ commit, state }, fileNameToUse) {
+      SAVE_STATE({ commit, state }, fileNameToUse) {
         const t = new Date();
         const fileName =
           fileNameToUse ||
           `${t.getFullYear()}${t.getMonth() +
             1}${t.getDate()}_${t.getHours()}-${t.getMinutes()}-${t.getSeconds()}.glance`;
 
-        commit(mTypes.SAVING_STATE, fileName);
+        commit(Mutations.SAVING_STATE, fileName);
 
         const userData = { layout: 'Something...', settings: { bg: 'white' } };
         const options = { recycleViews: true };
@@ -80,7 +79,7 @@ function createStore(proxyManager = null) {
             anchor.click();
             setTimeout(() => URL.revokeObjectURL(url), 60000);
 
-            commit(mTypes.SAVING_STATE, null);
+            commit(Mutations.SAVING_STATE, null);
           });
       },
     },

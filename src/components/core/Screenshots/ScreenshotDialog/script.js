@@ -1,5 +1,7 @@
 import { mapState } from 'vuex';
 
+import { Mutations } from 'paraview-glance/src/stores/types';
+
 const FILE_TYPES = ['.png', '.jpeg', '.gif'];
 
 // ----------------------------------------------------------------------------
@@ -71,9 +73,9 @@ export default {
       fileTypes: FILE_TYPES,
     };
   },
-  computed: mapState('screenshots', {
-    screenshot: 'currentScreenshot',
-    showDialog: 'showDialog',
+  computed: mapState({
+    screenshot: (state) => state.screenshots.currentScreenshot,
+    showDialog: (state) => state.screenshots.showDialog,
   }),
   watch: {
     transparentBackground: generateImage,
@@ -90,7 +92,7 @@ export default {
     backgroundToFillStyle,
     save,
     close() {
-      this.$store.commit('screenshots/closeDialog');
+      this.$store.commit(Mutations.CLOSE_SCREENSHOT_DIALOG);
     },
   },
   created() {

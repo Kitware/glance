@@ -1,15 +1,14 @@
 import { mapActions, mapState } from 'vuex';
 
 import VtkView from 'paraview-glance/src/components/core/VtkView';
-import mTypes from 'paraview-glance/src/stores/mutation-types';
-import aTypes from 'paraview-glance/src/stores/action-types';
+import { Actions, Mutations } from 'paraview-glance/src/stores/types';
 
 // ----------------------------------------------------------------------------
 // Component API
 // ----------------------------------------------------------------------------
 
 function setViewBackground(view, background) {
-  this.$store.commit(mTypes.VIEW_SET_BACKGROUND, {
+  this.$store.commit(Mutations.VIEW_SET_BACKGROUND, {
     viewId: view.getProxyId(),
     background,
   });
@@ -41,8 +40,8 @@ export default {
       setViewBackground,
     },
     mapActions({
-      updateViews: aTypes.UPDATE_VIEWS,
-      updateLayout: aTypes.UPDATE_LAYOUT,
+      updateViews: Actions.UPDATE_VIEWS,
+      updateLayout: Actions.UPDATE_LAYOUT,
     })
   ),
   components: {

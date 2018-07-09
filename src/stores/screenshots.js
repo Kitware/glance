@@ -1,17 +1,15 @@
 export default {
-  namespaced: true,
-
   state: {
     showDialog: false,
     currentScreenshot: null,
   },
 
   mutations: {
-    takeScreenshot(state, screenshot) {
+    TAKE_SCREENSHOT(state, screenshot) {
       state.currentScreenshot = screenshot;
       state.showDialog = true;
     },
-    closeDialog(state) {
+    CLOSE_SCREENSHOT_DIALOG(state) {
       state.showDialog = false;
     },
   },

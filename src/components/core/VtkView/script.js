@@ -1,3 +1,5 @@
+import { mapMutations } from 'vuex';
+
 import { Widgets } from 'paraview-glance/src/constants';
 import {
   DEFAULT_VIEW_TYPE,
@@ -10,6 +12,7 @@ import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker'
 import ToolbarSheet from 'paraview-glance/src/components/core/ToolbarSheet';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
+import { Mutations } from 'paraview-glance/src/stores/types';
 
 const ROTATION_STEP = 2;
 
@@ -247,12 +250,6 @@ function viewTypes() {
 }
 
 // ----------------------------------------------------------------------------
-
-function takeScreenshot(screenshot) {
-  this.$store.commit('screenshots/takeScreenshot', screenshot);
-}
-
-// ----------------------------------------------------------------------------
 // Vue LifeCycle
 // ----------------------------------------------------------------------------
 
@@ -367,26 +364,30 @@ export default {
       return this.layoutViewType || viewHelper.getViewType(this.view);
     },
   },
-  methods: {
-    changeViewType,
-    deleteCropWidget,
-    getAvailableActions,
-    onBeforeDestroy,
-    onMounted,
-    orientationLabels,
-    quadView,
-    resetCamera,
-    resetCrop,
-    rollLeft,
-    rollRight,
-    screenCapture,
-    singleView,
-    splitView,
-    toggleCrop,
-    updateOrientation,
-    viewTypes,
-    takeScreenshot,
-  },
+  methods: Object.assign(
+    {
+      changeViewType,
+      deleteCropWidget,
+      getAvailableActions,
+      onBeforeDestroy,
+      onMounted,
+      orientationLabels,
+      quadView,
+      resetCamera,
+      resetCrop,
+      rollLeft,
+      rollRight,
+      screenCapture,
+      singleView,
+      splitView,
+      toggleCrop,
+      updateOrientation,
+      viewTypes,
+    },
+    mapMutations({
+      takeScreenshot: Mutations.TAKE_SCREENSHOT,
+    })
+  ),
   mounted() {
     this.$nextTick(this.onMounted);
   },

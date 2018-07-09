@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { mapActions, mapMutations } from 'vuex';
 
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
@@ -15,8 +15,7 @@ import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
 import { Widgets } from 'paraview-glance/src/constants';
-import mTypes from 'paraview-glance/src/stores/mutation-types';
-import aTypes from 'paraview-glance/src/stores/action-types';
+import { Actions, Mutations } from 'paraview-glance/src/stores/types';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -101,27 +100,25 @@ export default {
     this.pxmSub.unsubscribe();
     this.renderListener.removeListeners();
   },
-  methods: {
-    showApp() {
-      this.$store.commit(mTypes.SHOW_APP);
-    },
-    showLanding() {
-      this.$store.commit(mTypes.SHOW_LANDING);
-    },
-    recordError(error) {
-      this.errors.push(error);
-    },
-    promptUserFiles() {
-      this.$store.dispatch('files/promptForFiles');
-    },
-    openUrls(urls, names) {
-      this.$store.dispatch('files/openRemoteFiles', { urls, names });
-    },
-    openFiles(files) {
-      this.$store.dispatch('files/openFiles', files);
-    },
-    saveState() {
-      this.$store.dispatch(aTypes.SAVE_STATE);
-    },
-  },
+  methods: Object.assign(
+    mapMutations({
+      showApp: Mutations.SHOW_APP,
+      showLanding: Mutations.SHOW_LANDING,
+    }),
+    mapActions({
+      promptUserFiles: Actions.PROMPT_FOR_FILES,
+
+      openUrls: (dispatch, urls, names) =>
+        dispatch(Actions.OPEN_REMOTE_FILES, { urls, names }),
+
+      openFiles: (dispatch, files) => dispatch(Actions.OPEN_FILES, files),
+
+      saveState: Actions.SAVE_STATE,
+    }),
+    {
+      recordError(error) {
+        this.errors.push(error);
+      },
+    }
+  ),
 };

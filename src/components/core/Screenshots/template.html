@@ -1,4 +1,4 @@
-<v-card>
+<div :class="$style.container">
   <v-toolbar color="transparent" flat>
     <v-toolbar-title>Screenshots</v-toolbar-title>
     <v-spacer />
@@ -9,7 +9,24 @@
       <v-icon>arrow_forward</v-icon>
     </v-btn>
   </v-toolbar>
-  <v-expansion-panel expand>
+  <div
+    v-show="!atLeastOneScreenshot"
+    :class="$style.emptyState"
+  >
+    <v-icon large>photo_library</v-icon>
+    <span class="subheading grey--text text--darken-1">No screenshots yet!</span>
+    <v-btn
+      :class="$style.takeScreenshot"
+      :disabled="!activeView"
+      v-on:click="takeScreenshot"
+    >
+      Capture Active View
+    </v-btn>
+  </div>
+  <v-expansion-panel
+    v-show="atLeastOneScreenshot"
+    expand
+  >
     <v-expansion-panel-content
       v-for="name in Object.keys(screenshots)"
       :key="name"
@@ -75,4 +92,4 @@
   <screenshot-dialog
     v-on:save="addScreenshot"
   />
-</v-card>
+</div>

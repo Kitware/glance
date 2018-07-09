@@ -1,3 +1,19 @@
+.container {
+  height: 100%;
+}
+
+.emptyState {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.takeScreenshot {
+  margin-top: 16px;
+}
+
 .filename {
   overflow: hidden;
   text-overflow: ellipsis;

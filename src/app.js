@@ -59,7 +59,6 @@ export function createViewer(container, proxyConfig = null) {
 
   // support history-based navigation
   function onRoute(event) {
-    console.log('route', event.state);
     const state = event.state || {};
     if (state.app) {
       store.commit(Mutations.SHOW_APP);

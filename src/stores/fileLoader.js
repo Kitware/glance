@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import JSZip from 'jszip';
 import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
@@ -67,19 +66,23 @@ function readRawFile(file, { dimensions, spacing, dataType }) {
 
 // ----------------------------------------------------------------------------
 
-function loadState(file) {
-  return new Promise((resolve) => {
-    const zip = new JSZip();
-    zip.loadAsync(file).then(() => {
-      zip.forEach((relativePath, zipEntry) => {
-        if (relativePath.match(/state\.json$/i)) {
-          zipEntry.async('string').then((txt) => {
-            resolve(JSON.parse(txt));
-          });
-        }
+function onLoadOkay(commit) {
+  commit(Mutations.FILE_IDLE);
+  commit(Mutations.SHOW_APP);
+}
+
+// ----------------------------------------------------------------------------
+
+function onLoadErrored(commit, errors) {
+  for (let i = 0; i < errors.length; ++i) {
+    if (errors[i]) {
+      commit(Mutations.FILE_SET_ERROR, {
+        fileIndex: i,
+        error: errors[i],
       });
-    });
-  });
+    }
+  }
+  commit(Mutations.FILE_ERROR);
 }
 
 // ----------------------------------------------------------------------------
@@ -147,24 +150,39 @@ export default {
         ReaderFactory.listSupportedExtensions()
       );
       ReaderFactory.openFiles(exts, (files) =>
-        dispatch(Actions.OPEN_FILES, files)
+        dispatch(
+          Actions.OPEN_FILES,
+          Array.from(files).map((file) => ({ file }))
+        )
       );
     },
-    OPEN_FILES({ commit, dispatch }, fileList) {
-      const files = Array.from(fileList).map((file) => ({
-        type: 'file',
-        name: file.name,
-        file,
-        extension: file.name.split('.').pop(),
-        isRaw: file.name.endsWith('.raw'),
-        rawInfo: null,
-      }));
+    /**
+     *
+     * @param {Object[]} fileList list of files to open
+     * @param {file} fileList[].file File object
+     * @param {name?} fileList[].name full name of file
+     * @param {isRaw?} fileList[].extension extension of ifle
+     */
+    OPEN_FILES({ commit, dispatch, rootState }, fileList) {
+      const files = Array.from(fileList)
+        .map((fileSpec) => ({
+          type: 'file',
+          name: fileSpec.name || fileSpec.file.name,
+          file: fileSpec.file,
+          rawInfo: fileSpec.rawInfo,
+        }))
+        .map((fileSpec) =>
+          Object.assign(fileSpec, {
+            extension: fileSpec.name.split('.').pop(),
+            isRaw: fileSpec.name.endsWith('.raw'),
+          })
+        );
 
       commit(Mutations.FILE_SET_FILES, files);
 
       let preload = false;
       for (let i = 0; i < files.length; ++i) {
-        if (files[i].isRaw) {
+        if (files[i].isRaw && !files[i].rawInfo) {
           preload = true;
           break;
         }
@@ -173,7 +191,17 @@ export default {
       if (preload) {
         commit(Mutations.FILE_PRELOAD);
       } else {
-        dispatch(Actions.READ_FILES);
+        dispatch(Actions.READ_FILES, files)
+          // load state files, if any
+          .then((readers) => dispatch(Actions.LOAD_STATE, readers))
+          .then((readers) =>
+            ReaderFactory.registerReadersToProxyManager(
+              readers,
+              rootState.proxyManager
+            )
+          )
+          .then(() => onLoadOkay(commit))
+          .catch((errors) => onLoadErrored(commit, errors));
       }
     },
     OPEN_REMOTE_FILES(
@@ -188,6 +216,25 @@ export default {
         }));
 
         commit(Mutations.FILE_SET_FILES, files);
+        dispatch(Actions.READ_REMOTE_FILES, { urls, names })
+          // load state files, if any
+          .then((readers) => dispatch(Actions.LOAD_STATE, readers))
+          .then((readers) =>
+            ReaderFactory.registerReadersToProxyManager(
+              readers.map(({ reader, sourceType }, i) => ({
+                reader,
+                name: names[i],
+                sourceType: types[i] || sourceType,
+              })),
+              rootState.proxyManager
+            )
+          )
+          .then(() => onLoadOkay(commit))
+          .catch((errors) => onLoadErrored(commit, errors));
+      }
+    },
+    READ_REMOTE_FILES({ commit }, { urls, names }) {
+      if (urls && urls.length && names && names.length) {
         commit(Mutations.FILE_LOAD);
 
         const progressCb = (index) => (progress) =>
@@ -199,81 +246,70 @@ export default {
         const promises = [];
         for (let i = 0; i < urls.length; ++i) {
           promises.push(
-            ReaderFactory.downloadDataset(
-              names[i],
-              urls[i],
-              progressCb(i)
-            ).then(({ reader, sourceType }) =>
-              ReaderFactory.registerReadersToProxyManager(
-                [
-                  {
-                    reader,
-                    name: names[i],
-                    sourceType: types[i] || sourceType,
-                  },
-                ],
-                rootState.proxyManager
-              )
-            )
+            ReaderFactory.downloadDataset(names[i], urls[i], progressCb(i))
           );
         }
 
-        dispatch(Actions.FILE_HANDLE_LOAD_RESULTS, promises);
+        return allWithErrors(promises);
       }
+      return Promise.reject();
     },
-    READ_FILES({ state, commit, dispatch, rootState }) {
+    /**
+     *
+     * @param {Object[]} files list of files to open
+     * @param {file} files[].file File object
+     * @param {name} files[].name full name of file
+     * @param {rawInfo} files[].extension extension of ifle
+     */
+    READ_FILES({ commit }, files) {
       commit(Mutations.FILE_LOAD);
 
-      const promises = state.files.map((file) => {
+      const promises = files.map((file) => {
         // Handle raw
         if (file.rawInfo) {
-          return readRawFile(file.file, file.rawInfo).then((dataset) =>
-            ReaderFactory.registerReadersToProxyManager(
-              [
-                {
-                  name: file.name,
-                  dataset,
-                },
-              ],
-              rootState.proxyManager
-            )
-          );
+          return readRawFile(file.file, file.rawInfo).then((dataset) => ({
+            name: file.name,
+            dataset,
+          }));
         }
 
-        // Handle state file
-        if (file.extension === 'glance') {
-          return loadState(file.file).then((appState) =>
-            rootState.proxyManager.loadState(appState)
-          );
-        }
-
-        return ReaderFactory.loadFiles([file.file]).then((readers) =>
-          ReaderFactory.registerReadersToProxyManager(
-            readers,
-            rootState.proxyManager
-          )
+        return ReaderFactory.loadFiles([file.file]).then(
+          // only return single reader
+          (readers) => readers[0]
         );
       });
 
-      dispatch(Actions.FILE_HANDLE_LOAD_RESULTS, promises);
+      return allWithErrors(promises);
     },
-    FILE_HANDLE_LOAD_RESULTS({ commit }, promises) {
-      allWithErrors(promises)
-        .then(() => {
-          commit(Mutations.FILE_IDLE);
-          commit(Mutations.SHOW_APP, null, { root: true });
-        })
-        .catch((errors) => {
-          for (let i = 0; i < errors.length; ++i) {
-            if (errors[i]) {
-              commit(Mutations.FILE_SET_ERROR, {
-                fileIndex: i,
-                error: errors[i],
-              });
-            }
-          }
-          commit(Mutations.FILE_ERROR);
-        });
+    LOAD_STATE({ dispatch, rootState }, readers) {
+      // technically should only be loading a single state file
+      let stateReader;
+      const otherReaders = [];
+      readers.forEach((r) => {
+        if (r.reader.isA && r.reader.isA('vtkGlanceStateReader')) {
+          stateReader = r.reader;
+        } else {
+          otherReaders.push(r);
+        }
+      });
+
+      if (stateReader) {
+        return stateReader
+          .loadRemoteDatasets((name, url) =>
+            dispatch(Actions.READ_REMOTE_FILES, {
+              urls: [url],
+              names: [name],
+            }).then((rdrs) =>
+              // only loaded 1 dataset
+              rdrs[0].reader.getOutputData()
+            )
+          )
+          .then(() => {
+            rootState.proxyManager.loadState(stateReader.getAppState());
+            return otherReaders;
+          });
+      }
+      return Promise.resolve(otherReaders);
     },
   },
 };

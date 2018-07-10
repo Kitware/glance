@@ -13,6 +13,7 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
+import vtkGlanceStateReader from 'paraview-glance/src/io/GlanceStateReader';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
 import createStore from 'paraview-glance/src/stores';
@@ -48,6 +49,14 @@ export function createViewer(container, proxyConfig = null) {
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
 
   const store = createStore(proxyManager);
+
+  // enable loading of *.glance files
+  registerReader({
+    extension: 'glance',
+    name: 'Glance State Reader',
+    vtkReader: vtkGlanceStateReader,
+    binary: true,
+  });
 
   /* eslint-disable no-new */
   new Vue({

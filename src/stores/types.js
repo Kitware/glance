@@ -15,7 +15,8 @@ export const Actions = objEnum([
   'OPEN_FILES',
   'OPEN_REMOTE_FILES',
   'READ_FILES',
-  'FILE_HANDLE_LOAD_RESULTS', // private
+  'READ_REMOTE_FILES',
+  'LOAD_STATE', // private
 
   // views
   'UPDATE_LAYOUT',

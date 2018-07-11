@@ -17,7 +17,7 @@ import vtkGlanceStateReader from 'paraview-glance/src/io/GlanceStateReader';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
 import createStore from 'paraview-glance/src/stores';
-import { Mutations } from 'paraview-glance/src/stores/types';
+import { Actions, Mutations } from 'paraview-glance/src/stores/types';
 
 // Expose IO API to Glance global object
 export const {
@@ -97,7 +97,7 @@ export function createViewer(container, proxyConfig = null) {
         const names = typeof name === 'string' ? [name] : name;
         const urls = typeof url === 'string' ? [url] : url;
         const types = typeof type === 'string' ? [type] : type || [];
-        store.dispatch('files/openRemoteFiles', { urls, names, types });
+        store.dispatch(Actions.OPEN_REMOTE_FILES, { urls, names, types });
       }
     },
   };

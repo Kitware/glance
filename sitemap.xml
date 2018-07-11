@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://kitware.github.io/paraview-glance/index.html</loc>
+    
+    <lastmod>2018-07-11T20:03:13.168Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://kitware.github.io/paraview-glance/doc/readers.html</loc>
     
     <lastmod>2018-06-25T21:31:49.426Z</lastmod>
@@ -19,13 +26,6 @@
     <loc>https://kitware.github.io/paraview-glance/doc/index.html</loc>
     
     <lastmod>2018-06-25T21:31:49.422Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://kitware.github.io/paraview-glance/index.html</loc>
-    
-    <lastmod>2018-06-22T15:45:37.759Z</lastmod>
     
   </url>
   

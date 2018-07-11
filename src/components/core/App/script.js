@@ -1,4 +1,4 @@
-import { mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
@@ -58,14 +58,15 @@ export default {
       errors: [],
     };
   },
-  computed: {
-    proxyManager() {
-      return this.$store.state.proxyManager;
+  computed: mapState({
+    proxyManager: 'proxyManager',
+    landingVisible: (state) => state.route === 'landing',
+    screenshotsDrawerStateless(state) {
+      // Keep screenshot drawer open if screenshot was taken from
+      // the "Capture Active View" button.
+      return this.screenshotsDrawer && !!state.screenshots.showDialog;
     },
-    landingVisible() {
-      return this.$store.state.route === 'landing';
-    },
-  },
+  }),
   mounted() {
     this.renderListener = vtkListenerHelper.newInstance(
       this.proxyManager.autoAnimateViews,

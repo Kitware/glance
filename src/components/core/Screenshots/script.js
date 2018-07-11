@@ -1,4 +1,7 @@
+import { mapState } from 'vuex';
+
 import ScreenshotDialog from 'paraview-glance/src/components/core/Screenshots/ScreenshotDialog';
+import { Actions } from 'paraview-glance/src/stores/types';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -49,6 +52,12 @@ function getTotalCount() {
 
 // ----------------------------------------------------------------------------
 
+function takeScreenshot() {
+  this.$store.dispatch(Actions.TAKE_SCREENSHOT, this.activeView);
+}
+
+// ----------------------------------------------------------------------------
+
 export default {
   name: 'Screenshots',
   components: {
@@ -58,12 +67,34 @@ export default {
     return {
       // viewName::String -> [Screenshot]
       screenshots: {},
+      activeView: null,
     };
   },
+  computed: Object.assign(mapState(['proxyManager']), {
+    atLeastOneScreenshot() {
+      const names = Object.keys(this.screenshots);
+      for (let i = 0; i < names.length; ++i) {
+        const list = this.screenshots[names[i]];
+        if (list && list.length) {
+          return true;
+        }
+      }
+      return false;
+    },
+  }),
   methods: {
     addScreenshot,
     deleteScreenshot,
     viewScreenshot,
     getTotalCount,
+    takeScreenshot,
+  },
+  mounted() {
+    this.subscription = this.proxyManager.onActiveViewChange((view) => {
+      this.activeView = view;
+    });
+  },
+  beforeDestroy() {
+    this.subscription.unsubscribe();
   },
 };

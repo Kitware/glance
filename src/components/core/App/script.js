@@ -108,10 +108,12 @@ export default {
     mapActions({
       promptUserFiles: Actions.PROMPT_FOR_FILES,
 
-      openUrls: (dispatch, urls, names) => {
+      openSample: (dispatch, urls, names) => {
         // dispatch: delete all loaded files since this is only called
         // by clicking on sample data
-        dispatch(Actions.OPEN_REMOTE_FILES, { urls, names });
+        dispatch(Actions.OPEN_REMOTE_FILES, { urls, names }).then(() =>
+          dispatch(Actions.RESET_WORKSPACE)
+        );
       },
 
       openFiles: (dispatch, files) =>

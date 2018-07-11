@@ -9,6 +9,7 @@ function objEnum(names) {
 export const Actions = objEnum([
   // index
   'SAVE_STATE',
+  'RESET_WORKSPACE',
 
   // files
   'PROMPT_FOR_FILES',

@@ -12,6 +12,8 @@ module.exports = merge(baseConfig, {
   optimization: {
     minimizer: [
       new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
         uglifyOptions: {
           compress: {
             // uglifyjs bug: https://github.com/webpack/webpack/issues/6567

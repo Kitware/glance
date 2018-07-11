@@ -96,10 +96,9 @@ function updateOrientation(mode) {
 
 function deleteCropWidget() {
   const cropWidget = this.view.getReferenceByName('cropWidget');
-  if (cropWidget) {
-    this.widgetManager.destroyWidget(cropWidget);
-    this.view.set({ cropWidget: null }, true);
-  }
+  this.widgetManager.destroyWidget(cropWidget);
+  this.view.set({ cropWidget: null }, true);
+  this.isCropping = false;
 }
 
 // ----------------------------------------------------------------------------
@@ -109,11 +108,16 @@ function toggleCrop() {
 
   if (cropWidget) {
     this.deleteCropWidget();
-    this.isCropping = false;
   } else {
-    const volumeRep = this.proxyManager
-      .getRepresentations()
-      .find((r) => r.getProxyName() === 'Volume');
+    const activeSource = this.proxyManager.getActiveSource();
+    if (!activeSource) {
+      return;
+    }
+
+    const volumeRep = this.proxyManager.getRepresentation(
+      activeSource,
+      this.view
+    );
 
     if (!volumeRep) {
       // TODO warn user
@@ -146,6 +150,21 @@ function toggleCrop() {
           .onModified(() => this.$nextTick(this.$forceUpdate)).unsubscribe
       );
     }
+
+    // work-around for deleting crop widget correctly
+    const pxmSub = this.proxyManager.onProxyRegistrationChange((changeInfo) => {
+      // remove crop widgets on volumes if volume is deleted
+      if (changeInfo.action === 'unregister') {
+        if (changeInfo.proxyName === 'Volume') {
+          this.widgetManager.destroyWidgetFromContextProxy(changeInfo.proxyId);
+          if (!this.widgetManager.hasWidget(cropWidget)) {
+            // this means the widget manager deleted the crop widget
+            this.deleteCropWidget();
+            pxmSub.unsubscribe();
+          }
+        }
+      }
+    });
   }
 }
 
@@ -268,12 +287,15 @@ function onMounted() {
       viewHelper.updateViewsAnnotation(this.proxyManager);
       this.$forceUpdate();
     }).unsubscribe,
+
     this.view.onModified(() => {
       this.$forceUpdate();
     }).unsubscribe,
+
     this.proxyManager.onActiveViewChange(() => {
       this.$forceUpdate();
     }).unsubscribe,
+
     this.proxyManager.onActiveSourceChange(() => {
       if (this.view.bindRepresentationToManipulator) {
         const activeSource = this.proxyManager.getActiveSource();

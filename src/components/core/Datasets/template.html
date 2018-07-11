@@ -1,6 +1,7 @@
 <v-expansion-panel expand>
   <v-expansion-panel-content
     v-for="(source, index) in datasets"
+    v-show="source !== proxyToDelete"
     :key="source.getProxyId()"
     :class="$style.datasetPanel"
     :value="true"

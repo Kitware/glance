@@ -37,8 +37,15 @@ function onBeforeDestroy() {
 // ----------------------------------------------------------------------------
 
 function deleteDataset(proxy) {
-  this.proxyManager.deleteProxy(proxy);
-  this.proxyManager.renderAllViews();
+  this.proxyToDelete = proxy;
+  // work-around for bug where vuetify's menu loses its activator
+  // when deleting datasets. Waiting 100ms should be enough time
+  // for vuetify's menu to hide before actually deleting the dataset.
+  window.setTimeout(() => {
+    this.proxyManager.deleteProxy(proxy);
+    this.proxyManager.renderAllViews();
+    this.proxyToDelete = null;
+  }, 100);
 }
 
 // ----------------------------------------------------------------------------
@@ -68,6 +75,7 @@ export default {
   data() {
     return {
       datasets: [],
+      proxyToDelete: null,
     };
   },
   computed: mapState(['proxyManager']),

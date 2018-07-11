@@ -287,7 +287,8 @@ export default {
       if (repGeometry) {
         const colorByValue = repGeometry.getColorBy();
         this.arrayName = colorByValue[0];
-        this.colorBy = colorByValue.join(':');
+        // only get name and location of colorBy array
+        this.colorBy = colorByValue.slice(0, 2).join(':');
         const propUI = repGeometry
           .getReferenceByName('ui')
           .find((item) => item.name === 'colorBy');
@@ -300,7 +301,8 @@ export default {
         this.available = 'volume';
         const colorByValue = repVolume.getColorBy();
         this.arrayName = colorByValue[0];
-        this.colorBy = colorByValue.join(':');
+        // only get name and location of colorBy array
+        this.colorBy = colorByValue.slice(0, 2).join(':');
         this.dataRange = repVolume.getDataArray().getRange();
         const propUI = repVolume
           .getReferenceByName('ui')

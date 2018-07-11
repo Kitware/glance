@@ -57,7 +57,7 @@
         :class="$style.toolbarButton"
         :disabled="landingVisible"
         flat
-        v-on:click="saveState"
+        v-on:click="saveState()"
       >
         <v-icon>cloud_download</v-icon>
         <span>Save state</span>
@@ -87,7 +87,7 @@
         v-if="landingVisible"
         key="if-landing"
         v-on:open="promptUserFiles"
-        v-on:open-urls="openUrls"
+        v-on:open-urls="openSample"
         v-on:open-files="openFiles"
       />
       <layout-view

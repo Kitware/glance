@@ -108,10 +108,19 @@ export default {
     mapActions({
       promptUserFiles: Actions.PROMPT_FOR_FILES,
 
-      openUrls: (dispatch, urls, names) =>
-        dispatch(Actions.OPEN_REMOTE_FILES, { urls, names }),
+      openSample: (dispatch, urls, names) => {
+        // dispatch: delete all loaded files since this is only called
+        // by clicking on sample data
+        dispatch(Actions.OPEN_REMOTE_FILES, { urls, names }).then(() =>
+          dispatch(Actions.RESET_WORKSPACE)
+        );
+      },
 
-      openFiles: (dispatch, files) => dispatch(Actions.OPEN_FILES, files),
+      openFiles: (dispatch, files) =>
+        dispatch(
+          Actions.OPEN_FILES,
+          Array.from(files).map((file) => ({ file }))
+        ),
 
       saveState: Actions.SAVE_STATE,
     }),

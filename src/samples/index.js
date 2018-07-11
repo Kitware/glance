@@ -5,18 +5,13 @@ export default [
   {
     label: '202-t + Edges',
     image: Images.CAD,
-    url: 'https://kitware.github.io/vtk-js-datasets/data/vtp/202-t.vtp',
     size: '112 KB',
     description: 'T-Handle, Flanged Base, Solid Bar',
     acknowledgement: 'https://www.traceparts.com/',
     datasets: [
       {
-        name: '202-t.vtp',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/vtp/202-t.vtp',
-      },
-      {
-        name: '202-t-edges.vtp',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/vtp/202-t-edges.vtp',
+        name: '202-t.glance',
+        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/202-t.glance',
       },
     ],
   },
@@ -27,8 +22,8 @@ export default [
     description: 'an enzyme that catalyzes the destruction of the cell walls of certain bacteria, occurring notably in tears and egg white.',
     datasets: [
       {
-        name: 'Lysozyme.pdb',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/pdb/2LYZ.pdb',
+        name: 'Lysozyme.glance',
+        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/lysozyme.glance',
       },
     ],
   },
@@ -38,8 +33,8 @@ export default [
     size: '1.6 MB',
     datasets: [
       {
-        name: 'Tooth.nrrd',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/nrrd/tooth.nrrd',
+        name: 'Tooth.glance',
+        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/Tooth.glance',
       },
     ],
   },
@@ -49,8 +44,8 @@ export default [
     size: '3.1 MB',
     datasets: [
       {
-        name: 'Engine.vti',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/vti/engine.vti',
+        name: 'Engine.glance',
+        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/Engine.glance',
       },
     ],
     acknowledgement: 'General Electric',
@@ -63,8 +58,8 @@ export default [
     description: 'Aerial LIDAR data',
     datasets: [
       {
-        name: 'lidar.vtp',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/vtp/lidar.vtp',
+        name: 'lidar.glance',
+        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/lidar.glance',
       },
     ],
   },
@@ -76,8 +71,8 @@ export default [
     acknowledgement: "Simulation data from Hydra-TH",
     datasets: [
       {
-        name: 'SinglePin.vtp',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/vtp/single-pin.vtp',
+        name: 'SinglePin.glance',
+        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/SinglePin.glance',
       },
     ],
   },
@@ -87,8 +82,8 @@ export default [
     size: '10.1 MB',
     datasets: [
       {
-        name: 'skull.nrrd',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/nrrd/skull.nrrd',
+        name: 'skull.glance',
+        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/skull.glance',
       },
     ],
     acknowledgement: 'Siemens Medical Solutions, Forchheim, Germany',
@@ -100,8 +95,8 @@ export default [
     size: '1.5 MB',
     datasets: [
       {
-        name: 'LIDC2.mha',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/mha/LIDC2.mha',
+        name: 'LIDC2.glance',
+        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/LIDC2.glance',
       },
     ],
   },
@@ -111,8 +106,8 @@ export default [
     size: '348 KB',
     datasets: [
       {
-        name: 'Aneurism.vti',
-        url: 'https://kitware.github.io/vtk-js-datasets/data/vti/aneurism.vti',
+        name: 'Aneurism.glance',
+        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/Aneurism.glance',
       },
     ],
     acknowledgement: 'Philips Research, Hamburg, Germany',

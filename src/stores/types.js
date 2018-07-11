@@ -9,13 +9,15 @@ function objEnum(names) {
 export const Actions = objEnum([
   // index
   'SAVE_STATE',
+  'RESET_WORKSPACE',
 
   // files
   'PROMPT_FOR_FILES',
   'OPEN_FILES',
   'OPEN_REMOTE_FILES',
   'READ_FILES',
-  'FILE_HANDLE_LOAD_RESULTS', // private
+  'READ_REMOTE_FILES',
+  'LOAD_STATE', // private
 
   // views
   'UPDATE_LAYOUT',

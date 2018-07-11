@@ -40,7 +40,7 @@ export default {
       },
     }),
     mapActions({
-      readFiles: Actions.READ_FILES,
+      openFiles: Actions.OPEN_FILES,
     })
   ),
 };

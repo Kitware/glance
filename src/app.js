@@ -13,10 +13,11 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
+import vtkGlanceStateReader from 'paraview-glance/src/io/GlanceStateReader';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
 import createStore from 'paraview-glance/src/stores';
-import { Mutations } from 'paraview-glance/src/stores/types';
+import { Actions, Mutations } from 'paraview-glance/src/stores/types';
 
 // Expose IO API to Glance global object
 export const {
@@ -49,6 +50,14 @@ export function createViewer(container, proxyConfig = null) {
 
   const store = createStore(proxyManager);
 
+  // enable loading of *.glance files
+  registerReader({
+    extension: 'glance',
+    name: 'Glance State Reader',
+    vtkReader: vtkGlanceStateReader,
+    binary: true,
+  });
+
   /* eslint-disable no-new */
   new Vue({
     el: '#root-container',
@@ -59,7 +68,6 @@ export function createViewer(container, proxyConfig = null) {
 
   // support history-based navigation
   function onRoute(event) {
-    console.log('route', event.state);
     const state = event.state || {};
     if (state.app) {
       store.commit(Mutations.SHOW_APP);
@@ -89,7 +97,7 @@ export function createViewer(container, proxyConfig = null) {
         const names = typeof name === 'string' ? [name] : name;
         const urls = typeof url === 'string' ? [url] : url;
         const types = typeof type === 'string' ? [type] : type || [];
-        store.dispatch('files/openRemoteFiles', { urls, names, types });
+        store.dispatch(Actions.OPEN_REMOTE_FILES, { urls, names, types });
       }
     },
   };

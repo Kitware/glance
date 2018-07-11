@@ -82,6 +82,15 @@ function createStore(proxyManager = null) {
             commit(Mutations.SAVING_STATE, null);
           });
       },
+      RESET_WORKSPACE({ state }) {
+        // use setTimeout to avoid some weird crashing with extractDomains
+        state.proxyManager
+          .getSources()
+          .forEach((source) =>
+            setTimeout(() => state.proxyManager.deleteProxy(source), 0)
+          );
+        setTimeout(state.proxyManager.resetAllViews, 0);
+      },
     },
   });
 }

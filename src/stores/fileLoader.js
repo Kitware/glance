@@ -286,7 +286,7 @@ export default {
       let stateReader;
       const otherReaders = [];
       readers.forEach((r) => {
-        if (r.reader.isA && r.reader.isA('vtkGlanceStateReader')) {
+        if (r.reader && r.reader.isA && r.reader.isA('vtkGlanceStateReader')) {
           stateReader = r.reader;
         } else {
           otherReaders.push(r);

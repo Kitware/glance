@@ -50,6 +50,8 @@
 .source {
   flex: 1;
   padding: 12px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /** should be moved to own component **/

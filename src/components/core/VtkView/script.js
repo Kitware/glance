@@ -114,10 +114,11 @@ function toggleCrop() {
       return;
     }
 
-    const volumeRep = this.proxyManager.getRepresentation(
-      activeSource,
-      this.view
-    );
+    const volumeRep = this.proxyManager
+      .getRepresentations()
+      .find(
+        (r) => r.getProxyName() === 'Volume' && r.getInput() === activeSource
+      );
 
     if (!volumeRep) {
       // TODO warn user

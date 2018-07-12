@@ -40,7 +40,6 @@
 
 .toolbarWrapper {
   position: relative;
-  overflow: hidden;
 }
 
 .smallCardText {
@@ -50,6 +49,10 @@
 .button {
   /* override vuetify */
   margin: 2px 4px;
+}
+
+.smallToolbar {
+  overflow: hidden;
 }
 
 .smallToolbar :global(.toolbar__content) {

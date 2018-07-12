@@ -20,8 +20,10 @@ export default {
   },
   mutations: {
     GLOBAL_BG(state, background) {
-      state.views.forEach((view) =>
-        setViewData(state, view.getProxyId(), { background })
+      // iterate over viewData keys since views[] represents
+      // the existing view set, not all views that have existed
+      Object.keys(state.viewData).forEach((viewId) =>
+        setViewData(state, viewId, { background })
       );
     },
     VIEW_SET_BACKGROUND(state, { viewId, background }) {

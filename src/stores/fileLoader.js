@@ -306,6 +306,16 @@ export default {
           )
           .then(() => {
             rootState.proxyManager.loadState(stateReader.getAppState());
+            // Need to create representations for sources, since the state
+            // may not encode for all visible layouts.
+            // This is a work-around for until layouts are saved in state.
+            rootState.proxyManager
+              .getSources()
+              .forEach((source) =>
+                rootState.proxyManager.createRepresentationInAllViews(source)
+              );
+            rootState.proxyManager.renderAllViews();
+
             return otherReaders;
           });
       }

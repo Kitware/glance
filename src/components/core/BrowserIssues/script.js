@@ -16,31 +16,21 @@ function getBrowserIssues() {
     const { UNMASKED_RENDERER, UNMASKED_VENDOR, WEBGL_VERSION } = allInfo;
 
     if (WEBGL_VERSION.value < 2) {
-      this.issues.push(
-        `Detected WebGL version ${
-          WEBGL_VERSION.value
-        }. (Slower Volume/Glyph rendering)`
-      );
+      this.$set(this.issues, 'webglVersion', WEBGL_VERSION.value);
     }
 
     const strToTest = `${UNMASKED_VENDOR.value} / ${
       UNMASKED_RENDERER.value
     }`.toLowerCase();
     if (strToTest.indexOf('intel') !== -1) {
-      this.issues.push(
-        `Detected GPU "${
-          UNMASKED_RENDERER.value
-        }". Dedicated GPU would offer better performance.`
-      );
+      this.$set(this.issues, 'integratedGPU', UNMASKED_RENDERER.value);
     }
     if (strToTest.indexOf('angle') !== -1) {
-      this.issues.push(
-        `ANGLE is used to translate OpenGL for your hardware, so expect slower rendering.`
-      );
+      this.$set(this.issues, 'angle', true);
     }
   }
 
-  if (this.issues.length && !this.suppressWarning) {
+  if (Object.keys(this.issues).length && !this.suppressWarning) {
     this.dialog = true;
   }
 }
@@ -60,7 +50,7 @@ export default {
   name: 'BrowserIssues',
   data() {
     return {
-      issues: [],
+      issues: {},
       dialog: false,
       dontShow: false,
       suppressWarning: false,

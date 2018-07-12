@@ -7,11 +7,18 @@
         performance of the application:
       </p>
       <ul :class="$style.list">
-        <li
-          v-for="(issue, i) in issues"
-          :key="i"
-        >
-          {{ issue }}
+        <li v-if="issues.webglVersion">
+          Detected WebGL version {{ issues.webglVersion }}.
+          (Slower Volume/Glyph rendering)
+        </li>
+        <li v-if="issues.integratedGPU">
+          Detected GPU "{{ issues.integratedGPU }}".
+          Dedicated GPU would offer better performance.
+        </li>
+        <li v-if="issues.angle">
+          ANGLE is used for WebGL rendering, which may slow down rendering.
+          More info
+          <a href="https://chromium.googlesource.com/angle/angle/+/master/README.md">here</a>.
         </li>
       </ul>
     </v-card-text>

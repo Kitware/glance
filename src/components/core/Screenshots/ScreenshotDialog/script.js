@@ -2,7 +2,7 @@ import { mapState } from 'vuex';
 
 import { Mutations } from 'paraview-glance/src/stores/types';
 
-const FILE_TYPES = ['.png', '.jpeg', '.gif'];
+const FILE_TYPES = ['.png', '.jpeg'];
 
 // ----------------------------------------------------------------------------
 // Component API

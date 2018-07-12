@@ -79,6 +79,7 @@ export default {
   }),
   watch: {
     transparentBackground: generateImage,
+    fileType: generateImage,
     showDialog(val) {
       if (val) {
         this.filename = 'Untitled';

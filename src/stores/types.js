@@ -9,6 +9,7 @@ function objEnum(names) {
 export const Actions = objEnum([
   // index
   'SAVE_STATE',
+  'RESTORE_APP_STATE',
   'RESET_WORKSPACE',
 
   // files
@@ -22,6 +23,7 @@ export const Actions = objEnum([
   // views
   'UPDATE_LAYOUT',
   'UPDATE_VIEWS',
+  'INIT_VIEWS_DATA',
 
   // screenshots
   'TAKE_SCREENSHOT',
@@ -32,6 +34,9 @@ export const Getters = objEnum([
   'FILE_TOTAL_PROGRESS',
   'FILE_RAW_FILES_LOADABLE',
   'FILE_INDETERMINATE_PROGRESS',
+
+  // views
+  'VIEWS',
 ]);
 
 export const Mutations = objEnum([
@@ -60,8 +65,7 @@ export const Mutations = objEnum([
   'VIEW_SET_BACKGROUND',
   'VIEWS_SWAP_ORDER', // private
   'VIEWS_REORDER_QUAD', // private
-  'SET_VIEWS', // private
-  'VIEWS_INIT_DATA', // private
+  'SET_VIEW_COUNT', // private
 
   // screenshots
   'OPEN_SCREENSHOT_DIALOG',

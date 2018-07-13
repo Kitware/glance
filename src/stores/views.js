@@ -2,7 +2,7 @@ import Vue from 'vue';
 
 import { VIEW_TYPES } from 'paraview-glance/src/components/core/VtkView/constants';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
-import { Actions, Mutations } from 'paraview-glance/src/stores/types';
+import { Actions, Getters, Mutations } from 'paraview-glance/src/stores/types';
 
 function setViewData(state, viewId, data) {
   Vue.set(
@@ -14,9 +14,15 @@ function setViewData(state, viewId, data) {
 
 export default {
   state: {
-    views: [],
     viewData: {},
     viewOrder: VIEW_TYPES.map((v) => v.value),
+    viewCount: 0,
+  },
+  getters: {
+    VIEWS: (state, getters, rootState) =>
+      state.viewOrder
+        .filter((v, i) => i < state.viewCount)
+        .map((t) => viewHelper.getView(rootState.proxyManager, t)),
   },
   mutations: {
     GLOBAL_BG(state, background) {
@@ -45,17 +51,8 @@ export default {
         state.viewOrder[1],
       ];
     },
-    SET_VIEWS(state, views) {
-      state.views = views;
-    },
-    VIEWS_INIT_DATA(state, initialData) {
-      // initialize viewData for new views
-      state.views.forEach((view) => {
-        const viewId = view.getProxyId();
-        if (!(viewId in state.viewData)) {
-          setViewData(state, viewId, initialData);
-        }
-      });
+    SET_VIEW_COUNT(state, count) {
+      state.viewCount = count;
     },
   },
   actions: {
@@ -75,21 +72,24 @@ export default {
           index,
           newType: state.viewOrder[1],
         });
-      } else if (state.views.length === 4 && count === 2 && index !== 1) {
+      } else if (state.viewCount === 4 && count === 2 && index !== 1) {
         commit(Mutations.VIEWS_REORDER_QUAD);
       }
       dispatch(Actions.UPDATE_VIEWS, count);
     },
-    UPDATE_VIEWS({ state, commit, rootState }, count = 1) {
-      commit(
-        Mutations.SET_VIEWS,
-        state.viewOrder
-          .filter((v, i) => i < count)
-          .map((t) => viewHelper.getView(rootState.proxyManager, t))
-      );
-
-      commit(Mutations.VIEWS_INIT_DATA, {
+    UPDATE_VIEWS({ dispatch, commit, rootState }, count = 1) {
+      commit(Mutations.SET_VIEW_COUNT, count);
+      dispatch(Actions.INIT_VIEWS_DATA, {
         background: rootState.global.backgroundColor,
+      });
+    },
+    INIT_VIEWS_DATA({ getters, state }, initialData) {
+      // initialize viewData for new views
+      getters[Getters.VIEWS].forEach((view) => {
+        const viewId = view.getProxyId();
+        if (!(viewId in state.viewData)) {
+          setViewData(state, viewId, initialData);
+        }
       });
     },
   },

@@ -7,7 +7,7 @@ import global from 'paraview-glance/src/stores/globalSettings';
 import files from 'paraview-glance/src/stores/fileLoader';
 import screenshots from 'paraview-glance/src/stores/screenshots';
 import views from 'paraview-glance/src/stores/views';
-import { Mutations } from 'paraview-glance/src/stores/types';
+import { Actions, Mutations } from 'paraview-glance/src/stores/types';
 
 function createStore(proxyManager = null) {
   let pxm = proxyManager;
@@ -41,7 +41,7 @@ function createStore(proxyManager = null) {
       },
     },
     actions: {
-      SAVE_STATE({ commit, state }, fileNameToUse) {
+      SAVE_STATE({ commit, state, rootState }, fileNameToUse) {
         const t = new Date();
         const fileName =
           fileNameToUse ||
@@ -50,13 +50,12 @@ function createStore(proxyManager = null) {
 
         commit(Mutations.SAVING_STATE, fileName);
 
-        const userData = { layout: 'Something...', settings: { bg: 'white' } };
         const options = { recycleViews: true };
         const zip = new JSZip();
         zip.file(
           'state.json',
           JSON.stringify(
-            state.proxyManager.saveState(options, userData),
+            state.proxyManager.saveState(options, rootState),
             null,
             2
           )
@@ -82,6 +81,16 @@ function createStore(proxyManager = null) {
             commit(Mutations.SAVING_STATE, null);
           });
       },
+      RESTORE_APP_STATE({ dispatch, state }, appState) {
+        dispatch(Actions.RESET_WORKSPACE);
+
+        const userData = state.proxyManager.loadState(appState);
+        // replace proxyManager
+        userData.proxyManager = pxm;
+        // clear transition state when saving state
+        userData.savingStateName = null;
+        this.replaceState(userData);
+      },
       RESET_WORKSPACE({ state }) {
         // use setTimeout to avoid some weird crashing with extractDomains
         state.proxyManager
@@ -89,7 +98,10 @@ function createStore(proxyManager = null) {
           .forEach((source) =>
             setTimeout(() => state.proxyManager.deleteProxy(source), 0)
           );
-        setTimeout(state.proxyManager.resetAllViews, 0);
+        setTimeout(() => {
+          state.proxyManager.renderAllViews();
+          state.proxyManager.resetCameraInAllViews();
+        }, 0);
       },
     },
   });

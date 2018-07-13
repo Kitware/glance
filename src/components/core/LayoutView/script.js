@@ -1,7 +1,7 @@
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 
 import VtkView from 'paraview-glance/src/components/core/VtkView';
-import { Actions, Mutations } from 'paraview-glance/src/stores/types';
+import { Actions, Getters, Mutations } from 'paraview-glance/src/stores/types';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -22,16 +22,18 @@ export default {
     widgetManager: { required: true },
   },
   computed: Object.assign(
+    mapGetters({
+      views: Getters.VIEWS,
+    }),
     mapState({
       proxyManager: 'proxyManager',
-      views: (state) => state.views.views,
       viewData: (state) => state.views.viewData,
       order: (state) => state.views.viewOrder,
       gridTemplateRows(state) {
-        return state.views.views.length < 4 ? '1fr' : '1fr 1fr';
+        return state.views.viewCount < 4 ? '1fr' : '1fr 1fr';
       },
       gridTemplateColumns(state) {
-        return state.views.views.length < 2 ? '1fr' : '1fr 1fr';
+        return state.views.viewCount < 2 ? '1fr' : '1fr 1fr';
       },
     })
   ),

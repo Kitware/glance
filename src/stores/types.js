@@ -9,6 +9,7 @@ function objEnum(names) {
 export const Actions = objEnum([
   // index
   'SAVE_STATE',
+  'RESTORE_APP_STATE',
   'RESET_WORKSPACE',
 
   // files
@@ -43,7 +44,6 @@ export const Mutations = objEnum([
   'SHOW_APP',
   'SHOW_LANDING',
   'SAVING_STATE', // private
-  'RESTORE_APP_STATE', // private
 
   // globalSettings
   'GLOBAL_BG',

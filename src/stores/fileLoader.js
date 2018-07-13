@@ -281,7 +281,7 @@ export default {
 
       return allWithErrors(promises);
     },
-    LOAD_STATE({ commit, dispatch }, readers) {
+    LOAD_STATE({ dispatch }, readers) {
       // technically should only be loading a single state file
       let stateReader;
       const otherReaders = [];
@@ -305,7 +305,7 @@ export default {
             )
           )
           .then(() => {
-            commit(Mutations.RESTORE_APP_STATE, stateReader.getAppState());
+            dispatch(Actions.RESTORE_APP_STATE, stateReader.getAppState());
             return otherReaders;
           });
       }

@@ -7,7 +7,7 @@ import global from 'paraview-glance/src/stores/globalSettings';
 import files from 'paraview-glance/src/stores/fileLoader';
 import screenshots from 'paraview-glance/src/stores/screenshots';
 import views from 'paraview-glance/src/stores/views';
-import { Mutations } from 'paraview-glance/src/stores/types';
+import { Actions, Mutations } from 'paraview-glance/src/stores/types';
 
 function createStore(proxyManager = null) {
   let pxm = proxyManager;
@@ -38,15 +38,6 @@ function createStore(proxyManager = null) {
       },
       SAVING_STATE(state, name = null) {
         state.savingStateName = name;
-      },
-      RESTORE_APP_STATE(state, appState) {
-        const userData = state.proxyManager.loadState(appState);
-        console.log(userData);
-        // replace proxyManager
-        userData.proxyManager = pxm;
-        // clear transition state when saving state
-        userData.savingStateName = null;
-        this.replaceState(userData);
       },
     },
     actions: {
@@ -89,6 +80,16 @@ function createStore(proxyManager = null) {
 
             commit(Mutations.SAVING_STATE, null);
           });
+      },
+      RESTORE_APP_STATE({ dispatch, state }, appState) {
+        dispatch(Actions.RESET_WORKSPACE);
+
+        const userData = state.proxyManager.loadState(appState);
+        // replace proxyManager
+        userData.proxyManager = pxm;
+        // clear transition state when saving state
+        userData.savingStateName = null;
+        this.replaceState(userData);
       },
       RESET_WORKSPACE({ state }) {
         // use setTimeout to avoid some weird crashing with extractDomains

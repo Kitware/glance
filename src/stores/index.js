@@ -98,7 +98,10 @@ function createStore(proxyManager = null) {
           .forEach((source) =>
             setTimeout(() => state.proxyManager.deleteProxy(source), 0)
           );
-        setTimeout(state.proxyManager.resetAllViews, 0);
+        setTimeout(() => {
+          state.proxyManager.renderAllViews();
+          state.proxyManager.resetCameraInAllViews();
+        }, 0);
       },
     },
   });

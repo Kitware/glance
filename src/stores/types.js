@@ -43,6 +43,7 @@ export const Mutations = objEnum([
   'SHOW_APP',
   'SHOW_LANDING',
   'SAVING_STATE', // private
+  'RESTORE_APP_STATE', // private
 
   // globalSettings
   'GLOBAL_BG',

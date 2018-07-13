@@ -39,9 +39,18 @@ function createStore(proxyManager = null) {
       SAVING_STATE(state, name = null) {
         state.savingStateName = name;
       },
+      RESTORE_APP_STATE(state, appState) {
+        const userData = state.proxyManager.loadState(appState);
+        console.log(userData);
+        // replace proxyManager
+        userData.proxyManager = pxm;
+        // clear transition state when saving state
+        userData.savingStateName = null;
+        this.replaceState(userData);
+      },
     },
     actions: {
-      SAVE_STATE({ commit, state }, fileNameToUse) {
+      SAVE_STATE({ commit, state, rootState }, fileNameToUse) {
         const t = new Date();
         const fileName =
           fileNameToUse ||
@@ -50,13 +59,12 @@ function createStore(proxyManager = null) {
 
         commit(Mutations.SAVING_STATE, fileName);
 
-        const userData = { layout: 'Something...', settings: { bg: 'white' } };
         const options = { recycleViews: true };
         const zip = new JSZip();
         zip.file(
           'state.json',
           JSON.stringify(
-            state.proxyManager.saveState(options, userData),
+            state.proxyManager.saveState(options, rootState),
             null,
             2
           )

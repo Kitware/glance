@@ -1,3 +1,4 @@
+import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { Mutations } from 'paraview-glance/src/stores/types';
 
 export default {
@@ -23,7 +24,7 @@ export default {
           commit(Mutations.OPEN_SCREENSHOT_DIALOG, {
             imgSrc,
             viewName: view.getName(),
-            viewData: rootState.views.viewData[view.getProxyId()],
+            viewData: rootState.views.viewData[viewHelper.getViewType(view)],
           });
         });
       }

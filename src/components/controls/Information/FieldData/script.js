@@ -1,5 +1,5 @@
 export default {
-  name: 'FieldData',
+  name: 'FieldDataInformation',
   props: {
     dataset: { required: true },
     name: { type: String },

@@ -7,8 +7,8 @@ import InformationWidget from 'paraview-glance/src/components/controls/Informati
 import MoleculeWidget from 'paraview-glance/src/components/controls/Molecule';
 import RepresentationWidget from 'paraview-glance/src/components/controls/Representation';
 import SliceWidget from 'paraview-glance/src/components/controls/SliceControl';
-
 import ColorGroup from 'paraview-glance/src/components/widgets/ColorGroup';
+import { Mutations } from 'paraview-glance/src/stores/types';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -72,13 +72,23 @@ function toggleDatasetVisibility(source) {
 
 export default {
   name: 'Datasets',
+  components: {
+    ColorGroup,
+  },
   data() {
     return {
       datasets: [],
       proxyToDelete: null,
     };
   },
-  computed: mapState(['proxyManager']),
+  computed: mapState({
+    proxyManager: 'proxyManager',
+    panels: (state) => {
+      const priorities = Object.keys(state.panels);
+      priorities.sort((a, b) => Number(a) - Number(b));
+      return [].concat(...priorities.map((prio) => state.panels[prio]));
+    },
+  }),
   created() {
     this.subscriptions = [];
     this.listenerHelper = vtkListenerHelper.newInstance(
@@ -87,6 +97,14 @@ export default {
       },
       () => [this.proxyManager].concat(this.proxyManager.getRepresentations())
     );
+
+    [
+      ColorByWidget,
+      InformationWidget,
+      MoleculeWidget,
+      RepresentationWidget,
+      SliceWidget,
+    ].forEach((panel, i) => this.addPanel(panel, i + 10));
   },
   mounted() {
     this.$nextTick(this.onMounted);
@@ -94,19 +112,14 @@ export default {
   beforeDestroy() {
     this.onBeforeDestroy();
   },
-  components: {
-    ColorByWidget,
-    InformationWidget,
-    MoleculeWidget,
-    RepresentationWidget,
-    SliceWidget,
-    ColorGroup,
-  },
   methods: {
     onMounted,
     onBeforeDestroy,
     deleteDataset,
     getDatasetVisibility,
     toggleDatasetVisibility,
+    addPanel(component, priority) {
+      this.$store.commit(Mutations.ADD_PANEL, { component, priority });
+    },
   },
 };

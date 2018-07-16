@@ -193,6 +193,7 @@ function onEsc(ev) {
 // ----------------------------------------------------------------------------
 
 export default {
+  name: 'ColorBy',
   props: ['source'],
   components: {
     PalettePicker,

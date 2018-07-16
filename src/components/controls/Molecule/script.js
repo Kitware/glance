@@ -8,7 +8,7 @@ const FIELDS = [
   { name: 'hideElements', initialValue: '' },
 ];
 
-export default helper.generateComponent(FIELDS, false, {
+export default helper.generateComponent('Molecule', FIELDS, false, {
   onChange: {
     bondRadius: 'updateData',
     atomicRadiusScaleFactor: 'updateData',

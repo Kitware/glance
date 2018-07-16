@@ -1,4 +1,6 @@
 import JSZip from 'jszip';
+import merge from 'merge';
+import Vue from 'vue';
 import Vuex from 'vuex';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
@@ -22,6 +24,7 @@ function createStore(proxyManager = null) {
       proxyManager: pxm,
       route: 'landing', // valid values: landing, app
       savingStateName: null,
+      panels: {},
     },
     modules: {
       global,
@@ -39,6 +42,12 @@ function createStore(proxyManager = null) {
       SAVING_STATE(state, name = null) {
         state.savingStateName = name;
       },
+      ADD_PANEL: (state, { component, priority = 0 }) => {
+        if (!(priority in state.panels)) {
+          Vue.set(state.panels, priority, []);
+        }
+        state.panels[priority].push(component);
+      },
     },
     actions: {
       SAVE_STATE({ commit, state, rootState }, fileNameToUse) {
@@ -50,12 +59,20 @@ function createStore(proxyManager = null) {
 
         commit(Mutations.SAVING_STATE, fileName);
 
+        // remove keys that shouldn't be saved
+        const userData = merge.clone(rootState);
+        delete userData.proxyManager;
+        delete userData.panels;
+        delete userData.savingStateName;
+        delete userData.files;
+        delete userData.screenshots;
+
         const options = { recycleViews: true };
         const zip = new JSZip();
         zip.file(
           'state.json',
           JSON.stringify(
-            state.proxyManager.saveState(options, rootState),
+            state.proxyManager.saveState(options, userData),
             null,
             2
           )
@@ -85,11 +102,7 @@ function createStore(proxyManager = null) {
         dispatch(Actions.RESET_WORKSPACE);
 
         const userData = state.proxyManager.loadState(appState);
-        // replace proxyManager
-        userData.proxyManager = pxm;
-        // clear transition state when saving state
-        userData.savingStateName = null;
-        this.replaceState(userData);
+        this.replaceState(merge.recursive(state, userData));
       },
       RESET_WORKSPACE({ state }) {
         // use setTimeout to avoid some weird crashing with extractDomains

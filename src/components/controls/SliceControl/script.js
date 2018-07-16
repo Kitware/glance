@@ -65,7 +65,7 @@ function isSliceAvailable(name) {
 // Add custom method
 // ----------------------------------------------------------------------------
 
-const component = helper.generateComponent(FIELDS, true);
+const component = helper.generateComponent('SliceControl', FIELDS, true);
 Object.assign(component.methods, {
   isSliceAvailable,
 });

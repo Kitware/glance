@@ -1,4 +1,5 @@
 import JSZip from 'jszip';
+import merge from 'merge';
 import Vuex from 'vuex';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
@@ -89,7 +90,7 @@ function createStore(proxyManager = null) {
         userData.proxyManager = pxm;
         // clear transition state when saving state
         userData.savingStateName = null;
-        this.replaceState(userData);
+        this.replaceState(merge.recursive(state, userData));
       },
       RESET_WORKSPACE({ state }) {
         // use setTimeout to avoid some weird crashing with extractDomains

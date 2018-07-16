@@ -100,5 +100,9 @@ export function createViewer(container, proxyConfig = null) {
         store.dispatch(Actions.OPEN_REMOTE_FILES, { urls, names, types });
       }
     },
+    // All components must have a unique name
+    addDatasetPanel(component) {
+      store.commit(Mutations.ADD_PANEL, { component });
+    },
   };
 }

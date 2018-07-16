@@ -1,5 +1,6 @@
 import JSZip from 'jszip';
 import merge from 'merge';
+import Vue from 'vue';
 import Vuex from 'vuex';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
@@ -23,6 +24,7 @@ function createStore(proxyManager = null) {
       proxyManager: pxm,
       route: 'landing', // valid values: landing, app
       savingStateName: null,
+      panels: {},
     },
     modules: {
       global,
@@ -39,6 +41,12 @@ function createStore(proxyManager = null) {
       },
       SAVING_STATE(state, name = null) {
         state.savingStateName = name;
+      },
+      ADD_PANEL: (state, { component, priority = 0 }) => {
+        if (!(priority in state.panels)) {
+          Vue.set(state.panels, priority, []);
+        }
+        state.panels[priority].push(component);
       },
     },
     actions: {

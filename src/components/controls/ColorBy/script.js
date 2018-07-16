@@ -70,6 +70,10 @@ function setColorBy(value) {
     if (dataArray) {
       this.dataRange = dataArray.getRange();
     }
+    // Update interpolateScalarsBeforeMapping
+    this.interpolateScalarsBeforeMapping = myRepresentations[
+      i
+    ].getInterpolateScalarsBeforeMapping();
   }
   this.proxyManager.renderAllViews();
 

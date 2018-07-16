@@ -1,6 +1,7 @@
 import { mapActions, mapState, mapGetters } from 'vuex';
 
 import VtkView from 'paraview-glance/src/components/core/VtkView';
+import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { Actions, Getters, Mutations } from 'paraview-glance/src/stores/types';
 
 // ----------------------------------------------------------------------------
@@ -9,7 +10,7 @@ import { Actions, Getters, Mutations } from 'paraview-glance/src/stores/types';
 
 function setViewBackground(view, background) {
   this.$store.commit(Mutations.VIEW_SET_BACKGROUND, {
-    viewId: view.getProxyId(),
+    view,
     background,
   });
 }
@@ -40,6 +41,7 @@ export default {
   methods: Object.assign(
     {
       setViewBackground,
+      getViewType: viewHelper.getViewType,
     },
     mapActions({
       updateViews: Actions.UPDATE_VIEWS,

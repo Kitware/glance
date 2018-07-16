@@ -28,12 +28,12 @@ export default {
     GLOBAL_BG(state, background) {
       // iterate over viewData keys since views[] represents
       // the existing view set, not all views that have existed
-      Object.keys(state.viewData).forEach((viewId) =>
-        setViewData(state, viewId, { background })
+      Object.keys(state.viewData).forEach((viewType) =>
+        setViewData(state, viewType, { background })
       );
     },
-    VIEW_SET_BACKGROUND(state, { viewId, background }) {
-      setViewData(state, viewId, { background });
+    VIEW_SET_BACKGROUND(state, { view, background }) {
+      setViewData(state, viewHelper.getViewType(view), { background });
     },
     VIEWS_SWAP_ORDER(state, { index, newType }) {
       const result = state.viewOrder.slice();
@@ -86,9 +86,9 @@ export default {
     INIT_VIEWS_DATA({ getters, state }, initialData) {
       // initialize viewData for new views
       getters[Getters.VIEWS].forEach((view) => {
-        const viewId = view.getProxyId();
-        if (!(viewId in state.viewData)) {
-          setViewData(state, viewId, initialData);
+        const viewType = viewHelper.getViewType(view);
+        if (!(viewType in state.viewData)) {
+          setViewData(state, viewType, initialData);
         }
       });
     },

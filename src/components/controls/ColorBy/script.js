@@ -34,8 +34,8 @@ function float2hex(red = 1, green = 1, blue = 1) {
   const hexBuffer = [
     (red * 255).toString(16),
     (green * 255).toString(16),
-    (blue * 255).toString(16)
-  ].map((str) => str.length === 2 ? str : `0${str}`);
+    (blue * 255).toString(16),
+  ].map((str) => (str.length === 2 ? str : `0${str}`));
   return `#${hexBuffer.join('')}`;
 }
 

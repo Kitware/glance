@@ -11,6 +11,15 @@ import screenshots from 'paraview-glance/src/stores/screenshots';
 import views from 'paraview-glance/src/stores/views';
 import { Actions, Mutations } from 'paraview-glance/src/stores/types';
 
+// Reduces app state to relevant persistent state
+function reduceState(state) {
+  return {
+    route: state.route,
+    global: state.global,
+    views: state.views,
+  };
+}
+
 function createStore(proxyManager = null) {
   let pxm = proxyManager;
   if (!proxyManager) {
@@ -50,7 +59,7 @@ function createStore(proxyManager = null) {
       },
     },
     actions: {
-      SAVE_STATE({ commit, state, rootState }, fileNameToUse) {
+      SAVE_STATE({ commit, state }, fileNameToUse) {
         const t = new Date();
         const fileName =
           fileNameToUse ||
@@ -59,13 +68,7 @@ function createStore(proxyManager = null) {
 
         commit(Mutations.SAVING_STATE, fileName);
 
-        // remove keys that shouldn't be saved
-        const userData = merge.clone(rootState);
-        delete userData.proxyManager;
-        delete userData.panels;
-        delete userData.savingStateName;
-        delete userData.files;
-        delete userData.screenshots;
+        const userData = reduceState(state);
 
         const options = { recycleViews: true };
         const zip = new JSZip();

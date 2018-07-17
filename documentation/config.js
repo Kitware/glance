@@ -21,5 +21,13 @@ module.exports = {
       src: '../node_modules/paraview-glance/dist/*',
       dest: './build-tmp/public/app',
     },
+    {
+      src: 'app-index.html',
+      dest: './build-tmp/public/app/index.html',
+    },
+    {
+      src: 'app-index.html',
+      dest: './build-tmp/public/nightly/index.html',
+    },
   ],
 };

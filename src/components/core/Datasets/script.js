@@ -99,11 +99,11 @@ export default {
     );
 
     [
-      ColorByWidget,
-      InformationWidget,
-      MoleculeWidget,
       RepresentationWidget,
+      ColorByWidget,
       SliceWidget,
+      MoleculeWidget,
+      InformationWidget,
     ].forEach((panel, i) => this.addPanel(panel, i + 10));
   },
   mounted() {

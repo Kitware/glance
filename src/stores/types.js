@@ -43,7 +43,9 @@ export const Mutations = objEnum([
   // index
   'SHOW_APP',
   'SHOW_LANDING',
+  'ADD_PANEL',
   'SAVING_STATE', // private
+  'LOADING_STATE', // private
 
   // globalSettings
   'GLOBAL_BG',

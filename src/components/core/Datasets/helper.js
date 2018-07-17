@@ -183,6 +183,7 @@ function getProxyWithFields() {
 // ----------------------------------------------------------------------------
 
 function generateComponent(
+  name,
   fields,
   dependOnLayout = false,
   options = {
@@ -196,11 +197,12 @@ function generateComponent(
     updateData,
     getProxyWithFields,
   };
-  Object.keys(computed).forEach((name) => {
-    methods[`get${macro.capitalize(name)}`] = computed[name].get;
-    methods[`set${macro.capitalize(name)}`] = computed[name].set;
+  Object.keys(computed).forEach((prop) => {
+    methods[`get${macro.capitalize(prop)}`] = computed[prop].get;
+    methods[`set${macro.capitalize(prop)}`] = computed[prop].set;
   });
   return {
+    name,
     props: ['source'],
     methods,
     data: function data() {

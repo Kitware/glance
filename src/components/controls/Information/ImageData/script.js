@@ -1,7 +1,7 @@
 import MatrixView from 'paraview-glance/src/components/controls/Information/MatrixView';
 
 export default {
-  name: 'ImageData',
+  name: 'ImageDataInformation',
   props: ['dataset'],
   components: {
     MatrixView,

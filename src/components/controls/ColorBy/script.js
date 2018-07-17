@@ -30,6 +30,17 @@ function getLookupTableImage(lut, min, max, width) {
 
 // ----------------------------------------------------------------------------
 
+function float2hex(red = 1, green = 1, blue = 1) {
+  const hexBuffer = [
+    (red * 255).toString(16),
+    (green * 255).toString(16),
+    (blue * 255).toString(16)
+  ].map((str) => str.length === 2 ? str : `0${str}`);
+  return `#${hexBuffer.join('')}`;
+}
+
+// ----------------------------------------------------------------------------
+
 function setSolidColor(value) {
   const color = vtkMath.hex2float(value);
   const myRepresentations = this.proxyManager
@@ -70,8 +81,13 @@ function setColorBy(value) {
     if (dataArray) {
       this.dataRange = dataArray.getRange();
     }
+    // Update interpolateScalarsBeforeMapping
+    this.interpolateScalarsBeforeMapping = myRepresentations[
+      i
+    ].getInterpolateScalarsBeforeMapping();
   }
   this.proxyManager.renderAllViews();
+  this.update();
 
   // Update lutImage
   if (args.length) {
@@ -189,10 +205,58 @@ function onEsc(ev) {
 }
 
 // ----------------------------------------------------------------------------
+
+function update() {
+  if (this.loadingState) {
+    return;
+  }
+  const myRepresentations = this.proxyManager
+    .getRepresentations()
+    .filter((r) => r.getInput() === this.source);
+  if (myRepresentations.length) {
+    const repGeometry = myRepresentations.find(
+      (r) => r.getProxyName() === 'Geometry'
+    );
+    const repVolume = myRepresentations.find(
+      (r) => r.getProxyName() === 'Volume'
+    );
+    if (repGeometry) {
+      const colorByValue = repGeometry.getColorBy();
+      this.arrayName = colorByValue[0];
+      // only get name and location of colorBy array
+      this.colorBy = colorByValue.slice(0, 2).join(':');
+      const propUI = repGeometry
+        .getReferenceByName('ui')
+        .find((item) => item.name === 'colorBy');
+      if (propUI) {
+        this.arrays = convertArrays(propUI.domain.arrays, true);
+      }
+      this.available = 'geometry';
+      this.solidColor = float2hex(...repGeometry.getColor());
+    }
+    if (repVolume) {
+      this.available = 'volume';
+      const colorByValue = repVolume.getColorBy();
+      this.arrayName = colorByValue[0];
+      // only get name and location of colorBy array
+      this.colorBy = colorByValue.slice(0, 2).join(':');
+      this.dataRange = repVolume.getDataArray().getRange();
+      const propUI = repVolume
+        .getReferenceByName('ui')
+        .find((item) => item.name === 'colorBy');
+      if (propUI) {
+        this.arrays = convertArrays(propUI.domain.arrays);
+      }
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
 // Add custom method
 // ----------------------------------------------------------------------------
 
 export default {
+  name: 'ColorBy',
   props: ['source'],
   components: {
     PalettePicker,
@@ -220,6 +284,9 @@ export default {
   computed: {
     proxyManager() {
       return this.$store.state.proxyManager;
+    },
+    loadingState() {
+      return this.$store.state.loadingState;
     },
     usePresetOpacity() {
       const preset = vtkColorMaps.getPresetByName(this.presetName);
@@ -272,50 +339,22 @@ export default {
     applyOpacity,
     applyColorMap,
     updateLookupTableImage,
+    update,
   },
   mounted() {
-    const myRepresentations = this.proxyManager
-      .getRepresentations()
-      .filter((r) => r.getInput() === this.source);
-    if (myRepresentations.length) {
-      const repGeometry = myRepresentations.find(
-        (r) => r.getProxyName() === 'Geometry'
-      );
-      const repVolume = myRepresentations.find(
-        (r) => r.getProxyName() === 'Volume'
-      );
-      if (repGeometry) {
-        const colorByValue = repGeometry.getColorBy();
-        this.arrayName = colorByValue[0];
-        // only get name and location of colorBy array
-        this.colorBy = colorByValue.slice(0, 2).join(':');
-        const propUI = repGeometry
-          .getReferenceByName('ui')
-          .find((item) => item.name === 'colorBy');
-        if (propUI) {
-          this.arrays = convertArrays(propUI.domain.arrays, true);
+    this.subscriptions = [
+      this.proxyManager.onProxyRegistrationChange(({ proxyGroup }) => {
+        if (proxyGroup === 'Representations') {
+          this.update();
         }
-        this.available = 'geometry';
-      }
-      if (repVolume) {
-        this.available = 'volume';
-        const colorByValue = repVolume.getColorBy();
-        this.arrayName = colorByValue[0];
-        // only get name and location of colorBy array
-        this.colorBy = colorByValue.slice(0, 2).join(':');
-        this.dataRange = repVolume.getDataArray().getRange();
-        const propUI = repVolume
-          .getReferenceByName('ui')
-          .find((item) => item.name === 'colorBy');
-        if (propUI) {
-          this.arrays = convertArrays(propUI.domain.arrays);
-        }
-      }
-    }
-
+      }),
+    ];
     document.addEventListener('keyup', this.onEsc);
   },
   beforeDestroy() {
     document.removeEventListener('keyup', this.onEsc);
+    while (this.subscriptions.length) {
+      this.subscriptions.pop().unsubscribe();
+    }
   },
 };

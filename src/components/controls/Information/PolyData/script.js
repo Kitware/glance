@@ -3,7 +3,7 @@ import macro from 'vtk.js/Sources/macro';
 const { formatNumbersWithThousandSeparator } = macro;
 
 export default {
-  name: 'PolyData',
+  name: 'PolyDataInformation',
   props: ['dataset'],
   methods: {
     formatNumbersWithThousandSeparator,

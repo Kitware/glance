@@ -8,4 +8,4 @@ const FIELDS = [
   { name: 'representation', initialValue: 'Surface' },
 ];
 
-export default helper.generateComponent(FIELDS);
+export default helper.generateComponent('Representation', FIELDS);

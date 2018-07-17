@@ -36,7 +36,7 @@ function vtkGlanceStateReader(publicAPI, model) {
   // Returns a promise to signal when image is ready
   publicAPI.parseAsArrayBuffer = (arrayBuffer) => {
     if (!arrayBuffer || arrayBuffer === model.rawDataBuffer) {
-      return Promise.resolve();
+      return Promise.resolve(model.appState);
     }
 
     model.rawDataBuffer = arrayBuffer;
@@ -44,24 +44,8 @@ function vtkGlanceStateReader(publicAPI, model) {
     return loadState(arrayBuffer).then((state) => {
       model.appState = state;
       publicAPI.modified();
+      return model.appState;
     });
-  };
-
-  // Loads any remote datasets that are referenced with a "url" key
-  // downloadFunc should resolve with a vtkDataSet given a url and name
-  publicAPI.loadRemoteDatasets = (downloadFunc) => {
-    if (model.appState && model.appState.sources) {
-      const promises = model.appState.sources
-        .filter((source) => source.props.url)
-        .map((source) =>
-          downloadFunc(source.props.name, source.props.url).then((dataset) => {
-            // eslint-disable-next-line no-param-reassign
-            source.props.dataset = dataset.getState();
-          })
-        );
-      return Promise.all(promises);
-    }
-    return Promise.resolve([]);
   };
 
   publicAPI.requestData = () => {

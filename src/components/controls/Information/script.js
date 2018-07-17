@@ -4,6 +4,7 @@ import VtkMolecule from 'paraview-glance/src/components/controls/Information/Mol
 import VtkPolyData from 'paraview-glance/src/components/controls/Information/PolyData';
 
 export default {
+  name: 'Information',
   props: ['source'],
   components: {
     VtkFieldData,

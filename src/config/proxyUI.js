@@ -48,6 +48,9 @@ const Geometry = [
     domain: {},
   },
   {
+    name: 'color',
+  },
+  {
     name: 'representation',
     domain: {
       items: [

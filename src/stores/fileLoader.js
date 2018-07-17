@@ -225,6 +225,7 @@ export default {
                 reader,
                 name: names[i],
                 sourceType: types[i] || sourceType,
+                metadata: { url: urls[i] },
               })),
               rootState.proxyManager
             )
@@ -294,20 +295,10 @@ export default {
       });
 
       if (stateReader) {
-        return stateReader
-          .loadRemoteDatasets((name, url) =>
-            dispatch(Actions.READ_REMOTE_FILES, {
-              urls: [url],
-              names: [name],
-            }).then((rdrs) =>
-              // only loaded 1 dataset
-              rdrs[0].reader.getOutputData()
-            )
-          )
-          .then(() => {
-            dispatch(Actions.RESTORE_APP_STATE, stateReader.getAppState());
-            return otherReaders;
-          });
+        stateReader.parseAsArrayBuffer().then(() => {
+          dispatch(Actions.RESTORE_APP_STATE, stateReader.getAppState());
+        });
+        return otherReaders;
       }
       return Promise.resolve(otherReaders);
     },

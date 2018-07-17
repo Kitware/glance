@@ -2,8 +2,11 @@ import JSZip from 'jszip';
 import merge from 'merge';
 import Vue from 'vue';
 import Vuex from 'vuex';
+
+import vtk from 'vtk.js/Sources/vtk';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
+import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import Config from 'paraview-glance/src/config';
 import global from 'paraview-glance/src/stores/globalSettings';
 import files from 'paraview-glance/src/stores/fileLoader';
@@ -69,43 +72,70 @@ function createStore(proxyManager = null) {
         commit(Mutations.SAVING_STATE, fileName);
 
         const userData = reduceState(state);
+        const options = {
+          recycleViews: true,
+          datasetHandler(dataset, source) {
+            const sourceMeta = source.get('name', 'url', 'remoteMetaData');
+            const datasetMeta = dataset.get('name', 'url', 'remoteMetaData');
+            const metadata = sourceMeta.url ? sourceMeta : datasetMeta;
+            if (metadata.name && metadata.url) {
+              return metadata;
+            }
+            // Not a remote dataset so use basic dataset serialization
+            return dataset.getState();
+          },
+        };
 
-        const options = { recycleViews: true };
         const zip = new JSZip();
-        zip.file(
-          'state.json',
-          JSON.stringify(
-            state.proxyManager.saveState(options, userData),
-            null,
-            2
-          )
-        );
-        console.log('zip entry added, start compression...');
-        zip
-          .generateAsync({
-            type: 'blob',
-            compression: 'DEFLATE',
-            compressionOptions: {
-              level: 6,
-            },
-          })
-          .then((blob) => {
-            console.log('file generated', this.fileName, blob.size);
-            const url = URL.createObjectURL(blob);
-            const anchor = document.createElement('a');
-            anchor.setAttribute('href', url);
-            anchor.setAttribute('download', fileName);
-            anchor.click();
-            setTimeout(() => URL.revokeObjectURL(url), 60000);
-
-            commit(Mutations.SAVING_STATE, null);
-          });
+        state.proxyManager.saveState(options, userData).then((stateObject) => {
+          zip.file('state.json', JSON.stringify(stateObject));
+          zip
+            .generateAsync({
+              type: 'blob',
+              compression: 'DEFLATE',
+              compressionOptions: {
+                level: 6,
+              },
+            })
+            .then((blob) => {
+              console.log('file generated', this.fileName, blob.size);
+              const url = URL.createObjectURL(blob);
+              const anchor = document.createElement('a');
+              anchor.setAttribute('href', url);
+              anchor.setAttribute('download', fileName);
+              anchor.click();
+              setTimeout(() => URL.revokeObjectURL(url), 60000);
+              commit(Mutations.SAVING_STATE, null);
+            });
+        });
       },
       RESTORE_APP_STATE({ dispatch, state }, appState) {
         dispatch(Actions.RESET_WORKSPACE);
-
-        const userData = state.proxyManager.loadState(appState);
-        this.replaceState(merge.recursive(state, userData));
+        state.proxyManager
+          .loadState(appState, {
+            datasetHandler(ds) {
+              if (ds.vtkClass) {
+                return vtk(ds);
+              }
+              return new Promise((resolve) => {
+                ReaderFactory.downloadDataset(ds.name, ds.url).then(
+                  ({ dataset, reader }) => {
+                    if (dataset) {
+                      dataset.set(ds, true); // Attach remote data origin
+                      resolve(dataset);
+                    } else {
+                      const newDS = reader.getOutputData();
+                      newDS.set(ds, true); // Attach remote data origin
+                      resolve(newDS);
+                    }
+                  }
+                );
+              });
+            },
+          })
+          .then((userData) => {
+            this.replaceState(merge.recursive(state, userData));
+          });
       },
       RESET_WORKSPACE({ state }) {
         // use setTimeout to avoid some weird crashing with extractDomains

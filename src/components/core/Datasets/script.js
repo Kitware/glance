@@ -83,6 +83,7 @@ export default {
   },
   computed: mapState({
     proxyManager: 'proxyManager',
+    loadingState: 'loadingState',
     panels: (state) => {
       const priorities = Object.keys(state.panels);
       priorities.sort((a, b) => Number(a) - Number(b));
@@ -93,7 +94,9 @@ export default {
     this.subscriptions = [];
     this.listenerHelper = vtkListenerHelper.newInstance(
       () => {
-        this.$nextTick(this.$forceUpdate);
+        if (!this.loadingState) {
+          this.$nextTick(this.$forceUpdate);
+        }
       },
       () => [this.proxyManager].concat(this.proxyManager.getRepresentations())
     );

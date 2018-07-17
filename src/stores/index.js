@@ -36,6 +36,7 @@ function createStore(proxyManager = null) {
       proxyManager: pxm,
       route: 'landing', // valid values: landing, app
       savingStateName: null,
+      loadingState: false,
       panels: {},
     },
     modules: {
@@ -53,6 +54,9 @@ function createStore(proxyManager = null) {
       },
       SAVING_STATE(state, name = null) {
         state.savingStateName = name;
+      },
+      LOADING_STATE(state, flag) {
+        state.loadingState = flag;
       },
       ADD_PANEL: (state, { component, priority = 0 }) => {
         if (!(priority in state.panels)) {
@@ -109,7 +113,9 @@ function createStore(proxyManager = null) {
             });
         });
       },
-      RESTORE_APP_STATE({ dispatch, state }, appState) {
+      RESTORE_APP_STATE({ commit, dispatch, state }, appState) {
+        commit(Mutations.LOADING_STATE, true);
+
         dispatch(Actions.RESET_WORKSPACE);
         state.proxyManager
           .loadState(appState, {
@@ -137,6 +143,9 @@ function createStore(proxyManager = null) {
           })
           .then((userData) => {
             this.replaceState(merge.recursive(state, userData));
+            commit(Mutations.LOADING_STATE, false);
+            // Force update
+            state.proxyManager.modified();
           });
       },
       RESET_WORKSPACE({ state }) {

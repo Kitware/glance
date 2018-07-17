@@ -14,37 +14,22 @@
         overflow: hidden !important;
       }
     </style>
-    
-      <script
-         inline 
-        type="text/javascript"
-        src="runtime.js"
-      ></script>
-    
-      <script
-         inline 
-        type="text/javascript"
-        src="vendors.js"
-      ></script>
-    
-      <script
-         inline 
-        type="text/javascript"
-        src="glance.js"
-      ></script>
-    
-      <script
-        
-        type="text/javascript"
-        src="glance-external-ITKReader.js"
-      ></script>
-    
-      <script
-        
-        type="text/javascript"
-        src="glance-external-Workbox.js"
-      ></script>
-    
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-90338862-10"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-90338862-10');
+    </script>
+
+    <!-- Glance -->
+    <script type="text/javascript" src="runtime.js"></script>
+    <script type="text/javascript" src="vendors.js"></script>
+    <script type="text/javascript" src="glance.js"></script>
+    <script type="text/javascript" src="glance-external-ITKReader.js"></script>
+    <script type="text/javascript" src="glance-external-Workbox.js"></script>
   </head>
   <body>
     <div id="root-container"></div>

@@ -22,12 +22,12 @@ module.exports = {
       dest: './build-tmp/public/app',
     },
     {
-      src: 'app-index.html',
-      dest: './build-tmp/public/app/index.html',
+      src: 'app-override/*',
+      dest: './build-tmp/public/app/',
     },
     {
-      src: 'app-index.html',
-      dest: './build-tmp/public/nightly/index.html',
+      src: 'app-override/*',
+      dest: './build-tmp/public/nightly/',
     },
   ],
 };

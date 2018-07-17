@@ -160,6 +160,9 @@ function createStore(proxyManager = null) {
           state.proxyManager.resetCameraInAllViews();
         }, 0);
       },
+      RESET_ACTIVE_CAMERA({ state }) {
+        state.proxyManager.resetCamera();
+      },
     },
   });
 }

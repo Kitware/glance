@@ -117,16 +117,18 @@ function createStore(proxyManager = null) {
               if (ds.vtkClass) {
                 return vtk(ds);
               }
-              return new Promise((resolve) => {
+              return new Promise((resolve, reject) => {
                 ReaderFactory.downloadDataset(ds.name, ds.url).then(
                   ({ dataset, reader }) => {
-                    if (dataset) {
-                      dataset.set(ds, true); // Attach remote data origin
-                      resolve(dataset);
-                    } else {
+                    if (reader) {
                       const newDS = reader.getOutputData();
                       newDS.set(ds, true); // Attach remote data origin
                       resolve(newDS);
+                    } else if (dataset && dataset.isA) {
+                      dataset.set(ds, true); // Attach remote data origin
+                      resolve(dataset);
+                    } else {
+                      reject(new Error('Invalid dataset'));
                     }
                   }
                 );

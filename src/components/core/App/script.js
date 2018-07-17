@@ -1,4 +1,5 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
+import Mousetrap from 'mousetrap';
 
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
@@ -16,6 +17,7 @@ import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
 import { Widgets } from 'paraview-glance/src/constants';
 import { Actions, Mutations } from 'paraview-glance/src/stores/types';
+import shortcuts from 'paraview-glance/src/shortcuts';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -68,6 +70,7 @@ export default {
     },
   }),
   mounted() {
+    // listen for proxyManager changes
     this.renderListener = vtkListenerHelper.newInstance(
       this.proxyManager.autoAnimateViews,
       () =>
@@ -81,8 +84,20 @@ export default {
       this.renderListener.resetListeners
     );
 
+    // attach keyboard shortcuts
+    shortcuts.forEach(({ key, action }) => {
+      if (Actions[action]) {
+        Mousetrap.bind(key, (e) => {
+          e.preventDefault();
+          this.$store.dispatch(Actions[action]);
+        });
+      }
+    });
+
+    // listen for errors
     window.addEventListener('error', this.recordError);
 
+    // listen for errors via console.error
     if (window.console) {
       this.origConsoleError = window.console.error;
       window.console.error = (...args) => {
@@ -97,6 +112,12 @@ export default {
     if (this.origConsoleError) {
       window.console.error = this.origConsoleError;
     }
+
+    shortcuts.forEach(({ key, action }) => {
+      if (Actions[action]) {
+        Mousetrap.unbind(key);
+      }
+    });
 
     this.pxmSub.unsubscribe();
     this.renderListener.removeListeners();

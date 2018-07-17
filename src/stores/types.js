@@ -11,6 +11,7 @@ export const Actions = objEnum([
   'SAVE_STATE',
   'RESTORE_APP_STATE',
   'RESET_WORKSPACE',
+  'RESET_ACTIVE_CAMERA',
 
   // files
   'PROMPT_FOR_FILES',

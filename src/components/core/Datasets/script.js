@@ -51,10 +51,10 @@ function deleteDataset(proxy) {
 // ----------------------------------------------------------------------------
 
 function getDatasetVisibility(source) {
-  return this.proxyManager
+  const rep = this.proxyManager
     .getRepresentations()
-    .filter((r) => r.getInput() === source)[0]
-    .isVisible();
+    .filter((r) => r.getInput() === source)[0];
+  return rep ? rep.isVisible() : false;
 }
 
 // ----------------------------------------------------------------------------

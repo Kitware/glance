@@ -62,6 +62,7 @@ export default {
   },
   computed: mapState({
     proxyManager: 'proxyManager',
+    loadingState: 'loadingState',
     landingVisible: (state) => state.route === 'landing',
     screenshotsDrawerStateless(state) {
       // Keep screenshot drawer open if screenshot was taken from
@@ -72,7 +73,11 @@ export default {
   mounted() {
     // listen for proxyManager changes
     this.renderListener = vtkListenerHelper.newInstance(
-      this.proxyManager.autoAnimateViews,
+      () => {
+        if (!this.loadingState) {
+          this.proxyManager.autoAnimateViews();
+        }
+      },
       () =>
         [].concat(
           this.proxyManager.getSources(),

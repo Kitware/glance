@@ -143,9 +143,27 @@ function createStore(proxyManager = null) {
           })
           .then((userData) => {
             this.replaceState(merge.recursive(state, userData));
-            commit(Mutations.LOADING_STATE, false);
-            // Force update
-            state.proxyManager.modified();
+
+            // Wait for the layout to be done (nextTick is not enough)
+            setTimeout(() => {
+              // Advertise that state loading is done
+              commit(Mutations.LOADING_STATE, false);
+
+              // Force update
+              state.proxyManager.modified();
+
+              // Activate visible view with a preference for the 3D one
+              const visibleViews = state.proxyManager
+                .getViews()
+                .filter((view) => view.getContainer());
+              const view3D = visibleViews.find(
+                (view) => view.getProxyName() === 'View3D'
+              );
+              const viewToActivate = view3D || visibleViews[0];
+              if (viewToActivate) {
+                viewToActivate.activate();
+              }
+            }, 100);
           });
       },
       RESET_WORKSPACE({ state }) {

@@ -117,7 +117,7 @@ function createStore(proxyManager = null) {
         commit(Mutations.LOADING_STATE, true);
 
         dispatch(Actions.RESET_WORKSPACE);
-        state.proxyManager
+        return state.proxyManager
           .loadState(appState, {
             datasetHandler(ds) {
               if (ds.vtkClass) {

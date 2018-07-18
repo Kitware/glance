@@ -36,7 +36,7 @@
     "bundle": "inline-source --compress false --root ./dist ./dist/index.html ./dist/ParaViewGlance.html",
     "commit": "git cz",
     "semantic-release": "semantic-release",
-    "prepublishOnly": "npm run version"
+    "prepublishOnly": "npm run version && npm run bundle"
   },
   "author": "Kitware",
   "dependencies": {

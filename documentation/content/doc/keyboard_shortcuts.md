@@ -12,7 +12,10 @@ table {
 | Shortcut       | Action               |
 | -------------- | -------------------- |
 | Ctrl + O       | Open File Dialog     |
+
+<!--
 | Ctrl + Delete  | Delete active data   |
+-->
 
 
 ## View
@@ -20,11 +23,12 @@ table {
 | Shortcut  | Action            |
 | ----------| ----------------- |
 | Ctrl + G  | Grab a screenshot |
+
+<!--
 | Ctrl + 0  | 3D View           |
 | Ctrl + X  | 2D View along X   |
 | Ctrl + Y  | 2D View along Y   |
 | Ctrl + Z  | 2D View along Z   |
-
 
 ## Slice / Window / Level
 
@@ -48,6 +52,7 @@ table {
 | Ctrl + 2     | Split view (top)     |
 | Ctrl + 3     | Split view (bottom)  |
 | Ctrl + 4     | Quad view            |
+-->
 
 
 ## Camera
@@ -55,8 +60,11 @@ table {
 | Shortcut           | Action               |
 | ------------------ | -------------------- |
 | R                  | Reset Camera         |
+
+<!--
 | Alt + Left arrow   | Roll Left            |
 | Alt + Right arrow  | Roll right           |
 | Alt + X/L          | Reset camera X       |
 | Alt + Y/P          | Reset camera Y       |
 | Alt + Z/S          | Reset camera Z       |
+-->

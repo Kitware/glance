@@ -1,5 +1,10 @@
 import Images from 'paraview-glance/src/samples/images';
 
+const version =
+  window.GLANCE_VERSION && window.GLANCE_VERSION !== 'master'
+    ? `v${window.GLANCE_VERSION}`
+    : 'master';
+
 // prettier-ignore
 export default [
   {
@@ -11,7 +16,7 @@ export default [
     datasets: [
       {
         name: '202-t.glance',
-        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/202-t.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/202-t.glance`,
       },
     ],
   },
@@ -23,7 +28,7 @@ export default [
     datasets: [
       {
         name: 'Lysozyme.glance',
-        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/lysozyme.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/lysozyme.glance`,
       },
     ],
   },
@@ -34,7 +39,7 @@ export default [
     datasets: [
       {
         name: 'Tooth.glance',
-        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/Tooth.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/Tooth.glance`,
       },
     ],
   },
@@ -45,7 +50,7 @@ export default [
     datasets: [
       {
         name: 'Engine.glance',
-        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/Engine.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/Engine.glance`,
       },
     ],
     acknowledgement: 'General Electric',
@@ -59,7 +64,7 @@ export default [
     datasets: [
       {
         name: 'lidar.glance',
-        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/lidar.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/lidar.glance`,
       },
     ],
   },
@@ -72,7 +77,7 @@ export default [
     datasets: [
       {
         name: 'SinglePin.glance',
-        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/SinglePin.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/SinglePin.glance`,
       },
     ],
   },
@@ -83,7 +88,7 @@ export default [
     datasets: [
       {
         name: 'skull.glance',
-        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/skull.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/skull.glance`,
       },
     ],
     acknowledgement: 'Siemens Medical Solutions, Forchheim, Germany',
@@ -96,7 +101,7 @@ export default [
     datasets: [
       {
         name: 'LIDC2.glance',
-        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/LIDC2.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/LIDC2.glance`,
       },
     ],
   },
@@ -107,7 +112,7 @@ export default [
     datasets: [
       {
         name: 'Aneurism.glance',
-        url: 'https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/Aneurism.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/Aneurism.glance`,
       },
     ],
     acknowledgement: 'Philips Research, Hamburg, Germany',

@@ -25,10 +25,19 @@
       and
       <a href="https://kitware.github.io/vtk-js/">VTK.js</a>.
     </p>
-    <p class="body-1">
-      <span>Find us on</span>
-      <a href="https://github.com/Kitware/paraview-glance">Github</a>!
-    </p>
+    <ul :class="$style.list">
+      <li class="body-1">
+        <span>Here is our</span>
+        <a href="https://kitware.github.io/paraview-glance/doc/">documentation</a>.
+      </li>
+      <li class="body-1">
+        <span>We are open source!</span>
+        <a href="https://github.com/Kitware/paraview-glance">Code is on Github</a>.
+      </li>
+      <li class="body-1">
+        <span>Current version: {{version}}</span>
+      </li>
+    </ul>
     <v-layout row wrap class="text-xs-center" align-end>
       <v-flex xs4>
         <a href="https://www.kitware.com">

@@ -18,7 +18,8 @@ export default {
   },
 
   actions: {
-    TAKE_SCREENSHOT({ commit, rootState }, view) {
+    TAKE_SCREENSHOT({ commit, rootState }, viewToUse = null) {
+      const view = viewToUse || rootState.proxyManager.getActiveView();
       if (view) {
         return view.captureImage().then((imgSrc) => {
           commit(Mutations.OPEN_SCREENSHOT_DIALOG, {

@@ -39,17 +39,17 @@
   <!-- RSS -->
   <link rel="alternate" href="/paraview-glance/atom.xml" title="ParaView Glance">
   <!-- Open Graph -->
-  <meta name="description" content="table {   width: 100%; }   Data management   Shortcut Action     Ctrl + O Open File Dialog   Ctrl + Delete Delete active data    View   Shortcut Action     Ctrl + G Grab a screenshot   Ctrl + 0 3D Vi">
+  <meta name="description" content="table {   width: 100%; }   Data management   Shortcut Action     Ctrl + O Open File Dialog     View   Shortcut Action     Ctrl + G Grab a screenshot     Camera   Shortcut Action     R Reset Camera">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Keyboard shortcuts">
 <meta property="og:url" content="https://kitware.github.io/paraview-glance/doc/keyboard_shortcuts.html">
 <meta property="og:site_name" content="ParaView Glance">
-<meta property="og:description" content="table {   width: 100%; }   Data management   Shortcut Action     Ctrl + O Open File Dialog   Ctrl + Delete Delete active data    View   Shortcut Action     Ctrl + G Grab a screenshot   Ctrl + 0 3D Vi">
+<meta property="og:description" content="table {   width: 100%; }   Data management   Shortcut Action     Ctrl + O Open File Dialog     View   Shortcut Action     Ctrl + G Grab a screenshot     Camera   Shortcut Action     R Reset Camera">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-07-17T22:57:34.861Z">
+<meta property="og:updated_time" content="2018-07-18T22:14:07.297Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Keyboard shortcuts">
-<meta name="twitter:description" content="table {   width: 100%; }   Data management   Shortcut Action     Ctrl + O Open File Dialog   Ctrl + Delete Delete active data    View   Shortcut Action     Ctrl + G Grab a screenshot   Ctrl + 0 3D Vi">
+<meta name="twitter:description" content="table {   width: 100%; }   Data management   Shortcut Action     Ctrl + O Open File Dialog     View   Shortcut Action     Ctrl + G Grab a screenshot     Camera   Shortcut Action     R Reset Camera">
   <!-- Google Analytics -->
   
 <script>
@@ -118,12 +118,11 @@ table {
 <td>Ctrl + O</td>
 <td>Open File Dialog</td>
 </tr>
-<tr>
-<td>Ctrl + Delete</td>
-<td>Delete active data</td>
-</tr>
 </tbody>
 </table>
+<!--
+| Ctrl + Delete  | Delete active data   |
+-->
 <h2 id="View" class="article-heading"><a href="#View" class="headerlink" title="View"></a>View<a class="article-anchor" href="#View" aria-hidden="true"></a></h2><table>
 <thead>
 <tr>
@@ -136,96 +135,37 @@ table {
 <td>Ctrl + G</td>
 <td>Grab a screenshot</td>
 </tr>
-<tr>
-<td>Ctrl + 0</td>
-<td>3D View</td>
-</tr>
-<tr>
-<td>Ctrl + X</td>
-<td>2D View along X</td>
-</tr>
-<tr>
-<td>Ctrl + Y</td>
-<td>2D View along Y</td>
-</tr>
-<tr>
-<td>Ctrl + Z</td>
-<td>2D View along Z</td>
-</tr>
 </tbody>
 </table>
-<h2 id="Slice-Window-Level" class="article-heading"><a href="#Slice-Window-Level" class="headerlink" title="Slice / Window / Level"></a>Slice / Window / Level<a class="article-anchor" href="#Slice-Window-Level" aria-hidden="true"></a></h2><table>
-<thead>
-<tr>
-<th>Shortcut</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Shift + Up arrow</td>
-<td>Increase Window</td>
-</tr>
-<tr>
-<td>Shift + Down arrow</td>
-<td>Decrease Window</td>
-</tr>
-<tr>
-<td>Shift + Left arrow</td>
-<td>Decrease Level</td>
-</tr>
-<tr>
-<td>Shift + Right arrow</td>
-<td>Increase Level</td>
-</tr>
-<tr>
-<td>Shift + Alt + Up arrow</td>
-<td>Next Slice</td>
-</tr>
-<tr>
-<td>Shift + Alt + Down arrow</td>
-<td>Previous Slice</td>
-</tr>
-<tr>
-<td>Shift + Alt + Right arrow</td>
-<td>Next Slice</td>
-</tr>
-<tr>
-<td>Shift + Alt + Left arrow</td>
-<td>Previous Slice</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Layout" class="article-heading"><a href="#Layout" class="headerlink" title="Layout"></a>Layout<a class="article-anchor" href="#Layout" aria-hidden="true"></a></h2><table>
-<thead>
-<tr>
-<th>Shortcut</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Ctrl + Space</td>
-<td>Toggle left pane</td>
-</tr>
-<tr>
-<td>Ctrl + 1</td>
-<td>One view</td>
-</tr>
-<tr>
-<td>Ctrl + 2</td>
-<td>Split view (top)</td>
-</tr>
-<tr>
-<td>Ctrl + 3</td>
-<td>Split view (bottom)</td>
-</tr>
-<tr>
-<td>Ctrl + 4</td>
-<td>Quad view</td>
-</tr>
-</tbody>
-</table>
+<!--
+| Ctrl + 0  | 3D View           |
+| Ctrl + X  | 2D View along X   |
+| Ctrl + Y  | 2D View along Y   |
+| Ctrl + Z  | 2D View along Z   |
+
+## Slice / Window / Level
+
+| Shortcut                  | Action              |
+| ------------------------- | ------------------- |
+| Shift + Up arrow          | Increase Window     |
+| Shift + Down arrow        | Decrease Window     |
+| Shift + Left arrow        | Decrease Level      |
+| Shift + Right arrow       | Increase Level      |
+| Shift + Alt + Up arrow    | Next Slice          |
+| Shift + Alt + Down arrow  | Previous Slice      |
+| Shift + Alt + Right arrow | Next Slice          |
+| Shift + Alt + Left arrow  | Previous Slice      |
+
+## Layout
+
+| Shortcut     | Action               |
+| ------------ | -------------------- |
+| Ctrl + Space | Toggle left pane     |
+| Ctrl + 1     | One view             |
+| Ctrl + 2     | Split view (top)     |
+| Ctrl + 3     | Split view (bottom)  |
+| Ctrl + 4     | Quad view            |
+-->
 <h2 id="Camera" class="article-heading"><a href="#Camera" class="headerlink" title="Camera"></a>Camera<a class="article-anchor" href="#Camera" aria-hidden="true"></a></h2><table>
 <thead>
 <tr>
@@ -238,32 +178,19 @@ table {
 <td>R</td>
 <td>Reset Camera</td>
 </tr>
-<tr>
-<td>Alt + Left arrow</td>
-<td>Roll Left</td>
-</tr>
-<tr>
-<td>Alt + Right arrow</td>
-<td>Roll right</td>
-</tr>
-<tr>
-<td>Alt + X/L</td>
-<td>Reset camera X</td>
-</tr>
-<tr>
-<td>Alt + Y/P</td>
-<td>Reset camera Y</td>
-</tr>
-<tr>
-<td>Alt + Z/S</td>
-<td>Reset camera Z</td>
-</tr>
 </tbody>
 </table>
+<!--
+| Alt + Left arrow   | Roll Left            |
+| Alt + Right arrow  | Roll right           |
+| Alt + X/L          | Reset camera X       |
+| Alt + Y/P          | Reset camera Y       |
+| Alt + Z/S          | Reset camera Z       |
+-->
 
               </div>
               <footer class="article-footer">
-                <time class="article-footer-updated" datetime="2018-07-17T22:57:34.861Z" itemprop="dateModified">Last updated: 2018-07-17</time>
+                <time class="article-footer-updated" datetime="2018-07-18T22:14:07.297Z" itemprop="dateModified">Last updated: 2018-07-18</time>
                 <a href="readers.html" class="article-footer-prev" title="Supported formats"><i class="fa fa-chevron-left"></i><span>Prev</span></a>
               </footer>
               
@@ -272,7 +199,7 @@ table {
           <aside id="article-toc" role="navigation">
             <div id="article-toc-inner">
               <strong class="sidebar-title">Contents</strong>
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Data-management"><span class="toc-text">Data management</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#View"><span class="toc-text">View</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Slice-Window-Level"><span class="toc-text">Slice / Window / Level</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Layout"><span class="toc-text">Layout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Camera"><span class="toc-text">Camera</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Data-management"><span class="toc-text">Data management</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#View"><span class="toc-text">View</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Camera"><span class="toc-text">Camera</span></a></li></ol>
               <a href="#" id="article-toc-top">Back to Top</a>
             </div>
           </aside>

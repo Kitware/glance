@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://kitware.github.io/paraview-glance/doc/keyboard_shortcuts.html</loc>
+    
+    <lastmod>2018-07-18T22:14:07.297Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://kitware.github.io/paraview-glance/index.html</loc>
     
     <lastmod>2018-07-17T22:57:34.869Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>https://kitware.github.io/paraview-glance/gallery/index.html</loc>
     
     <lastmod>2018-07-17T22:57:34.869Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://kitware.github.io/paraview-glance/doc/keyboard_shortcuts.html</loc>
-    
-    <lastmod>2018-07-17T22:57:34.861Z</lastmod>
     
   </url>
   

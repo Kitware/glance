@@ -126,6 +126,13 @@ export default {
     mapMutations({
       showApp: Mutations.SHOW_APP,
       showLanding: Mutations.SHOW_LANDING,
+      toggleLanding() {
+        if (this.landingVisible) {
+          this.showApp();
+        } else {
+          this.showLanding();
+        }
+      },
     }),
     mapActions({
       promptUserFiles: Actions.PROMPT_FOR_FILES,

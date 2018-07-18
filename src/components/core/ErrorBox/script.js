@@ -39,13 +39,14 @@ export default {
   },
   computed: {
     readableErrors() {
+      const version = window.GLANCE_VERSION || 'not available';
       const errorStrings = this.errors.map((err) => {
         if (err instanceof ErrorEvent) {
           return err.message;
         }
         return err;
       });
-      return `${navigator.userAgent}\n\n\`\`\`\n${errorStrings}\n\`\`\``;
+      return `ParaViewGlance: ${version}\n${navigator.userAgent}\n\n\`\`\`\n${errorStrings}\n\`\`\``;
     },
   },
   methods: {

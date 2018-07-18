@@ -7,4 +7,9 @@ export default {
   components: {
     SvgIcon,
   },
+  data() {
+    return {
+      version: window.GLANCE_VERSION || 'not available',
+    };
+  },
 };

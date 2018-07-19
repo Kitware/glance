@@ -208,6 +208,13 @@ function onEsc(ev) {
 
 function update() {
   if (this.loadingState) {
+    if (this.subscriptions.length === 1) {
+      this.subscriptions.push(
+        this.proxyManager.onModified(() => {
+          this.update();
+        })
+      );
+    }
     return;
   }
   const myRepresentations = this.proxyManager
@@ -248,6 +255,11 @@ function update() {
         this.arrays = convertArrays(propUI.domain.arrays);
       }
     }
+  }
+
+  // Remove our listener on proxy manager
+  if (this.subscriptions.length === 2) {
+    this.subscriptions.pop().unsubscribe();
   }
 }
 

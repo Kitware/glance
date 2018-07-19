@@ -163,6 +163,11 @@ function createStore(proxyManager = null) {
               if (viewToActivate) {
                 viewToActivate.activate();
               }
+
+              // Make sure pre-existing view (not expected in state) have a representation
+              state.proxyManager
+                .getSources()
+                .forEach(state.proxyManager.createRepresentationInAllViews);
             }, 100);
           });
       },

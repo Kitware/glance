@@ -12,7 +12,7 @@ workboxSW.precache([
   },
   {
     "url": "glance.js",
-    "revision": "ad3257ffd2d3feca069aad2b352e90e7"
+    "revision": "e66633aa5bcf3614696fa5da20945f9f"
   },
   {
     "url": "index.html",
@@ -416,7 +416,7 @@ workboxSW.precache([
   },
   {
     "url": "version.js",
-    "revision": "32cf278df02e2509c5fdfed2f466d8a4"
+    "revision": "525f68c8c351b76a3fa31d319e0db446"
   },
   {
     "url": "workbox-sw.prod.v2.1.2.js",
@@ -426,8 +426,8 @@ workboxSW.precache([
 
 workboxSW.router.registerRoute(
   /\.js|\.png|\.wasm$/,
-  workboxSW.strategies.staleWhileRevalidate({
-    cacheName: 'staleWhileRevalidateContent',
+  workboxSW.strategies.networkFirst({
+    cacheName: 'networkFirstContent',
     cacheExpiration: {
       maxEntries: 50,
       maxAgeSeconds: 7 * 24 * 60 * 60 * 26,

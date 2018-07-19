@@ -1,5 +1,4 @@
 import JSZip from 'jszip';
-import merge from 'merge';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -13,6 +12,30 @@ import files from 'paraview-glance/src/stores/fileLoader';
 import screenshots from 'paraview-glance/src/stores/screenshots';
 import views from 'paraview-glance/src/stores/views';
 import { Actions, Mutations } from 'paraview-glance/src/stores/types';
+
+// http://jsperf.com/typeofvar
+function typeOf(o) {
+  return {}.toString
+    .call(o)
+    .slice(8, -1)
+    .toLowerCase();
+}
+
+// quick object merge using Vue.set
+/* eslint-disable no-param-reassign */
+function merge(dst, src) {
+  const keys = Object.keys(src);
+  for (let i = 0; i < keys.length; ++i) {
+    const key = keys[i];
+    if (typeOf(dst[key]) === 'object' && typeOf(src[key]) === 'object') {
+      Vue.set(dst, key, merge(dst[key], src[key]));
+    } else {
+      Vue.set(dst, key, src[key]);
+    }
+  }
+  return dst;
+}
+/* eslint-enable no-param-reassign */
 
 // Reduces app state to relevant persistent state
 function reduceState(state) {
@@ -142,7 +165,7 @@ function createStore(proxyManager = null) {
             },
           })
           .then((userData) => {
-            this.replaceState(merge.recursive(state, userData));
+            this.replaceState(merge(state, userData));
 
             // Wait for the layout to be done (nextTick is not enough)
             setTimeout(() => {

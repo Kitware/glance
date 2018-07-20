@@ -295,12 +295,14 @@ export default {
       });
 
       if (stateReader) {
-        return stateReader
-          .parseAsArrayBuffer()
-          .then(() =>
-            dispatch(Actions.RESTORE_APP_STATE, stateReader.getAppState())
-          )
-          .then(() => otherReaders);
+        return allWithErrors([
+          stateReader
+            .parseAsArrayBuffer()
+            .then(() =>
+              dispatch(Actions.RESTORE_APP_STATE, stateReader.getAppState())
+            )
+            .then(() => otherReaders),
+        ]);
       }
       return Promise.resolve(otherReaders);
     },

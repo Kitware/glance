@@ -146,22 +146,29 @@ function createStore(proxyManager = null) {
               if (ds.vtkClass) {
                 return vtk(ds);
               }
-              return new Promise((resolve, reject) => {
-                ReaderFactory.downloadDataset(ds.name, ds.url).then(
-                  ({ dataset, reader }) => {
-                    if (reader) {
-                      const newDS = reader.getOutputData();
-                      newDS.set(ds, true); // Attach remote data origin
-                      resolve(newDS);
-                    } else if (dataset && dataset.isA) {
-                      dataset.set(ds, true); // Attach remote data origin
-                      resolve(dataset);
-                    } else {
-                      reject(new Error('Invalid dataset'));
-                    }
+              return ReaderFactory.downloadDataset(ds.name, ds.url)
+                .then(({ dataset, reader }) => {
+                  if (reader) {
+                    const newDS = reader.getOutputData();
+                    newDS.set(ds, true); // Attach remote data origin
+                    return newDS;
+                  } else if (dataset && dataset.isA) {
+                    dataset.set(ds, true); // Attach remote data origin
+                    return dataset;
                   }
-                );
-              });
+                  throw new Error('Invalid dataset');
+                })
+                .catch((e) => {
+                  // more meaningful error
+                  const moreInfo = `Dataset doesn't exist or adblock/firewall prevents access.`;
+                  if ('xhr' in e) {
+                    const { xhr } = e;
+                    throw new Error(
+                      `${xhr.statusText} (${xhr.status}): ${moreInfo}`
+                    );
+                  }
+                  throw new Error(`${e.message} (${moreInfo})`);
+                });
             },
           })
           .then((userData) => {

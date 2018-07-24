@@ -101,12 +101,12 @@
     </v-content>
 
     <v-navigation-drawer
-      v-show="!landingVisible"
       v-model="screenshotsDrawer"
-      absolute
+      :touchless="landingVisible"
+      :stateless="screenshotsDrawerStateless"
+      app
       right
       temporary
-      :stateless="screenshotsDrawerStateless"
     >
       <screenshots
         v-on:screenshot-count="screenshotCount = $event"

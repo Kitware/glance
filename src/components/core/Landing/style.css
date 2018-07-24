@@ -25,6 +25,9 @@
 }
 
 .fileUploadContents {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
   width: 100%;
   text-align: center;
   padding: 15px;

@@ -31,7 +31,11 @@
           href="#"
           v-on:click.prevent="toggleLanding"
         >
-          <svg-icon icon="paraview-glance" height="52px" />
+          <svg-icon
+            icon="paraview-glance"
+            height="52px"
+            style="margin-top: 6px"
+          />
         </a>
         <span v-if="landingVisible" key="if-landingVisible">Go to app</span>
         <span v-else key="if-landingVisible">Back to landing page</span>

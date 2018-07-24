@@ -3,13 +3,15 @@
   v-on:drop="openFiles"
 >
   <v-app slot-scope="{ dragHover }">
+    <!-- 960 is vuetify's md breakpoint -->
     <v-navigation-drawer
-      :value="!landingVisible && controlsDrawer"
-      absolute
+      v-model="controlsDrawer"
+      :touchless="landingVisible"
+      :clipped="$vuetify.breakpoint.mdAndUp"
+      mobile-break-point="960"
       app
-      clipped
-      hide-overlay
-      stateless
+      fixed
+      disable-resize-watcher
     >
       <controls-drawer />
     </v-navigation-drawer>

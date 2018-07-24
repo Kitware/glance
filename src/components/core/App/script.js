@@ -54,7 +54,7 @@ export default {
     return {
       aboutDialog: false,
       errorDialog: false,
-      controlsDrawer: true,
+      controlsDrawer: false,
       screenshotsDrawer: false,
       screenshotCount: 0,
       errors: [],
@@ -70,6 +70,14 @@ export default {
       return this.screenshotsDrawer && !!state.screenshots.showDialog;
     },
   }),
+  watch: {
+    landingVisible(value) {
+      // matches the mobile breakpoint for navigation-drawer
+      if (!value && this.$vuetify.breakpoint.mdAndUp) {
+        this.controlsDrawer = true;
+      }
+    },
+  },
   mounted() {
     // listen for proxyManager changes
     this.renderListener = vtkListenerHelper.newInstance(

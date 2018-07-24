@@ -74,6 +74,9 @@ export default {
       // hide buttons under 768.
       return this.$vuetify.breakpoint.width < 768;
     },
+    dialogType() {
+      return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
+    },
   }),
   watch: {
     landingVisible(value) {

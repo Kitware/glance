@@ -149,13 +149,21 @@
     <browser-issues />
 
     <!-- about dialog -->
-    <v-dialog v-model="aboutDialog" max-width="50%">
+    <component
+      :is="dialogType"
+      v-model="aboutDialog"
+      max-width="50%"
+    >
       <about-box v-on:close="aboutDialog = false" />
-    </v-dialog>
+    </component>
 
     <!-- error dialog-->
-    <v-dialog v-model="errorDialog" max-width="50%">
+    <component
+      :is="dialogType"
+      v-model="errorDialog"
+      max-width="50%"
+    >
       <error-box :errors="errors" v-on:close="errorDialog = false" />
-    </v-dialog>
+    </component>
   </v-app>
 </drag-and-drop>

@@ -41,47 +41,53 @@
         v-if="errors.length"
         key="if-has-errors"
         :class="$style.toolbarButton"
+        :icon="smallScreen"
         flat
         color="error"
         v-on:click="errorDialog = true"
       >
         <v-icon>error</v-icon>
-        <span>{{ errors.length }} error(s)</span>
+        <span>{{ errors.length }}</span>
+        <span v-show="!smallScreen">error(s)</span>
       </v-btn>
       <v-btn
         :class="$style.toolbarButton"
+        :icon="smallScreen"
         flat
         v-on:click="promptUserFiles"
       >
         <v-icon>folder</v-icon>
-        <span>Open</span>
+        <span v-show="!smallScreen">Open</span>
       </v-btn>
       <v-btn
         v-show="!landingVisible"
         :class="$style.toolbarButton"
+        :icon="smallScreen"
         flat
         v-on:click="saveState()"
       >
         <v-icon>cloud_download</v-icon>
-        <span>Save state</span>
+        <span v-show="!smallScreen">Save state</span>
       </v-btn>
       <v-btn
         v-show="!landingVisible"
         :class="$style.toolbarButton"
+        :icon="smallScreen"
         flat
         v-on:click="screenshotsDrawer = true"
       >
         <v-icon>collections</v-icon>
-        <span>Screenshots ({{ screenshotCount }})</span>
+        <span v-show="!smallScreen">Screenshots ({{ screenshotCount }})</span>
       </v-btn>
       <v-btn
         :class="$style.toolbarButton"
+        :icon="smallScreen"
         flat
         v-on:click="aboutDialog = true"
       >
         <!-- width of other icons in toolbar -->
         <svg-icon icon="kitware-logo" width="24px" />
-        <span>About</span>
+        <span v-show="!smallScreen">About</span>
       </v-btn>
     </v-toolbar>
 

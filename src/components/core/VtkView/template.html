@@ -164,7 +164,7 @@
         </v-tooltip>
         <v-tooltip
           top
-          v-if="layoutCount > 1"
+          v-if="!smallScreen && singleViewButton"
         >
           <span :class="$style.noSelect">Single view</span>
           <v-btn
@@ -178,7 +178,7 @@
         </v-tooltip>
         <v-tooltip
           top
-          v-if="layoutCount === 1 || layoutCount === 4 && layoutIndex % 2 === 1"
+          v-if="!smallScreen && flipViewButton"
           >
           <span :class="$style.noSelect">Split view</span>
           <v-btn
@@ -192,7 +192,7 @@
         </v-tooltip>
         <v-tooltip
           top
-          v-if="layoutCount === 2 && layoutIndex === 1"
+          v-if="!smallScreen && quadViewButton"
           >
           <span :class="$style.noSelect">Quad view</span>
           <v-btn

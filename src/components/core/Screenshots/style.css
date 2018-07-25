@@ -1,5 +1,6 @@
 .container {
   height: 100%;
+  user-select: none;
 }
 
 .emptyState {
@@ -30,14 +31,6 @@
   width: 24px;
   /* override vuetify */
   margin: 0 3px;
-}
-
-.listButtons {
-  display: none;
-}
-
-.listItem:hover .listButtons {
-  display: flex;
 }
 
 .hoverTooltip {

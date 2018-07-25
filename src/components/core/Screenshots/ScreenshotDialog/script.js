@@ -1,4 +1,4 @@
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 
 import { Mutations } from 'paraview-glance/src/stores/types';
 
@@ -73,10 +73,26 @@ export default {
       fileTypes: FILE_TYPES,
     };
   },
-  computed: mapState({
-    screenshot: (state) => state.screenshots.currentScreenshot,
-    showDialog: (state) => state.screenshots.showDialog,
-  }),
+  computed: Object.assign(
+    {
+      smallScreen() {
+        return this.$vuetify.breakpoint.smAndDown;
+      },
+      dialogType() {
+        return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
+      },
+      flexLayout() {
+        return {
+          xs6: !this.smallScreen,
+          xs12: this.smallScreen,
+        };
+      },
+    },
+    mapState({
+      screenshot: (state) => state.screenshots.currentScreenshot,
+      showDialog: (state) => state.screenshots.showDialog,
+    })
+  ),
   watch: {
     transparentBackground: generateImage,
     fileType: generateImage,
@@ -88,14 +104,16 @@ export default {
       }
     },
   },
-  methods: {
-    generateImage,
-    backgroundToFillStyle,
-    save,
-    close() {
-      this.$store.commit(Mutations.CLOSE_SCREENSHOT_DIALOG);
+  methods: Object.assign(
+    {
+      generateImage,
+      backgroundToFillStyle,
+      save,
     },
-  },
+    mapMutations({
+      close: Mutations.CLOSE_SCREENSHOT_DIALOG,
+    })
+  ),
   created() {
     this.canvas = document.createElement('canvas');
   },

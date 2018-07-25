@@ -3,13 +3,15 @@
   v-on:drop="openFiles"
 >
   <v-app slot-scope="{ dragHover }">
+    <!-- 960 is vuetify's md breakpoint -->
     <v-navigation-drawer
-      :value="!landingVisible && controlsDrawer"
-      absolute
+      v-model="controlsDrawer"
+      :touchless="landingVisible"
+      :clipped="$vuetify.breakpoint.mdAndUp"
+      mobile-break-point="960"
       app
-      clipped
-      hide-overlay
-      stateless
+      fixed
+      disable-resize-watcher
     >
       <controls-drawer />
     </v-navigation-drawer>
@@ -29,7 +31,11 @@
           href="#"
           v-on:click.prevent="toggleLanding"
         >
-          <svg-icon icon="paraview-glance" height="52px" />
+          <svg-icon
+            :icon="iconLogo"
+            height="52px"
+            style="margin-top: 6px"
+          />
         </a>
         <span v-if="landingVisible" key="if-landingVisible">Go to app</span>
         <span v-else key="if-landingVisible">Back to landing page</span>
@@ -44,7 +50,8 @@
         v-on:click="errorDialog = true"
       >
         <v-icon>error</v-icon>
-        <span>{{ errors.length }} error(s)</span>
+        <span>{{ errors.length }}</span>
+        <span v-show="!smallScreen">error(s)</span>
       </v-btn>
       <v-btn
         :class="$style.toolbarButton"
@@ -52,25 +59,25 @@
         v-on:click="promptUserFiles"
       >
         <v-icon>folder</v-icon>
-        <span>Open</span>
+        <span v-show="!smallScreen">Open</span>
       </v-btn>
       <v-btn
+        v-show="!landingVisible"
         :class="$style.toolbarButton"
-        :disabled="landingVisible"
         flat
         v-on:click="saveState()"
       >
         <v-icon>cloud_download</v-icon>
-        <span>Save state</span>
+        <span v-show="!smallScreen">Save state</span>
       </v-btn>
       <v-btn
+        v-show="!landingVisible"
         :class="$style.toolbarButton"
-        :disabled="landingVisible"
         flat
         v-on:click="screenshotsDrawer = true"
       >
         <v-icon>collections</v-icon>
-        <span>Screenshots ({{ screenshotCount }})</span>
+        <span v-show="!smallScreen">Screenshots ({{ screenshotCount }})</span>
       </v-btn>
       <v-btn
         :class="$style.toolbarButton"
@@ -79,7 +86,7 @@
       >
         <!-- width of other icons in toolbar -->
         <svg-icon icon="kitware-logo" width="24px" />
-        <span>About</span>
+        <span v-show="!smallScreen">About</span>
       </v-btn>
     </v-toolbar>
 
@@ -99,12 +106,12 @@
     </v-content>
 
     <v-navigation-drawer
-      v-show="!landingVisible"
       v-model="screenshotsDrawer"
-      absolute
+      :touchless="landingVisible"
+      :stateless="screenshotsDrawerStateless"
+      app
       right
       temporary
-      :stateless="screenshotsDrawerStateless"
     >
       <screenshots
         v-on:screenshot-count="screenshotCount = $event"
@@ -137,13 +144,21 @@
     <browser-issues />
 
     <!-- about dialog -->
-    <v-dialog v-model="aboutDialog" max-width="50%">
+    <component
+      :is="dialogType"
+      v-model="aboutDialog"
+      max-width="50%"
+    >
       <about-box v-on:close="aboutDialog = false" />
-    </v-dialog>
+    </component>
 
     <!-- error dialog-->
-    <v-dialog v-model="errorDialog" max-width="50%">
+    <component
+      :is="dialogType"
+      v-model="errorDialog"
+      max-width="50%"
+    >
       <error-box :errors="errors" v-on:close="errorDialog = false" />
-    </v-dialog>
+    </component>
   </v-app>
 </drag-and-drop>

@@ -1,4 +1,9 @@
-<v-dialog :value="showDialog" @input="close" max-width="60%">
+<component
+  :is="dialogType"
+  :value="showDialog"
+  @input="close"
+  max-width="60%"
+>
   <v-toolbar color="grey lighten-4" flat>
     <v-toolbar-title>Save Screenshot</v-toolbar-title>
   </v-toolbar>
@@ -7,8 +12,8 @@
     v-if="screenshot"
   >
     <v-container>
-      <v-layout row>
-        <v-flex xs6>
+      <v-layout row wrap>
+        <v-flex v-bind="flexLayout">
           <v-card flat tile>
             <v-card-media
               :class="$style.imagePreview"
@@ -18,8 +23,10 @@
             />
           </v-card>
         </v-flex>
-        <v-flex xs6>
-          <v-container>
+        <v-flex v-bind="flexLayout">
+          <v-container
+            :class="{ 'pa-1': $vuetify.breakpoint.smAndDown }"
+          >
             <v-layout row>
               <v-flex xs8>
                 <v-text-field
@@ -31,6 +38,7 @@
               <v-flex xs4>
                 <v-select
                   label="File type"
+                  hide-details
                   single-line
                   v-model="fileType"
                   :items="fileTypes"
@@ -74,4 +82,4 @@
       </v-btn>
     </v-card-actions>
   </v-card>
-</v-dialog>
+</component>

@@ -378,6 +378,22 @@ export default {
     viewType() {
       return this.layoutViewType || viewHelper.getViewType(this.view);
     },
+    // The value 700 is taken from <App>
+    smallScreen() {
+      return this.$vuetify.breakpoint.width < 700;
+    },
+    singleViewButton() {
+      return this.layoutCount > 1;
+    },
+    flipViewButton() {
+      return (
+        this.layoutCount === 1 ||
+        (this.layoutCount === 4 && this.layoutIndex % 2 === 1)
+      );
+    },
+    quadViewButton() {
+      return this.layoutCount === 2 && this.layoutIndex === 1;
+    },
   },
   methods: Object.assign(
     {

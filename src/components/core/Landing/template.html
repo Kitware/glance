@@ -2,7 +2,10 @@
   <v-jumbotron color="grey darken-3" height="250px">
     <v-container fill-height>
       <v-layout row align-center>
-        <v-flex xs6>
+        <v-flex
+          :xs6="$vuetify.breakpoint.width >= 700"
+          :xs12="$vuetify.breakpoint.width < 700"
+        >
           <v-card flat dark>
             <v-card-title class="display-1">Visualize your data with Glance</v-card-title>
             <v-card-text>
@@ -18,7 +21,13 @@
             </v-card-text>
           </v-card>
         </v-flex>
-        <v-flex xs6 fill-height>
+        <!-- iPads have width 768, so show controls on them -->
+        <v-flex
+          v-if="$vuetify.breakpoint.width >= 700"
+          key="if-large-enough-screen"
+          xs6
+          fill-height
+        >
           <drag-and-drop
             enabled
             :class="$style.dnd"
@@ -49,7 +58,10 @@
       </v-layout>
     </v-container>
   </v-jumbotron>
-  <v-container grid-list-xl>
+  <v-container
+    :class="$style.noSelect"
+    grid-list-xl
+  >
     <v-layout row wrap>
       <v-flex xs12>
         <span class="title">Sample Data</span>
@@ -57,7 +69,9 @@
       <v-flex
         v-for="(sample, i) in samples"
         :key="i"
-        xs4
+        :xs4="$vuetify.breakpoint.mdAndUp"
+        :xs6="$vuetify.breakpoint.sm"
+        :xs12="$vuetify.breakpoint.xs"
       >
         <v-card
           :class="$style.sampleData"
@@ -68,20 +82,20 @@
             :src="sample.image"
             height="300px"
           />
-            <div
-              :class="$style.linkOverlay"
-              v-on:click.stop="openSample(sample)"
-            >
-              <div :class="$style.linkOverlayText" class="body-2">
-                {{ sample.label }} ({{ sample.size }})
-                <div :class="$style.description" v-if="sample.description">
-                  {{ sample.description }}
-                </div>
-                <div :class="$style.acknowledgement" v-if="sample.acknowledgement">
-                  {{ sample.acknowledgement }}
-                </div>
+          <div
+            :class="$style.linkOverlay"
+            v-on:click.stop="openSample(sample)"
+          >
+            <div :class="$style.linkOverlayText" class="body-2">
+              {{ sample.label }} ({{ sample.size }})
+              <div :class="$style.description" v-if="sample.description">
+                {{ sample.description }}
+              </div>
+              <div :class="$style.acknowledgement" v-if="sample.acknowledgement">
+                {{ sample.acknowledgement }}
               </div>
             </div>
+          </div>
         </v-card>
       </v-flex>
     </v-layout>

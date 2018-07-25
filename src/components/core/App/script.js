@@ -54,7 +54,7 @@ export default {
     return {
       aboutDialog: false,
       errorDialog: false,
-      controlsDrawer: true,
+      controlsDrawer: false,
       screenshotsDrawer: false,
       screenshotCount: 0,
       errors: [],
@@ -69,7 +69,28 @@ export default {
       // the "Capture Active View" button.
       return this.screenshotsDrawer && !!state.screenshots.showDialog;
     },
+    smallScreen() {
+      // vuetify xs is 600px, but our buttons collide at around 700, so
+      // hide buttons under 768.
+      return this.$vuetify.breakpoint.width < 768;
+    },
+    dialogType() {
+      return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
+    },
+    iconLogo() {
+      return this.smallScreen ? 'paraview-glance-small' : 'paraview-glance';
+    },
   }),
+  watch: {
+    landingVisible(value) {
+      // matches the mobile breakpoint for navigation-drawer
+      if (!value && this.$vuetify.breakpoint.mdAndUp) {
+        this.controlsDrawer = true;
+      } else if (value) {
+        this.controlsDrawer = false;
+      }
+    },
+  },
   mounted() {
     // listen for proxyManager changes
     this.renderListener = vtkListenerHelper.newInstance(

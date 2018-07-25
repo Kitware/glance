@@ -86,6 +86,8 @@ export default {
       // matches the mobile breakpoint for navigation-drawer
       if (!value && this.$vuetify.breakpoint.mdAndUp) {
         this.controlsDrawer = true;
+      } else if (value) {
+        this.controlsDrawer = false;
       }
     },
   },

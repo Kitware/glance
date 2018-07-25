@@ -32,7 +32,7 @@
           v-on:click.prevent="toggleLanding"
         >
           <svg-icon
-            icon="paraview-glance"
+            :icon="iconLogo"
             height="52px"
             style="margin-top: 6px"
           />
@@ -45,7 +45,6 @@
         v-if="errors.length"
         key="if-has-errors"
         :class="$style.toolbarButton"
-        :icon="smallScreen"
         flat
         color="error"
         v-on:click="errorDialog = true"
@@ -56,7 +55,6 @@
       </v-btn>
       <v-btn
         :class="$style.toolbarButton"
-        :icon="smallScreen"
         flat
         v-on:click="promptUserFiles"
       >
@@ -66,7 +64,6 @@
       <v-btn
         v-show="!landingVisible"
         :class="$style.toolbarButton"
-        :icon="smallScreen"
         flat
         v-on:click="saveState()"
       >
@@ -76,7 +73,6 @@
       <v-btn
         v-show="!landingVisible"
         :class="$style.toolbarButton"
-        :icon="smallScreen"
         flat
         v-on:click="screenshotsDrawer = true"
       >
@@ -85,7 +81,6 @@
       </v-btn>
       <v-btn
         :class="$style.toolbarButton"
-        :icon="smallScreen"
         flat
         v-on:click="aboutDialog = true"
       >

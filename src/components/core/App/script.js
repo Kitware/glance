@@ -77,6 +77,9 @@ export default {
     dialogType() {
       return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
     },
+    iconLogo() {
+      return this.smallScreen ? 'paraview-glance-small' : 'paraview-glance';
+    },
   }),
   watch: {
     landingVisible(value) {

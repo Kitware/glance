@@ -33,14 +33,6 @@
   margin: 0 3px;
 }
 
-.listButtons {
-  display: none;
-}
-
-.listItem:hover .listButtons {
-  display: flex;
-}
-
 .hoverTooltip {
   background-color: white;
   opacity: 1;

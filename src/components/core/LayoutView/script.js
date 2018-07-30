@@ -2,6 +2,7 @@ import { mapActions, mapState } from 'vuex';
 
 import VtkView from 'paraview-glance/src/components/core/VtkView';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
+import { Breakpoints } from 'paraview-glance/src/constants';
 import { Actions, Getters, Mutations } from 'paraview-glance/src/stores/types';
 
 // ----------------------------------------------------------------------------
@@ -25,7 +26,7 @@ export default {
   computed: Object.assign(
     {
       smallScreen() {
-        return this.$vuetify.breakpoint.xsAndDown;
+        return this.$vuetify.breakpoint.width < Breakpoints.md;
       },
       views() {
         const views = this.$store.getters[Getters.VIEWS];

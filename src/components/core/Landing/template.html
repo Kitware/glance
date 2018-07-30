@@ -3,8 +3,8 @@
     <v-container fill-height>
       <v-layout row align-center>
         <v-flex
-          :xs6="$vuetify.breakpoint.width >= 700"
-          :xs12="$vuetify.breakpoint.width < 700"
+          :xs6="!smallScreen"
+          :xs12="smallScreen"
         >
           <v-card flat dark>
             <v-card-title class="display-1">Visualize your data with Glance</v-card-title>
@@ -23,7 +23,7 @@
         </v-flex>
         <!-- iPads have width 768, so show controls on them -->
         <v-flex
-          v-if="$vuetify.breakpoint.width >= 700"
+          v-if="!smallScreen"
           key="if-large-enough-screen"
           xs6
           fill-height

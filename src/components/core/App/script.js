@@ -70,9 +70,8 @@ export default {
       return this.screenshotsDrawer && !!state.screenshots.showDialog;
     },
     smallScreen() {
-      // vuetify xs is 600px, but our buttons collide at around 700, so
-      // hide buttons under 768.
-      return this.$vuetify.breakpoint.width < 768;
+      // vuetify xs is 600px, but our buttons collide at around 700.
+      return this.$vuetify.breakpoint.smAndDown;
     },
     dialogType() {
       return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';

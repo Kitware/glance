@@ -1,6 +1,6 @@
 import { mapMutations } from 'vuex';
 
-import { Widgets } from 'paraview-glance/src/constants';
+import { Breakpoints, Widgets } from 'paraview-glance/src/constants';
 import {
   DEFAULT_VIEW_TYPE,
   VIEW_TYPES,
@@ -378,9 +378,8 @@ export default {
     viewType() {
       return this.layoutViewType || viewHelper.getViewType(this.view);
     },
-    // The value 700 is taken from <App>
     smallScreen() {
-      return this.$vuetify.breakpoint.width < 700;
+      return this.$vuetify.breakpoint.width < Breakpoints.md;
     },
     singleViewButton() {
       return this.layoutCount > 1;

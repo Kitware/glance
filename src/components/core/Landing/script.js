@@ -1,5 +1,6 @@
 import samples from 'paraview-glance/src/samples';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
+import { Breakpoints } from 'paraview-glance/src/constants';
 
 export default {
   name: 'Landing',
@@ -10,6 +11,11 @@ export default {
     return {
       samples,
     };
+  },
+  computed: {
+    smallScreen() {
+      return this.$vuetify.breakpoint.width < Breakpoints.md;
+    },
   },
   methods: {
     openSample(sample) {

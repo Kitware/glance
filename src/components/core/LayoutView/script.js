@@ -1,7 +1,8 @@
-import { mapActions, mapState, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import VtkView from 'paraview-glance/src/components/core/VtkView';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
+import { Breakpoints } from 'paraview-glance/src/constants';
 import { Actions, Getters, Mutations } from 'paraview-glance/src/stores/types';
 
 // ----------------------------------------------------------------------------
@@ -23,18 +24,28 @@ export default {
     widgetManager: { required: true },
   },
   computed: Object.assign(
-    mapGetters({
-      views: Getters.VIEWS,
-    }),
+    {
+      smallScreen() {
+        return this.$vuetify.breakpoint.width < Breakpoints.md;
+      },
+      views() {
+        const views = this.$store.getters[Getters.VIEWS];
+        return this.smallScreen ? views.slice(0, 1) : views;
+      },
+      gridTemplateRows() {
+        return this.viewCount < 4 ? '1fr' : '1fr 1fr';
+      },
+      gridTemplateColumns() {
+        return this.viewCount < 2 ? '1fr' : '1fr 1fr';
+      },
+    },
     mapState({
       proxyManager: 'proxyManager',
       viewData: (state) => state.views.viewData,
       order: (state) => state.views.viewOrder,
-      gridTemplateRows(state) {
-        return state.views.viewCount < 4 ? '1fr' : '1fr 1fr';
-      },
-      gridTemplateColumns(state) {
-        return state.views.viewCount < 2 ? '1fr' : '1fr 1fr';
+      viewCount(state) {
+        // only show 1 view on small screens
+        return this.smallScreen ? 1 : state.views.viewCount;
       },
     })
   ),

@@ -26,6 +26,7 @@ export const {
   openFiles,
   loadFiles,
   registerReadersToProxyManager,
+  getReader,
 } = ReaderFactory;
 
 Vue.use(Vuex);
@@ -95,5 +96,6 @@ export function createViewer(container, proxyConfig = null) {
     addDatasetPanel(component) {
       store.commit(Mutations.ADD_PANEL, { component });
     },
+    proxyManager,
   };
 }

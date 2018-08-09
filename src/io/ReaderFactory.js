@@ -32,14 +32,11 @@ function registerReader({
 }
 
 function getReader({ name }) {
-  /* eslint no-bitwise: ["error", { "allow": [">>>"] }] */
-  let ext = name.toLowerCase().slice(((name.lastIndexOf('.') - 1) >>> 0) + 2);
-  if (ext === 'gz') {
-    const index = name.slice(0, -3).lastIndexOf('.');
-    /* eslint no-bitwise: ["error", { "allow": [">>>"] }] */
-    ext = name.slice(((index - 1) >>> 0) + 2);
-  }
-  return READER_MAPPING[ext];
+  const lowerCaseName = name.toLowerCase();
+  const extToUse = Object.keys(READER_MAPPING).find((ext) =>
+    lowerCaseName.endsWith(ext)
+  );
+  return READER_MAPPING[extToUse];
 }
 
 function listReaders() {

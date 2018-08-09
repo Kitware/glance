@@ -25,25 +25,25 @@ table {
 
 ## ITK.js
 
-The only structure that can be loaded by ITK.js are vtkImageData.
+The only structure that currently can be loaded by ITK.js are vtkImageData.
 This means that the `Legacy VTK (*.vtk)` format won't work for vtkPolyData, vtkUnstructuredGrid...
 
-| Extension           | Module         |
-| ------------------- | -------------- |
-| *.bmp               | itkBMPImage    |
-| *.dcm               | itkDCMTKImage  |
-| *.gipl, gipl.gz     | itkGiplImage   |
-| *.hdf5              | itkHDF5Image   |
-| *.jpg, *.jpeg       | itkJPEGImage   |
-| *.json              | itkJSONImage   |
-| *.lsm               | itkLSMImage    |
-| *.mnc, *.mnc2       | itkMINCImage   |
-| *.mgh, *.mgz        | itkMGHImage    |
-| *.mha, *.mhd        | itkMetaImage   |
-| *.mrc               | itkMRCImage    |
-| *.nia, *.nii, *.hdr | itkNiftiImage  |
-| *.nrrd, *.nhdr      | itkNrrdImage   |
-| *.png               | itkPNGImage    |
-| *.pic               | itkBioRadImage |
-| *.tif, *.tiff       | itkTIFFImage   |
-| *.vtk               | itkVTKImage    |
+| Extension                     | Module         |
+| ----------------------------- | -------------- |
+| *.bmp                         | itkBMPImage    |
+| *.dcm                         | itkDCMTKImage  |
+| *.gipl, gipl.gz               | itkGiplImage   |
+| *.hdf5                        | itkHDF5Image   |
+| *.jpg, *.jpeg                 | itkJPEGImage   |
+| *.json                        | itkJSONImage   |
+| *.lsm                         | itkLSMImage    |
+| *.mnc, *.mnc.gz,*.mnc2        | itkMINCImage   |
+| *.mgh, *.mgz, *.mgh.gz        | itkMGHImage    |
+| *.mha, *.mhd                  | itkMetaImage   |
+| *.mrc                         | itkMRCImage    |
+| *.nia, *.nii, *.hdr, *.nii.gz | itkNiftiImage  |
+| *.nrrd, *.nhdr                | itkNrrdImage   |
+| *.png                         | itkPNGImage    |
+| *.pic                         | itkBioRadImage |
+| *.tif, *.tiff                 | itkTIFFImage   |
+| *.vtk                         | itkVTKImage    |

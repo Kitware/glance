@@ -32,10 +32,13 @@ function registerReader({
 }
 
 function getReader({ name }) {
-  const ext = name
-    .split('.')
-    .pop()
-    .toLowerCase();
+  /* eslint no-bitwise: ["error", { "allow": [">>>"] }] */
+  let ext = name.toLowerCase().slice(((name.lastIndexOf('.') - 1) >>> 0) + 2);
+  if (ext === 'gz') {
+    const index = name.slice(0, -3).lastIndexOf('.');
+    /* eslint no-bitwise: ["error", { "allow": [">>>"] }] */
+    ext = name.slice(((index - 1) >>> 0) + 2);
+  }
   return READER_MAPPING[ext];
 }
 

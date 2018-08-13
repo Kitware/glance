@@ -30,7 +30,11 @@
         class="body-2"
         :class="$style.source"
       >{{ source.getName() }}</div>
-      <v-tooltip top v-if="proxyManager.getSources().length > 1">
+      <v-tooltip
+        v-if="proxyManager.getSources().length > 1"
+        top
+        :disabled="smallScreen"
+      >
         <span :class="$style.noSelect">Activate source</span>
         <v-btn
           slot="activator"

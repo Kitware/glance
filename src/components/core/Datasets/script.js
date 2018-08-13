@@ -89,6 +89,10 @@ export default {
       priorities.sort((a, b) => Number(a) - Number(b));
       return [].concat(...priorities.map((prio) => state.panels[prio]));
     },
+    smallScreen() {
+      // vuetify xs is 600px, but our buttons collide at around 700.
+      return this.$vuetify.breakpoint.smAndDown;
+    },
   }),
   created() {
     this.subscriptions = [];

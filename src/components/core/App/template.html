@@ -25,7 +25,10 @@
         @click.native.stop="controlsDrawer = !controlsDrawer"
       />
       <!-- smaller than height of the toolbar -->
-      <v-tooltip bottom>
+      <v-tooltip
+        bottom
+        :disabled="smallScreen"
+      >
         <a
           slot="activator"
           href="#"

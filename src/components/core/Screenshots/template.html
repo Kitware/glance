@@ -38,9 +38,10 @@
       </div>
       <v-list dense>
         <v-tooltip
-          left
           v-for="(screenshot, i) in screenshots[name]"
           :key="i"
+          left
+          :disabled="smallScreen"
           :content-class="$style.hoverTooltip"
         >
           <v-list-tile

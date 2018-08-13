@@ -9,9 +9,24 @@
     <meta name="description" content="Data Viewer in a browser">
     <link inline rel="icon" type="image/png" href="ParaView.png">
     <style type="text/css">
-      /* override vuetify */
+      /* override vuetify for mobile */
       html {
-        overflow: hidden !important;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: auto !important;
+      }
+
+      /* override vuetify for mobile */
+      .application--wrap {
+        position: absolute !important;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        min-height: unset !important;
       }
     </style>
     <script inline type="text/javascript" src="version.js"></script>

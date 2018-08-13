@@ -78,14 +78,16 @@ export default {
       smallScreen() {
         return this.$vuetify.breakpoint.smAndDown;
       },
+      landscapeScreen() {
+        const { width, height } = this.$vuetify.breakpoint;
+        return width > height;
+      },
       dialogType() {
         return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
       },
       flexLayout() {
-        return {
-          xs6: !this.smallScreen,
-          xs12: this.smallScreen,
-        };
+        const size = !this.smallScreen || this.landscapeScreen ? 'xs6' : 'xs12';
+        return { [size]: true };
       },
     },
     mapState({

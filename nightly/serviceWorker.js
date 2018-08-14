@@ -12,11 +12,11 @@ workboxSW.precache([
   },
   {
     "url": "glance.js",
-    "revision": "15f92b061f144b0fc4e70b41eb960b7b"
+    "revision": "40ff81047cebc79f96646c00cf1304dc"
   },
   {
     "url": "index.html",
-    "revision": "4419228e390d102285f1cd144728e59e"
+    "revision": "f54ff66f6d0d08997ffd85976edba49c"
   },
   {
     "url": "itk/createWebworkerPromise.js",
@@ -416,7 +416,7 @@ workboxSW.precache([
   },
   {
     "url": "version.js",
-    "revision": "9e7806e508a87c83e54ddfca81751a23"
+    "revision": "444efa0190a9739599d50b26e40b54a0"
   },
   {
     "url": "workbox-sw.prod.v2.1.2.js",

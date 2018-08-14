@@ -2,44 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://kitware.github.io/paraview-glance/doc/readers.html</loc>
-    
-    <lastmod>2018-08-09T16:46:34.929Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://kitware.github.io/paraview-glance/index.html</loc>
     
-    <lastmod>2018-08-07T20:32:07.440Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://kitware.github.io/paraview-glance/doc/keyboard_shortcuts.html</loc>
-    
-    <lastmod>2018-07-18T22:14:07.297Z</lastmod>
+    <lastmod>2018-08-14T21:20:16.213Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://kitware.github.io/paraview-glance/gallery/index.html</loc>
     
-    <lastmod>2018-07-17T22:57:34.869Z</lastmod>
+    <lastmod>2018-08-14T21:20:16.209Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://kitware.github.io/paraview-glance/doc/index.html</loc>
     
-    <lastmod>2018-07-17T22:57:34.857Z</lastmod>
+    <lastmod>2018-08-14T21:20:16.197Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://kitware.github.io/paraview-glance/doc/keyboard_shortcuts.html</loc>
+    
+    <lastmod>2018-08-14T21:20:16.197Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://kitware.github.io/paraview-glance/doc/readers.html</loc>
+    
+    <lastmod>2018-08-14T21:20:16.197Z</lastmod>
     
   </url>
   
   <url>
     <loc>https://kitware.github.io/paraview-glance/2016/04/29/kw-doc/</loc>
     
-    <lastmod>2018-07-17T22:57:34.849Z</lastmod>
+    <lastmod>2018-08-14T21:20:16.189Z</lastmod>
     
   </url>
   

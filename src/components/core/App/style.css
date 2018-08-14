@@ -1,8 +1,6 @@
 .appContent {
-  /* need a fixed height of arbitrary value
-   * so the vtk viewers don't grow too much in
-   * height when resizing. */
-  height: 0;
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* set vuetify-specific wrapper to contain our overlay */

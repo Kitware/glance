@@ -1,6 +1,9 @@
 <v-container fluid :class="$style.container">
   <v-layout column :class="$style.floatToolbar">
-    <v-tooltip left>
+    <v-tooltip
+      left
+      :disabled="smallScreen"
+    >
       <span :class="$style.noSelect">Reset camera</span>
       <v-btn
         slot="activator"
@@ -13,7 +16,10 @@
       </v-btn>
     </v-tooltip>
     <div :class="$style.relative">
-      <v-tooltip left>
+      <v-tooltip
+        left
+        :disabled="smallScreen"
+      >
         <span :class="$style.noSelect">Crop</span>
         <v-btn
           slot="activator"
@@ -27,7 +33,11 @@
           <v-icon>crop</v-icon>
         </v-btn>
       </v-tooltip>
-      <v-tooltip left v-if="getAvailableActions().resetCrop">
+      <v-tooltip
+        left
+        v-if="getAvailableActions().resetCrop"
+        :disabled="smallScreen"
+      >
         <span :class="$style.noSelect">Reset Crop</span>
         <v-btn
           slot="activator"
@@ -41,7 +51,10 @@
         </v-btn>
       </v-tooltip>
     </div>
-    <v-tooltip left>
+    <v-tooltip
+      left
+      :disabled="smallScreen"
+    >
       <span :class="$style.noSelect">Rotate camera left 90°</span>
       <v-btn
         slot="activator"
@@ -53,7 +66,10 @@
         <v-icon>rotate_left</v-icon>
       </v-btn>
     </v-tooltip>
-    <v-tooltip left>
+    <v-tooltip
+      left
+      :disabled="smallScreen"
+    >
       <span :class="$style.noSelect">Rotate camera right 90°</span>
       <v-btn
         slot="activator"
@@ -65,7 +81,11 @@
         <v-icon>rotate_right</v-icon>
       </v-btn>
     </v-tooltip>
-    <v-tooltip left v-if="view.getProxyName() === 'View3D'">
+    <v-tooltip
+      left
+      v-if="view.getProxyName() === 'View3D'"
+      :disabled="smallScreen"
+    >
       <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[0]}}</span>
       <v-btn
         slot="activator"
@@ -77,7 +97,11 @@
         {{orientationLabels()[0]}}
       </v-btn>
     </v-tooltip>
-    <v-tooltip left v-if="view.getProxyName() === 'View3D'">
+    <v-tooltip
+      left
+      v-if="view.getProxyName() === 'View3D'"
+      :disabled="smallScreen"
+    >
       <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[1]}}</span>
       <v-btn
         slot="activator"
@@ -89,7 +113,11 @@
         {{orientationLabels()[1]}}
       </v-btn>
     </v-tooltip>
-    <v-tooltip left v-if="view.getProxyName() === 'View3D'">
+    <v-tooltip
+      left
+      v-if="view.getProxyName() === 'View3D'"
+      :disabled="smallScreen"
+    >
       <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[2]}}</span>
       <v-btn
         slot="activator"
@@ -139,7 +167,10 @@
           @change="changeViewType"
         />
         <v-spacer />
-        <v-tooltip top>
+        <v-tooltip
+          top
+          :disabled="smallScreen"
+        >
           <span :class="$style.noSelect">Background color</span>
           <v-btn
             slot="activator"
@@ -151,7 +182,10 @@
             <v-icon>palette</v-icon>
           </v-btn>
         </v-tooltip>
-        <v-tooltip top>
+        <v-tooltip
+          top
+          :disabled="smallScreen"
+        >
           <span :class="$style.noSelect">Screenshot</span>
           <v-btn
             slot="activator"

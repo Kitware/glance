@@ -81,6 +81,10 @@ export default {
       }
       return false;
     },
+    smallScreen() {
+      // vuetify xs is 600px, but our buttons collide at around 700.
+      return this.$vuetify.breakpoint.smAndDown;
+    },
   }),
   methods: {
     addScreenshot,

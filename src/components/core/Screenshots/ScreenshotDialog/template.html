@@ -19,13 +19,13 @@
               :class="$style.imagePreview"
               :src="imageUrl"
               contain
-              height="250px"
+              :height="smallScreen ? '125px' : '250px'"
             />
           </v-card>
         </v-flex>
         <v-flex v-bind="flexLayout">
           <v-container
-            :class="{ 'pa-1': $vuetify.breakpoint.smAndDown }"
+            :class="{ 'pa-1': smallScreen }"
           >
             <v-layout row>
               <v-flex xs8>

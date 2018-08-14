@@ -1,5 +1,9 @@
 <div :class="['grey lighten-3', $style.root]">
-  <v-jumbotron color="grey darken-3" height="250px">
+  <v-jumbotron
+    color="grey
+    darken-3"
+    :height="smallScreen ? '320px' : '250px'"
+  >
     <v-container fill-height>
       <v-layout row align-center>
         <v-flex

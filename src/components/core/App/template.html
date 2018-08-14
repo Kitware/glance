@@ -6,12 +6,12 @@
     <!-- 960 is vuetify's md breakpoint -->
     <v-navigation-drawer
       v-model="controlsDrawer"
-      :touchless="landingVisible"
       :clipped="$vuetify.breakpoint.mdAndUp"
       mobile-break-point="960"
       app
       fixed
       disable-resize-watcher
+      touchless
     >
       <controls-drawer />
     </v-navigation-drawer>
@@ -25,7 +25,10 @@
         @click.native.stop="controlsDrawer = !controlsDrawer"
       />
       <!-- smaller than height of the toolbar -->
-      <v-tooltip bottom>
+      <v-tooltip
+        bottom
+        :disabled="smallScreen"
+      >
         <a
           slot="activator"
           href="#"
@@ -107,11 +110,11 @@
 
     <v-navigation-drawer
       v-model="screenshotsDrawer"
-      :touchless="landingVisible"
       :stateless="screenshotsDrawerStateless"
       app
       right
       temporary
+      touchless
     >
       <screenshots
         v-on:screenshot-count="screenshotCount = $event"

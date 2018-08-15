@@ -2,7 +2,10 @@
   :enabled="!landingVisible"
   v-on:drop="openFiles"
 >
-  <v-app slot-scope="{ dragHover }">
+  <v-app
+    slot-scope="{ dragHover }"
+    :class="$style.root"
+  >
     <!-- 960 is vuetify's md breakpoint -->
     <v-navigation-drawer
       v-model="controlsDrawer"

@@ -130,7 +130,11 @@ function createStore(proxyManager = null) {
               const anchor = document.createElement('a');
               anchor.setAttribute('href', url);
               anchor.setAttribute('download', fileName);
+
+              document.body.appendChild(anchor);
               anchor.click();
+              document.body.removeChild(anchor);
+
               setTimeout(() => URL.revokeObjectURL(url), 60000);
               commit(Mutations.SAVING_STATE, null);
             });

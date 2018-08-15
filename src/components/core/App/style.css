@@ -1,11 +1,20 @@
-.appContent {
+.root :global(.application--wrap) {
+  position: absolute;
+  /* Fill to parent height, which will be the height of <html> */
   height: 100%;
-  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  /* override vuetify's min-height: 100vh.
+   * 100vh also includes navbar height, which we don't
+   * want b/c we want to contrain our app between the address bar
+   * and the bottom navbar.
+   */
+  min-height: 0;
 }
 
-/* set vuetify-specific wrapper to contain our overlay */
-:global(.content--wrap) {
-  position: relative;
+.appContent {
+  height: 100%;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* vuetify overrides */

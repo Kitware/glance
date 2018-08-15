@@ -10,6 +10,7 @@ import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 import 'typeface-roboto';
 import 'vuetify/dist/vuetify.min.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import 'paraview-glance/static/global.css';
 
 import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';

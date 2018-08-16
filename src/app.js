@@ -53,7 +53,7 @@ export function createViewer(container, proxyConfig = null) {
 
   /* eslint-disable no-new */
   new Vue({
-    el: '#root-container',
+    el: container,
     components: { App },
     store,
     template: '<App />',

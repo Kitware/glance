@@ -10,6 +10,7 @@ export default {
   data() {
     return {
       samples,
+      version: window.GLANCE_VERSION || 'no version available',
     };
   },
   computed: {

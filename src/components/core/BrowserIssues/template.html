@@ -1,24 +1,22 @@
 <v-dialog v-model="dialog" width="90%" max-width="900px">
   <v-card>
-    <v-card-title class="title">Potential Issues</v-card-title>
+    <v-card-title class="title">Welcome to ParaView Glance!</v-card-title>
     <v-card-text>
       <p>
-        We've detected some system configurations that may affect the
-        performance of the application:
+        You may experience slower rendering speeds because of the following
+        reason(s):
       </p>
       <ul :class="$style.list">
         <li v-if="issues.webglVersion">
-          Detected WebGL version {{ issues.webglVersion }}.
-          (Slower Volume/Glyph rendering)
+          Detected WebGL version {{ issues.webglVersion }}. For best performance,
+          please use a computer and/or browser with at least WebGL 2.
         </li>
         <li v-if="issues.integratedGPU">
-          Detected GPU "{{ issues.integratedGPU }}".
-          Dedicated GPU would offer better performance.
-        </li>
-        <li v-if="issues.angle">
-          ANGLE is used for WebGL rendering, which may slow down rendering.
-          More info
-          <a href="https://chromium.googlesource.com/angle/angle/+/master/README.md">here</a>.
+          Using GPU "{{ issues.integratedGPU }}". A dedicated GPU would
+          offer better performance.
+          <a href="https://wevideo.zendesk.com/hc/en-us/articles/225259448-How-to-enable-WebGL">
+            More info on enabling dedicated GPUs in browsers.
+          </a>
         </li>
       </ul>
     </v-card-text>

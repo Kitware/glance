@@ -104,9 +104,10 @@
       </v-flex>
     </v-layout>
   </v-container>
-  <v-footer class="pa-2 d-block">
-    <div class="text-xs-center grey--text text--darken-2">
-      &copy; {{ new Date().getFullYear() }} — Kitware, Inc.
+  <v-footer class="pa-2 d-flex" height="48px" color="transparent">
+    <div class="mb-2 text-xs-center grey--text text--darken-2">
+      <div>&copy; {{ new Date().getFullYear() }} — Kitware, Inc.</div>
+      <div>ParaView Glance ({{version}})</div>
     </div>
   </v-footer>
 </div>

@@ -25,9 +25,9 @@ function getBrowserIssues() {
     if (strToTest.indexOf('intel') !== -1) {
       this.$set(this.issues, 'integratedGPU', UNMASKED_RENDERER.value);
     }
-    if (strToTest.indexOf('angle') !== -1) {
-      this.$set(this.issues, 'angle', true);
-    }
+    // if (strToTest.indexOf('angle') !== -1) {
+    //   this.$set(this.issues, 'angle', true);
+    // }
   }
 
   if (Object.keys(this.issues).length && !this.suppressWarning) {

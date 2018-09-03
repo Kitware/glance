@@ -82,26 +82,24 @@ export default [
     ],
   },
   {
-    label: 'Skull.nrrd',
-    image: Images.Skull,
-    size: '10.1 MB',
+    label: 'TieFighter.obj',
+    image: Images.TieFighter,
+    size: '11 MB',
     datasets: [
       {
-        name: 'skull.glance',
-        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/skull.glance`,
+        name: 'TieFighter.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/TieFighter.glance`,
       },
     ],
-    acknowledgement: 'Siemens Medical Solutions, Forchheim, Germany',
-    description: 'Rotational C-arm x-ray scan of phantom of a human skull.',
   },
   {
-    label: 'LIDC2.mha',
-    image: Images.LIDC2,
-    size: '1.5 MB',
+    label: 'Head.mha',
+    image: Images.Head,
+    size: '6.2 MB',
     datasets: [
       {
-        name: 'LIDC2.glance',
-        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/LIDC2.glance`,
+        name: 'head.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/head.glance`,
       },
     ],
   },

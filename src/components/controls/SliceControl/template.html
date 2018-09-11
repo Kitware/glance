@@ -200,4 +200,41 @@
       </v-container>
     </v-card-text>
   </v-card>
+
+  <v-card flat :class="$style.block">
+    <v-card-title :class="$style.blockTitle">
+      <span class="body-2">Opacity</span>
+    </v-card-title>
+    <v-card-text :class="$style.blockContent">
+      <v-container fluid grid-list-md>
+        <v-layout row wrap>
+          <v-flex xs9>
+            <v-slider
+              :class="$style.noTopPadding"
+              hide-details
+
+              v-model="opacity"
+              min="0"
+              max="1"
+              step="0.01"
+            />
+          </v-flex>
+          <v-flex xs3>
+            <v-text-field
+              :class="$style.noTopPadding"
+              hide-details
+              type="number"
+
+              v-model="opacity"
+              min="0"
+              max="1"
+              step="0.01"
+            />
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card-text>
+  </v-card>
+
+
 </v-expansion-panel-content>

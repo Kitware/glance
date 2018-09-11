@@ -44,7 +44,7 @@
     "material-design-icons-iconfont": "3.0.3",
     "mousetrap": "^1.6.2",
     "typeface-roboto": "0.0.54",
-    "vtk.js": "7.6.0",
+    "vtk.js": "7.8.4",
     "vue": "2.5.16",
     "vuetify": "1.0.19",
     "vuex": "^3.0.1",

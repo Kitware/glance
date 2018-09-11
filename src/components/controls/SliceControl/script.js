@@ -37,6 +37,8 @@ const FIELDS = [
   { name: 'xSliceVisibility', initialValue: false },
   { name: 'ySliceVisibility', initialValue: false },
   { name: 'zSliceVisibility', initialValue: false },
+  { name: 'zSliceVisibility', initialValue: false },
+  { name: 'opacity', initialValue: 1.0 },
   // Fake props that don't exist on proxy
   {
     name: 'toggleSliceX',
@@ -62,12 +64,38 @@ function isSliceAvailable(name) {
 }
 
 // ----------------------------------------------------------------------------
+
+function updateOpacity() {
+  // Look on the representations
+  const sliceReps = this.proxyManager
+    .getRepresentations()
+    .filter((r) => r.getInput() === this.source && r.isA('vtkSliceRepresentation'));
+  for (let i = 0; i < sliceReps.length; i++) {
+    const actors = sliceReps[i]
+      .getActors()
+      .map((actor) => actor.getProperty())
+      .filter((property) => property.isA('vtkImageProperty'))
+      .forEach((property) => property.setOpacity(this.opacity));
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+const OPTS = {
+  onUpdate: ['updateOpacity'],
+  onChange: {
+    opacity: 'updateOpacity',
+  },
+};
+
+// ----------------------------------------------------------------------------
 // Add custom method
 // ----------------------------------------------------------------------------
 
-const component = helper.generateComponent('SliceControl', FIELDS, true);
+const component = helper.generateComponent('SliceControl', FIELDS, true, OPTS);
 Object.assign(component.methods, {
   isSliceAvailable,
+  updateOpacity,
 });
 
 export default component;

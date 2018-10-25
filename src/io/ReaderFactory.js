@@ -146,9 +146,7 @@ function downloadDataset(fileName, url, progressCallback) {
       FETCH_DATA[readMethod](url, progressCallback)
         .then((rawData) => {
           if (rawData) {
-            readRawData({ fileName, data: rawData })
-              .then((result) => resolve(result))
-              .catch((error) => reject(error));
+            resolve(new File([rawData], fileName));
           } else {
             throw new Error(`No data for ${fileName}`);
           }

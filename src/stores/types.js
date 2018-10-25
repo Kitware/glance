@@ -17,8 +17,7 @@ export const Actions = objEnum([
   'PROMPT_FOR_FILES',
   'OPEN_FILES',
   'OPEN_REMOTE_FILES',
-  'READ_FILES',
-  'READ_REMOTE_FILES',
+  'FETCH_REMOTE',
   'LOAD_STATE', // private
 
   // views
@@ -55,12 +54,14 @@ export const Mutations = objEnum([
   'GLOBAL_AXIS_TYPE',
 
   // files
+  'FILE_SET_URLS', // private
   'FILE_SET_FILES', // private
   'FILE_PRELOAD', // private
   'FILE_LOAD', // private
   'FILE_ERROR', // private
   'FILE_IDLE', // private
   'FILE_SET_RAW_INFO', // private
+  'FILE_CLEAR_RAW_INFO', // private
   'FILE_SET_ERROR', // private
   'FILE_UPDATE_PROGRESS', // private
 

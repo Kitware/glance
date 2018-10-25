@@ -151,6 +151,8 @@ function createStore(proxyManager = null) {
                 return vtk(ds);
               }
               return ReaderFactory.downloadDataset(ds.name, ds.url)
+                .then((file) => ReaderFactory.loadFiles([file]))
+                .then((readers) => readers[0])
                 .then(({ dataset, reader }) => {
                   if (reader) {
                     const newDS = reader.getOutputData();

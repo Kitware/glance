@@ -1,3 +1,4 @@
+import JSZip from 'jszip';
 import Vue from 'vue';
 import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
@@ -8,17 +9,41 @@ import { Mutations, Actions } from 'paraview-glance/src/stores/types';
 // ----------------------------------------------------------------------------
 
 function getSupportedExtensions() {
-  return ['raw', 'glance'].concat(ReaderFactory.listSupportedExtensions());
+  return ['zip', 'raw', 'glance'].concat(
+    ReaderFactory.listSupportedExtensions()
+  );
 }
 
 // ----------------------------------------------------------------------------
 
-function getExtension(file) {
-  const i = file.name.lastIndexOf('.');
+function getExtension(filename) {
+  const i = filename.lastIndexOf('.');
   if (i > -1) {
-    return file.name.substr(i + 1).toLowerCase();
+    return filename.substr(i + 1).toLowerCase();
   }
   return '';
+}
+
+// ----------------------------------------------------------------------------
+
+function zipGetSupportedFiles(zip, path) {
+  const supportedExts = getSupportedExtensions();
+  const promises = [];
+  zip.folder(path).forEach((relPath, file) => {
+    if (file.dir) {
+      promises.push(zipGetSupportedFiles(zip, relPath));
+    } else if (supportedExts.indexOf(getExtension(file.name)) > -1) {
+      const splitPath = file.name.split('/');
+      const baseName = splitPath[splitPath.length - 1];
+      promises.push(
+        zip
+          .file(file.name)
+          .async('blob')
+          .then((blob) => new File([blob], baseName))
+      );
+    }
+  });
+  return promises;
 }
 
 // ----------------------------------------------------------------------------
@@ -185,62 +210,61 @@ export default {
     OPEN_FILES({ commit, state, dispatch, rootState }, fileList) {
       commit(Mutations.FILE_SET_FILES, fileList);
 
-      const loadList = [];
-      for (let i = 0; i < fileList.length; i++) {
-        const file = fileList[i];
-        const ext = getExtension(file);
-        switch (ext) {
-          case 'glance': {
-            if (
-              loadList.length === 0 ||
-              getExtension(loadList[0]) !== 'glance'
-            ) {
-              loadList.unshift(file);
-            }
-            break;
-          }
-          default:
-            loadList.push(file);
-        }
+      const stateFile = fileList.find((f) => getExtension(f.name) === 'glance');
+      if (stateFile) {
+        commit(Mutations.FILE_LOAD);
+        // Don't load any other file except for the state file
+        return dispatch(Actions.LOAD_STATE, stateFile)
+          .then(() => onLoadOkay(commit))
+          .catch((error) => onLoadErrored(commit, [error]));
+      }
+
+      const zips = fileList.filter((f) => getExtension(f.name) === 'zip');
+      if (zips.length) {
+        const newFileList = fileList.filter(
+          (f) => getExtension(f.name) !== 'zip'
+        );
+        const p = zips.map((file) =>
+          JSZip.loadAsync(file)
+            .then((zip) => Promise.all(zipGetSupportedFiles(zip)))
+            .then((files) => newFileList.push(...files))
+        );
+        return Promise.all(p).then(() =>
+          dispatch(Actions.OPEN_FILES, newFileList)
+        );
       }
 
       const needsPreload =
-        loadList.filter((f) => getExtension(f) === 'raw').length !==
+        fileList.filter((f) => getExtension(f.name) === 'raw').length !==
         Object.keys(state.rawInfos).length;
 
       if (needsPreload) {
         commit(Mutations.FILE_CLEAR_RAW_INFO);
         commit(Mutations.FILE_PRELOAD);
-      } else if (getExtension(loadList[0]) === 'glance') {
-        commit(Mutations.FILE_LOAD);
-        // Don't load any other file except for the state file
-        dispatch(Actions.LOAD_STATE, loadList[0])
-          .then(() => onLoadOkay(commit))
-          .catch((error) => onLoadErrored(commit, [error]));
-      } else {
-        commit(Mutations.FILE_LOAD);
-        const promises = loadList.map((file, i) => {
-          // Handle raw
-          if (getExtension(file) === 'raw') {
-            return readRawFile(file, state.rawInfos[i]).then((dataset) => ({
-              name: file.name,
-              dataset,
-            }));
-          }
-
-          return ReaderFactory.loadFiles([file]).then((r) => r[0]);
-        });
-
-        allWithErrors(promises)
-          .then((readers) =>
-            ReaderFactory.registerReadersToProxyManager(
-              readers,
-              rootState.proxyManager
-            )
-          )
-          .then(() => onLoadOkay(commit))
-          .catch((errors) => onLoadErrored(commit, errors));
+        return Promise.resolve();
       }
+      commit(Mutations.FILE_LOAD);
+      const promises = fileList.map((file, i) => {
+        // Handle raw
+        if (getExtension(file.name) === 'raw') {
+          return readRawFile(file, state.rawInfos[i]).then((dataset) => ({
+            name: file.name,
+            dataset,
+          }));
+        }
+
+        return ReaderFactory.loadFiles([file]).then((r) => r[0]);
+      });
+
+      return allWithErrors(promises)
+        .then((readers) =>
+          ReaderFactory.registerReadersToProxyManager(
+            readers,
+            rootState.proxyManager
+          )
+        )
+        .then(() => onLoadOkay(commit))
+        .catch((errors) => onLoadErrored(commit, errors));
     },
     OPEN_REMOTE_FILES({ commit, dispatch }, { urls, names, types = [] }) {
       if (urls && urls.length && names && names.length) {

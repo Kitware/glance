@@ -239,32 +239,42 @@ export default {
         Object.keys(state.rawInfos).length;
 
       if (needsPreload) {
-        commit(Mutations.FILE_CLEAR_RAW_INFO);
         commit(Mutations.FILE_PRELOAD);
         return Promise.resolve();
       }
       commit(Mutations.FILE_LOAD);
+
+      const readers = [];
       const promises = fileList.map((file, i) => {
         // Handle raw
         if (getExtension(file.name) === 'raw') {
-          return readRawFile(file, state.rawInfos[i]).then((dataset) => ({
-            name: file.name,
-            dataset,
-          }));
+          return readRawFile(file, state.rawInfos[i]).then((dataset) =>
+            readers.push({
+              name: file.name,
+              dataset,
+            })
+          );
         }
 
-        return ReaderFactory.loadFiles([file]).then((r) => r[0]);
+        return ReaderFactory.loadFiles([file]).then((rs) =>
+          readers.push(...rs)
+        );
       });
 
       return allWithErrors(promises)
-        .then((readers) =>
-          ReaderFactory.registerReadersToProxyManager(
-            readers,
-            rootState.proxyManager
-          )
-        )
         .then(() => onLoadOkay(commit))
-        .catch((errors) => onLoadErrored(commit, errors));
+        .catch((errors) => onLoadErrored(commit, errors))
+        .finally(() => {
+          // clear leftover raw info
+          commit(Mutations.FILE_CLEAR_RAW_INFO);
+          // load all successful readers
+          if (readers.length) {
+            ReaderFactory.registerReadersToProxyManager(
+              readers,
+              rootState.proxyManager
+            );
+          }
+        });
     },
     OPEN_REMOTE_FILES({ commit, dispatch }, { urls, names, types = [] }) {
       if (urls && urls.length && names && names.length) {

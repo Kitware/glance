@@ -14,6 +14,21 @@ export default {
     mapState({
       stage: (state) => state.files.stage,
       files: (state) => state.files.files,
+      loadingNames: (state) =>
+        [].concat(state.files.urls, state.files.files).map((o) => o.name),
+      preloadCanContinue(state) {
+        const { files, rawInfos } = state.files;
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (
+            this.isRawFile(file) &&
+            (!(i in rawInfos) || rawInfos[i].effectiveSize !== file.size)
+          ) {
+            return false;
+          }
+        }
+        return true;
+      },
     }),
     mapGetters({
       totalProgress: Getters.FILE_TOTAL_PROGRESS,
@@ -41,6 +56,9 @@ export default {
     }),
     mapActions({
       openFiles: Actions.OPEN_FILES,
-    })
+    }),
+    {
+      isRawFile: (f) => f.name.toLowerCase().endsWith('.raw'),
+    }
   ),
 };

@@ -7,7 +7,7 @@
       >
         <div :class="$style.loadingText">
           <span class="display-1">
-            Loading {{ files.map(({ name }) => name).join(', ') }}
+            Loading {{ loadingNames.join(', ') }}
           </span>
         </div>
         <v-progress-linear
@@ -28,20 +28,20 @@
           <v-expansion-panel-content
             v-for="(file, i) in files"
             :key="i"
-            :hide-actions="!file.isRaw"
+            :hide-actions="!isRawFile(file)"
           >
             <div slot="header" class="body-2">
               {{ file.name }}
               <v-icon
-                v-show="file.isRaw"
+                v-show="isRawFile(file)"
                 :class="$style.icon"
               >
                 error
               </v-icon>
             </div>
-            <template v-if="file.isRaw">
+            <template v-if="isRawFile(file)">
               <raw-file-reader
-                :file="file.file"
+                :file="file"
                 v-on:change="setFileRawInfo(i, arguments[0])"
               />
             </template>
@@ -79,7 +79,7 @@
         <v-btn v-on:click="cancel">Cancel</v-btn>
         <v-btn
           color="primary"
-          :disabled="!preloadCanLoad"
+          :disabled="!preloadCanContinue"
           v-on:click="openFiles(files)"
         >
           Load files

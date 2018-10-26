@@ -3,6 +3,8 @@ import vtkITKImageReader from 'vtk.js/Sources/IO/Misc/ITKImageReader';
 import extensionToImageIO from 'itk/extensionToImageIO';
 import readImageArrayBuffer from 'itk/readImageArrayBuffer';
 
+import vtkITKDicomImageReader from './ITKDicomImageReader';
+
 vtkITKImageReader.setReadImageArrayBufferFromITK(readImageArrayBuffer);
 
 export const extensions = Array.from(
@@ -11,7 +13,7 @@ export const extensions = Array.from(
 
 export function registerToGlance(Glance) {
   if (Glance) {
-    extensions.forEach((extension) =>
+    extensions.filter((e) => e !== 'dcm').forEach((extension) =>
       Glance.registerReader({
         extension,
         name: `${extension.toUpperCase()} Reader`,
@@ -20,6 +22,14 @@ export function registerToGlance(Glance) {
         fileNameMethod: 'setFileName',
       })
     );
+
+    Glance.registerReader({
+      extension: 'dcm',
+      name: 'DICOM File Series Reader',
+      vtkReader: vtkITKDicomImageReader,
+      binary: true,
+      fileNameMethod: 'setFileName',
+    });
   }
 }
 

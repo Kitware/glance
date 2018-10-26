@@ -21,8 +21,8 @@ export default {
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (
-            (this.isRawFile(file) && !(i in rawInfos)) ||
-            rawInfos[i].effectiveSize !== file.size
+            this.isRawFile(file) &&
+            (!(i in rawInfos) || rawInfos[i].effectiveSize !== file.size)
           ) {
             return false;
           }

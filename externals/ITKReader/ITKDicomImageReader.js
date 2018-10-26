@@ -35,7 +35,6 @@ function vtkITKDicomImageReader(publicAPI, model) {
         return image;
       })
       .then((itkImage) => {
-        console.log('itkImage', itkImage);
         const imageData = convertItkToVtkImage(itkImage, {
           scalarArrayName: model.arrayName || getArrayName(model.fileName),
         });

@@ -16,7 +16,7 @@ function extractDomains(domains, uiList) {
       domains[uiList[i].name] = Object.assign({}, domain);
       if (domain.step && domain.step === 'any') {
         if (Number.isInteger(domain.min) && Number.isInteger(domain.max)) {
-          domains[uiList[i].name].step = 1;
+          domains[uiList[i].name].step = 0.01;
         } else {
           domains[uiList[i].name].step =
             (domain.max - domain.min) / MAX_SLIDER_STEPS;

@@ -19,11 +19,11 @@ const Volume = [
   },
   {
     name: 'windowWidth',
-    domain: { min: 0, max: 255, step: 1 },
+    domain: { min: 0, max: 255, step: 0.01 },
   },
   {
     name: 'windowLevel',
-    domain: { min: 0, max: 255, step: 1 },
+    domain: { min: 0, max: 255, step: 0.01 },
   },
   {
     name: 'sliceVisibility',
@@ -83,11 +83,11 @@ const Slice = [
   },
   {
     name: 'windowWidth',
-    domain: { min: 0, max: 255, step: 1 },
+    domain: { min: 0, max: 255, step: 0.01 },
   },
   {
     name: 'windowLevel',
-    domain: { min: 0, max: 255, step: 1 },
+    domain: { min: 0, max: 255, step: 0.01 },
   },
   {
     name: 'slice',

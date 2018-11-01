@@ -85,7 +85,7 @@
     :width="250"
     :proxyManager="proxyManager"
   />
-  <v-card flat :class="$style.card" v-if="hasVR">
+  <v-card flat :class="$style.card" v-if="hasVR()">
     <div :class="$style.heading">
       <v-layout row align-center>
         <v-flex xs10>

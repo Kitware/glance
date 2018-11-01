@@ -125,10 +125,6 @@ export default {
         this.$store.commit(Mutations.GLOBAL_AXIS_TYPE, axisType);
       },
     },
-    hasVR() {
-      const view = this.getViewForVR();
-      return view && !!view.getOpenglRenderWindow().getVrDisplay();
-    },
   },
   watch: {
     orientationAxis: setOrientationAxesVisible,
@@ -147,6 +143,10 @@ export default {
     },
   },
   methods: {
+    hasVR() {
+      const view = this.getViewForVR();
+      return view && !!view.getOpenglRenderWindow().getVrDisplay();
+    },
     setAxisType,
     setOrientationAxesVisible,
     setAnnotationOpacity,

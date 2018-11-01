@@ -1,12 +1,11 @@
 {
   "presets": [
-    ["env", {
-      "targets": {
-        "browsers": ["last 2 versions"]
-      }
+    ["@babel/preset-env", {
+      "debug": false,
+      "useBuiltIns": false
     }]
   ],
   "plugins": [
-    "syntax-dynamic-import"
+    "@babel/plugin-syntax-dynamic-import"
   ]
 }

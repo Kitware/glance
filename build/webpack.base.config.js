@@ -63,6 +63,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
+        exclude: /\.module\.css$/,
         include: /node_modules/,
         use: ['style-loader', 'css-loader'],
       },
@@ -93,7 +94,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.mcss$/,
+        test: /\.module\.css$/,
         use: [
           { loader: 'style-loader' },
           {

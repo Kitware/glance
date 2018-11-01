@@ -121,7 +121,6 @@ function vtkGlanceZipObjReader(publicAPI, model) {
   };
 
   publicAPI.setProxyManager = (proxyManager) => {
-    console.log('=== pxm ===');
     const allViews = proxyManager.getViews();
     Object.keys(model.scene).forEach((uid) => {
       // Create various sources

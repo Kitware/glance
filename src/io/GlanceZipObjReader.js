@@ -133,7 +133,6 @@ function vtkGlanceZipObjReader(publicAPI, model) {
         const rep = proxyManager.getRepresentation(source, allViews[i]);
         const actor = rep.getActors()[0];
         if (mtlReader && name) {
-          console.log('=>', name, actor);
           mtlReader.applyMaterialToActor(name, actor);
         }
       }

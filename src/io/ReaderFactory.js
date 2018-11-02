@@ -176,10 +176,12 @@ function registerReadersToProxyManager(readers, proxyManager) {
         : null;
       if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
         source.setInputData(dataset, sourceType);
-      } else if (reader.isA('vtkAlgorithm')) {
+      } else if (reader && reader.isA('vtkAlgorithm')) {
         source.setInputAlgorithm(reader, sourceType);
-      } else if (reader.setProxyManager) {
+      } else if (reader && reader.setProxyManager) {
         reader.setProxyManager(proxyManager);
+      } else {
+        console.error(`No proper reader handler was found for ${name}`)
       }
 
       if (source) {

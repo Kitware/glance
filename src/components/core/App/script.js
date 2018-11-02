@@ -171,10 +171,7 @@ export default {
       },
 
       openFiles: (dispatch, files) =>
-        dispatch(
-          Actions.OPEN_FILES,
-          Array.from(files).map((file) => ({ file }))
-        ),
+        dispatch(Actions.OPEN_FILES, Array.from(files)),
 
       saveState: Actions.SAVE_STATE,
     }),

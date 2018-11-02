@@ -11,6 +11,14 @@ table {
 }
 </style>
 
+## Glance
+
+| Extension | Description          | Format specificity                                                  |
+| --------- | -------------------- | ------------------------------------------------------------------- |
+| *.glance  | Glance Scene         | Binary encoding of a scene for Glance.                              |
+| *.obz     | Zip of OBJ/MTL/Images| Gathering of OBJ/MTL files along with their image texture files.    |
+| *.zip     | Zip of various files | Bundle of files to load inside that are contains in a zip file.     |
+
 ## VTK.js
 
 | Extension | Description          | Format specificity                                                  |

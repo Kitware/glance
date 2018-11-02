@@ -165,7 +165,7 @@ function registerReadersToProxyManager(readers, proxyManager) {
     const { reader, sourceType, name, dataset, metadata } = readers[i];
     if (reader || dataset) {
       const needSource =
-        reader.isA('vtkAlgorithm') ||
+        reader.getOutputData ||
         (dataset && dataset.isA && dataset.isA('vtkDataSet'));
       const source = needSource
         ? proxyManager.createProxy(
@@ -176,12 +176,12 @@ function registerReadersToProxyManager(readers, proxyManager) {
         : null;
       if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
         source.setInputData(dataset, sourceType);
-      } else if (reader && reader.isA('vtkAlgorithm')) {
+      } else if (reader && reader.getOutputData) {
         source.setInputAlgorithm(reader, sourceType);
       } else if (reader && reader.setProxyManager) {
         reader.setProxyManager(proxyManager);
       } else {
-        console.error(`No proper reader handler was found for ${name}`)
+        console.error(`No proper reader handler was found for ${name}`);
       }
 
       if (source) {

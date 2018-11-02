@@ -13,6 +13,12 @@
     >{{ readableErrors }}</textarea>
   </v-card-text>
   <v-card-actions>
+    <v-btn
+      color="secondary"
+      v-on:click="$emit('clear')"
+    >
+      Clear Errors
+    </v-btn>
     <v-spacer />
     <v-btn v-on:click="$emit('close')">Cancel</v-btn>
     <v-btn

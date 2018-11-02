@@ -82,13 +82,13 @@ export default [
     ],
   },
   {
-    label: 'TieFighter.obj',
-    image: Images.TieFighter,
-    size: '11 MB',
+    label: 'Formula 1',
+    image: Images.F1,
+    size: '6.7 MB',
     datasets: [
       {
-        name: 'TieFighter.glance',
-        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/TieFighter.glance`,
+        name: 'F1.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/F1.glance`,
       },
     ],
   },

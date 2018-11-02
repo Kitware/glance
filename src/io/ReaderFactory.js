@@ -164,21 +164,32 @@ function registerReadersToProxyManager(readers, proxyManager) {
   for (let i = 0; i < readers.length; i += 1) {
     const { reader, sourceType, name, dataset, metadata } = readers[i];
     if (reader || dataset) {
-      const source = proxyManager.createProxy(
-        'Sources',
-        'TrivialProducer',
-        Object.assign({ name }, metadata)
-      );
+      const needSource =
+        reader.getOutputData ||
+        (dataset && dataset.isA && dataset.isA('vtkDataSet'));
+      const source = needSource
+        ? proxyManager.createProxy(
+            'Sources',
+            'TrivialProducer',
+            Object.assign({ name }, metadata)
+          )
+        : null;
       if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
         source.setInputData(dataset, sourceType);
-      } else if (reader) {
+      } else if (reader && reader.getOutputData) {
         source.setInputAlgorithm(reader, sourceType);
+      } else if (reader && reader.setProxyManager) {
+        reader.setProxyManager(proxyManager);
+      } else {
+        console.error(`No proper reader handler was found for ${name}`);
       }
 
-      source.activate();
+      if (source) {
+        source.activate();
 
-      proxyManager.createRepresentationInAllViews(source);
-      proxyManager.renderAllViews();
+        proxyManager.createRepresentationInAllViews(source);
+        proxyManager.renderAllViews();
+      }
     }
   }
 }

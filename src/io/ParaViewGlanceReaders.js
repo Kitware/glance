@@ -7,6 +7,7 @@ import vtkJSONReader from 'vtk.js/Sources/IO/Misc/JSONReader';
 import vtkSkyboxReader from 'vtk.js/Sources/IO/Misc/SkyboxReader';
 
 import vtkGlanceStateReader from 'paraview-glance/src/io/GlanceStateReader';
+import vtkGlanceZipObjReader from 'paraview-glance/src/io/GlanceZipObjReader';
 import ReaderFactory from './ReaderFactory';
 
 // ----------------------------------------------------------------------------
@@ -18,6 +19,14 @@ ReaderFactory.registerReader({
   extension: 'glance',
   name: 'Glance State Reader',
   vtkReader: vtkGlanceStateReader,
+  binary: true,
+});
+
+// enable loading of *.obz files (zip of (obj/mtl/jpg))
+ReaderFactory.registerReader({
+  extension: 'obz',
+  name: 'OBJ bundle',
+  vtkReader: vtkGlanceZipObjReader,
   binary: true,
 });
 

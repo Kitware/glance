@@ -85,4 +85,37 @@
     :width="250"
     :proxyManager="proxyManager"
   />
+  <v-card flat :class="$style.card" v-if="hasVR()">
+    <div :class="$style.heading">
+      <v-layout row align-center>
+        <v-flex xs10>
+          <span class="body-2">Virtual Reality</span>
+        </v-flex>
+        <v-flex xs2>
+          <v-switch
+            v-model="vrEnabled"
+            hide-details
+            v-on:change="toggleVR"
+          />
+        </v-flex>
+      </v-layout>
+    </div>
+    <v-divider :class="$style.divider" />
+    <v-layout row align-center :class="$style.lineTopPadding" wrap>
+      <v-flex xs5>
+        <span class="body-2">Physical scale</span>
+      </v-flex>
+      <v-flex xs7>
+        <v-slider
+          :class="$style.noTopPadding"
+          hide-details
+
+          v-model="physicalScale"
+          min="0.1"
+          max="10"
+          step="any"
+        />
+      </v-flex>
+    </v-layout>
+  </v-card>
 </v-container>

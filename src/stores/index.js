@@ -158,7 +158,8 @@ function createStore(proxyManager = null) {
                     const newDS = reader.getOutputData();
                     newDS.set(ds, true); // Attach remote data origin
                     return newDS;
-                  } else if (dataset && dataset.isA) {
+                  }
+                  if (dataset && dataset.isA) {
                     dataset.set(ds, true); // Attach remote data origin
                     return dataset;
                   }

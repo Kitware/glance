@@ -168,18 +168,18 @@ export default {
           // ------------------------------------------------------------------
           // Reorient physical space
           // ------------------------------------------------------------------
-          // const unit = (v) => (v > 0 ? 1 : -1);
-          // const north = camera.getDirectionOfProjection();
-          // const northMax = Math.max(...north.map(Math.abs));
-          // camera.setPhysicalViewNorth(
-          //   north.map((v) => (Math.abs(v) === northMax ? unit(v) : 0))
-          // );
+          const unit = (v) => (v > 0 ? 1 : -1);
+          const north = camera.getDirectionOfProjection();
+          const northMax = Math.max(...north.map(Math.abs));
+          camera.setPhysicalViewNorth(
+            north.map((v) => (Math.abs(v) === northMax ? unit(v) : 0))
+          );
 
-          // const up = camera.getViewUp();
-          // const upMax = Math.max(...up.map(Math.abs));
-          // camera.setPhysicalViewUp(
-          //   up.map((v) => (Math.abs(v) === upMax ? unit(v) : 0))
-          // );
+          const up = camera.getViewUp();
+          const upMax = Math.max(...up.map(Math.abs));
+          camera.setPhysicalViewUp(
+            up.map((v) => (Math.abs(v) === upMax ? unit(v) : 0))
+          );
           // ------------------------------------------------------------------
 
           // Start VR finally

@@ -272,7 +272,12 @@ export default {
             readers.push(...rs)
           );
         }),
-        ReaderFactory.loadFileSeries(dicomFileList, 'dcm').then((r) => {
+        ReaderFactory.loadFileSeries(
+          dicomFileList,
+          'dcm',
+          // use first file as output image name
+          dicomFileList.length && dicomFileList[0].name
+        ).then((r) => {
           if (r) {
             readers.push(r);
           }

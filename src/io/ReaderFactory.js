@@ -140,7 +140,7 @@ function loadFiles(files) {
 
 // ----------------------------------------------------------------------------
 
-function loadFileSeries(files, extension) {
+function loadFileSeries(files, extension, outFileName = '') {
   return new Promise((resolve, reject) => {
     if (files.length) {
       const readerMapping = READER_MAPPING[extension];
@@ -154,13 +154,13 @@ function loadFileSeries(files, extension) {
         const reader = vtkReader.newInstance();
 
         if (fileNameMethod) {
-          reader[fileNameMethod](files[0] && files[0].name);
+          reader[fileNameMethod](outFileName);
         }
 
         if (fileSeriesMethod) {
           const ds = reader[fileSeriesMethod](files);
           Promise.resolve(ds).then((dataset) =>
-            resolve({ dataset, reader, sourceType, name: files[0].name })
+            resolve({ dataset, reader, sourceType, name: outFileName })
           );
         } else {
           reject(new Error('No file series method available'));

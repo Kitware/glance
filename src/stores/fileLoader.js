@@ -272,9 +272,11 @@ export default {
             readers.push(...rs)
           );
         }),
-        ReaderFactory.loadFileSeries(dicomFileList, 'dcm').then((r) =>
-          readers.push(r)
-        )
+        ReaderFactory.loadFileSeries(dicomFileList, 'dcm').then((r) => {
+          if (r) {
+            readers.push(r);
+          }
+        })
       );
 
       return allWithErrors(promises)

@@ -163,7 +163,6 @@ function updateLookupTableImage() {
     ...lutProxy.getDataRange(),
     256
   );
-  this.presetName = lutProxy.getPresetName();
 
   this.piecewiseFunction = this.proxyManager.getPiecewiseFunction(arrayName);
 }
@@ -190,6 +189,10 @@ function convertArrays(arrays, addSolidColor = false) {
 function onChangePreset(preset) {
   if (preset) {
     this.presetName = preset.Name;
+    // reset shift value when preset has opacity points
+    if (this.usePresetOpacity) {
+      this.shift = 0;
+    }
   }
   this.presetMenu = false;
 }
@@ -251,8 +254,20 @@ function update() {
       const propUI = repVolume
         .getReferenceByName('ui')
         .find((item) => item.name === 'colorBy');
+
       if (propUI) {
         this.arrays = convertArrays(propUI.domain.arrays);
+      }
+
+      // set preset
+      const lutProxy = this.proxyManager.getLookupTable(this.arrayName);
+      this.presetName = lutProxy.getPresetName();
+      // usetPresetOpacity gets updated when presetName is set
+      if (this.usePresetOpacity) {
+        const pwfProxy = this.proxyManager.getPiecewiseFunction(this.arrayName);
+        // compute shift based on saved pwfProxy data range
+        const pwfRange = pwfProxy.getDataRange();
+        this.shift = pwfRange[0] - this.shiftRange[0];
       }
     }
   }
@@ -302,7 +317,7 @@ export default {
     },
     usePresetOpacity() {
       const preset = vtkColorMaps.getPresetByName(this.presetName);
-      return preset && preset.OpacityPoints;
+      return Boolean(preset && preset.OpacityPoints);
     },
     shiftRange() {
       const preset = vtkColorMaps.getPresetByName(this.presetName);
@@ -324,14 +339,7 @@ export default {
   watch: {
     interpolateScalarsBeforeMapping: setInterpolateScalarsBeforeMapping,
     colorBy: setColorBy,
-    presetName() {
-      if (this.shift) {
-        // changing shift value will call setPreset()
-        this.shift = 0;
-      } else {
-        this.setPreset();
-      }
-    },
+    presetName: setPreset,
     shift: setPreset,
     usePresetOpacity(value) {
       const arrayName = this.colorBy.split(':')[0];

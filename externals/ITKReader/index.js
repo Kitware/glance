@@ -27,8 +27,8 @@ export function registerToGlance(Glance) {
       extension: 'dcm',
       name: 'DICOM File Series Reader',
       vtkReader: vtkITKDicomImageReader,
-      binary: true,
       fileNameMethod: 'setFileName',
+      fileSeriesMethod: 'readFileSeries',
     });
   }
 }

@@ -20,16 +20,14 @@ function vtkITKDicomImageReader(publicAPI, model) {
   model.classHierarchy.push('vtkITKDicomImageReader');
 
   // Returns a promise to signal when image is ready
-  publicAPI.parseAsArrayBuffer = (arrayBuffer) => {
-    if (!arrayBuffer || arrayBuffer === model.rawDataBuffer) {
+  publicAPI.readFileSeries = (files) => {
+    if (!files || !files.length || files === model.files) {
       return Promise.resolve();
     }
 
-    model.rawDataBuffer = arrayBuffer;
+    model.files = files;
 
-    return readImageDICOMFileSeries(null, [
-      new File([arrayBuffer], model.fileName),
-    ])
+    return readImageDICOMFileSeries(null, files)
       .then(({ webWorker, image }) => {
         webWorker.terminate();
         return image;
@@ -45,7 +43,7 @@ function vtkITKDicomImageReader(publicAPI, model) {
   };
 
   publicAPI.requestData = (/* inData, outData */) => {
-    publicAPI.parseAsArrayBuffer(model.rawDataBuffer, model.fileName);
+    publicAPI.readFileSeries(model.files, model.fileName);
   };
 }
 

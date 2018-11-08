@@ -18,6 +18,7 @@ function registerReader({
   readMethod,
   parseMethod,
   fileNameMethod,
+  fileSeriesMethod,
   sourceType,
   binary,
 }) {
@@ -27,6 +28,7 @@ function registerReader({
     readMethod: readMethod || binary ? 'readAsArrayBuffer' : 'readAsText',
     parseMethod: parseMethod || binary ? 'parseAsArrayBuffer' : 'parseAsText',
     fileNameMethod,
+    fileSeriesMethod,
     sourceType,
   };
 }
@@ -138,6 +140,38 @@ function loadFiles(files) {
 
 // ----------------------------------------------------------------------------
 
+function loadFileSeries(files, extension) {
+  return new Promise((resolve, reject) => {
+    const readerMapping = READER_MAPPING[extension];
+    if (readerMapping) {
+      const {
+        vtkReader,
+        fileSeriesMethod,
+        fileNameMethod,
+        sourceType,
+      } = readerMapping;
+      const reader = vtkReader.newInstance();
+
+      if (fileNameMethod) {
+        reader[fileNameMethod](files[0].name);
+      }
+
+      if (fileSeriesMethod) {
+        const ds = reader[fileSeriesMethod](files);
+        Promise.resolve(ds).then((dataset) =>
+          resolve({ dataset, reader, sourceType, name: files[0].name })
+        );
+      } else {
+        reject(new Error('No file series method available'));
+      }
+    } else {
+      reject(new Error(`No file series reader mapping for ${extension}`));
+    }
+  });
+}
+
+// ----------------------------------------------------------------------------
+
 function downloadDataset(fileName, url, progressCallback) {
   return new Promise((resolve, reject) => {
     const readerMapping = getReader({ name: fileName });
@@ -165,7 +199,7 @@ function registerReadersToProxyManager(readers, proxyManager) {
     const { reader, sourceType, name, dataset, metadata } = readers[i];
     if (reader || dataset) {
       const needSource =
-        reader.getOutputData ||
+        (reader && reader.getOutputData) ||
         (dataset && dataset.isA && dataset.isA('vtkDataSet'));
       const source = needSource
         ? proxyManager.createProxy(
@@ -200,6 +234,7 @@ export default {
   downloadDataset,
   openFiles,
   loadFiles,
+  loadFileSeries,
   registerReader,
   listReaders,
   listSupportedExtensions,

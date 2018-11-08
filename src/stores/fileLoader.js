@@ -244,22 +244,45 @@ export default {
       }
       commit(Mutations.FILE_LOAD);
 
-      const readers = [];
-      const promises = fileList.map((file, i) => {
-        // Handle raw
-        if (getExtension(file.name) === 'raw') {
-          return readRawFile(file, state.rawInfos[i]).then((dataset) =>
-            readers.push({
-              name: file.name,
-              dataset,
-            })
-          );
+      // split out dicom and single datasets
+      const singleFileList = [];
+      const dicomFileList = [];
+      fileList.forEach((f) => {
+        if (getExtension(f.name) === 'dcm') {
+          dicomFileList.push(f);
+        } else {
+          singleFileList.push(f);
         }
-
-        return ReaderFactory.loadFiles([file]).then((rs) =>
-          readers.push(...rs)
-        );
       });
+
+      const readers = [];
+      const promises = [].concat(
+        singleFileList.map((file, i) => {
+          // Handle raw
+          if (getExtension(file.name) === 'raw') {
+            return readRawFile(file, state.rawInfos[i]).then((dataset) =>
+              readers.push({
+                name: file.name,
+                dataset,
+              })
+            );
+          }
+
+          return ReaderFactory.loadFiles([file]).then((rs) =>
+            readers.push(...rs)
+          );
+        }),
+        ReaderFactory.loadFileSeries(
+          dicomFileList,
+          'dcm',
+          // use first file as output image name
+          dicomFileList.length && dicomFileList[0].name
+        ).then((r) => {
+          if (r) {
+            readers.push(r);
+          }
+        })
+      );
 
       return allWithErrors(promises)
         .then(() => onLoadOkay(commit))

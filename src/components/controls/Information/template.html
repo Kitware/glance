@@ -3,8 +3,14 @@
     :class="$style.subpanelHeader"
     slot="header"
   >
-    <v-icon>help_outline</v-icon>
-    <span class="body-2">Information</span>
+    <v-layout row align-center>
+      <v-flex shrink>
+        <v-icon>help_outline</v-icon>
+      </v-flex>
+      <v-flex shrink :class="$style.subpanelTitle">
+        <span class="body-2">Information</span>
+      </v-flex>
+    </v-layout>
   </div>
 
   <vtk-image-data :dataset="source.getDataset()" />

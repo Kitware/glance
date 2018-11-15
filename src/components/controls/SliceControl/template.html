@@ -3,8 +3,14 @@
     :class="$style.subpanelHeader"
     slot="header"
   >
-    <v-icon>tune</v-icon>
-    <span class="body-2">Slices</span>
+    <v-layout row align-center>
+      <v-flex shrink>
+        <v-icon>tune</v-icon>
+      </v-flex>
+      <v-flex shrink :class="$style.subpanelTitle">
+        <span class="body-2">Slices</span>
+      </v-flex>
+    </v-layout>
   </div>
 
   <v-card flat :class="$style.block">

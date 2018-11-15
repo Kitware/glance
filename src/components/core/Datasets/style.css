@@ -35,12 +35,12 @@
   align-items: center;
 }
 
-:global(.v-expansion-panel__header) {
-  padding: 4px 10px 4px 4px;
-}
-
 .subpanelHeader {
   margin-left: 1em;
+}
+
+.subpanelTitle {
+  margin-left: 4px;
 }
 
 .headerMenuButton {

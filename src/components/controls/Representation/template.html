@@ -5,8 +5,14 @@
     :class="$style.subpanelHeader"
     slot="header"
   >
-    <v-icon>brightness_medium</v-icon>
-    <span class="body-2">Representation</span>
+    <v-layout row align-center>
+      <v-flex shrink>
+        <v-icon>brightness_medium</v-icon>
+      </v-flex>
+      <v-flex shrink :class="$style.subpanelTitle">
+        <span class="body-2">Representation</span>
+      </v-flex>
+    </v-layout>
   </div>
 
   <v-card flat :class="$style.block" v-if="domains.representation">

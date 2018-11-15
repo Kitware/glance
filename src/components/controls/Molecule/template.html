@@ -3,8 +3,14 @@
     :class="$style.subpanelHeader"
     slot="header"
   >
-    <v-icon>bubble_chart</v-icon>
-    <span class="body-2">Molecule</span>
+    <v-layout row align-center>
+      <v-flex shrink>
+        <v-icon>bubble_chart</v-icon>
+      </v-flex>
+      <v-flex shrink :class="$style.subpanelTitle">
+        <span class="body-2">Molecule</span>
+      </v-flex>
+    </v-layout>
   </div>
 
   <v-card light flat :class="$style.block">

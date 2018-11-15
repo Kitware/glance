@@ -76,6 +76,11 @@
   padding: 4px;
 }
 
+/* Yeah really should override this with stylus */
+.blockContent :global(.v-input--slider) {
+  margin-top: 0;
+}
+
 .blockRow {
   margin: 4px 0;
 }

@@ -7,11 +7,11 @@
     <span class="body-2">vtkPolyData</span>
   </v-card-title>
   <v-card-text :class="$style.blockContent">
-    <v-layout row>
+    <v-layout row align-center>
       <v-flex xs6 class="body-1">Number of points:</v-flex>
       <v-flex xs6 class="body-1" :class="$style.canSelect">{{ formatNumbersWithThousandSeparator(dataset.getPoints().getNumberOfPoints(), ',') }}</v-flex>
     </v-layout>
-    <v-layout row>
+    <v-layout row align-center>
       <v-flex xs6 class="body-1">Number of cells:</v-flex>
       <v-flex xs6 class="body-1" :class="$style.canSelect">{{ formatNumbersWithThousandSeparator(dataset.getNumberOfCells(), ',') }}</v-flex>
     </v-layout>

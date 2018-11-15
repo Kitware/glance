@@ -13,19 +13,19 @@
       hide-details
       :class="$style.noSelect"
     />
-    <v-layout row v-if="!!activeFieldName">
+    <v-layout row align-center v-if="!!activeFieldName">
       <v-flex xs6 class="body-1">Type:</v-flex>
       <v-flex xs6 class="body-1" :class="$style.canSelect">{{ getActiveArray().getDataType() }}</v-flex>
     </v-layout>
-    <v-layout row v-if="!!activeFieldName">
+    <v-layout row align-center v-if="!!activeFieldName">
         <v-flex xs6 class="body-1">Min value:</v-flex>
         <v-flex xs6 class="body-1" :class="$style.canSelect">{{ getActiveArray().getRange()[0] }}</v-flex>
       </v-layout>
-      <v-layout row v-if="!!activeFieldName">
+      <v-layout row align-center v-if="!!activeFieldName">
         <v-flex xs6 class="body-1">Max value:</v-flex>
         <v-flex xs6 class="body-1" :class="$style.canSelect">{{ getActiveArray().getRange()[1] }}</v-flex>
       </v-layout>
-      <v-layout row v-if="!!activeFieldName">
+      <v-layout row align-center v-if="!!activeFieldName">
         <v-flex xs6 class="body-1"># of components:</v-flex>
         <v-flex xs6 class="body-1" :class="$style.canSelect">{{ getActiveArray().getNumberOfComponents() }}</v-flex>
       </v-layout>

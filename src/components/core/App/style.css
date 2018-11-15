@@ -1,3 +1,7 @@
+/**
+ * NOTE: should technically modify stylus rules instead of patching
+ * individual classnames.
+ */
 .root :global(.application--wrap) {
   position: absolute;
   /* Fill to parent height, which will be the height of <html> */

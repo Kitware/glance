@@ -12,8 +12,8 @@
       <span class="body-2">Window/Level</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">
-      <v-container fluid grid-list-md>
-        <v-layout row wrap>
+      <v-container fluid grid-list-lg>
+        <v-layout row wrap align-center>
           <v-flex xs3>
             <label :class="$style.smallLabel">Window</label>
           </v-flex>
@@ -76,8 +76,8 @@
       <span class="body-2">Slices</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">
-      <v-container fluid grid-list-md>
-        <v-layout row wrap>
+      <v-container fluid grid-list-lg>
+        <v-layout row wrap align-center>
           <v-flex xs2 :class="isSliceAvailable('x') || (isSliceAvailable('default') && xSliceVisibility) ? '' : $style.disable">
             <div style="position: relative;">
               <v-btn
@@ -202,8 +202,8 @@
       <span class="body-2">Opacity</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">
-      <v-container fluid grid-list-md>
-        <v-layout row wrap>
+      <v-container fluid grid-list-lg>
+        <v-layout row wrap align-center>
           <v-flex xs9>
             <v-slider
               :class="$style.noTopPadding"

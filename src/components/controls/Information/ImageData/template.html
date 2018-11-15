@@ -7,25 +7,25 @@
     <span class="body-2">vtkImageData</span>
   </v-card-title>
   <v-card-text :class="$style.blockContent">
-    <v-layout row>
+    <v-layout row align-center>
       <v-flex xs6 class="body-1">Dimensions:</v-flex>
       <v-flex xs6 class="body-1" :class="$style.canSelect">
         {{ showVect(dataset.getDimensions(), ' x ') }}
       </v-flex>
     </v-layout>
-    <v-layout row>
+    <v-layout row align-center>
       <v-flex xs6 class="body-1">Origin:</v-flex>
       <v-flex xs6 class="body-1" :class="$style.canSelect">
         {{ showVect(dataset.getOrigin()) }}
       </v-flex>
     </v-layout>
-    <v-layout row>
+    <v-layout row align-center>
       <v-flex xs6 class="body-1">Spacing:</v-flex>
       <v-flex xs6 class="body-1" :class="$style.canSelect">
         {{ showVect(dataset.getSpacing()) }}
       </v-flex>
     </v-layout>
-    <v-layout row>
+    <v-layout row align-center>
       <v-flex xs6 class="body-1">Orientation:</v-flex>
       <v-flex xs6 class="body-1" :class="$style.canSelect">
         <matrix-view

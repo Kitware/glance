@@ -61,6 +61,11 @@
   margin-left: 6px;
 }
 
+/* override vuetify */
+.block :global(.container) {
+  padding: 0;
+}
+
 .blockTitle {
   padding: 4px 0; /* override vuetify */
   margin: 8px 4px;

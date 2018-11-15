@@ -8,19 +8,21 @@
 
 /* override vuetify */
 .datasetPanel :global(.v-expansion-panel__header) {
+  padding: 4px 10px 4px 4px;
   user-select: none;
 }
 
 .datasetPanel .datasetControls :global(.v-expansion-panel__header) {
   padding: 6px 10px 6px 6px;
+  min-height: unset;
   user-select: none;
 }
 
-:global(.v-theme--dark) .datasetPanel :global(.v-expansion-panel__body) {
+:global(.theme--dark) .datasetPanel :global(.v-expansion-panel__body) {
   border-top: 1px solid hsla(0,0%,100%,.12);
 }
 
-:global(.v-theme--light) .datasetPanel :global(.v-expansion-panel__body) {
+:global(.theme--light) .datasetPanel :global(.v-expansion-panel__body) {
   border-top: 1px solid rgba(0,0,0,.12);
 }
 

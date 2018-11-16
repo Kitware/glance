@@ -1,4 +1,7 @@
-<v-expansion-panel expand>
+<v-expansion-panel
+  v-model="panelStates"
+  expand
+>
   <v-expansion-panel-content
     v-for="(source, index) in datasets"
     v-show="source !== proxyToDelete"
@@ -66,14 +69,34 @@
       </div>
     </div>
     <v-card :class="$style.datasetControls">
-      <v-expansion-panel expand>
-        <template v-for="panel in panels">
+      <v-expansion-panel
+        v-model="subpanelStateMap.get(source)"
+        expand
+      >
+        <v-expansion-panel-content
+          v-for="(panel,i) in panels"
+          :key="i"
+          v-show="panel.visible(source)"
+        >
+          <div
+            :class="$style.subpanelHeader"
+            slot="header"
+          >
+            <v-layout row align-center>
+              <v-flex shrink>
+                <v-icon>{{ panel.icon }}</v-icon>
+              </v-flex>
+              <v-flex shrink :class="$style.subpanelTitle">
+                <span class="body-2">{{ panel.name }}</span>
+              </v-flex>
+            </v-layout>
+          </div>
           <component
-            :is="panel"
-            :key="panel.name"
+            v-if="panel.visible(source)"
+            :is="panel.component"
             :source="source"
           />
-        </template>
+        </v-expansion-panel-content>
       </v-expansion-panel>
     </v-card>
   </v-expansion-panel-content>

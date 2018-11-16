@@ -1,20 +1,6 @@
-<v-expansion-panel-content
+<div
   v-if="domains.representation || domains.opacity || domains.sampleDistance"
 >
-  <div
-    :class="$style.subpanelHeader"
-    slot="header"
-  >
-    <v-layout row align-center>
-      <v-flex shrink>
-        <v-icon>brightness_medium</v-icon>
-      </v-flex>
-      <v-flex shrink :class="$style.subpanelTitle">
-        <span class="body-2">Representation</span>
-      </v-flex>
-    </v-layout>
-  </div>
-
   <v-card flat :class="$style.block" v-if="domains.representation">
     <v-container fluid grid-list-lg>
       <v-layout row wrap align-center>
@@ -158,4 +144,4 @@
       </v-container>
     </v-card-text>
   </v-card>
-</v-expansion-panel-content>
+</div>

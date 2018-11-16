@@ -1,18 +1,6 @@
-<v-expansion-panel-content v-if="domains.windowWidth && domains.windowLevel">
-  <div
-    :class="$style.subpanelHeader"
-    slot="header"
-  >
-    <v-layout row align-center>
-      <v-flex shrink>
-        <v-icon>tune</v-icon>
-      </v-flex>
-      <v-flex shrink :class="$style.subpanelTitle">
-        <span class="body-2">Slices</span>
-      </v-flex>
-    </v-layout>
-  </div>
-
+<div
+  v-if="domains.windowWidth && domains.windowLevel"
+>
   <v-card flat :class="$style.block">
     <v-card-title :class="$style.blockTitle">
       <span class="body-2">Window/Level</span>
@@ -237,6 +225,4 @@
       </v-container>
     </v-card-text>
   </v-card>
-
-
-</v-expansion-panel-content>
+</div>

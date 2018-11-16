@@ -18,11 +18,11 @@
   user-select: none;
 }
 
-:global(.theme--dark) .datasetPanel :global(.v-expansion-panel__body) {
+:global(.theme--dark) .datasetControls :global(.v-expansion-panel__body) {
   border-top: 1px solid hsla(0,0%,100%,.12);
 }
 
-:global(.theme--light) .datasetPanel :global(.v-expansion-panel__body) {
+:global(.theme--light) .datasetControls :global(.v-expansion-panel__body) {
   border-top: 1px solid rgba(0,0,0,.12);
 }
 

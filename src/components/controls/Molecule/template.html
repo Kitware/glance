@@ -1,18 +1,6 @@
-<v-expansion-panel-content v-if="domains.atomicRadiusScaleFactor">
-  <div
-    :class="$style.subpanelHeader"
-    slot="header"
-  >
-    <v-layout row align-center>
-      <v-flex shrink>
-        <v-icon>bubble_chart</v-icon>
-      </v-flex>
-      <v-flex shrink :class="$style.subpanelTitle">
-        <span class="body-2">Molecule</span>
-      </v-flex>
-    </v-layout>
-  </div>
-
+<div
+  v-if="domains.atomicRadiusScaleFactor"
+>
   <v-card light flat :class="$style.block">
     <v-card-text :class="$style.blockContent">
       <v-container fluid grid-list-lg>
@@ -110,4 +98,4 @@
       </v-container>
     </v-card-text>
   </v-card>
-</v-expansion-panel-content>
+</div>

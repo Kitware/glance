@@ -28,9 +28,7 @@ export default [
     defaultExpand: true,
     icon: 'tune',
     name: 'Slice',
-    visible: (source) =>
-      source.getDataset().isA('vtkPolyData') ||
-      source.getDataset().isA('vtkImageData'),
+    visible: (source) => source.getDataset().isA('vtkImageData'),
   },
   {
     component: Molecule,

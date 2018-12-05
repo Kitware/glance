@@ -234,13 +234,50 @@ function registerReadersToProxyManager(readers, proxyManager) {
 
 // ----------------------------------------------------------------------------
 
+function importBase64Dataset(
+  fileName,
+  base64String,
+  proxyManager,
+  chunkSize = 512
+) {
+  console.log('loadBase64', fileName, base64String.length);
+  const chunks = [];
+  const bytes = atob(base64String);
+  console.log('bytes', bytes.length);
+  let totalCount = 0;
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    const slice = bytes.slice(offset, offset + chunkSize);
+    const array = new Uint8Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      array[i] = slice.charCodeAt(i);
+    }
+    chunks.push(array);
+    totalCount += array.length;
+  }
+  console.log('totalCount', totalCount);
+  const blob = new Blob(chunks, { type: 'application/octet-stream' });
+  const file = new File([blob], fileName);
+
+  if (proxyManager) {
+    loadFiles([file]).then((readers) => {
+      registerReadersToProxyManager(readers, proxyManager);
+    });
+    return Promise.resolve('loading');
+  }
+
+  return loadFiles([file]);
+}
+
+// ----------------------------------------------------------------------------
+
 export default {
   downloadDataset,
-  openFiles,
-  loadFiles,
-  loadFileSeries,
-  registerReader,
   listReaders,
   listSupportedExtensions,
+  importBase64Dataset,
+  loadFiles,
+  loadFileSeries,
+  openFiles,
+  registerReader,
   registerReadersToProxyManager,
 };

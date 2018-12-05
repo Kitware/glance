@@ -21,13 +21,14 @@ import { Actions, Mutations } from 'paraview-glance/src/stores/types';
 
 // Expose IO API to Glance global object
 export const {
-  registerReader,
+  getReader,
+  importBase64Dataset,
   listReaders,
   listSupportedExtensions,
-  openFiles,
   loadFiles,
+  openFiles,
+  registerReader,
   registerReadersToProxyManager,
-  getReader,
 } = ReaderFactory;
 
 Vue.use(Vuex);
@@ -98,5 +99,8 @@ export function createViewer(container, proxyConfig = null) {
       store.commit(Mutations.ADD_PANEL, { component });
     },
     proxyManager,
+    showApp() {
+      store.commit(Mutations.SHOW_APP);
+    },
   };
 }

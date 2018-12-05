@@ -7,6 +7,7 @@ import vtkJSONReader from 'vtk.js/Sources/IO/Misc/JSONReader';
 import vtkSkyboxReader from 'vtk.js/Sources/IO/Misc/SkyboxReader';
 
 import vtkGlanceStateReader from 'paraview-glance/src/io/GlanceStateReader';
+import vtkGlanceVtkJsReader from 'paraview-glance/src/io/GlanceVtkJsReader';
 import vtkGlanceZipObjReader from 'paraview-glance/src/io/GlanceZipObjReader';
 import ReaderFactory from './ReaderFactory';
 
@@ -27,6 +28,14 @@ ReaderFactory.registerReader({
   extension: 'obz',
   name: 'OBJ bundle',
   vtkReader: vtkGlanceZipObjReader,
+  binary: true,
+});
+
+// enable loading of *.vtkjs files (zip of httpDataSetReaders)
+ReaderFactory.registerReader({
+  extension: 'vtkjs',
+  name: 'vtkjs',
+  vtkReader: vtkGlanceVtkJsReader,
   binary: true,
 });
 

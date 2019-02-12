@@ -57,7 +57,7 @@
   overflow: hidden;
 }
 
-.smallToolbar :global(.toolbar__content) {
+.smallToolbar :global(.v-toolbar__content) {
   height: 45px !important;
 }
 

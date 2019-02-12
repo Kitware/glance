@@ -7,20 +7,20 @@
 }
 
 /* override vuetify */
-.datasetPanel :global(.expansion-panel__header) {
+.datasetPanel :global(.v-expansion-panel__header) {
   user-select: none;
 }
 
-.datasetPanel .datasetControls :global(.expansion-panel__header) {
+.datasetPanel .datasetControls :global(.v-expansion-panel__header) {
   padding: 6px 10px 6px 6px;
   user-select: none;
 }
 
-:global(.theme--dark) .datasetPanel :global(.expansion-panel__body) {
+:global(.v-theme--dark) .datasetPanel :global(.v-expansion-panel__body) {
   border-top: 1px solid hsla(0,0%,100%,.12);
 }
 
-:global(.theme--light) .datasetPanel :global(.expansion-panel__body) {
+:global(.v-theme--light) .datasetPanel :global(.v-expansion-panel__body) {
   border-top: 1px solid rgba(0,0,0,.12);
 }
 
@@ -35,7 +35,7 @@
   align-items: center;
 }
 
-:global(.expansion-panel__header) {
+:global(.v-expansion-panel__header) {
   padding: 4px 10px 4px 4px;
 }
 

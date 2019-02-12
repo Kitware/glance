@@ -57,6 +57,10 @@
   margin: auto;
 }
 
+.dropIcon {
+  font-size: 112px;
+}
+
 .noTransition {
   transition: none;
 }

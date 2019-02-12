@@ -1,7 +1,7 @@
 <div :class="['grey lighten-3', $style.root]">
-  <v-jumbotron
-    color="grey
-    darken-3"
+  <v-responsive
+    color="grey darken-3"
+    class="grey darken-3"
     :height="smallScreen ? '360px' : '250px'"
   >
     <v-container fill-height>
@@ -61,7 +61,7 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </v-jumbotron>
+  </v-responsive>
   <v-container
     :class="$style.noSelect"
     grid-list-xl
@@ -82,7 +82,7 @@
           flat
           tile
         >
-          <v-card-media
+          <v-img
             :src="sample.image"
             height="300px"
           />

@@ -7,9 +7,18 @@
 }
 
 /* override vuetify */
+.datasetPanel :global(.v-expansion-panel) {
+  box-shadow: none;
+}
+
 .datasetPanel :global(.v-expansion-panel__header) {
   padding: 4px 10px 4px 4px;
   user-select: none;
+}
+
+.datasetPanel :global(.v-expansion-panel__container):first-child {
+  /* override vuetify's "border: none!important" rule */
+  border: 1px solid rgba(0,0,0,.12)!important;
 }
 
 .datasetPanel .datasetControls :global(.v-expansion-panel__header) {

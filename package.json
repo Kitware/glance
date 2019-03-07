@@ -44,9 +44,9 @@
     "material-design-icons-iconfont": "4.0.2",
     "mousetrap": "^1.6.2",
     "typeface-roboto": "0.0.54",
-    "vtk.js": "8.3.0",
+    "vtk.js": "8.3.10",
     "vue": "2.6.6",
-    "vuetify": "1.5.1",
+    "vuetify": "1.5.2",
     "vuex": "^3.0.1",
     "webworker-promise": "0.4.1",
     "workbox-sw": "2.1.2"

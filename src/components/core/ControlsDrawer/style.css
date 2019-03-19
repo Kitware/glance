@@ -1,9 +1,0 @@
-/* override vuetify */
-/* widens the tabs to take up full space */
-.tabs :global(.tabs__div) {
-  flex: 1 1 auto;
-  /* https://github.com/vuetifyjs/vuetify/issues/3211 */
-  display: inline-flex;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-}

@@ -1,19 +1,9 @@
-<v-expansion-panel-content
+<div
   v-if="domains.representation || domains.opacity || domains.sampleDistance"
-  class=""
-  :value="true"
 >
-  <div
-    :class="$style.subpanelHeader"
-    slot="header"
-  >
-    <v-icon>brightness_medium</v-icon>
-    <span class="body-2">Representation</span>
-  </div>
-
   <v-card flat :class="$style.block" v-if="domains.representation">
-    <v-container fluid grid-list-md>
-      <v-layout row wrap>
+    <v-container fluid grid-list-lg>
+      <v-layout row wrap align-center>
         <v-flex xs12>
           <v-select
             dense
@@ -33,8 +23,8 @@
       <span class="body-2">Mesh</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">
-      <v-container fluid grid-list-md>
-        <v-layout row wrap>
+      <v-container fluid grid-list-lg>
+        <v-layout row wrap align-center>
           <v-flex xs3>
             <label :class="$style.smallLabel">Point Size</label>
           </v-flex>
@@ -96,8 +86,8 @@
       <span class="body-2">Shadow & Edge</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">
-      <v-container fluid grid-list-md>
-        <v-layout row wrap>
+      <v-container fluid grid-list-lg>
+        <v-layout row wrap align-center>
           <v-flex xs3>
             <label :class="$style.smallLabel">Sample Distance</label>
           </v-flex>
@@ -154,4 +144,4 @@
       </v-container>
     </v-card-text>
   </v-card>
-</v-expansion-panel-content>
+</div>

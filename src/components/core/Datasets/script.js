@@ -2,11 +2,7 @@ import { mapState } from 'vuex';
 
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 
-import ColorByWidget from 'paraview-glance/src/components/controls/ColorBy';
-import InformationWidget from 'paraview-glance/src/components/controls/Information';
-import MoleculeWidget from 'paraview-glance/src/components/controls/Molecule';
-import RepresentationWidget from 'paraview-glance/src/components/controls/Representation';
-import SliceWidget from 'paraview-glance/src/components/controls/SliceControl';
+import Controls from 'paraview-glance/src/components/controls';
 import ColorGroup from 'paraview-glance/src/components/widgets/ColorGroup';
 import { Mutations } from 'paraview-glance/src/stores/types';
 
@@ -19,6 +15,32 @@ function onMounted() {
     this.proxyManager.onProxyRegistrationChange(({ proxyGroup }) => {
       if (proxyGroup === 'Sources') {
         this.datasets = this.proxyManager.getSources();
+
+        const newPanelStates = [];
+        const newPanelStateIndexMap = new Map();
+        const newSubpanelStateMap = new Map();
+
+        this.datasets.forEach((ds, index) => {
+          if (this.panelStateIndexMap.has(ds)) {
+            const oldIndex = this.panelStateIndexMap.get(ds);
+            const state = this.panelStates[oldIndex];
+
+            newPanelStates.push(state);
+          } else {
+            newPanelStates.push(true);
+          }
+          newPanelStateIndexMap.set(ds, index);
+
+          if (this.subpanelStateMap.has(ds)) {
+            newSubpanelStateMap.set(ds, this.subpanelStateMap.get(ds));
+          } else {
+            newSubpanelStateMap.set(ds, Controls.map((c) => c.defaultExpand));
+          }
+        });
+
+        this.panelStates = newPanelStates;
+        this.panelStateIndexMap = newPanelStateIndexMap;
+        this.subpanelStateMap = newSubpanelStateMap;
       }
       this.listenerHelper.resetListeners();
     }),
@@ -78,6 +100,11 @@ export default {
   data() {
     return {
       datasets: [],
+      panelStates: [],
+      // dataset -> index into panelStates
+      panelStateIndexMap: new Map(),
+      // dataset -> [subpanel states]
+      subpanelStateMap: new Map(),
       proxyToDelete: null,
     };
   },
@@ -105,13 +132,7 @@ export default {
       () => [this.proxyManager].concat(this.proxyManager.getRepresentations())
     );
 
-    [
-      RepresentationWidget,
-      ColorByWidget,
-      SliceWidget,
-      MoleculeWidget,
-      InformationWidget,
-    ].forEach((panel, i) => this.addPanel(panel, i + 10));
+    Controls.forEach((control, i) => this.addPanel(control, i + 10));
   },
   mounted() {
     this.$nextTick(this.onMounted);

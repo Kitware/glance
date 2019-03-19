@@ -1,18 +1,8 @@
-<v-expansion-panel-content
+<div
   v-if="available === 'geometry' || available === 'volume'"
-  class=""
-  :value="true"
 >
-  <div
-    :class="$style.subpanelHeader"
-    slot="header"
-  >
-    <v-icon>invert_colors</v-icon>
-    <span class="body-2">Colors</span>
-  </div>
-
   <v-card flat :class="$style.block">
-    <v-container fluid grid-list-md>
+    <v-container fluid grid-list-lg>
       <v-layout row wrap align-center>
         <v-flex xs3 v-show="available === 'geometry'">
           Color By
@@ -113,4 +103,4 @@
       </v-layout>
     </v-container>
   </v-card>
-</v-expansion-panel-content>
+</div>

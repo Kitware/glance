@@ -1,3 +1,7 @@
+/**
+ * NOTE: should technically modify stylus rules instead of patching
+ * individual classnames.
+ */
 .root :global(.application--wrap) {
   position: absolute;
   /* Fill to parent height, which will be the height of <html> */
@@ -55,6 +59,10 @@
   transform: translateY(-50%);
   width: 80%;
   margin: auto;
+}
+
+.dropIcon {
+  font-size: 112px;
 }
 
 .noTransition {

@@ -137,12 +137,7 @@
     >
       <div :class="$style.overlayText">
         <div class="display-3">Drop files here</div>
-        <v-icon
-          class="display-4"
-          :class="$style.noTransition"
-        >
-          publish
-        </v-icon>
+        <v-icon :class="[$style.noTransition, $style.dropIcon]">publish</v-icon>
       </div>
     </div>
 

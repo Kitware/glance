@@ -135,7 +135,7 @@
       fill-height
       :class="[$style.vtkView, 'js-view']"
       :style="{ background: viewData.background }"
-      v-on:click="view.activate()"
+      v-on:mousedown="view.activate()"
     />
     <div
       :class="$style.activeView"

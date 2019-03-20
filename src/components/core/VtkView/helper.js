@@ -1,3 +1,5 @@
+import vtkWidgetManager from 'vtk.js/Sources/Widgets/Core/WidgetManager';
+
 import {
   VIEW_ORIENTATIONS,
   ANNOTATIONS,
@@ -77,6 +79,11 @@ function getView(proxyManager, viewType, container) {
   if (container) {
     view.setContainer(container);
     view.resize();
+  }
+
+  if (!view.getReferenceByName('widgetManager')) {
+    const widgetManager = vtkWidgetManager.newInstance();
+    view.set({ widgetManager }, true);
   }
 
   return view;

@@ -10,6 +10,9 @@ import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/Sl
 import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
 import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
 
+import vtkLabelMapVolumeRepProxy from 'paraview-glance/src/vtk/LabelMapVolumeRepProxy';
+import vtkLabelMapSliceRepProxy from 'paraview-glance/src/vtk/LabelMapSliceRepProxy';
+
 import ConfigUtils from 'paraview-glance/src/config/configUtils';
 
 import proxyUI from 'paraview-glance/src/config/proxyUI';
@@ -66,7 +69,7 @@ export default {
       PiecewiseFunction: createProxyDefinition(vtkPiecewiseFunctionProxy),
     },
     Sources: {
-      TrivialProducer: activateOnCreate(createProxyDefinition(vtkProxySource)),
+      TrivialProducer: createProxyDefinition(vtkProxySource),
       Contour: proxyFilter.Contour,
     },
     Representations: {
@@ -121,6 +124,26 @@ export default {
         proxyUI.Glyph,
         proxyLinks.Glyph
       ),
+      LabelMapVolume: createProxyDefinition(
+        vtkLabelMapVolumeRepProxy,
+        [], // ui
+        [] // links
+      ),
+      LabelMapSliceX: createProxyDefinition(
+        vtkLabelMapSliceRepProxy,
+        [], // ui
+        [] // links
+      ),
+      LabelMapSliceY: createProxyDefinition(
+        vtkLabelMapSliceRepProxy,
+        [], // ui
+        [] // links
+      ),
+      LabelMapSliceZ: createProxyDefinition(
+        vtkLabelMapSliceRepProxy,
+        [], // ui
+        [] // links
+      ),
     },
     Views: {
       View3D: createDefaultView(vtkView, proxyUI.View3D),
@@ -135,12 +158,15 @@ export default {
     View2D: proxyViewRepresentationMapping.View2D,
     View2D_X: Object.assign({}, proxyViewRepresentationMapping.View2D, {
       vtkImageData: { name: 'SliceX' },
+      vtkLabelMap: { name: 'LabelMapSliceX' },
     }),
     View2D_Y: Object.assign({}, proxyViewRepresentationMapping.View2D, {
       vtkImageData: { name: 'SliceY' },
+      vtkLabelMap: { name: 'LabelMapSliceY' },
     }),
     View2D_Z: Object.assign({}, proxyViewRepresentationMapping.View2D, {
       vtkImageData: { name: 'SliceZ' },
+      vtkLabelMap: { name: 'LabelMapSliceZ' },
     }),
   },
   filters: {

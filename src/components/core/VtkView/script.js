@@ -268,6 +268,15 @@ function viewTypes() {
 function onMounted() {
   if (this.view) {
     this.view.setContainer(this.$el.querySelector('.js-view'));
+    const widgetManager = this.view.getReferenceByName('widgetManager');
+    if (widgetManager) {
+      const enabled = widgetManager.getPickingEnabled();
+      widgetManager.setRenderer(this.view.getRenderer());
+      // workaround to disable picking if previously disabled
+      if (!enabled) {
+        widgetManager.disablePicking();
+      }
+    }
   }
 
   // Closure creation for callback
@@ -300,9 +309,10 @@ function onMounted() {
     this.proxyManager.onActiveSourceChange(() => {
       if (this.view.bindRepresentationToManipulator) {
         const activeSource = this.proxyManager.getActiveSource();
-        const representation = this.view
-          .getRepresentations()
-          .find((r) => r.getInput() === activeSource);
+        const representation = this.proxyManager.getRepresentation(
+          activeSource,
+          this.view
+        );
         this.view.bindRepresentationToManipulator(representation);
         this.view.updateWidthHeightAnnotation();
       }

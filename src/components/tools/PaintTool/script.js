@@ -1,5 +1,6 @@
 import { mapState } from 'vuex';
 
+import macro from 'vtk.js/Sources/macro';
 import vtkPaintWidget from 'vtk.js/Sources/Widgets/Widgets3D/PaintWidget';
 import vtkPaintFilter from 'vtk.js/Sources/Filters/General/PaintFilter';
 import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
@@ -11,7 +12,38 @@ import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker'
 import PopUp from 'paraview-glance/src/components/widgets/PopUp';
 import { SPECTRAL } from 'paraview-glance/src/palette';
 
+const { vtkErrorMacro } = macro;
 const { makeSubManager, forAllViews } = utils;
+
+// ----------------------------------------------------------------------------
+
+function linkInteractors(sourceView, destView) {
+  const srcInt = sourceView.getInteractor();
+  const dstInt = destView.getInteractor();
+  const sync = {}; // dummy unique object for animation requesting
+
+  let startSub;
+
+  if (srcInt.isAnimating()) {
+    dstInt.requestAnimation(sync);
+  } else {
+    startSub = srcInt.onStartAnimation(() => {
+      dstInt.requestAnimation(sync);
+    });
+  }
+
+  const endSub = srcInt.onEndAnimation(() => {
+    dstInt.cancelAnimation(sync);
+    setTimeout(dstInt.render, 0);
+  });
+
+  return {
+    unsubscribe: () => {
+      startSub && startSub.unsubscribe();
+      endSub.unsubscribe();
+    },
+  };
+}
 
 // ----------------------------------------------------------------------------
 
@@ -43,13 +75,17 @@ export default {
     this.filter.setRadius(this.radius);
     this.filter.setLabel(this.label);
 
-    window.asdf = this;
+    this.view3D = null;
 
     this.subs = [];
     this.labelmapSub = makeSubManager();
   },
   beforeDestroy() {
+    this.view3D = null;
     this.labelmapSub.unsub();
+    while (this.subs.length) {
+      this.subs.pop().unsubscribe();
+    }
   },
   watch: {
     label(label) {
@@ -290,6 +326,15 @@ export default {
         }
       };
 
+      // find 3d view; assume it always exists
+      this.view3D = this.proxyManager.getViews().find(
+        (v) => v.getClassName() === 'vtkViewProxy'
+      );
+      if (!this.view3D) {
+        vtkErrorMacro('Could not find a 3D view!');
+        return;
+      }
+
       // add widget to views
       this.subs.push(
         forAllViews(this.proxyManager, (view) => {
@@ -299,6 +344,7 @@ export default {
               this.widget,
               ViewTypes.SLICE
             );
+
             widgetManager.grabFocus(this.widget);
 
             // tell labelmap slice who the master slice is
@@ -317,15 +363,17 @@ export default {
             updateHandleFromSlice(rep, view);
             updateHandleOrientation(view);
 
+            // link interactors
+            this.subs.push(
+              linkInteractors(view, this.view3D)
+            );
+
             this.subs.push(
               rep.onModified(() => updateHandleFromSlice(rep, view))
             );
 
             viewWidget.onStartInteractionEvent(() => {
               this.filter.startStroke();
-              this.filter.addPoint(
-                this.widget.getWidgetState().getTrueOrigin()
-              );
             });
 
             viewWidget.onInteractionEvent(() => {
@@ -337,10 +385,20 @@ export default {
             });
 
             viewWidget.onEndInteractionEvent(() => {
+              this.filter.addPoint(
+                this.widget.getWidgetState().getTrueOrigin()
+              );
               this.filter.endStroke();
               // update all views when drawing is done
               this.proxyManager.renderAllViews();
             });
+          } else {
+            // all other views assumed to be 3D views
+            widgetManager.disablePicking();
+            widgetManager.addWidget(
+              this.widget,
+              ViewTypes.VOLUME
+            );
           }
         })
       );
@@ -366,10 +424,14 @@ export default {
       updateHandleOrientation(this.proxyManager.getActiveView());
     },
     removeWidgetFromViews() {
+      while (this.subs.length) {
+        this.subs.pop().unsubscribe();
+      }
+
       this.proxyManager.getViews().forEach((view) => {
         const widgetManager = view.getReferenceByName('widgetManager');
         if (widgetManager) {
-          widgetManager.releaseFocus(this.widget);
+          widgetManager.releaseFocus();
           widgetManager.removeWidget(this.widget);
         }
       });

@@ -34,7 +34,7 @@ function linkInteractors(sourceView, destView) {
 
   const endSub = srcInt.onEndAnimation(() => {
     dstInt.cancelAnimation(sync);
-    setTimeout(dstInt.render, 0);
+    // setTimeout(dstInt.render, 0);
   });
 
   return {
@@ -65,6 +65,7 @@ export default {
       label: 1,
       radius: 5,
       palette: SPECTRAL,
+      nextPaletteColorIdx: 0,
     };
   },
   computed: mapState(['proxyManager']),
@@ -122,6 +123,11 @@ export default {
     },
   },
   methods: {
+    getNextColorArray() {
+      const color = this.palette[this.nextPaletteColorIdx];
+      this.nextPaletteColorIdx = (this.nextPaletteColorIdx + 1) % this.palette.length;
+      return this.fromHex(color);
+    },
     asHex(colorArray) {
       return (
         '#' + colorArray.map((c) => ('00' + c.toString(16)).slice(-2)).join('')
@@ -187,6 +193,10 @@ export default {
           this.proxyManager
         );
         this.labelmapProxy = this.proxyManager.getActiveSource();
+
+        // set color of label 1
+        const color = this.getNextColorArray();
+        labelmap.setLabelColor(1, color);
 
         // activate master source b/c we can't window/level nor slice scroll
         // on the labelmap proxy due to lack of property domains.
@@ -254,7 +264,10 @@ export default {
         }
         newLabel = l;
       }
-      this.labelmapProxy.getDataset().setLabelColor(newLabel, [0, 0, 0]);
+      this.label = newLabel;
+
+      const newColor = this.getNextColorArray();
+      this.labelmapProxy.getDataset().setLabelColor(newLabel, newColor);
 
       this.$forceUpdate();
     },
@@ -389,8 +402,6 @@ export default {
                 this.widget.getWidgetState().getTrueOrigin()
               );
               this.filter.endStroke();
-              // update all views when drawing is done
-              this.proxyManager.renderAllViews();
             });
           } else {
             // all other views assumed to be 3D views

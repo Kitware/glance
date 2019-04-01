@@ -40,15 +40,32 @@ function vtkLabelMapVolumeRepProxy(publicAPI, model) {
 
     model.property.setRGBTransferFunction(0, cfun);
     model.property.setScalarOpacity(0, ofun);
+
+    const maxDim = Math.max(
+      ...labelmap.getImageRepresentation().getDimensions()
+    );
+    model.property.setScalarOpacityUnitDistance(0, Math.sqrt(maxDim));
+
+    const sampleDistance = labelmap
+      .getImageRepresentation()
+      .getSpacing()
+      .map((v) => v * v)
+      .reduce((a, b) => a + b, 0);
+    model.mapper.setSampleDistance(sampleDistance * 2 ** -1.5);
   }
 
   model.sourceDependencies.push({
     setInputData(labelmap) {
-      labelMapSub.sub(
-        labelmap.onModified(() => updateTransferFunctions(labelmap))
-      );
-      updateTransferFunctions(labelmap);
-      model.mapper.setInputData(labelmap.getImageRepresentation());
+      if (labelmap) {
+        labelMapSub.sub(
+          labelmap.onModified(() => updateTransferFunctions(labelmap))
+        );
+        updateTransferFunctions(labelmap);
+        model.mapper.setInputData(labelmap.getImageRepresentation());
+      } else {
+        // this probably will never happen
+        labelMapSub.unsub();
+      }
     },
   });
 

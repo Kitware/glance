@@ -403,6 +403,8 @@ export default {
               );
               this.filter.endStroke();
             });
+
+            this.proxyManager.renderAllViews();
           } else {
             // all other views assumed to be 3D views
             widgetManager.disablePicking();

@@ -33,6 +33,12 @@
         {{ enabled ? "Disable painting" : "Enable painting" }}
       </v-btn>
     </v-flex>
+  </v-layout>
+  <v-layout
+    v-show="master && labelmapProxy"
+    wrap
+    align-center
+  >
     <v-flex xs12>
       <v-text-field
         label="Radius"

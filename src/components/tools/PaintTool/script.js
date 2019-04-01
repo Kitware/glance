@@ -80,10 +80,17 @@ export default {
 
     this.subs = [];
     this.labelmapSub = makeSubManager();
+    this.pxmSub = this.proxyManager.onProxyRegistrationChange((changeInfo) => {
+      if (changeInfo.proxyGroup === 'Sources') {
+        this.$forceUpdate();
+      }
+    });
   },
   beforeDestroy() {
     this.view3D = null;
     this.labelmapSub.unsub();
+    this.pxmSub.unsubscribe();
+
     while (this.subs.length) {
       this.subs.pop().unsubscribe();
     }

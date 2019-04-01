@@ -311,14 +311,9 @@ export default {
     addWidgetToViews() {
       // helper method to update handle pos from slice
       const updateHandleFromSlice = (representation, view) => {
-        const ijk = [0, 0, 0];
         const position = [0, 0, 0];
-        ijk[view.getAxis()] = representation.getSlice();
-        this.labelmapProxy
-          .getDataset()
-          .getImageRepresentation()
-          .indexToWorldVec3(ijk, position);
-
+        // representation is in XYZ, not IJK, so slice is in world space
+        position[view.getAxis()] = representation.getSlice();
         this.widget.getManipulator().setOrigin(position);
       };
 

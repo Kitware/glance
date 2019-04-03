@@ -73,30 +73,39 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
         // sync from master to labelmap
         masterSliceSub.sub(
           masterSliceRep.onModified(() => {
-            const slice = masterSliceRep.getSlice();
-            const mode =
-              vtkImageMapper.SlicingMode[masterSliceRep.getSlicingMode()];
+            if (masterSliceRep.isDeleted()) {
+              // disconnect from our master slice rep
+              publicAPI.setMasterSlice(null);
+            } else {
+              const slice = masterSliceRep.getSlice();
+              const mode =
+                vtkImageMapper.SlicingMode[masterSliceRep.getSlicingMode()];
 
-            model.mapper.setSlice(slice);
-            model.mapper.setSlicingMode(mode);
+              model.mapper.setSlice(slice);
+              model.mapper.setSlicingMode(mode);
+            }
           })
         );
 
         // sync from labelmap to master
         labelMapSliceSub.sub(
           publicAPI.onModified(() => {
-            masterSliceRep.setSlice(model.mapper.getSlice());
-            masterSliceRep.setSlicingMode(
-              'IJKXYZ'[model.mapper.getSlicingMode()]
-            );
+            if (masterSliceRep.isDeleted()) {
+              // disconnect from our master slice rep
+              publicAPI.setMasterSlice(null);
+            } else {
+              masterSliceRep.setSlice(model.mapper.getSlice());
+              masterSliceRep.setSlicingMode(
+                'IJKXYZ'[model.mapper.getSlicingMode()]
+              );
+            }
           })
         );
 
         // first update syncs labelmap slice with master slice
         masterSliceRep.modified();
-
-        publicAPI.modified();
       }
+      publicAPI.modified();
     }
   };
 

@@ -72,16 +72,26 @@ export default {
   mounted() {
     this.widget = vtkPaintWidget.newInstance();
     this.widget.setRadius(this.radius);
-    this.filter = vtkPaintFilter.newInstance();
-    this.filter.setRadius(this.radius);
-    this.filter.setLabel(this.label);
-
+    this.filter = null;
     this.view3D = null;
 
     this.subs = [];
     this.labelmapSub = makeSubManager();
+
     this.pxmSub = this.proxyManager.onProxyRegistrationChange((changeInfo) => {
       if (changeInfo.proxyGroup === 'Sources') {
+        if (changeInfo.action === 'unregister') {
+          if (this.master && changeInfo.proxyId === this.master.getProxyId()) {
+            this.master = null;
+            this.enabled = false;
+          }
+          if (
+            this.labelmapProxy &&
+            changeInfo.proxyId === this.labelmapProxy.getProxyId()
+          ) {
+            this.labelmapProxy = null;
+          }
+        }
         this.$forceUpdate();
       }
     });
@@ -89,6 +99,7 @@ export default {
   beforeDestroy() {
     this.view3D = null;
     this.labelmapSub.unsub();
+
     this.pxmSub.unsubscribe();
 
     while (this.subs.length) {
@@ -174,7 +185,6 @@ export default {
     },
     setMasterVolume(source) {
       this.master = source;
-      this.filter.setBackgroundImage(source.getDataset());
 
       if (this.enabled) {
         // refresh widgets when backing image changes
@@ -184,6 +194,11 @@ export default {
     },
     setLabelMap(selected) {
       if (selected === 'CREATE_NEW_LABELMAP') {
+        this.filter = vtkPaintFilter.newInstance();
+        this.filter.setBackgroundImage(this.master.getDataset());
+        this.filter.setRadius(this.radius);
+        this.filter.setLabel(this.label);
+
         const paintImage = this.filter.getOutputData();
         /* eslint-disable-next-line import/no-named-as-default-member */
         const labelmap = vtkLabelMap.newInstance({
@@ -193,7 +208,7 @@ export default {
         ReaderFactory.registerReadersToProxyManager(
           [
             {
-              name: 'Painting Labelmap',
+              name: `Labelmap for ${this.master.getName()}`,
               dataset: labelmap,
             },
           ],

@@ -1,0 +1,9 @@
+<div :class="$style.container" ref="container">
+  <div @click="visible = true">
+    <slot name="trigger" />
+  </div>
+  <div v-show="visible" :class="$style.popup">
+    <slot name="popup" />
+  </div>
+</div>
+

@@ -1,0 +1,156 @@
+<v-container :class="$style.container">
+  <v-layout wrap align-center>
+    <v-flex xs12>
+      <v-select
+        label="Master volume"
+        :items="getVolumes()"
+        item-text="name"
+        item-value="source"
+        :value="master"
+        @input="setMasterVolume"
+      ></v-select>
+    </v-flex>
+    <v-flex xs12>
+      <v-select
+        label="Output labelmap"
+        :items="getLabelmaps()"
+        item-text="name"
+        item-value="source"
+        :value="labelmapProxy"
+        @input="setLabelMap"
+        :disabled="!master"
+      ></v-select>
+    </v-flex>
+  </v-layout>
+  <v-layout wrap align-center>
+    <v-flex xs12>
+      <v-btn
+        :color="enabled ? 'warning' : 'info'"
+        label="Enable painting"
+        @click="enabled = !enabled"
+        :disabled="!master || !labelmapProxy"
+      >
+        {{ enabled ? "Disable painting" : "Enable painting" }}
+      </v-btn>
+    </v-flex>
+  </v-layout>
+  <v-layout
+    v-show="master && labelmapProxy"
+    wrap
+    align-center
+  >
+    <v-flex xs12>
+      <v-text-field
+        label="Radius"
+        type="number"
+        min="1"
+        step="1"
+        v-model="radius"
+        :disabled="!enabled"
+      />
+    </v-flex>
+    <v-flex xs6>
+      <v-btn @click="undo">undo</v-btn>
+    </v-flex>
+    <v-flex xs6>
+      <v-btn @click="redo">redo</v-btn>
+    </v-flex>
+    <v-flex xs6>
+      <v-btn @click="addLabel">
+        Add label
+      </v-btn>
+    </v-flex>
+    <v-flex xs12>
+      <v-radio-group
+        v-model="label"
+        :class="$style.fullWidth"
+      >
+        <table
+          v-if="labelmapProxy"
+          :class="$style.fullWidth"
+        >
+          <thead>
+            <tr>
+              <th><!-- column for picking active label --></th>
+              <th :class="$style.labelColumn">Label</th>
+              <th><!-- column for delete button --></th>
+            </tr>
+          </thead>
+          <tbody :class="$style.tableBody">
+            <tr
+              v-for="(labelData, i) in colormapArray"
+              :key="labelData.label"
+            >
+              <th>
+                <v-radio
+                  :class="$style.activeRadio"
+                  :value="labelData.label"
+                />
+              </th>
+              <th>
+                <div :class="[$style.flexRow, $style.labelColumn]">
+                  <template v-if="labelData.label === 0">
+                    <div :class="$style.colorBoxBackground">
+                      <div
+                        :class="$style.colorBox"
+                        :style="colorToBackgroundCSS(colormapArray, 0)"
+                      />
+                    </div>
+                    <div class="text-xs-center">Eraser</div>
+                  </template>
+                  <template v-else>
+                    <!-- use key to force child component PopUp to re-render -->
+                    <pop-up>
+                      <template v-slot:trigger>
+                        <div :class="$style.colorBoxBackground">
+                          <!-- hacky way to get PopUp to re-render when colormapArray changes,
+                               i.e. reference colormapArray directly inside the PopUp trigger slot
+                               so it will re-render when this.colormapArray changes -->
+                          <div
+                            :class="$style.colorBox"
+                            :style="colorToBackgroundCSS(colormapArray, i)"
+                          />
+                        </div>
+                      </template>
+                      <template v-slot:popup>
+                        <div :class="$style.colorPicker">
+                          <palette-picker
+                            :palette="palette"
+                            :size="28"
+                            :value="asHex(labelData.color)"
+                            @input="setLabelColor(labelData.label, arguments[0])"
+                          />
+                          <div :class="$style.opacitySlider">
+                            <v-slider
+                              label="Opacity"
+                              :value="labelData.opacity"
+                              @input="setLabelOpacity(labelData.label, arguments[0])"
+                              :min="0"
+                              :max="255"
+                              :step="1"
+                            />
+                          </div>
+                        </div>
+                      </template>
+                    </pop-up>
+                    Label {{ labelData.label }}
+                  </template>
+                </div>
+              </th>
+              <th>
+                <div
+                  :class="$style.deleteButton"
+                  v-if="labelData.label !== 0"
+                  @click="deleteLabel(labelData.label)"
+                >
+                  <v-icon>delete</v-icon>
+                </div>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+      </v-radio-group>
+    </v-flex>
+  </v-layout>
+
+</v-container>

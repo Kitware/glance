@@ -10,7 +10,7 @@
       v-on:click="$emit('input', color)"
     >
       <v-icon
-        v-if="color === value"
+        v-if="color.toLowerCase() === value.toLowerCase()"
         :class="$style.check"
         :size="size"
       >

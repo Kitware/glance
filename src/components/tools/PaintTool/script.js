@@ -143,7 +143,8 @@ export default {
   methods: {
     getNextColorArray() {
       const color = this.palette[this.nextPaletteColorIdx];
-      this.nextPaletteColorIdx = (this.nextPaletteColorIdx + 1) % this.palette.length;
+      this.nextPaletteColorIdx =
+        (this.nextPaletteColorIdx + 1) % this.palette.length;
       return this.fromHex(color);
     },
     asHex(colorArray) {
@@ -357,9 +358,9 @@ export default {
       };
 
       // find 3d view; assume it always exists
-      this.view3D = this.proxyManager.getViews().find(
-        (v) => v.getClassName() === 'vtkViewProxy'
-      );
+      this.view3D = this.proxyManager
+        .getViews()
+        .find((v) => v.getClassName() === 'vtkViewProxy');
       if (!this.view3D) {
         vtkErrorMacro('Could not find a 3D view!');
         return;
@@ -394,9 +395,7 @@ export default {
             updateHandleOrientation(view);
 
             // link interactors
-            this.subs.push(
-              linkInteractors(view, this.view3D)
-            );
+            this.subs.push(linkInteractors(view, this.view3D));
 
             this.subs.push(
               rep.onModified(() => updateHandleFromSlice(rep, view))
@@ -425,10 +424,7 @@ export default {
           } else {
             // all other views assumed to be 3D views
             widgetManager.disablePicking();
-            widgetManager.addWidget(
-              this.widget,
-              ViewTypes.VOLUME
-            );
+            widgetManager.addWidget(this.widget, ViewTypes.VOLUME);
           }
         })
       );

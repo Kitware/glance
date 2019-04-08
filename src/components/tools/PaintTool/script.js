@@ -421,6 +421,9 @@ export default {
 
             viewWidget.onStartInteractionEvent(() => {
               this.filter.startStroke();
+              this.filter.addPoint(
+                this.widget.getWidgetState().getTrueOrigin()
+              );
             });
 
             viewWidget.onInteractionEvent(() => {

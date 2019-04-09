@@ -160,6 +160,16 @@ export default {
       }
       return colorArray;
     },
+    getBrushSizeMax() {
+      if (this.labelmapProxy) {
+        const dims = this.labelmapProxy
+          .getDataset()
+          .getImageRepresentation()
+          .getDimensions();
+        return Math.floor(Math.max(...dims) / 2);
+      }
+      return 100;
+    },
     getVolumes() {
       return this.proxyManager
         .getSources()

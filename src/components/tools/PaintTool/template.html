@@ -44,6 +44,7 @@
         label="Radius"
         type="number"
         min="1"
+        :max="getBrushSizeMax()"
         step="1"
         v-model="radius"
         :disabled="!enabled"

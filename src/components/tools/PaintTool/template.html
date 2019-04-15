@@ -1,94 +1,103 @@
-<v-container :class="$style.container">
-  <v-layout wrap align-center>
-    <v-flex xs12>
-      <v-select
-        label="Master volume"
-        :items="getVolumes()"
-        item-text="name"
-        item-value="source"
-        :value="master"
-        @input="setMasterVolume"
-      ></v-select>
-    </v-flex>
-    <v-flex xs12>
-      <v-select
-        label="Output labelmap"
-        :items="getLabelmaps()"
-        item-text="name"
-        item-value="source"
-        :value="labelmapProxy"
-        @input="setLabelMap"
-        :disabled="!master"
-      ></v-select>
-    </v-flex>
-  </v-layout>
-  <v-layout wrap align-center>
-    <v-flex xs12>
-      <v-btn
-        :color="enabled ? 'warning' : 'info'"
-        label="Enable painting"
-        @click="enabled = !enabled"
-        :disabled="!master || !labelmapProxy"
-      >
-        {{ enabled ? "Disable painting" : "Enable painting" }}
-      </v-btn>
-    </v-flex>
-  </v-layout>
-  <v-layout
-    v-show="master && labelmapProxy"
-    wrap
-    align-center
-  >
-    <v-flex xs12>
-      <v-text-field
-        label="Radius"
-        type="number"
-        min="1"
-        step="1"
-        v-model="radius"
-        :disabled="!enabled"
-      />
-    </v-flex>
-    <v-flex xs6>
-      <v-btn @click="undo">undo</v-btn>
-    </v-flex>
-    <v-flex xs6>
-      <v-btn @click="redo">redo</v-btn>
-    </v-flex>
-    <v-flex xs6>
-      <v-btn @click="addLabel">
-        Add label
-      </v-btn>
-    </v-flex>
-    <v-flex xs12>
-      <v-radio-group
-        v-model="label"
-        :class="$style.fullWidth"
-      >
-        <table
-          v-if="labelmapProxy"
-          :class="$style.fullWidth"
+<div>
+  <v-container :class="$style.container">
+    <v-layout wrap align-center>
+      <v-flex xs12>
+        <v-select
+          label="Master volume"
+          :items="getVolumes()"
+          item-text="name"
+          item-value="source"
+          :value="master"
+          @input="setMasterVolume"
+        ></v-select>
+      </v-flex>
+      <v-flex xs12>
+        <v-select
+          label="Output labelmap"
+          :items="getLabelmaps()"
+          item-text="name"
+          item-value="source"
+          :value="labelmapProxy"
+          @input="setLabelMap"
+          :disabled="!master"
+        ></v-select>
+      </v-flex>
+    </v-layout>
+  </v-container>
+
+  <v-card color="teal lighten-5">
+    <v-card-text :class="$style.paintActions">
+        <v-switch
+          v-model="enabled"
+          hide-details
+          label="Paint Mode"
+          :class="$style.paintSwitch"
+        />
+        <v-btn
+          icon
+          small
+          @click="undo"
+          :disabled="!master || !labelmapProxy"
         >
-          <thead>
-            <tr>
-              <th><!-- column for picking active label --></th>
-              <th :class="$style.labelColumn">Label</th>
-              <th><!-- column for delete button --></th>
-            </tr>
-          </thead>
-          <tbody :class="$style.tableBody">
-            <tr
-              v-for="(labelData, i) in colormapArray"
-              :key="labelData.label"
+          <v-icon>undo</v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          small
+          @click="redo"
+          :disabled="!master || !labelmapProxy"
+        >
+          <v-icon>redo</v-icon>
+        </v-btn>
+    </v-card-text>
+  </v-card>
+
+  <v-container :class="$style.container">
+    <v-layout
+      v-show="master && labelmapProxy"
+      wrap
+      align-center
+    >
+      <v-flex xs12>
+        <v-text-field
+          label="Radius"
+          type="number"
+          min="1"
+          :max="getBrushSizeMax()"
+          step="1"
+          v-model="radius"
+        />
+      </v-flex>
+      <v-flex xs12>
+        <v-list :class="$style.fullWidth">
+          <v-subheader :class="$style.headerRow">
+            <span class="black--text subheading font-weight-medium">Labels</span>
+            <v-spacer />
+            <v-btn
+              :class="$style.lowercaseText"
+              flat
+              @click="addLabel"
             >
-              <th>
-                <v-radio
-                  :class="$style.activeRadio"
-                  :value="labelData.label"
-                />
-              </th>
-              <th>
-                <div :class="[$style.flexRow, $style.labelColumn]">
+              <v-icon small color="blue">add_circle</v-icon>
+              <span class="pl-2 grey--text text--darken-2">Add Label</span>
+            </v-btn>
+          </v-subheader>
+          <v-radio-group
+            v-model="label"
+            :class="$style.radioGroup"
+          >
+            <template
+              v-for="(labelData, i) in colormapArray"
+            >
+              <v-divider :key="`divider_${i}`" />
+              <v-list-tile :key="labelData.label">
+                <v-list-tile-action>
+                  <v-radio
+                    :class="$style.activeRadio"
+                    :value="labelData.label"
+                  />
+                </v-list-tile-action>
+                <v-list-tile-content :class="$style.listRow">
                   <template v-if="labelData.label === 0">
                     <div :class="$style.colorBoxBackground">
                       <div
@@ -96,7 +105,7 @@
                         :style="colorToBackgroundCSS(colormapArray, 0)"
                       />
                     </div>
-                    <div class="text-xs-center">Eraser</div>
+                    <span class="pl-1">Eraser</span>
                   </template>
                   <template v-else>
                     <!-- use key to force child component PopUp to re-render -->
@@ -133,24 +142,24 @@
                         </div>
                       </template>
                     </pop-up>
-                    Label {{ labelData.label }}
+                    <span class="pl-1">Label {{ labelData.label }}</span>
                   </template>
-                </div>
-              </th>
-              <th>
-                <div
-                  :class="$style.deleteButton"
-                  v-if="labelData.label !== 0"
-                  @click="deleteLabel(labelData.label)"
-                >
-                  <v-icon>delete</v-icon>
-                </div>
-              </th>
-            </tr>
-          </tbody>
-        </table>
-      </v-radio-group>
-    </v-flex>
-  </v-layout>
-
-</v-container>
+                </v-list-tile-content>
+                <v-list-tile-avatar>
+                  <div
+                    :class="$style.deleteButton"
+                    v-if="labelData.label !== 0"
+                    @click="deleteLabel(labelData.label)"
+                  >
+                    <v-icon>delete</v-icon>
+                  </div>
+                </v-list-tile-avatar>
+              </v-list-tile>
+            </template>
+            <v-divider />
+          </v-radio-group>
+        </v-list>
+      </v-flex>
+    </v-layout>
+  </v-container>
+</div>

@@ -160,6 +160,16 @@ export default {
       }
       return colorArray;
     },
+    getBrushSizeMax() {
+      if (this.labelmapProxy) {
+        const dims = this.labelmapProxy
+          .getDataset()
+          .getImageRepresentation()
+          .getDimensions();
+        return Math.floor(Math.max(...dims) / 2);
+      }
+      return 100;
+    },
     getVolumes() {
       return this.proxyManager
         .getSources()
@@ -191,6 +201,10 @@ export default {
         // refresh widgets when backing image changes
         this.removeWidgetFromViews();
         this.addWidgetToViews();
+      }
+
+      if (!this.master && this.enabled) {
+        this.removeWidgetFromViews();
       }
     },
     setLabelMap(selected) {
@@ -390,10 +404,24 @@ export default {
             );
             rep.setMasterSlice(masterRep);
 
-            // update handle position from slice position and handle orientation
-            updateHandleFromSlice(rep, view);
-            updateHandleOrientation(view);
+            // update handle position on mouse move from slice position and
+            // handle position
+            this.subs.push(
+              view.getInteractor().onStartMouseMove((callData) => {
+                updateHandleOrientation(view);
 
+                // Update handle based on master representation.
+                // If we go based on labelmap representation,
+                // we run the risk of creating the labelmap rep before the
+                // master rep, which would result in the labelmap rep rendering
+                // first, and thus rendering behind the master slice rep.
+                const rep = this.proxyManager.getRepresentation(
+                  this.master,
+                  view
+                );
+                updateHandleFromSlice(rep, view);
+              })
+            );
             // link interactors
             this.subs.push(linkInteractors(view, this.view3D));
 
@@ -403,6 +431,9 @@ export default {
 
             viewWidget.onStartInteractionEvent(() => {
               this.filter.startStroke();
+              this.filter.addPoint(
+                this.widget.getWidgetState().getTrueOrigin()
+              );
             });
 
             viewWidget.onInteractionEvent(() => {
@@ -425,23 +456,6 @@ export default {
             // all other views assumed to be 3D views
             widgetManager.disablePicking();
             widgetManager.addWidget(this.widget, ViewTypes.VOLUME);
-          }
-        })
-      );
-
-      // whenever active view changes, update handle orientation and position.
-      this.subs.push(
-        this.proxyManager.onActiveViewChange((view) => {
-          if (view.isA('vtkView2DProxy')) {
-            updateHandleOrientation(view);
-
-            // Update handle based on master representation.
-            // If we go based on labelmap representation,
-            // we run the risk of creating the labelmap rep before the
-            // master rep, which would result in the labelmap rep rendering
-            // first, and thus rendering behind the master slice rep.
-            const rep = this.proxyManager.getRepresentation(this.master, view);
-            updateHandleFromSlice(rep, view);
           }
         })
       );

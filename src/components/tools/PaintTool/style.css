@@ -18,26 +18,45 @@
   width: 100%;
 }
 
-.tableBody th {
-  font-weight: normal;
-}
-
-.tableBody input {
-  text-align: center;
-  background: #eee;
-  border: 1px solid #ddd;
-  border-radius: 2px;
-}
-
-.flexRow {
+.paintActions {
   display: flex;
   flex-flow: row;
   align-items: center;
+  padding: 8px;
 }
 
-.labelColumn {
-  width: 120px;
-  padding-left: 20px;
+.paintSwitch {
+  margin-top: 0;
+  flex: 2;
+}
+
+.radioGroup {
+  width: 100%;
+  margin-top: 0;
+}
+
+.radioGroup > :global(.v-input__control) {
+  width: 100%;
+}
+
+.headerRow {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  padding: 0;
+}
+
+.listRow {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: visible;
+}
+
+.lowercaseText {
+  text-transform: none;
+  font-weight: normal;
 }
 
 .colorBoxBackground {

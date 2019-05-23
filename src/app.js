@@ -8,8 +8,8 @@ import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
 /* eslint-disable-next-line import/extensions */
 import 'typeface-roboto';
-import 'vuetify/dist/vuetify.min.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import 'vuetify/dist/vuetify.min.css';
 import 'paraview-glance/static/global.css';
 
 import 'paraview-glance/src/io/ParaViewGlanceReaders';

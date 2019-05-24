@@ -8,31 +8,32 @@ const pxmSubsKey = Symbol('ProxyManagerSubsKey');
 export default {
   computed: mapState(['proxyManager']),
   mounted() {
-    const pxm = this.proxyManager;
+    if (this.$options.proxyManager) {
+      const pxm = this.proxyManager;
+      const hooks = this.$options.proxyManager;
 
-    this[pxmSubsKey] = [];
+      this[pxmSubsKey] = [];
 
-    const forwardMethod = (methodName) => {
-      if (this.$options[methodName]) {
+      const forwardMethod = (methodName) => {
+        if (hooks[methodName]) {
+          this[pxmSubsKey].push(pxm[methodName](hooks[methodName].bind(this)));
+        }
+      };
+
+      forwardMethod('onProxyRegistrationChange');
+      forwardMethod('onActiveSourceChange');
+      forwardMethod('onActiveViewChange');
+
+      // onSourceDeletion
+      if (hooks.onSourceDeletion) {
         this[pxmSubsKey].push(
-          pxm[methodName](this.$options[methodName].bind(this))
+          pxm.onProxyRegistrationChange((info) => {
+            if (info.proxyGroup === 'Sources' && info.action === 'unregister') {
+              hooks.onSourceDeletion(info.proxyId);
+            }
+          })
         );
       }
-    };
-
-    forwardMethod('onProxyRegistrationChange');
-    forwardMethod('onActiveSourceChange');
-    forwardMethod('onActiveViewChange');
-
-    // onSourceDeletion
-    if (this.$options.onSourceDeletion) {
-      this[pxmSubsKey].push(
-        pxm.onProxyRegistrationChange((info) => {
-          if (info.proxyGroup === 'Sources' && info.action === 'unregister') {
-            this.$options.onSourceDeletion(info.proxyId);
-          }
-        })
-      );
     }
   },
   beforeDestroy() {

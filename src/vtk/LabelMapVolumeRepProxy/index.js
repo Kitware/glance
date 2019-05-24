@@ -5,9 +5,7 @@ import vtkAbstractRepresentationProxy from 'vtk.js/Sources/Proxy/Core/AbstractRe
 import vtkColorTransferFunction from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction';
 import vtkPiecewiseFunction from 'vtk.js/Sources/Common/DataModel/PiecewiseFunction';
 
-import utils from 'paraview-glance/src/utils';
-
-const { makeSubManager } = utils;
+import { makeSubManager } from 'paraview-glance/src/utils';
 
 // ----------------------------------------------------------------------------
 // vtkLabelMapVolumeRepProxy methods

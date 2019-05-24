@@ -6,9 +6,8 @@ import vtkPiecewiseFunction from 'vtk.js/Sources/Common/DataModel/PiecewiseFunct
 import vtkAbstractRepresentationProxy from 'vtk.js/Sources/Proxy/Core/AbstractRepresentationProxy';
 import ImagePropertyConstants from 'vtk.js/Sources/Rendering/Core/ImageProperty/Constants';
 
-import utils from 'paraview-glance/src/utils';
+import { makeSubManager } from 'paraview-glance/src/utils';
 
-const { makeSubManager } = utils;
 const { InterpolationType } = ImagePropertyConstants;
 
 // ----------------------------------------------------------------------------

@@ -6,8 +6,8 @@
           label="Master volume"
           :items="getVolumes()"
           item-text="name"
-          item-value="source"
-          :value="master"
+          item-value="sourceId"
+          :value="masterSelection"
           @input="setMasterVolume"
         ></v-select>
       </v-flex>
@@ -16,8 +16,8 @@
           label="Output labelmap"
           :items="getLabelmaps()"
           item-text="name"
-          item-value="source"
-          :value="labelmapProxy"
+          item-value="sourceId"
+          :value="labelmapSelection"
           @input="setLabelMap"
           :disabled="!master"
         ></v-select>

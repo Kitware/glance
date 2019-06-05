@@ -11,6 +11,7 @@ import utils from 'paraview-glance/src/utils';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import PopUp from 'paraview-glance/src/components/widgets/PopUp';
 import { SPECTRAL } from 'paraview-glance/src/palette';
+import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 
 const { vtkErrorMacro } = macro;
 const { makeSubManager, forAllViews } = utils;
@@ -53,6 +54,7 @@ export default {
     PalettePicker,
     PopUp,
   },
+  mixins: [ProxyManagerMixin],
   data() {
     return {
       master: null,
@@ -68,7 +70,47 @@ export default {
       nextPaletteColorIdx: 0,
     };
   },
-  computed: mapState(['proxyManager']),
+  computed: {
+    ...mapState(['proxyManager']),
+    masterSelection() {
+      if (this.master) {
+        return {
+          name: this.master.getName(),
+          sourceId: this.master.getProxyId(),
+        };
+      }
+      return null;
+    },
+    labelmapSelection() {
+      if (this.labelmapProxy) {
+        return {
+          name: this.labelmapProxy.getName(),
+          sourceId: this.labelmapProxy.getProxyId(),
+        };
+      }
+      return null;
+    },
+  },
+  proxyManager: {
+    onProxyRegistrationChange(info) {
+      const { proxyGroup, action, proxyId } = info;
+      if (proxyGroup === 'Sources') {
+        if (action === 'unregister') {
+          if (this.master && proxyId === this.master.getProxyId()) {
+            this.master = null;
+            this.enabled = false;
+          }
+          if (
+            this.labelmapProxy && proxyId === this.labelmapProxy.getProxyId()
+          ) {
+            this.labelmapProxy = null;
+          }
+        }
+        // update image selection
+        this.$forceUpdate();
+      }
+    },
+  },
   mounted() {
     this.widget = vtkPaintWidget.newInstance();
     this.widget.setRadius(this.radius);
@@ -77,30 +119,10 @@ export default {
 
     this.subs = [];
     this.labelmapSub = makeSubManager();
-
-    this.pxmSub = this.proxyManager.onProxyRegistrationChange((changeInfo) => {
-      if (changeInfo.proxyGroup === 'Sources') {
-        if (changeInfo.action === 'unregister') {
-          if (this.master && changeInfo.proxyId === this.master.getProxyId()) {
-            this.master = null;
-            this.enabled = false;
-          }
-          if (
-            this.labelmapProxy &&
-            changeInfo.proxyId === this.labelmapProxy.getProxyId()
-          ) {
-            this.labelmapProxy = null;
-          }
-        }
-        this.$forceUpdate();
-      }
-    });
   },
   beforeDestroy() {
     this.view3D = null;
     this.labelmapSub.unsub();
-
-    this.pxmSub.unsubscribe();
 
     while (this.subs.length) {
       this.subs.pop().unsubscribe();
@@ -176,7 +198,7 @@ export default {
         .filter((s) => s.getType() === 'vtkImageData')
         .map((s) => ({
           name: s.getName(),
-          source: s,
+          sourceId: s.getProxyId(),
         }));
     },
     getLabelmaps() {
@@ -185,17 +207,17 @@ export default {
         .filter((s) => s.getType() === 'vtkLabelMap')
         .map((s) => ({
           name: s.getName(),
-          source: s,
+          sourceId: s.getProxyId(),
         }));
 
       labelmaps.unshift({
         name: 'Create new labelmap',
-        source: 'CREATE_NEW_LABELMAP',
+        sourceId: 'CREATE_NEW_LABELMAP',
       });
       return labelmaps;
     },
-    setMasterVolume(source) {
-      this.master = source;
+    setMasterVolume(sourceId) {
+      this.master = this.proxyManager.getProxyById(sourceId);
 
       if (this.enabled) {
         // refresh widgets when backing image changes
@@ -239,7 +261,7 @@ export default {
         // on the labelmap proxy due to lack of property domains.
         this.master.activate();
       } else {
-        this.labelmapProxy = selected;
+        this.labelmapProxy = this.proxyManager.getProxyById(selected);
       }
 
       if (this.labelmapProxy) {

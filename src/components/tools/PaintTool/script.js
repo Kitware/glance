@@ -258,7 +258,8 @@ export default {
         labelmap.setLabelColor(1, color);
 
         // activate master source b/c we can't window/level nor slice scroll
-        // on the labelmap proxy due to lack of property domains.
+        // on the labelmap proxy due to lack of property domains on the
+        // labelmap proxy.
         this.master.activate();
       } else {
         this.labelmapProxy = this.proxyManager.getProxyById(selected);
@@ -266,7 +267,7 @@ export default {
 
       if (this.labelmapProxy) {
         const labelmap = this.labelmapProxy.getDataset();
-        const updateFunc = () => {
+        const updateColorMap = () => {
           const cm = labelmap.getColorMap();
           const numComp = (a, b) => a - b;
           this.colormapArray = Object.keys(cm)
@@ -277,9 +278,9 @@ export default {
               opacity: cm[label][3],
             }));
         };
-        this.labelmapSub.sub(labelmap.onModified(updateFunc));
+        this.labelmapSub.sub(labelmap.onModified(updateColorMap));
         // initialize colormap
-        updateFunc();
+        updateColorMap();
       }
     },
     setLabelColor(label, colorStr) {

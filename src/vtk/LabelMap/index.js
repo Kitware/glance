@@ -32,6 +32,14 @@ function vtkLabelMap(publicAPI, model) {
       publicAPI.modified();
     }
   };
+
+  if (model.colorMap === null) {
+    // default colormap
+    model.colorMap = {
+      0: [0, 0, 0, 0],
+      1: [0, 0, 0, 255],
+    };
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -42,10 +50,7 @@ const DEFAULT_VALUES = {
   // only representation for now
   imageRepresentation: null,
   // default opacity map uses 0 as the transparent pixel
-  colorMap: {
-    0: [0, 0, 0, 0],
-    1: [0, 0, 0, 255],
-  },
+  colorMap: null,
 };
 
 // ----------------------------------------------------------------------------

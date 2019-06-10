@@ -32,6 +32,7 @@
           hide-details
           label="Paint Mode"
           :class="$style.paintSwitch"
+          :disabled="!canPaint"
         />
         <v-btn
           icon

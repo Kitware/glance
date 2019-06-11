@@ -422,7 +422,6 @@ export default {
               this.labelmapProxy,
               view
             );
-            rep.setSyncSource(this.master, view);
 
             // update handle position on mouse move from slice position and
             // handle position

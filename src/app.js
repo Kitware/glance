@@ -19,6 +19,7 @@ import Config from 'paraview-glance/src/config';
 import createStore, {
   registerProxyManagerHooks,
 } from 'paraview-glance/src/store';
+import syncSlices from 'paraview-glance/src/syncSlices';
 import { Actions, Mutations } from 'paraview-glance/src/store/types';
 
 // Expose IO API to Glance global object
@@ -57,6 +58,10 @@ export function createViewer(container, proxyConfig = null) {
   // subscription won't be unsubscribed b/c we currently
   // don't have a way to destroy a viewer
   registerProxyManagerHooks(proxyManager, store);
+
+  // sync slices for 2D view representations that support the
+  // [g|s]etSlice API.
+  syncSlices(proxyManager);
 
   /* eslint-disable no-new */
   new Vue({

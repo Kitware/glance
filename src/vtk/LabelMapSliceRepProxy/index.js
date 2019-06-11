@@ -19,8 +19,10 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
   model.classHierarchy.push('vtkLabelMapSliceRepProxy');
 
   const labelMapSub = makeSubManager();
-  const masterSliceSub = makeSubManager();
-  const labelMapSliceSub = makeSubManager();
+  // syncSource slice -> labelmap slice
+  const syncSub = makeSubManager();
+  // labelmap slice -> syncSource slice
+  const sliceSub = makeSubManager();
 
   model.mapper = vtkImageMapper.newInstance();
   model.actor = vtkImageSlice.newInstance();
@@ -32,7 +34,7 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
 
   model.property.setInterpolationType(InterpolationType.NEAREST);
 
-  model.masterSliceRep = null;
+  model.syncSource = null;
 
   function updateTransferFunctions(labelmap) {
     const colorMap = labelmap.getColorMap();
@@ -59,59 +61,61 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
     model.mapper.setInputData(inputDataset);
   }
 
-  publicAPI.setMasterSlice = (masterSliceRep) => {
-    if (model.masterSliceRep !== masterSliceRep) {
-      if (model.masterSliceRep) {
-        masterSliceSub.unsub();
-        labelMapSliceSub.unsub();
+  const bindToRepresentation = (rep) => {
+    console.log('binding to', rep.getClassName());
+    const sub1 = rep.onModified(() => {
+      if (rep.isDeleted()) {
+        // disconnect from our master slice rep
+        publicAPI.setSyncSource(null);
+      } else {
+        const slice = rep.getSlice();
+        const mode = vtkImageMapper.SlicingMode[rep.getSlicingMode()];
+
+        model.mapper.setSlice(slice);
+        model.mapper.setSlicingMode(mode);
+      }
+    });
+
+    // sync from labelmap to rep
+    const sub2 = publicAPI.onModified(() => {
+      if (rep.isDeleted()) {
+        // disconnect from our master slice rep
+        publicAPI.setSyncSource(null);
+      } else {
+        rep.setSlice(model.mapper.getSlice());
+        rep.setSlicingMode('IJKXYZ'[model.mapper.getSlicingMode()]);
+      }
+    });
+
+    // first update syncs labelmap slice with sync slice
+    rep.modified();
+
+    syncSub.sub(sub1);
+    sliceSub.sub(sub2);
+  };
+
+  // maybe set this on the labelmap itself? I wonder what slicer does...
+  publicAPI.setSyncSource = (syncSource, view) => {
+    if (model.syncSource !== syncSource) {
+      model.syncSource = syncSource;
+
+      if (syncSource && view) {
+        const rep = model.proxyManager.getRepresentation(syncSource, view);
+        if (rep) {
+          bindToRepresentation(rep);
+        }
       }
 
-      model.masterSliceRep = masterSliceRep;
-
-      if (masterSliceRep) {
-        // sync from master to labelmap
-        masterSliceSub.sub(
-          masterSliceRep.onModified(() => {
-            if (masterSliceRep.isDeleted()) {
-              // disconnect from our master slice rep
-              publicAPI.setMasterSlice(null);
-            } else {
-              const slice = masterSliceRep.getSlice();
-              const mode =
-                vtkImageMapper.SlicingMode[masterSliceRep.getSlicingMode()];
-
-              model.mapper.setSlice(slice);
-              model.mapper.setSlicingMode(mode);
-            }
-          })
-        );
-
-        // sync from labelmap to master
-        labelMapSliceSub.sub(
-          publicAPI.onModified(() => {
-            if (masterSliceRep.isDeleted()) {
-              // disconnect from our master slice rep
-              publicAPI.setMasterSlice(null);
-            } else {
-              masterSliceRep.setSlice(model.mapper.getSlice());
-              masterSliceRep.setSlicingMode(
-                'IJKXYZ'[model.mapper.getSlicingMode()]
-              );
-            }
-          })
-        );
-
-        // first update syncs labelmap slice with master slice
-        masterSliceRep.modified();
-      }
       publicAPI.modified();
+      return true;
     }
+    return false;
   };
 
   publicAPI.delete = macro.chain(publicAPI.delete, () => {
     labelMapSub.unsub();
-    masterSliceSub.unsub();
-    labelMapSliceSub.unsub();
+    syncSub.unsub();
+    sliceSub.unsub();
   });
 
   // Keep things updated
@@ -122,7 +126,9 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
 // Object factory
 // ----------------------------------------------------------------------------
 
-const DEFAULT_VALUES = {};
+const DEFAULT_VALUES = {
+  syncSource: null,
+};
 
 // ----------------------------------------------------------------------------
 
@@ -131,6 +137,8 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Object methods
   vtkAbstractRepresentationProxy.extend(publicAPI, model);
+
+  macro.setGet(publicAPI, model, ['syncSource']);
 
   // Object specific methods
   vtkLabelMapSliceRepProxy(publicAPI, model);

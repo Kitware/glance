@@ -418,17 +418,11 @@ export default {
 
             widgetManager.grabFocus(this.widget);
 
-            // tell labelmap slice who the master slice is
-            const masterRep = this.proxyManager.getRepresentation(
-              this.master,
-              view
-            );
-
             const rep = this.proxyManager.getRepresentation(
               this.labelmapProxy,
               view
             );
-            rep.setMasterSlice(masterRep);
+            rep.setSyncSource(this.master, view);
 
             // update handle position on mouse move from slice position and
             // handle position

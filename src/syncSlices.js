@@ -26,7 +26,7 @@ export default function syncSlices(proxyManager) {
 
         for (let i = 0; i < views2D.length; i++) {
           const view = views2D[i];
-          if (view.getRepresentations().indexOf(proxy)) {
+          if (view.getRepresentations().indexOf(proxy) > -1) {
             sliceToView[proxyId] = view.getProxyId();
             repSubs[proxyId] = proxy.onModified(synchronize);
             break;

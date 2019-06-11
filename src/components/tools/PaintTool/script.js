@@ -101,13 +101,13 @@ export default {
         if (action === 'unregister') {
           if (this.master && proxyId === this.master.getProxyId()) {
             this.master = null;
-            this.enabled = false;
           }
           if (
             this.labelmapProxy && proxyId === this.labelmapProxy.getProxyId()
           ) {
             this.labelmapProxy = null;
           }
+          this.enabled = false;
         }
         // update image selection
         this.$forceUpdate();

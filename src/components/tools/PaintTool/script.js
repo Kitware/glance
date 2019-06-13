@@ -69,7 +69,6 @@ export default {
   proxyManager: {
     onProxyRegistrationChange(info) {
       const { proxyGroup, action, proxy, proxyId } = info;
-
       if (proxyGroup === 'Sources') {
         if (action === 'unregister') {
           if (this.master && proxyId === this.master.getProxyId()) {
@@ -84,14 +83,6 @@ export default {
         }
         // update image selection
         this.$forceUpdate();
-      }
-
-      // link interactors
-      if (proxyGroup === 'Views') {
-        if (action === 'register' && this.enabled) {
-          const interactor = proxy.getInteractor();
-          interactor.requestAnimation(SYNC);
-        }
       }
     },
   },

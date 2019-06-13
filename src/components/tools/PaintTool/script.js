@@ -16,35 +16,7 @@ import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 const { vtkErrorMacro } = macro;
 const { makeSubManager, forAllViews } = utils;
 
-// ----------------------------------------------------------------------------
-
-function linkInteractors(sourceView, destView) {
-  const srcInt = sourceView.getInteractor();
-  const dstInt = destView.getInteractor();
-  const sync = {}; // dummy unique object for animation requesting
-
-  let startSub;
-
-  if (srcInt.isAnimating()) {
-    dstInt.requestAnimation(sync);
-  } else {
-    startSub = srcInt.onStartAnimation(() => {
-      dstInt.requestAnimation(sync);
-    });
-  }
-
-  const endSub = srcInt.onEndAnimation(() => {
-    dstInt.cancelAnimation(sync);
-    // setTimeout(dstInt.render, 0);
-  });
-
-  return {
-    unsubscribe: () => {
-      startSub && startSub.unsubscribe();
-      endSub.unsubscribe();
-    },
-  };
-}
+const SYNC = Symbol('PaintToolSync');
 
 // ----------------------------------------------------------------------------
 
@@ -96,7 +68,8 @@ export default {
   },
   proxyManager: {
     onProxyRegistrationChange(info) {
-      const { proxyGroup, action, proxyId } = info;
+      const { proxyGroup, action, proxy, proxyId } = info;
+
       if (proxyGroup === 'Sources') {
         if (action === 'unregister') {
           if (this.master && proxyId === this.master.getProxyId()) {
@@ -111,6 +84,14 @@ export default {
         }
         // update image selection
         this.$forceUpdate();
+      }
+
+      // link interactors
+      if (proxyGroup === 'Views') {
+        if (action === 'register' && this.enabled) {
+          const interactor = proxy.getInteractor();
+          interactor.requestAnimation(SYNC);
+        }
       }
     },
   },
@@ -409,6 +390,9 @@ export default {
       // add widget to views
       this.subs.push(
         forAllViews(this.proxyManager, (view) => {
+          // synchronize view interactor animations
+          view.getInteractor().requestAnimation(SYNC);
+
           const widgetManager = view.getReferenceByName('widgetManager');
           if (view.isA('vtkView2DProxy')) {
             const viewWidget = widgetManager.addWidget(
@@ -441,8 +425,6 @@ export default {
                 updateHandleFromSlice(rep, view);
               })
             );
-            // link interactors
-            this.subs.push(linkInteractors(view, this.view3D));
 
             this.subs.push(
               rep.onModified(() => updateHandleFromSlice(rep, view))
@@ -493,6 +475,9 @@ export default {
           widgetManager.releaseFocus();
           widgetManager.removeWidget(this.widget);
         }
+
+        // desynchronize view interactor animations
+        view.getInteractor().cancelAnimation(SYNC);
       });
     },
   },

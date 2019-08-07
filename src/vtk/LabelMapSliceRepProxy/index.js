@@ -1,9 +1,7 @@
 import macro from 'vtk.js/Sources/macro';
-import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
-import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
 import vtkColorTransferFunction from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction';
 import vtkPiecewiseFunction from 'vtk.js/Sources/Common/DataModel/PiecewiseFunction';
-import vtkAbstractRepresentationProxy from 'vtk.js/Sources/Proxy/Core/AbstractRepresentationProxy';
+import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/SliceRepresentationProxy';
 import ImagePropertyConstants from 'vtk.js/Sources/Rendering/Core/ImageProperty/Constants';
 
 import { makeSubManager } from 'paraview-glance/src/utils';
@@ -23,14 +21,6 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
   const syncSub = makeSubManager();
   // labelmap slice -> syncSource slice
   const sliceSub = makeSubManager();
-
-  model.mapper = vtkImageMapper.newInstance();
-  model.actor = vtkImageSlice.newInstance();
-  model.property = model.actor.getProperty();
-
-  // connect rendering pipeline
-  model.actor.setMapper(model.mapper);
-  model.actors.push(model.actor);
 
   model.property.setInterpolationType(InterpolationType.NEAREST);
 
@@ -53,12 +43,10 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
   }
 
   function setInputData(labelmap) {
-    const inputDataset = labelmap.getImageRepresentation();
     labelMapSub.sub(
       labelmap.onModified(() => updateTransferFunctions(labelmap))
     );
     updateTransferFunctions(labelmap);
-    model.mapper.setInputData(inputDataset);
   }
 
   const bindToRepresentation = (rep) => {
@@ -69,10 +57,7 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
         publicAPI.setSyncSource(null);
       } else {
         const slice = rep.getSlice();
-        const mode = vtkImageMapper.SlicingMode[rep.getSlicingMode()];
-
         model.mapper.setSlice(slice);
-        model.mapper.setSlicingMode(mode);
       }
     });
 
@@ -83,7 +68,6 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
         publicAPI.setSyncSource(null);
       } else {
         rep.setSlice(model.mapper.getSlice());
-        rep.setSlicingMode('IJKXYZ'[model.mapper.getSlicingMode()]);
       }
     });
 
@@ -112,11 +96,20 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
     return false;
   };
 
+  // override to return the image representation as the input dataset
+  publicAPI.getInputDataSet = () =>
+    model.input && model.input.getDataset().getImageRepresentation();
+
   publicAPI.delete = macro.chain(publicAPI.delete, () => {
     labelMapSub.unsub();
     syncSub.unsub();
     sliceSub.unsub();
   });
+
+  model.sourceDependencies = model.sourceDependencies.map((dep) => ({
+    setInputData: (labelMap) =>
+      dep.setInputData(labelMap.getImageRepresentation()),
+  }));
 
   // Keep things updated
   model.sourceDependencies.push({ setInputData });
@@ -136,18 +129,12 @@ export function extend(publicAPI, model, initialValues = {}) {
   Object.assign(model, DEFAULT_VALUES, initialValues);
 
   // Object methods
-  vtkAbstractRepresentationProxy.extend(publicAPI, model);
+  vtkSliceRepresentationProxy.extend(publicAPI, model);
 
   macro.setGet(publicAPI, model, ['syncSource']);
 
   // Object specific methods
   vtkLabelMapSliceRepProxy(publicAPI, model);
-
-  // Proxyfy
-  macro.proxyPropertyMapping(publicAPI, model, {
-    visibility: { modelKey: 'actor', property: 'visibility' },
-    slice: { modelKey: 'mapper', property: 'slice' },
-  });
 }
 
 // ----------------------------------------------------------------------------

@@ -16,7 +16,9 @@ import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
-import createStore from 'paraview-glance/src/store';
+import createStore, {
+  registerProxyManagerHooks,
+} from 'paraview-glance/src/store';
 import { Actions, Mutations } from 'paraview-glance/src/store/types';
 
 // Expose IO API to Glance global object
@@ -51,6 +53,10 @@ export function createViewer(container, proxyConfig = null) {
   const proxyManager = vtkProxyManager.newInstance({ proxyConfiguration });
 
   const store = createStore(proxyManager);
+
+  // subscription won't be unsubscribed b/c we currently
+  // don't have a way to destroy a viewer
+  registerProxyManagerHooks(proxyManager, store);
 
   /* eslint-disable no-new */
   new Vue({

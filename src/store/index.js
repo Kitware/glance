@@ -46,6 +46,38 @@ function reduceState(state) {
   };
 }
 
+function getModuleDefinitions() {
+  return {
+    global,
+    files,
+    screenshots,
+    views,
+  };
+}
+
+export function registerProxyManagerHooks(pxm, store) {
+  const subs = [];
+  const modules = getModuleDefinitions();
+  const hookNames = ['onProxyRegistrationChange'];
+
+  Object.keys(modules)
+    .filter((mod) => Boolean(modules[mod].proxyManagerHooks))
+    .forEach((mod) => {
+      const hooks = modules[mod].proxyManagerHooks;
+      hookNames
+        .filter((name) => Boolean(hooks[name]))
+        .forEach((hookName) =>
+          subs.push(pxm[hookName](hooks[hookName](store)))
+        );
+    });
+
+  return () => {
+    while (subs.length) {
+      subs.pop().unsubscribe();
+    }
+  };
+}
+
 function createStore(proxyManager = null) {
   let pxm = proxyManager;
   if (!proxyManager) {
@@ -62,12 +94,7 @@ function createStore(proxyManager = null) {
       loadingState: false,
       panels: {},
     },
-    modules: {
-      global,
-      files,
-      screenshots,
-      views,
-    },
+    modules: getModuleDefinitions(),
     mutations: {
       SHOW_LANDING(state) {
         state.route = 'landing';

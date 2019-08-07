@@ -49,53 +49,6 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
     updateTransferFunctions(labelmap);
   }
 
-  const bindToRepresentation = (rep) => {
-    console.log('binding to', rep.getClassName());
-    const sub1 = rep.onModified(() => {
-      if (rep.isDeleted()) {
-        // disconnect from our master slice rep
-        publicAPI.setSyncSource(null);
-      } else {
-        const slice = rep.getSlice();
-        model.mapper.setSlice(slice);
-      }
-    });
-
-    // sync from labelmap to rep
-    const sub2 = publicAPI.onModified(() => {
-      if (rep.isDeleted()) {
-        // disconnect from our master slice rep
-        publicAPI.setSyncSource(null);
-      } else {
-        rep.setSlice(model.mapper.getSlice());
-      }
-    });
-
-    // first update syncs labelmap slice with sync slice
-    rep.modified();
-
-    syncSub.sub(sub1);
-    sliceSub.sub(sub2);
-  };
-
-  // maybe set this on the labelmap itself? I wonder what slicer does...
-  publicAPI.setSyncSource = (syncSource, view) => {
-    if (model.syncSource !== syncSource) {
-      model.syncSource = syncSource;
-
-      if (syncSource && view) {
-        const rep = model.proxyManager.getRepresentation(syncSource, view);
-        if (rep) {
-          bindToRepresentation(rep);
-        }
-      }
-
-      publicAPI.modified();
-      return true;
-    }
-    return false;
-  };
-
   // override to return the image representation as the input dataset
   publicAPI.getInputDataSet = () =>
     model.input && model.input.getDataset().getImageRepresentation();

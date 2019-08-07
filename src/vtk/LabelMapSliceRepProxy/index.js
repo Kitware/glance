@@ -53,6 +53,9 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
   publicAPI.getInputDataSet = () =>
     model.input && model.input.getDataset().getImageRepresentation();
 
+  // override because we manage our own color/opacity functions
+  publicAPI.setColorBy = () => {};
+
   publicAPI.delete = macro.chain(publicAPI.delete, () => {
     labelMapSub.unsub();
     syncSub.unsub();

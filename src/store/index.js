@@ -7,11 +7,11 @@ import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import Config from 'paraview-glance/src/config';
-import global from 'paraview-glance/src/stores/globalSettings';
-import files from 'paraview-glance/src/stores/fileLoader';
-import screenshots from 'paraview-glance/src/stores/screenshots';
-import views from 'paraview-glance/src/stores/views';
-import { Actions, Mutations } from 'paraview-glance/src/stores/types';
+import global from 'paraview-glance/src/store/globalSettings';
+import files from 'paraview-glance/src/store/fileLoader';
+import screenshots from 'paraview-glance/src/store/screenshots';
+import views from 'paraview-glance/src/store/views';
+import { Actions, Mutations } from 'paraview-glance/src/store/types';
 
 // http://jsperf.com/typeofvar
 function typeOf(o) {
@@ -46,6 +46,38 @@ function reduceState(state) {
   };
 }
 
+function getModuleDefinitions() {
+  return {
+    global,
+    files,
+    screenshots,
+    views,
+  };
+}
+
+export function registerProxyManagerHooks(pxm, store) {
+  const subs = [];
+  const modules = getModuleDefinitions();
+  const hookNames = ['onProxyRegistrationChange'];
+
+  Object.keys(modules)
+    .filter((mod) => Boolean(modules[mod].proxyManagerHooks))
+    .forEach((mod) => {
+      const hooks = modules[mod].proxyManagerHooks;
+      hookNames
+        .filter((name) => Boolean(hooks[name]))
+        .forEach((hookName) =>
+          subs.push(pxm[hookName](hooks[hookName](store)))
+        );
+    });
+
+  return () => {
+    while (subs.length) {
+      subs.pop().unsubscribe();
+    }
+  };
+}
+
 function createStore(proxyManager = null) {
   let pxm = proxyManager;
   if (!proxyManager) {
@@ -62,12 +94,7 @@ function createStore(proxyManager = null) {
       loadingState: false,
       panels: {},
     },
-    modules: {
-      global,
-      files,
-      screenshots,
-      views,
-    },
+    modules: getModuleDefinitions(),
     mutations: {
       SHOW_LANDING(state) {
         state.route = 'landing';

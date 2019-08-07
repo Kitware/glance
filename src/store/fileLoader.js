@@ -4,7 +4,7 @@ import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
-import { Mutations, Actions } from 'paraview-glance/src/stores/types';
+import { Mutations, Actions } from 'paraview-glance/src/store/types';
 
 // ----------------------------------------------------------------------------
 

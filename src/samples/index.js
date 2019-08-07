@@ -104,7 +104,7 @@ export default [
     ],
   },
   {
-    label: 'Aneurism.vti',
+    label: 'Aneurysm.vti',
     image: Images.Aneurism,
     size: '348 KB',
     datasets: [

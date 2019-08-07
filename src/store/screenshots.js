@@ -1,5 +1,5 @@
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
-import { Mutations } from 'paraview-glance/src/stores/types';
+import { Mutations } from 'paraview-glance/src/store/types';
 
 export default {
   state: {

@@ -16,7 +16,7 @@ import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
 import { Widgets } from 'paraview-glance/src/constants';
-import { Actions, Mutations } from 'paraview-glance/src/stores/types';
+import { Actions, Mutations } from 'paraview-glance/src/store/types';
 import shortcuts from 'paraview-glance/src/shortcuts';
 
 // ----------------------------------------------------------------------------

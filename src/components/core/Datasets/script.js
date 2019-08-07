@@ -4,7 +4,7 @@ import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 
 import Controls from 'paraview-glance/src/components/controls';
 import ColorGroup from 'paraview-glance/src/components/widgets/ColorGroup';
-import { Mutations } from 'paraview-glance/src/stores/types';
+import { Mutations } from 'paraview-glance/src/store/types';
 
 // ----------------------------------------------------------------------------
 // Component API

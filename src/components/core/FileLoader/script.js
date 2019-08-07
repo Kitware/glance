@@ -1,7 +1,7 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 
 import RawFileReader from 'paraview-glance/src/components/core/RawFileReader';
-import { Actions, Getters, Mutations } from 'paraview-glance/src/stores/types';
+import { Actions, Getters, Mutations } from 'paraview-glance/src/store/types';
 
 // ----------------------------------------------------------------------------
 

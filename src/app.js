@@ -16,8 +16,8 @@ import 'paraview-glance/src/io/ParaViewGlanceReaders';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
-import createStore from 'paraview-glance/src/stores';
-import { Actions, Mutations } from 'paraview-glance/src/stores/types';
+import createStore from 'paraview-glance/src/store';
+import { Actions, Mutations } from 'paraview-glance/src/store/types';
 
 // Expose IO API to Glance global object
 export const {

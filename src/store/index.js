@@ -7,11 +7,11 @@ import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import Config from 'paraview-glance/src/config';
-import global from 'paraview-glance/src/stores/globalSettings';
-import files from 'paraview-glance/src/stores/fileLoader';
-import screenshots from 'paraview-glance/src/stores/screenshots';
-import views from 'paraview-glance/src/stores/views';
-import { Actions, Mutations } from 'paraview-glance/src/stores/types';
+import global from 'paraview-glance/src/store/globalSettings';
+import files from 'paraview-glance/src/store/fileLoader';
+import screenshots from 'paraview-glance/src/store/screenshots';
+import views from 'paraview-glance/src/store/views';
+import { Actions, Mutations } from 'paraview-glance/src/store/types';
 
 // http://jsperf.com/typeofvar
 function typeOf(o) {

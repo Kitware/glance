@@ -1,7 +1,7 @@
 import GpuInformation from 'paraview-glance/src/components/widgets/GPUInformation';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
-import { Mutations } from 'paraview-glance/src/stores/types';
+import { Mutations } from 'paraview-glance/src/store/types';
 
 const ORIENTATION_PRESETS = [
   { text: 'XYZ', value: 'default' },

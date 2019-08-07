@@ -1,6 +1,6 @@
 import { mapState, mapMutations } from 'vuex';
 
-import { Mutations } from 'paraview-glance/src/stores/types';
+import { Mutations } from 'paraview-glance/src/store/types';
 
 const FILE_TYPES = ['.png', '.jpeg'];
 

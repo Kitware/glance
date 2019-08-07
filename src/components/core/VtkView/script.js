@@ -12,7 +12,7 @@ import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker'
 import ToolbarSheet from 'paraview-glance/src/components/core/ToolbarSheet';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
-import { Actions, Mutations } from 'paraview-glance/src/stores/types';
+import { Actions, Mutations } from 'paraview-glance/src/store/types';
 
 const ROTATION_STEP = 2;
 

@@ -1,7 +1,7 @@
 import { mapState } from 'vuex';
 
 import ScreenshotDialog from 'paraview-glance/src/components/core/Screenshots/ScreenshotDialog';
-import { Actions } from 'paraview-glance/src/stores/types';
+import { Actions } from 'paraview-glance/src/store/types';
 
 // ----------------------------------------------------------------------------
 // Component API

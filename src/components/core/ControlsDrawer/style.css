@@ -1,0 +1,30 @@
+.tabsContainer {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+.tabItems {
+  flex: 2;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-flow: column;
+}
+
+/* needed so .tabItem doesn't default to auto height */
+.tabItems > :global(.v-window__container) {
+  height: 100%;
+}
+
+
+.tabItem {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+.tabComponent {
+  overflow-x: hidden;
+  overflow-y: auto;
+}

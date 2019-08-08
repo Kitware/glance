@@ -75,7 +75,8 @@ export default {
             this.master = null;
           }
           if (
-            this.labelmapProxy && proxyId === this.labelmapProxy.getProxyId()
+            this.labelmapProxy &&
+            proxyId === this.labelmapProxy.getProxyId()
           ) {
             this.labelmapProxy = null;
           }

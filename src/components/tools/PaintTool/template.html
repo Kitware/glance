@@ -28,7 +28,8 @@
   <v-card color="teal lighten-5">
     <v-card-text :class="$style.paintActions">
         <v-switch
-          v-model="enabled"
+          :value="enabled"
+          @change="$emit('enable', Boolean($event))"
           hide-details
           label="Paint Mode"
           :class="$style.paintSwitch"

@@ -16,7 +16,7 @@ import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 const { vtkErrorMacro } = macro;
 const { makeSubManager, forAllViews } = utils;
 
-const SYNC = Symbol('PaintToolSync');
+const SYNC = 'PaintToolSync';
 
 // ----------------------------------------------------------------------------
 
@@ -27,6 +27,7 @@ export default {
     PopUp,
   },
   mixins: [ProxyManagerMixin],
+  props: ['enabled'],
   data() {
     return {
       master: null,
@@ -35,7 +36,6 @@ export default {
       // [ { label, color, opacity }, ... ], sorted by label asc
       colormapArray: [],
       widget: null,
-      enabled: false,
       label: 1,
       radius: 5,
       palette: SPECTRAL,
@@ -80,7 +80,7 @@ export default {
           ) {
             this.labelmapProxy = null;
           }
-          this.enabled = false;
+          this.$emit('enable', false);
         }
         // update image selection
         this.$forceUpdate();

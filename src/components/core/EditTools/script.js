@@ -7,4 +7,14 @@ export default {
   components: {
     PaintTool,
   },
+  data() {
+    return {
+      enabledTool: '',
+    };
+  },
+  methods: {
+    setEnabledTool(tool, flag) {
+      this.enabledTool = flag ? tool : '';
+    },
+  },
 };

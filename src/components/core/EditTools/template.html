@@ -1,1 +1,11 @@
-<paint-tool />
+<v-expansion-panel>
+  <v-expansion-panel-content>
+    <template v-slot:header>
+      <span class="body-2">Painting</span>
+    </template>
+    <paint-tool
+      :enabled="enabledTool === 'paint'"
+      @enable="setEnabledTool('paint', $event)"
+    />
+  </v-expansion-panel-content>
+</v-expansion-panel>

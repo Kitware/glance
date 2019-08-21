@@ -33,6 +33,7 @@ function emptyPendingTool() {
 export default {
   name: 'MeasurementTools',
   mixins: [ProxyManagerMixin],
+  props: ['enabled'],
   data() {
     return {
       tools: toolsList,
@@ -54,6 +55,27 @@ export default {
         };
       }
       return null;
+    },
+  },
+  watch: {
+    enabled(enabled) {
+      if (enabled) {
+        const { tool } = this.pendingTool;
+        if (!tool) {
+          throw new Error('No tool enabled. This should not happen.');
+        }
+
+        const widget = tool.widgetClass.newInstance();
+        this.pendingTool = Object.assign(this.pendingTool, { widget });
+
+        // add widget to views
+        this.proxyManager
+          .getViews()
+          .forEach((view) => this.addToolToView(tool, widget, view));
+      } else {
+        // remove a pending tool if we disable measurements
+        this.removePendingTool();
+      }
     },
   },
   proxyManager: {
@@ -125,8 +147,6 @@ export default {
       this.targetVolumeId = sourceId;
     },
     enableWidget(toolName) {
-      this.$emit('enable', true);
-
       const tool = this.tools.find((tool) => tool.name === toolName);
       if (!tool) {
         throw new Error('Failed to find tool. This should not happen.');
@@ -136,16 +156,11 @@ export default {
         throw new Error('Cannot enable widget when one is pending. This should not happen.');
       }
 
-      const widget = tool.widgetClass.newInstance();
-      this.pendingTool = Object.assign(emptyPendingTool(), {
-        tool,
-        widget,
-      });
-
-      // add widget to views
-      this.proxyManager
-        .getViews()
-        .forEach((view) => this.addToolToView(tool, widget, view));
+      // We wait for the "enabled" prop to switch to true.
+      // Enabling a tool when "enabled" is true should not happen. If it does,
+      // those enable requests will be ignored.
+      this.pendingTool.tool = tool;
+      this.$emit('enable', true);
     },
     addToolToView(tool, widget, view) {
       const widgetManager = view.getReferenceByName('widgetManager');
@@ -200,14 +215,7 @@ export default {
               widget.getWidgetState().onModified((state) => {
                 if (tool.isWidgetFinalized(state)) {
                   this.widgetStateSub.unsub();
-
-                  // finalize widget by adding it to active tool list
-                  const id = rep.getProxyId();
-                  if (!(id in this.activeToolRepMap)) {
-                    this.activeToolRepMap[id] = [];
-                  }
-                  this.activeToolRepMap[id].push(this.pendingTool);
-                  this.pendingTool = emptyPendingTool();
+                  this.finalizeToolPlacement();
                 }
               })
             );
@@ -221,7 +229,19 @@ export default {
 
         view.renderLater();
       }
+    },
+    finalizeToolPlacement() {
+      // finalize widget by adding it to active tool list
+      const { associatedRep } = this.pendingTool;
+      const id = associatedRep.getProxyId();
+      if (!(id in this.activeToolRepMap)) {
+        this.activeToolRepMap[id] = [];
+      }
+      this.activeToolRepMap[id].push(this.pendingTool);
+      this.pendingTool = emptyPendingTool();
 
+      // we're done with our focused widget
+      this.$emit('enable', false);
     },
     removePendingTool() {
       const { widget, associatedRep } = this.pendingTool;

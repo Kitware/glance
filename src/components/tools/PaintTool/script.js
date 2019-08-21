@@ -402,7 +402,7 @@ export default {
             // update handle position on mouse move from slice position and
             // handle position
             this.subs.push(
-              view.getInteractor().onStartMouseMove((callData) => {
+              view.getInteractor().onMouseMove((callData) => {
                 updateHandleOrientation(view);
 
                 // Update handle based on master representation.
@@ -415,7 +415,7 @@ export default {
                   view
                 );
                 updateHandleFromSlice(rep, view);
-              })
+              }, viewWidget.getPriority() + 1)
             );
 
             this.subs.push(

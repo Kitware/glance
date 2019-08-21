@@ -73,9 +73,10 @@ export default {
       } else if (proxyGroup === 'Representations') {
         if (
           action === 'register' &&
-          this.targetVolume &&
-          proxy.getInput() === this.targetVolume
+          proxy.isA('vtkSliceRepresentationProxy')
         ) {
+          // listen to all slice representations
+          // a bit expensive for reps that don't have measurements on them
           this.repSubs.push(proxy.onModified(this.onRepUpdate));
         } else if (
           action === 'unregister' &&
@@ -200,6 +201,7 @@ export default {
                 if (tool.isWidgetFinalized(state)) {
                   this.widgetStateSub.unsub();
 
+                  // finalize widget by adding it to active tool list
                   const id = rep.getProxyId();
                   if (!(id in this.activeToolRepMap)) {
                     this.activeToolRepMap[id] = [];
@@ -247,7 +249,7 @@ export default {
       }
 
       const id = rep.getProxyId();
-      const toolsInScene = this.activeToolRepMap[id];
+      const toolsInScene = this.activeToolRepMap[id] || [];
       const repSlice = rep.getSlice();
       for (let i = 0; i < toolsInScene.length; i++) {
         const { viewWidget, slice } = toolsInScene[i];

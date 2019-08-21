@@ -1,0 +1,34 @@
+<div>
+  <v-container :class="$style.container">
+    <v-layout wrap align-center>
+      <v-flex xs12>
+        <v-select
+          label="Target volume"
+          :items="getVolumes()"
+          item-text="name"
+          item-value="sourceId"
+          :value="volumeSelection"
+          @input="setTargetVolume"
+        ></v-select>
+      </v-flex>
+    </v-layout>
+  </v-container>
+  <v-container :class="$style.container">
+    <v-layout wrap align-center>
+      <v-btn
+        @click="enableWidget('Length')"
+        :disabled="!targetVolume"
+      >
+        D
+      </v-btn>
+    </v-layout>
+    <v-layout wrap align-center>
+      <v-list :class="$style.fullWidth">
+        <v-subheader :class="$style.headerRow">
+          <span class="black--text subheading font-weight-medium">Measurements</span>
+        </v-subheader>
+        <v-list-tile>HI</v-list-tile>
+      </v-list>
+    </v-layout>
+  </v-container>
+</div>

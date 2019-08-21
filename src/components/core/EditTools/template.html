@@ -1,6 +1,15 @@
 <v-expansion-panel>
   <v-expansion-panel-content>
     <template v-slot:header>
+      <span class="body-2">Measurements</span>
+    </template>
+    <measurement-tools
+      :enabled="enabledTool === 'measurement'"
+      @enable="setEnabledTool('measurement', $event)"
+    />
+  </v-expansion-panel-content>
+  <v-expansion-panel-content>
+    <template v-slot:header>
       <span class="body-2">Painting</span>
     </template>
     <paint-tool

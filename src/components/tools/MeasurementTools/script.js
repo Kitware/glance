@@ -86,10 +86,8 @@ export default {
         if (action === 'unregister') {
           if (proxyId === this.targetVolumeId) {
             this.targetVolumeId = -1;
-            this.removePendingTool();
-            unsubList(this.viewSubs);
           }
-          this.$emit('enable', false);
+          this.disable();
         }
         // update image selection
         this.$forceUpdate();
@@ -124,8 +122,10 @@ export default {
   mounted() {
     this.tools = toolsList;
 
-    this.repSubs = [];
+    // used during the duration of widget placement
     this.viewSubs = [];
+    // used to show/hide widgets per slice
+    this.repSubs = [];
     this.widgetStateSub = makeSubManager();
   },
   beforeDestroy() {
@@ -147,7 +147,7 @@ export default {
     setTargetVolume(sourceId) {
       this.targetVolumeId = sourceId;
     },
-    enableWidget(toolName) {
+    enable(toolName) {
       const toolInfo = this.tools.find((info) => info.name === toolName);
       if (!toolInfo) {
         throw new Error('Failed to find tool. This should not happen.');
@@ -162,6 +162,11 @@ export default {
       // those enable requests will be ignored.
       this.pendingTool.toolInfo = toolInfo;
       this.$emit('enable', true);
+    },
+    disable() {
+      this.removePendingTool();
+      unsubList(this.viewSubs);
+      this.$emit('enable', false);
     },
     addToolToView(toolInfo, widget, view) {
       const widgetManager = view.getReferenceByName('widgetManager');
@@ -252,7 +257,7 @@ export default {
       }
 
       // we're done with our focused widget
-      this.$emit('enable', false);
+      this.disable();
     },
     removePendingTool() {
       const { widget, associatedRep } = this.pendingTool;
@@ -260,9 +265,8 @@ export default {
         this.proxyManager.getViews().forEach((view) =>
           this.removeWidgetFromView(widget, view)
         );
-
-        this.pendingTool = emptyTool();
       }
+      this.pendingTool = emptyTool();
     },
     removeWidgetFromView(widget, view) {
       const widgetManager = view.getReferenceByName('widgetManager');
@@ -276,7 +280,7 @@ export default {
       const repSlice = Math.round(rep.getSlice());
       if (this.pendingTool.associatedRep === rep) {
         if (repSlice !== this.pendingTool.slice) {
-          this.removePendingTool();
+          this.disable();
         }
       }
 

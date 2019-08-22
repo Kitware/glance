@@ -17,9 +17,9 @@ function unsubList(list) {
   }
 }
 
-function emptyPendingTool() {
+function emptyTool() {
   return {
-    tool: null,
+    toolInfo: null,
     widget: null,
     viewWidget: null,
     associatedRep: null,
@@ -37,7 +37,7 @@ export default {
   data() {
     return {
       tools: toolsList,
-      pendingTool: emptyPendingTool(),
+      pendingTool: emptyTool(),
       activeToolRepMap: {}, // repId -> [<pendingTool obj>, ...]
       targetVolumeId: -1,
     };
@@ -60,18 +60,18 @@ export default {
   watch: {
     enabled(enabled) {
       if (enabled) {
-        const { tool } = this.pendingTool;
-        if (!tool) {
+        const { toolInfo } = this.pendingTool;
+        if (!toolInfo) {
           throw new Error('No tool enabled. This should not happen.');
         }
 
-        const widget = tool.widgetClass.newInstance();
+        const widget = toolInfo.widgetClass.newInstance();
         this.pendingTool = Object.assign(this.pendingTool, { widget });
 
         // add widget to views
         this.proxyManager
           .getViews()
-          .forEach((view) => this.addToolToView(tool, widget, view));
+          .forEach((view) => this.addToolToView(toolInfo, widget, view));
       } else {
         // remove a pending tool if we disable measurements
         this.removePendingTool();
@@ -113,9 +113,9 @@ export default {
           delete this.activeToolRepMap[proxyId];
         }
       } else if (proxyGroup === 'Views' && action === 'register') {
-        const { tool, widget, associatedRep } = this.pendingTool;
+        const { toolInfo, widget, associatedRep } = this.pendingTool;
         if (widget && !associatedRep) {
-          this.addToolToView(tool, widget, proxy);
+          this.addToolToView(toolInfo, widget, proxy);
         }
       }
     },
@@ -147,22 +147,22 @@ export default {
       this.targetVolumeId = sourceId;
     },
     enableWidget(toolName) {
-      const tool = this.tools.find((tool) => tool.name === toolName);
-      if (!tool) {
+      const toolInfo = this.tools.find((info) => info.name === toolName);
+      if (!toolInfo) {
         throw new Error('Failed to find tool. This should not happen.');
       }
 
-      if (this.pendingTool.tool) {
+      if (this.pendingTool.toolInfo) {
         throw new Error('Cannot enable widget when one is pending. This should not happen.');
       }
 
       // We wait for the "enabled" prop to switch to true.
       // Enabling a tool when "enabled" is true should not happen. If it does,
       // those enable requests will be ignored.
-      this.pendingTool.tool = tool;
+      this.pendingTool.toolInfo = toolInfo;
       this.$emit('enable', true);
     },
-    addToolToView(tool, widget, view) {
+    addToolToView(toolInfo, widget, view) {
       const widgetManager = view.getReferenceByName('widgetManager');
       if (view.isA('vtkView2DProxy')) {
         const viewWidget = widgetManager.addWidget(
@@ -170,7 +170,7 @@ export default {
           ViewTypes.SLICE
         );
 
-        tool.prepareWidget(viewWidget);
+        toolInfo.prepareWidget(viewWidget);
 
         // update widget when moving between views
         // subscribe with a higher priority than the viewWidget
@@ -181,7 +181,7 @@ export default {
               view
             );
             const slice = Math.round(rep.getSlice());
-            tool.onSliceUpdate(widget, view.getAxis(), slice);
+            toolInfo.onSliceUpdate(widget, viewWidget, view.getAxis(), slice);
           }, viewWidget.getPriority() + 1)
         );
 
@@ -214,7 +214,7 @@ export default {
             // listen for tool final signal
             this.widgetStateSub.sub(
               widget.getWidgetState().onModified((state) => {
-                if (tool.isWidgetFinalized(state)) {
+                if (toolInfo.isWidgetFinalized(state)) {
                   this.widgetStateSub.unsub();
                   this.finalizeToolPlacement();
                 }
@@ -234,12 +234,13 @@ export default {
     finalizeToolPlacement() {
       // finalize widget by adding it to active tool list
       const { associatedRep } = this.pendingTool;
+      const toolInstance = this.pendingTool;
       const id = associatedRep.getProxyId();
       if (!(id in this.activeToolRepMap)) {
         this.activeToolRepMap[id] = [];
       }
-      this.activeToolRepMap[id].push(this.pendingTool);
-      this.pendingTool = emptyPendingTool();
+      this.activeToolRepMap[id].push(toolInstance);
+      this.pendingTool = emptyTool();
 
       // we're done with our focused widget
       this.$emit('enable', false);
@@ -251,7 +252,7 @@ export default {
           this.removeWidgetFromView(widget, view)
         );
 
-        this.pendingTool = emptyPendingTool();
+        this.pendingTool = emptyTool();
       }
     },
     removeWidgetFromView(widget, view) {

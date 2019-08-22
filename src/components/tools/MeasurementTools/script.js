@@ -180,7 +180,8 @@ export default {
               this.targetVolume,
               view
             );
-            tool.onSliceUpdate(widget, view.getAxis(), rep.getSlice());
+            const slice = Math.round(rep.getSlice());
+            tool.onSliceUpdate(widget, view.getAxis(), slice);
           }, viewWidget.getPriority() + 1)
         );
 
@@ -262,15 +263,15 @@ export default {
       }
     },
     onRepUpdate(rep) {
+      const repSlice = Math.round(rep.getSlice());
       if (this.pendingTool.associatedRep === rep) {
-        if (rep.getSlice() !== this.pendingTool.slice) {
+        if (repSlice !== this.pendingTool.slice) {
           this.removePendingTool();
         }
       }
 
       const id = rep.getProxyId();
       const toolsInScene = this.activeToolRepMap[id] || [];
-      const repSlice = rep.getSlice();
       for (let i = 0; i < toolsInScene.length; i++) {
         const { viewWidget, slice } = toolsInScene[i];
         const changed = viewWidget.setVisibility(repSlice === slice);

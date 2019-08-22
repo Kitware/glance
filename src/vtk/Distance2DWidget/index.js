@@ -9,6 +9,7 @@ import stateGenerator from 'paraview-glance/src/vtk/Distance2DWidget/state';
 
 import vtkSVGCircleHandleRepresentation from 'paraview-glance/src/vtk/SVGCircleHandleRepresentation';
 import vtkSVGLineRepresentation from 'paraview-glance/src/vtk/SVGLineRepresentation';
+import vtkSVGLabelRepresentation from 'paraview-glance/src/vtk/SVGLabelRepresentation';
 
 import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 
@@ -28,6 +29,9 @@ function vtkDistanceWidget(publicAPI, model) {
     'defaultScale',
     'circleProps',
     'lineProps',
+    'textProps',
+    'text',
+    'textStateIndex',
   ];
   model.behavior = widgetBehavior;
   model.widgetState = stateGenerator();
@@ -49,6 +53,10 @@ function vtkDistanceWidget(publicAPI, model) {
           {
             builder: vtkSVGLineRepresentation,
             labels: ['handles', 'moveHandle'],
+          },
+          {
+            builder: vtkSVGLabelRepresentation,
+            labels: ['handles'],
           },
         ];
     }

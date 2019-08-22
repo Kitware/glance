@@ -25,6 +25,7 @@ function emptyTool() {
     associatedRep: null,
     associatedView: null,
     slice: -1,
+    stateSub: makeSubManager(),
   };
 }
 
@@ -233,14 +234,22 @@ export default {
     },
     finalizeToolPlacement() {
       // finalize widget by adding it to active tool list
-      const { associatedRep } = this.pendingTool;
       const toolInstance = this.pendingTool;
+      const { toolInfo, widget, associatedRep, stateSub } = toolInstance;
       const id = associatedRep.getProxyId();
       if (!(id in this.activeToolRepMap)) {
         this.activeToolRepMap[id] = [];
       }
       this.activeToolRepMap[id].push(toolInstance);
       this.pendingTool = emptyTool();
+
+      // attach widget state listener
+      // TODO unsub when removing the widget
+      if (toolInfo.onWidgetStateUpdate) {
+        stateSub.sub(widget.getWidgetState().onModified((state) =>
+          toolInfo.onWidgetStateUpdate(toolInstance)
+        ));
+      }
 
       // we're done with our focused widget
       this.$emit('enable', false);

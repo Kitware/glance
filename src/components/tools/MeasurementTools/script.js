@@ -4,7 +4,7 @@ import macro from 'vtk.js/Sources/macro';
 import vtkDistanceWidget from 'vtk.js/Sources/Widgets/Widgets3D/DistanceWidget';
 import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 
-import toolsList from 'paraview-glance/src/components/tools/MeasurementTools/tools';
+import toolList from 'paraview-glance/src/components/tools/MeasurementTools/tools';
 import utils from 'paraview-glance/src/utils';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 
@@ -22,8 +22,8 @@ function emptyTool() {
     toolInfo: null,
     widget: null,
     viewWidget: null,
-    associatedRep: null,
-    associatedView: null,
+    repId: -1,
+    viewId: -1,
     slice: -1,
     stateSub: makeSubManager(),
   };
@@ -37,9 +37,9 @@ export default {
   props: ['enabled'],
   data() {
     return {
-      tools: toolsList,
+      toolList,
       pendingTool: emptyTool(),
-      activeToolRepMap: {}, // repId -> [<pendingTool obj>, ...]
+      tools: [], // [{ repId, ...emptyTool() }, ....]
       targetVolumeId: -1,
     };
   },
@@ -99,29 +99,22 @@ export default {
           // listen to all slice representations
           // a bit expensive for reps that don't have measurements on them
           this.repSubs.push(proxy.onModified(this.onRepUpdate));
-        } else if (
-          action === 'unregister' &&
-          proxyId in this.activeToolRepMap
-        ) {
-          const tools = this.activeToolRepMap[proxyId];
-          for (let i = 0; i < widgets.length; i++) {
-            const { widget, view } = tools[i];
-            const widgetManager = view.getReferenceByName('widgetManager');
-            widgetManager.removeWidget(widget);
-          }
-          delete this.activeToolRepMap[proxyId];
+        } else if (action === 'unregister') {
+          // remove tools associated with the deleted representation
+          this.tools
+            .filter((tool) => tool.repId === proxyId)
+            .forEach((tool) => this.removeTool(tool));
+          this.tools = this.tools.filter((tool) => tool.repId !== proxyId);
         }
       } else if (proxyGroup === 'Views' && action === 'register') {
-        const { toolInfo, widget, associatedRep } = this.pendingTool;
-        if (widget && !associatedRep) {
+        const { toolInfo, widget, repId } = this.pendingTool;
+        if (widget && repId === -1) {
           this.addToolToView(toolInfo, widget, proxy);
         }
       }
     },
   },
   mounted() {
-    this.tools = toolsList;
-
     // used during the duration of widget placement
     this.viewSubs = [];
     // used to show/hide widgets per slice
@@ -148,7 +141,7 @@ export default {
       this.targetVolumeId = sourceId;
     },
     enable(toolName) {
-      const toolInfo = this.tools.find((info) => info.name === toolName);
+      const toolInfo = this.toolList.find((info) => info.name === toolName);
       if (!toolInfo) {
         throw new Error('Failed to find tool. This should not happen.');
       }
@@ -213,9 +206,11 @@ export default {
             // bind widget to view, rep and slice
             const rep = 
               this.proxyManager.getRepresentation(this.targetVolume, view);
-            this.pendingTool.associatedRep = rep;
-            this.pendingTool.viewWidget = viewWidget;
-            this.pendingTool.slice = Math.round(rep.getSlice());
+            this.pendingTool = Object.assign(this.pendingTool, {
+              repId: rep.getProxyId(),
+              viewWidget,
+              slice: Math.round(rep.getSlice()),
+            });
 
             // listen for tool final signal
             this.widgetStateSub.sub(
@@ -240,14 +235,11 @@ export default {
     finalizeToolPlacement() {
       // finalize widget by adding it to active tool list
       const toolInstance = this.pendingTool;
-      const { toolInfo, widget, associatedRep, stateSub } = toolInstance;
-      const id = associatedRep.getProxyId();
-      if (!(id in this.activeToolRepMap)) {
-        this.activeToolRepMap[id] = [];
-      }
-      this.activeToolRepMap[id].push(toolInstance);
+      this.tools.push(toolInstance);
+
       this.pendingTool = emptyTool();
 
+      const { toolInfo, widget, stateSub } = toolInstance;
       // attach widget state listener
       // TODO unsub when removing the widget
       if (toolInfo.onWidgetStateUpdate) {
@@ -260,13 +252,23 @@ export default {
       this.disable();
     },
     removePendingTool() {
-      const { widget, associatedRep } = this.pendingTool;
+      const { widget } = this.pendingTool;
       if (widget) {
         this.proxyManager.getViews().forEach((view) =>
           this.removeWidgetFromView(widget, view)
         );
       }
       this.pendingTool = emptyTool();
+    },
+    removeTool(tool) {
+      this.proxyManager.getViews().forEach((view) =>
+        this.removeWidgetFromView(tool.widget, view)
+      );
+      tool.stateSub.unsub();
+      tool.widget.delete();
+      tool.viewWidget.delete();
+      tool.widget = null;
+      tool.viewWidget = null;
     },
     removeWidgetFromView(widget, view) {
       const widgetManager = view.getReferenceByName('widgetManager');
@@ -278,14 +280,14 @@ export default {
     },
     onRepUpdate(rep) {
       const repSlice = Math.round(rep.getSlice());
-      if (this.pendingTool.associatedRep === rep) {
+      if (this.pendingTool.repId === rep.getProxyId()) {
         if (repSlice !== this.pendingTool.slice) {
           this.disable();
         }
       }
 
       const id = rep.getProxyId();
-      const toolsInScene = this.activeToolRepMap[id] || [];
+      const toolsInScene = this.tools.filter((tool) => tool.repId === id);
       for (let i = 0; i < toolsInScene.length; i++) {
         const { viewWidget, slice } = toolsInScene[i];
         const changed = viewWidget.setVisibility(repSlice === slice);

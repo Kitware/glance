@@ -5,6 +5,7 @@ const MAX_POINTS = 2;
 export default function widgetBehavior(publicAPI, model) {
   model.classHierarchy.push('vtkDistanceWidgetProp');
   let isDragging = null;
+  let cameraSub = null;
 
   // --------------------------------------------------------------------------
   // Display 2D
@@ -151,4 +152,28 @@ export default function widgetBehavior(publicAPI, model) {
     model.widgetManager.enablePicking();
     model.interactor.render();
   };
+
+  // --------------------------------------------------------------------------
+
+  publicAPI.delete = macro.chain(publicAPI.delete, () => {
+    if (cameraSub) {
+      cameraSub.unsubscribe();
+    }
+  });
+
+  // --------------------------------------------------------------------------
+  // init
+  // --------------------------------------------------------------------------
+
+  // listen to camera so we can scale the handles to the screen
+  cameraSub = model.camera.onModified(() => {
+    let scale;
+    if (model.camera.getParallelProjection()) {
+      scale = model.camera.getParallelScale() / 1.9;
+    } else {
+      scale = model.camera.getDistance() / 7;
+    }
+
+    publicAPI.setHandleScale(scale);
+  });
 }

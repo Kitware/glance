@@ -22,11 +22,6 @@ export default [
         dy: -12,
       });
       viewWidget.setText('');
-      // TODO match SVG circle
-      viewWidget
-        .getWidgetState()
-        .getMoveHandle()
-        .setScale1(10);
       viewWidget.setHandleVisibility(false);
     },
     onSliceUpdate: (widget, viewWidget, axis, slice) => {

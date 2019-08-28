@@ -1,12 +1,12 @@
 import macro from 'vtk.js/Sources/macro';
 import vtkAbstractWidgetFactory from 'vtk.js/Sources/Widgets/Core/AbstractWidgetFactory';
 import vtkPlanePointManipulator from 'vtk.js/Sources/Widgets/Manipulators/PlaneManipulator';
-import vtkSphereHandleRepresentation from 'vtk.js/Sources/Widgets/Representations/SphereHandleRepresentation';
 import { distance2BetweenPoints } from 'vtk.js/Sources/Common/Core/Math';
 
 import widgetBehavior from 'paraview-glance/src/vtk/Distance2DWidget/behavior';
 import stateGenerator from 'paraview-glance/src/vtk/Distance2DWidget/state';
 
+import vtkScaledSphereHandleRepresentation from 'paraview-glance/src/vtk/ScaledSphereHandleRepresentation';
 import vtkSVGCircleHandleRepresentation from 'paraview-glance/src/vtk/SVGCircleHandleRepresentation';
 import vtkSVGLineRepresentation from 'paraview-glance/src/vtk/SVGLineRepresentation';
 import vtkSVGLabelRepresentation from 'paraview-glance/src/vtk/SVGLabelRepresentation';
@@ -32,6 +32,7 @@ function vtkDistanceWidget(publicAPI, model) {
     'textProps',
     'text',
     'textStateIndex',
+    'handleScale',
   ];
   model.behavior = widgetBehavior;
   model.widgetState = stateGenerator();
@@ -44,8 +45,11 @@ function vtkDistanceWidget(publicAPI, model) {
       case ViewTypes.VOLUME:
       default:
         return [
-          { builder: vtkSphereHandleRepresentation, labels: ['handles'] },
-          { builder: vtkSphereHandleRepresentation, labels: ['moveHandle'] },
+          { builder: vtkScaledSphereHandleRepresentation, labels: ['handles'] },
+          {
+            builder: vtkScaledSphereHandleRepresentation,
+            labels: ['moveHandle'],
+          },
           {
             builder: vtkSVGCircleHandleRepresentation,
             labels: ['handles', 'moveHandle'],

@@ -165,15 +165,21 @@ export default function widgetBehavior(publicAPI, model) {
   // init
   // --------------------------------------------------------------------------
 
-  // listen to camera so we can scale the handles to the screen
-  cameraSub = model.camera.onModified(() => {
+  const setHandleScaleFromCamera = () => {
     let scale;
     if (model.camera.getParallelProjection()) {
-      scale = model.camera.getParallelScale() / 1.9;
+      scale = model.camera.getParallelScale() / 1.25;
     } else {
-      scale = model.camera.getDistance() / 7;
+      scale = model.camera.getDistance() / 6;
     }
 
     publicAPI.setHandleScale(scale);
-  });
+  };
+
+  // listen to camera so we can scale the handles to the screen
+  cameraSub = model.camera.onModified(setHandleScaleFromCamera);
+  // since forwarded/linked set/get methods aren't created until
+  // after this behavior function finishes, this is a hack to invoke
+  // initial handle scale.
+  setTimeout(setHandleScaleFromCamera, 0);
 }

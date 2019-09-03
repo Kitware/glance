@@ -1,9 +1,14 @@
+import { Portal } from '@linusborg/vue-simple-portal';
+
 // ----------------------------------------------------------------------------
 // Component
 // ----------------------------------------------------------------------------
 
 export default {
   name: 'PopUp',
+  components: {
+    Portal,
+  },
   data() {
     return {
       visible: false,
@@ -26,6 +31,14 @@ export default {
           this.visible = false;
         }
       }
+    },
+    getPositioning() {
+      const anchor = this.$refs.anchor;
+      const { top: y, left: x } = anchor.getBoundingClientRect();
+      return {
+        top: `${y}px`,
+        left: `${x}px`,
+      };
     },
   },
 };

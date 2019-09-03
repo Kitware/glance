@@ -10,7 +10,7 @@ import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import utils from 'paraview-glance/src/utils';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import PopUp from 'paraview-glance/src/components/widgets/PopUp';
-import { SPECTRAL } from 'paraview-glance/src/palette';
+import { createPaletteCycler, SPECTRAL } from 'paraview-glance/src/palette';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 
 const { vtkErrorMacro } = macro;
@@ -32,14 +32,13 @@ export default {
     return {
       master: null,
       labelmapProxy: null,
+      palette: SPECTRAL,
       // for view purpose only
       // [ { label, color, opacity }, ... ], sorted by label asc
       colormapArray: [],
       widget: null,
       label: 1,
       radius: 5,
-      palette: SPECTRAL,
-      nextPaletteColorIdx: 0,
     };
   },
   computed: {
@@ -93,6 +92,8 @@ export default {
     this.filter = null;
     this.view3D = null;
 
+    this.paletteCycler = createPaletteCycler(this.palette);
+
     this.subs = [];
     this.labelmapSub = makeSubManager();
   },
@@ -140,10 +141,7 @@ export default {
   },
   methods: {
     getNextColorArray() {
-      const color = this.palette[this.nextPaletteColorIdx];
-      this.nextPaletteColorIdx =
-        (this.nextPaletteColorIdx + 1) % this.palette.length;
-      return this.fromHex(color);
+      return this.fromHex(this.paletteCycler.next());
     },
     asHex(colorArray) {
       return (

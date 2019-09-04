@@ -353,5 +353,11 @@ export default {
         this.proxyManager.renderAllViews();
       }
     },
+    deleteTool(idx) {
+      if (idx >= 0 && idx < this.tools.length) {
+        const [deletedTool] = this.tools.splice(idx, 1);
+        this.removeTool(deletedTool);
+      }
+    },
   },
 };

@@ -81,7 +81,9 @@
                       />
                     </v-flex>
                     <v-flex xs12>
-                      <v-btn>Delete</v-btn>
+                      <v-btn @click="deleteTool(idx)">
+                        <v-icon left>delete</v-icon> Delete
+                      </v-btn>
                     </v-flex>
                   </v-layout>
                 </v-container>

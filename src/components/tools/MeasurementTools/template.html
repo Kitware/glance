@@ -16,10 +16,13 @@
   <v-container :class="$style.container">
     <v-layout wrap align-center>
       <v-btn
-        @click="enable('Length')"
+        v-for="tool in toolList"
+        :key="tool.name"
+        icon
+        @click="enable(tool.name)"
         :disabled="!targetVolume || !!pendingTool.toolInfo"
       >
-        D
+        {{ tool.icon }}
       </v-btn>
     </v-layout>
     <v-layout wrap align-center>
@@ -35,7 +38,7 @@
             <v-list-tile-title>
               {{ tool.name || tool.toolInfo.name }}
             </v-list-tile-title>
-            <v-list-tile-sub-title>Length: {{ tool.measurement.toFixed(3) }}</v-list-tile-sub-title>
+            <v-list-tile-sub-title>{{ tool.label }}: {{ tool.measurement.toFixed(3) }}</v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <pop-up>

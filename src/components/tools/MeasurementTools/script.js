@@ -4,12 +4,19 @@ import macro from 'vtk.js/Sources/macro';
 import vtkDistanceWidget from 'vtk.js/Sources/Widgets/Widgets3D/DistanceWidget';
 import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 
+import PopUp from 'paraview-glance/src/components/widgets/PopUp';
+import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import toolList from 'paraview-glance/src/components/tools/MeasurementTools/tools';
 import utils from 'paraview-glance/src/utils';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
+import { createPaletteCycler, SPECTRAL } from 'paraview-glance/src/palette';
 
 const { vtkErrorMacro } = macro;
 const { makeSubManager, forAllViews } = utils;
+
+const PALETTE = [
+  '#ffee00',
+].concat(SPECTRAL);
 
 function unsubList(list) {
   while (list.length) {
@@ -23,9 +30,12 @@ function emptyTool() {
     widget: null,
     viewWidget: null,
     repId: -1,
-    viewId: -1,
     slice: -1,
     stateSub: makeSubManager(),
+    measurement: null,
+    name: '',
+    size: 12,
+    color: PALETTE[0],
   };
 }
 
@@ -35,12 +45,17 @@ export default {
   name: 'MeasurementTools',
   mixins: [ProxyManagerMixin],
   props: ['enabled'],
+  components: {
+    PopUp,
+    PalettePicker,
+  },
   data() {
     return {
       toolList,
       pendingTool: emptyTool(),
       tools: [], // [{ repId, ...emptyTool() }, ....]
       targetVolumeId: -1,
+      palette: PALETTE,
     };
   },
   computed: {
@@ -67,12 +82,18 @@ export default {
         }
 
         const widget = toolInfo.widgetClass.newInstance();
-        this.pendingTool = Object.assign(this.pendingTool, { widget });
+        this.pendingTool = Object.assign(
+          this.pendingTool,
+          {
+            widget,
+            color: this.paletteCycler.next(),
+          }
+        );
 
         // add widget to views
         this.proxyManager
           .getViews()
-          .forEach((view) => this.addToolToView(toolInfo, widget, view));
+          .forEach((view) => this.addToolToView(this.pendingTool, view));
       } else {
         // remove a pending tool if we disable measurements
         this.removePendingTool();
@@ -92,10 +113,7 @@ export default {
         // update image selection
         this.$forceUpdate();
       } else if (proxyGroup === 'Representations') {
-        if (
-          action === 'register' &&
-          proxy.isA('vtkSliceRepresentationProxy')
-        ) {
+        if (action === 'register' && proxy.isA('vtkSliceRepresentationProxy')) {
           // listen to all slice representations
           // a bit expensive for reps that don't have measurements on them
           this.repSubs.push(proxy.onModified(this.onRepUpdate));
@@ -107,14 +125,15 @@ export default {
           this.tools = this.tools.filter((tool) => tool.repId !== proxyId);
         }
       } else if (proxyGroup === 'Views' && action === 'register') {
-        const { toolInfo, widget, repId } = this.pendingTool;
+        const { widget, repId } = this.pendingTool;
         if (widget && repId === -1) {
-          this.addToolToView(toolInfo, widget, proxy);
+          this.addToolToView(this.pendingTool, proxy);
         }
       }
     },
   },
   mounted() {
+    this.paletteCycler = createPaletteCycler(this.palette);
     // used during the duration of widget placement
     this.viewSubs = [];
     // used to show/hide widgets per slice
@@ -147,7 +166,9 @@ export default {
       }
 
       if (this.pendingTool.toolInfo) {
-        throw new Error('Cannot enable widget when one is pending. This should not happen.');
+        throw new Error(
+          'Cannot enable widget when one is pending. This should not happen.'
+        );
       }
 
       // We wait for the "enabled" prop to switch to true.
@@ -161,15 +182,16 @@ export default {
       unsubList(this.viewSubs);
       this.$emit('enable', false);
     },
-    addToolToView(toolInfo, widget, view) {
+    addToolToView(tool, view) {
       const widgetManager = view.getReferenceByName('widgetManager');
       if (view.isA('vtkView2DProxy')) {
-        const viewWidget = widgetManager.addWidget(
-          widget,
-          ViewTypes.SLICE
-        );
+        const { toolInfo, widget, size, color } = tool;
+        const viewWidget = widgetManager.addWidget(widget, ViewTypes.SLICE);
 
+        // style the view widget
         toolInfo.prepareWidget(viewWidget);
+        toolInfo.setWidgetSize(viewWidget, size);
+        toolInfo.setWidgetColor(viewWidget, color);
 
         // update widget when moving between views
         // subscribe with a higher priority than the viewWidget
@@ -204,8 +226,10 @@ export default {
             widgetManager.grabFocus(widget);
 
             // bind widget to view, rep and slice
-            const rep = 
-              this.proxyManager.getRepresentation(this.targetVolume, view);
+            const rep = this.proxyManager.getRepresentation(
+              this.targetVolume,
+              view
+            );
             this.pendingTool = Object.assign(this.pendingTool, {
               repId: rep.getProxyId(),
               viewWidget,
@@ -221,7 +245,6 @@ export default {
                 }
               })
             );
-
           }, viewWidget.getPriority() + 1)
         );
 
@@ -243,9 +266,12 @@ export default {
       // attach widget state listener
       // TODO unsub when removing the widget
       if (toolInfo.onWidgetStateUpdate) {
-        stateSub.sub(widget.getWidgetState().onModified((state) =>
-          toolInfo.onWidgetStateUpdate(toolInstance)
-        ));
+        stateSub.sub(
+          widget.getWidgetState().onModified((state) => {
+            toolInfo.onWidgetStateUpdate(toolInstance);
+            toolInstance.measurement = toolInfo.measurementCallback(widget);
+          })
+        );
       }
 
       // we're done with our focused widget
@@ -254,16 +280,16 @@ export default {
     removePendingTool() {
       const { widget } = this.pendingTool;
       if (widget) {
-        this.proxyManager.getViews().forEach((view) =>
-          this.removeWidgetFromView(widget, view)
-        );
+        this.proxyManager
+          .getViews()
+          .forEach((view) => this.removeWidgetFromView(widget, view));
       }
       this.pendingTool = emptyTool();
     },
     removeTool(tool) {
-      this.proxyManager.getViews().forEach((view) =>
-        this.removeWidgetFromView(tool.widget, view)
-      );
+      this.proxyManager
+        .getViews()
+        .forEach((view) => this.removeWidgetFromView(tool.widget, view));
       tool.stateSub.unsub();
       tool.widget.delete();
       tool.viewWidget.delete();
@@ -300,6 +326,32 @@ export default {
       // Maybe I can only render the 2D views where widgets updated.
       // For now, this will work just fine.
       this.proxyManager.renderAllViews();
+    },
+    setToolName(idx, newName) {
+      if (idx >= 0 && idx < this.tools.length) {
+        this.tools[idx].name = newName;
+      }
+    },
+    setToolColor(idx, newColorHex) {
+      if (idx >= 0 && idx < this.tools.length) {
+        const { toolInfo, viewWidget } = this.tools[idx];
+        toolInfo.setWidgetColor(viewWidget, newColorHex);
+        this.tools[idx].color = newColorHex;
+
+        // hacky way to update color selection and svg
+        this.$forceUpdate();
+        this.proxyManager.renderAllViews();
+      }
+    },
+    setToolSize(idx, newSize) {
+      if (idx >= 0 && idx < this.tools.length) {
+        const { toolInfo, viewWidget } = this.tools[idx];
+        toolInfo.setWidgetSize(viewWidget, newSize);
+        this.tools[idx].size = newSize;
+
+        // hacky way to re-render svg
+        this.proxyManager.renderAllViews();
+      }
     },
   },
 };

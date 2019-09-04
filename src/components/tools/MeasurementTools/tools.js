@@ -45,6 +45,30 @@ export default [
       const d = widget.getDistance();
       viewWidget.setText(d.toFixed(3));
     },
+    setWidgetColor: (viewWidget, colorHex) => {
+      viewWidget.setCircleProps(
+        Object.assign(viewWidget.getCircleProps(), {
+          stroke: colorHex,
+        })
+      );
+      viewWidget.setLineProps(
+        Object.assign(viewWidget.getLineProps(), {
+          stroke: colorHex,
+        })
+      );
+      viewWidget.setTextProps(
+        Object.assign(viewWidget.getTextProps(), {
+          fill: colorHex,
+        })
+      );
+    },
+    setWidgetSize: (viewWidget, size) => {
+      viewWidget.setTextProps(
+        Object.assign(viewWidget.getTextProps(), {
+          style: `font-size: ${size}px`,
+        })
+      );
+    },
   },
   // {
   //   name: 'Angle',

@@ -6,36 +6,7 @@
   user-select: none;
 }
 
-.noSelect {
-  user-select: none;
-}
-
 .fullWidth {
-  width: 100%;
-}
-
-.labelInput {
-  width: 100%;
-}
-
-.paintActions {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  padding: 8px;
-}
-
-.paintSwitch {
-  margin-top: 0;
-  flex: 2;
-}
-
-.radioGroup {
-  width: 100%;
-  margin-top: 0;
-}
-
-.radioGroup > :global(.v-input__control) {
   width: 100%;
 }
 
@@ -54,46 +25,10 @@
   overflow: visible;
 }
 
-.lowercaseText {
-  text-transform: none;
-  font-weight: normal;
+.actions {
+  margin: 0 1px;
 }
 
-.colorBoxBackground {
-  cursor: pointer;
-  flex: 0 0 20px;
-  width: 20px;
-  height: 20px;
-  box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.1);
-  margin-right: 4px;
-  background-image: linear-gradient(-45deg, #ccc 25%, transparent 25%, 75%, #ccc 75%),
-                    linear-gradient(-45deg, #ccc 25%, transparent 25%, 75%, #ccc 75%);
-  background-size: 10px 10px;
-  background-position: 0 0, -5px 5px;
-  background-repeat: repeat;
-}
-
-.colorBox {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.2);
-}
-
-.colorPicker {
-  width: 200px;
-  padding: 8px;
-  overflow: hidden;
-}
-
-.opacitySlider {
-  width: 90%;
-}
-
-.activeRadio {
-  margin-right: -8px;
-}
-
-.deleteButton {
-  cursor: pointer;
+.popup {
+  width: 250px;
 }

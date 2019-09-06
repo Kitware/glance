@@ -40,5 +40,8 @@ export default {
         left: `${x}px`,
       };
     },
+    close() {
+      this.visible = false;
+    },
   },
 };

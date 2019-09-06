@@ -5,7 +5,7 @@
   </div>
   <portal v-if="visible" selector="#app-portal-mount">
     <div :class="$style.popup" :style="getPositioning()" ref="container">
-      <slot name="popup" />
+      <slot name="popup" v-bind:close="close" />
     </div>
   </portal>
 </div>

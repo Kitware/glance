@@ -38,7 +38,9 @@
             <v-list-tile-title>
               {{ tool.name || tool.toolInfo.name }}
             </v-list-tile-title>
-            <v-list-tile-sub-title>{{ tool.label }}: {{ tool.measurement.toFixed(3) }}</v-list-tile-sub-title>
+            <v-list-tile-sub-title>
+              {{ tool.toolInfo.label }}: {{ tool.measurement.toFixed(3) }}
+            </v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <pop-up>
@@ -52,7 +54,7 @@
                   <v-icon>more_vert</v-icon>
                 </v-btn>
               </template>
-              <template v-slot:popup>
+              <template v-slot:popup="{ close }">
                 <v-container :class="[$style.container, $style.popup]">
                   <v-layout wrap align-center>
                     <v-flex xs12>
@@ -84,7 +86,7 @@
                       />
                     </v-flex>
                     <v-flex xs12>
-                      <v-btn @click="deleteTool(idx)">
+                      <v-btn @click="deleteTool(idx); close()">
                         <v-icon left>delete</v-icon> Delete
                       </v-btn>
                     </v-flex>

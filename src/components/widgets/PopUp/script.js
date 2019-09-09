@@ -35,7 +35,8 @@ export default {
       }
     },
     handleEsc(ev) {
-      if (this.visible && ev.keyCode === 27) { // Esc
+      if (this.visible && ev.keyCode === 27) {
+        // Esc
         this.close();
       }
     },
@@ -45,7 +46,7 @@ export default {
       const viewportHeight = window.innerHeight;
       if (y > viewportHeight / 2) {
         return {
-          bottom: `${viewportHeight -y}px`,
+          bottom: `${viewportHeight - y}px`,
           left: `${x}px`,
         };
       }

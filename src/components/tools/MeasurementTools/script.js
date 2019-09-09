@@ -14,9 +14,7 @@ import { createPaletteCycler, SPECTRAL } from 'paraview-glance/src/palette';
 const { vtkErrorMacro } = macro;
 const { makeSubManager, forAllViews } = utils;
 
-const PALETTE = [
-  '#ffee00',
-].concat(SPECTRAL);
+const PALETTE = ['#ffee00'].concat(SPECTRAL);
 
 function unsubList(list) {
   while (list.length) {
@@ -82,13 +80,10 @@ export default {
         }
 
         const widget = toolInfo.widgetClass.newInstance();
-        this.pendingTool = Object.assign(
-          this.pendingTool,
-          {
-            widget,
-            color: this.paletteCycler.next(),
-          }
-        );
+        this.pendingTool = Object.assign(this.pendingTool, {
+          widget,
+          color: this.paletteCycler.next(),
+        });
 
         // add widget to views
         this.proxyManager

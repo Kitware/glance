@@ -112,8 +112,6 @@ export default function widgetBehavior(publicAPI, model) {
       (model.activeState && !model.activeState.getActive())
     ) {
       publicAPI.invokeEndInteractionEvent();
-      model.widgetManager.enablePicking();
-      model.interactor.render();
     }
 
     isDragging = false;

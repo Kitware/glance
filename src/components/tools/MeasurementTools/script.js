@@ -354,5 +354,14 @@ export default {
         this.removeTool(deletedTool);
       }
     },
+    focusWidget(idx) {
+      if (idx >= 0 && idx < this.tools.length) {
+        const { repId, slice } = this.tools[idx];
+        const rep = this.proxyManager.getProxyById(repId);
+        if (rep) {
+          rep.setSlice(slice);
+        }
+      }
+    },
   },
 };

@@ -53,6 +53,15 @@
                   <span v-else :class="$style.buttonText">open a file</span>
                   <v-icon>folder_open</v-icon>
                 </v-btn>
+                <v-btn
+                  color="primary"
+                  raised="false"
+                  v-on:click.stop="$emit('open')"
+                >
+                  <span v-if="dragHover" :class="$style.buttonText">drop your file</span>
+                  <span v-else :class="$style.buttonText">open a file from girder</span>
+                  <v-icon>folder_open</v-icon>
+                </v-btn>
                 <div :class="$style.noSelect">
                   or drop one anywhere in this box to begin.
                 </div>

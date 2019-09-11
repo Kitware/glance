@@ -6,6 +6,8 @@ import Vuetify from 'vuetify';
 import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
+import GirderProvider from @/girder/girder;
+
 /* eslint-disable-next-line import/extensions */
 import 'typeface-roboto';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
@@ -68,6 +70,7 @@ export function createViewer(container, proxyConfig = null) {
     el: container,
     components: { App },
     store,
+    provide: GirderProvider,
     template: '<App />',
   });
 

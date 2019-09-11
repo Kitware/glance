@@ -72,6 +72,26 @@ module.exports = {
         loader: 'eslint-loader',
         enforce: 'pre',
       },
+      {
+        test: /\.pug$/,
+        loader: "pug-plain-loader",
+      },
+      {
+        test: /.styl$/,
+        use: [
+            "style-loader",
+            "css-loader",
+            "stylus-loader",
+        ],
+      },
+      {
+        test: /\.(sass|scss)$/,
+        use: [
+            "style-loader",
+            "css-loader",
+            "sass-loader",
+        ],
+      },
       /* for vtk.js */
       {
         test: /\.glsl$/,

@@ -23,7 +23,6 @@ export default [
         fill: '#ffee00',
         dx: 12,
         dy: -12,
-        style: 'font-size: 32px',
       });
       viewWidget.setText('');
       viewWidget.setHandleVisibility(false);
@@ -69,7 +68,7 @@ export default [
     setWidgetSize: (viewWidget, size) => {
       viewWidget.setTextProps(
         Object.assign(viewWidget.getTextProps(), {
-          style: `font-size: ${size}px`,
+          style: `font-size: ${size * (window.devicePixelRatio || 1)}px`,
         })
       );
     },
@@ -95,7 +94,6 @@ export default [
         fill: '#ffee00',
         dx: 12,
         dy: -12,
-        style: 'font-size: 32px',
       });
       viewWidget.setText('');
       viewWidget.setHandleVisibility(false);
@@ -142,7 +140,7 @@ export default [
     setWidgetSize: (viewWidget, size) => {
       viewWidget.setTextProps(
         Object.assign(viewWidget.getTextProps(), {
-          style: `font-size: ${size}px`,
+          style: `font-size: ${size * (window.devicePixelRatio || 1)}px`,
         })
       );
     },

@@ -32,7 +32,7 @@ function emptyTool() {
     stateSub: makeSubManager(),
     measurement: null,
     name: '',
-    size: 12,
+    size: 16,
     color: PALETTE[0],
   };
 }

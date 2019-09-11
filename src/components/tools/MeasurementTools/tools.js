@@ -23,6 +23,7 @@ export default [
         fill: '#ffee00',
         dx: 12,
         dy: -12,
+        style: 'font-size: 32px',
       });
       viewWidget.setText('');
       viewWidget.setHandleVisibility(false);
@@ -94,6 +95,7 @@ export default [
         fill: '#ffee00',
         dx: 12,
         dy: -12,
+        style: 'font-size: 32px',
       });
       viewWidget.setText('');
       viewWidget.setHandleVisibility(false);

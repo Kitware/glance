@@ -25,10 +25,10 @@
   overflow: visible;
 }
 
-.actions {
-  margin: 0 1px;
-}
-
 .popup {
   width: 250px;
+}
+
+.measurementValue {
+  margin-left: 20px;
 }

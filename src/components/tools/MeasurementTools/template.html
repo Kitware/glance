@@ -40,18 +40,15 @@
               {{ tool.name || tool.toolInfo.name }}
             </v-list-tile-title>
             <v-list-tile-sub-title>
-              {{ tool.toolInfo.label }}: {{ tool.measurement.toFixed(3) }}
+              <span :class="$style.measurementValue">
+                {{ tool.toolInfo.label }}: {{ tool.measurement.toFixed(3) }}
+              </span>
             </v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <pop-up>
               <template v-slot:trigger>
-                <v-btn
-                  :class="$style.actions"
-                  small
-                  flat
-                  icon
-                >
+                <v-btn small flat icon>
                   <v-icon>more_vert</v-icon>
                 </v-btn>
               </template>

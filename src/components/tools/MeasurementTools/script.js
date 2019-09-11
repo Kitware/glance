@@ -309,18 +309,23 @@ export default {
 
       const id = rep.getProxyId();
       const toolsInScene = this.tools.filter((tool) => tool.repId === id);
+      const widgetManagersToUpdate = new Set();
       for (let i = 0; i < toolsInScene.length; i++) {
         const { viewWidget, slice } = toolsInScene[i];
         const changed = viewWidget.setVisibility(repSlice === slice);
         if (changed) {
-          // this will re-render the widget visibility
-          viewWidget.getWidgetManager().enablePicking();
+          widgetManagersToUpdate.add(viewWidget.getWidgetManager());
         }
       }
 
-      // Maybe I can only render the 2D views where widgets updated.
-      // For now, this will work just fine.
-      this.proxyManager.renderAllViews();
+      const views = this.proxyManager.getViews();
+      for (let i = 0; i < views.length; i++) {
+        const wm = views[i].getReferenceByName('widgetManager');
+        if (wm && widgetManagersToUpdate.has(wm)) {
+          wm.enablePicking();
+          views[i].renderLater();
+        }
+      }
     },
     setToolName(idx, newName) {
       if (idx >= 0 && idx < this.tools.length) {

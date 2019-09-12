@@ -1,0 +1,23 @@
+<div>
+  <v-container :class="$style.container">
+    <v-layout wrap align-center>
+      <v-flex xs12>
+        <v-select
+          label="Target volume"
+          :items="getVolumes()"
+          item-text="name"
+          item-value="sourceId"
+          :value="volumeSelection"
+          @input="setTargetVolume"
+        ></v-select>
+      </v-flex>
+    </v-layout>
+  </v-container>
+  <v-container :class="$style.container">
+    <v-layout wrap align-center>
+      <v-btn v-if="enabled" @click="disable">Disable</v-btn>
+      <v-btn v-else @click="enable">Enable</v-btn>
+      <v-btn @click="reset" :disabled="!targetVolume">Reset</v-btn>
+    </v-layout>
+  </v-container>
+</div>

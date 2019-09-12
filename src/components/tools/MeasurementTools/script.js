@@ -9,6 +9,7 @@ import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker'
 import toolList from 'paraview-glance/src/components/tools/MeasurementTools/tools';
 import utils from 'paraview-glance/src/utils';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
+import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
 import { createPaletteCycler, SPECTRAL } from 'paraview-glance/src/palette';
 
 const { vtkErrorMacro } = macro;
@@ -46,6 +47,7 @@ export default {
   components: {
     PopUp,
     PalettePicker,
+    SvgIcon,
   },
   data() {
     return {

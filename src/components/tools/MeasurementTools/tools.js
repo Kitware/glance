@@ -4,7 +4,7 @@ import vtkAngleWidget from 'paraview-glance/src/vtk/AngleWidget';
 export default [
   {
     name: 'Length',
-    icon: 'L',
+    icon: 'length-tool', // from static/icons/
     label: 'Length',
     widgetClass: vtkDistance2DWidget,
     measurementCallback: (w) => w.getDistance(),
@@ -75,7 +75,7 @@ export default [
   },
   {
     name: 'Angle',
-    icon: 'A',
+    icon: 'angle-tool',
     label: 'Angle',
     widgetClass: vtkAngleWidget,
     measurementCallback: (w) => w.getAngle(),

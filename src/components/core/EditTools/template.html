@@ -17,4 +17,13 @@
       @enable="setEnabledTool('paint', $event)"
     />
   </v-expansion-panel-content>
+  <v-expansion-panel-content>
+    <template v-slot:header>
+      <span class="body-2">Cropping</span>
+    </template>
+    <crop-tool
+      :enabled="enabledTool === 'crop'"
+      @enable="setEnabledTool('crop', $event)"
+    />
+  </v-expansion-panel-content>
 </v-expansion-panel>

@@ -17,24 +17,6 @@ function getNumberOfVisibleViews(proxyManager) {
 
 // ----------------------------------------------------------------------------
 
-function getViewActions(proxyManager) {
-  const possibleActions = {
-    crop: false,
-  };
-
-  // To crop we need at list an image data
-  proxyManager.getSources().forEach((s) => {
-    const ds = s.getDataset();
-    if (ds && ds.isA && ds.isA('vtkImageData')) {
-      possibleActions.crop = true;
-    }
-  });
-
-  return possibleActions;
-}
-
-// ----------------------------------------------------------------------------
-
 function getViewType(view) {
   return `${view.getProxyName()}:${view.getName()}`;
 }
@@ -120,7 +102,6 @@ export default {
   getViewType,
   bindView,
   getView,
-  getViewActions,
   getNumberOfVisibleViews,
   updateViewsAnnotation,
 };

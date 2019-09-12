@@ -14,16 +14,30 @@
     </v-layout>
   </v-container>
   <v-container :class="$style.container">
+    <v-subheader :class="$style.headerRow">
+      <span class="black--text subheading font-weight-medium">Tools</span>
+    </v-subheader>
     <v-layout wrap align-center>
-      <v-btn
+      <v-tooltip
+        bottom
         v-for="tool in toolList"
         :key="tool.name"
-        icon
-        @click="enable(tool.name)"
-        :disabled="!targetVolume || !!pendingTool.toolInfo"
       >
-        {{ tool.icon }}
-      </v-btn>
+        <v-btn
+          slot="activator"
+          icon
+          @click="enable(tool.name)"
+          :disabled="!targetVolume || !!pendingTool.toolInfo"
+          :class="$style.toolButton"
+        >
+          <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
+          <div
+            v-show="!targetVolume || (!!pendingTool.toolInfo && pendingTool.toolInfo.name !== tool.name)"
+            :class="$style.toolIconOverlay"
+          />
+        </v-btn>
+        {{ tool.name }}
+      </v-tooltip>
     </v-layout>
     <v-layout wrap align-center>
       <v-list two-line :class="$style.fullWidth">

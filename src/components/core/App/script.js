@@ -4,7 +4,6 @@ import Mousetrap from 'mousetrap';
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
 import ControlsDrawer from 'paraview-glance/src/components/core/ControlsDrawer';
-import CropWidget from 'paraview-glance/src/vtkwidgets/CropWidget';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
 import ErrorBox from 'paraview-glance/src/components/core/ErrorBox';
 import FileLoader from 'paraview-glance/src/components/core/FileLoader';
@@ -14,8 +13,6 @@ import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 import StateFileGenerator from 'paraview-glance/src/components/core/StateFileGenerator';
 import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
-import vtkWidgetManager from 'paraview-glance/src/vtkwidgets/WidgetManager';
-import { Widgets } from 'paraview-glance/src/constants';
 import { Actions, Mutations } from 'paraview-glance/src/store/types';
 import shortcuts from 'paraview-glance/src/shortcuts';
 
@@ -37,18 +34,6 @@ export default {
     Screenshots,
     StateFileGenerator,
     SvgIcon,
-  },
-  props: {
-    widgetManager: {
-      required: false,
-      default() {
-        const widgetManager = vtkWidgetManager.newInstance({
-          proxyManager: this.proxyManager,
-        });
-        widgetManager.registerWidgetGroup(Widgets.CROP, CropWidget);
-        return widgetManager;
-      },
-    },
   },
   data() {
     return {

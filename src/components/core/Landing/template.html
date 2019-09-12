@@ -56,7 +56,7 @@
                 <v-btn
                   color="primary"
                   raised="false"
-                  v-on:click.stop="$emit('open')"
+                  v-on:click.stop="$emit('openGirder')"
                 >
                   <span v-if="dragHover" :class="$style.buttonText">drop your file</span>
                   <span v-else :class="$style.buttonText">open a file from girder</span>

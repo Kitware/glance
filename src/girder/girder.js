@@ -1,4 +1,3 @@
-
 // https://github.com/girder/girder_web_components
 import Vue from 'vue';
 import Girder, { RestClient } from '@girder/components/src';

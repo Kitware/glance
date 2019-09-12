@@ -162,6 +162,10 @@ export default {
     mapActions({
       promptUserFiles: Actions.PROMPT_FOR_FILES,
 
+      promptGirderFiles: () => {
+        open("https://gwc.girder.org/")
+      },
+
       openSample: (dispatch, urls, names) => {
         // dispatch: delete all loaded files since this is only called
         // by clicking on sample data

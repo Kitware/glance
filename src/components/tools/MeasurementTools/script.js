@@ -56,6 +56,7 @@ export default {
       tools: [], // [{ repId, ...emptyTool() }, ....]
       targetVolumeId: -1,
       palette: PALETTE,
+      pendingViewWidgets: [],
     };
   },
   computed: {
@@ -189,10 +190,16 @@ export default {
         const { toolInfo, widget, size, color } = tool;
         const viewWidget = widgetManager.addWidget(widget, ViewTypes.SLICE);
 
+        this.pendingViewWidgets.push(viewWidget);
+
         // style the view widget
         toolInfo.prepareWidget(viewWidget);
         toolInfo.setWidgetSize(viewWidget, size);
         toolInfo.setWidgetColor(viewWidget, color);
+
+        // start the view widget as not visible. This is to simplify
+        // the onMouseMove logic below.
+        viewWidget.setVisibility(false);
 
         // update widget when moving between views
         // subscribe with a higher priority than the viewWidget
@@ -204,6 +211,17 @@ export default {
             );
             const slice = Math.round(rep.getSlice());
             toolInfo.onSliceUpdate(widget, viewWidget, view.getAxis(), slice);
+
+            // hide the other view widgets
+            if (!viewWidget.getVisibility()) {
+              viewWidget.setVisibility(true);
+              this.pendingViewWidgets
+                .filter((vw) => vw != viewWidget)
+                .forEach((vw) => vw.setVisibility(false));
+              // Need to update current widget for render
+              widgetManager.enablePicking();
+              this.proxyManager.renderAllViews();
+            }
           }, viewWidget.getPriority() + 1)
         );
 
@@ -211,6 +229,7 @@ export default {
         // view and representation.
         this.viewSubs.push(
           view.getInteractor().onLeftButtonPress(() => {
+            // unsub from onMouseMove (from above)
             unsubList(this.viewSubs);
 
             // remove widgets from other views
@@ -218,6 +237,14 @@ export default {
               .getViews()
               .filter((v) => v !== view)
               .forEach((v) => this.removeWidgetFromView(widget, v));
+
+            this.pendingViewWidgets = [];
+
+            if (!viewWidget.getVisibility()) {
+              viewWidget.setVisibility(true);
+              widgetManager.enablePicking();
+              view.renderLater();
+            }
 
             // ensure we retain focus of the widget in this view
             // this is a hack to re-gain focus of our widget, since

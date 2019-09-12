@@ -94,6 +94,11 @@ export default {
         this.removePendingTool();
       }
     },
+    targetVolumeId() {
+      if (this.enabled) {
+        this.disable();
+      }
+    },
   },
   proxyManager: {
     onProxyRegistrationChange(info) {
@@ -103,7 +108,6 @@ export default {
           if (proxyId === this.targetVolumeId) {
             this.targetVolumeId = -1;
           }
-          this.disable();
         }
         // update image selection
         this.$forceUpdate();

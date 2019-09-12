@@ -56,6 +56,13 @@ export default {
         const imageData = this.targetVolume.getDataset();
         this.cropWidget.copyImageDataDescription(imageData);
 
+        // if the crop filter is resettable, that means we have
+        // cropping planes to use.
+        if (cropFilter.isResetAvailable()) {
+          const state = this.cropWidget.getWidgetState().getCroppingPlanes();
+          state.setPlanes(cropFilter.getCroppingPlanes());
+        }
+
         // modify crop filter based on widget
         const planesState =
           this.cropWidget.getWidgetState().getCroppingPlanes();
@@ -72,6 +79,11 @@ export default {
         this.stateSub.unsub();
       }
     },
+    targetVolumeId() {
+      if (this.enabled) {
+        this.disable();
+      }
+    },
   },
   proxyManager: {
     onProxyRegistrationChange(info) {
@@ -81,7 +93,6 @@ export default {
           if (proxyId === this.targetVolumeId) {
             this.targetVolumeId = -1;
           }
-          this.disable();
         }
         // update image selection
         this.$forceUpdate();

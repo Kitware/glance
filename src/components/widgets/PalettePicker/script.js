@@ -18,6 +18,11 @@ export default {
       default: '',
     },
   },
+  computed: {
+    selectedColor() {
+      return this.value.toLowerCase();
+    },
+  },
   methods: {
     getStyles(color) {
       return {

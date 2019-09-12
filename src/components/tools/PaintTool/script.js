@@ -10,13 +10,13 @@ import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import utils from 'paraview-glance/src/utils';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import PopUp from 'paraview-glance/src/components/widgets/PopUp';
-import { SPECTRAL } from 'paraview-glance/src/palette';
+import { createPaletteCycler, SPECTRAL } from 'paraview-glance/src/palette';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 
 const { vtkErrorMacro } = macro;
 const { makeSubManager, forAllViews } = utils;
 
-const SYNC = Symbol('PaintToolSync');
+const SYNC = 'PaintToolSync';
 
 // ----------------------------------------------------------------------------
 
@@ -27,19 +27,18 @@ export default {
     PopUp,
   },
   mixins: [ProxyManagerMixin],
+  props: ['enabled'],
   data() {
     return {
       master: null,
       labelmapProxy: null,
+      palette: SPECTRAL,
       // for view purpose only
       // [ { label, color, opacity }, ... ], sorted by label asc
       colormapArray: [],
       widget: null,
-      enabled: false,
       label: 1,
       radius: 5,
-      palette: SPECTRAL,
-      nextPaletteColorIdx: 0,
     };
   },
   computed: {
@@ -80,7 +79,7 @@ export default {
           ) {
             this.labelmapProxy = null;
           }
-          this.enabled = false;
+          this.$emit('enable', false);
         }
         // update image selection
         this.$forceUpdate();
@@ -92,6 +91,8 @@ export default {
     this.widget.setRadius(this.radius);
     this.filter = null;
     this.view3D = null;
+
+    this.paletteCycler = createPaletteCycler(this.palette);
 
     this.subs = [];
     this.labelmapSub = makeSubManager();
@@ -140,10 +141,7 @@ export default {
   },
   methods: {
     getNextColorArray() {
-      const color = this.palette[this.nextPaletteColorIdx];
-      this.nextPaletteColorIdx =
-        (this.nextPaletteColorIdx + 1) % this.palette.length;
-      return this.fromHex(color);
+      return this.fromHex(this.paletteCycler.next());
     },
     asHex(colorArray) {
       return (
@@ -402,7 +400,7 @@ export default {
             // update handle position on mouse move from slice position and
             // handle position
             this.subs.push(
-              view.getInteractor().onStartMouseMove((callData) => {
+              view.getInteractor().onMouseMove((callData) => {
                 updateHandleOrientation(view);
 
                 // Update handle based on master representation.
@@ -415,7 +413,7 @@ export default {
                   view
                 );
                 updateHandleFromSlice(rep, view);
-              })
+              }, viewWidget.getPriority() + 1)
             );
 
             this.subs.push(

@@ -6,9 +6,24 @@ const Volume = [
   // { link: 'EdgeGradient', property: 'edgeGradient' },
   { link: 'WW', property: 'windowWidth', updateOnBind: true },
   { link: 'WL', property: 'windowLevel', updateOnBind: true },
-  { link: 'SliceX', property: 'xSlice', updateOnBind: true },
-  { link: 'SliceY', property: 'ySlice', updateOnBind: true },
-  { link: 'SliceZ', property: 'zSlice', updateOnBind: true },
+  {
+    link: 'SliceX',
+    property: 'xSlice',
+    updateOnBind: true,
+    type: 'application',
+  },
+  {
+    link: 'SliceY',
+    property: 'ySlice',
+    updateOnBind: true,
+    type: 'application',
+  },
+  {
+    link: 'SliceZ',
+    property: 'zSlice',
+    updateOnBind: true,
+    type: 'application',
+  },
 ];
 
 const Geometry = [

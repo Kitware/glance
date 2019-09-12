@@ -28,7 +28,8 @@
   <v-card color="teal lighten-5">
     <v-card-text :class="$style.paintActions">
         <v-switch
-          v-model="enabled"
+          :value="enabled"
+          @change="$emit('enable', Boolean($event))"
           hide-details
           label="Paint Mode"
           :class="$style.paintSwitch"
@@ -109,7 +110,6 @@
                     <span class="pl-1">Eraser</span>
                   </template>
                   <template v-else>
-                    <!-- use key to force child component PopUp to re-render -->
                     <pop-up>
                       <template v-slot:trigger>
                         <div :class="$style.colorBoxBackground">

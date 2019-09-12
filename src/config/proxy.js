@@ -91,23 +91,38 @@ export default {
       SliceX: createProxyDefinition(
         vtkSliceRepresentationProxy,
         proxyUI.Slice,
-        [{ link: 'SliceX', property: 'slice', updateOnBind: true }].concat(
-          proxyLinks.Slice
-        )
+        [
+          {
+            link: 'SliceX',
+            property: 'slice',
+            updateOnBind: true,
+            type: 'application',
+          },
+        ].concat(proxyLinks.Slice)
       ),
       SliceY: createProxyDefinition(
         vtkSliceRepresentationProxy,
         proxyUI.Slice,
-        [{ link: 'SliceY', property: 'slice', updateOnBind: true }].concat(
-          proxyLinks.Slice
-        )
+        [
+          {
+            link: 'SliceY',
+            property: 'slice',
+            updateOnBind: true,
+            type: 'application',
+          },
+        ].concat(proxyLinks.Slice)
       ),
       SliceZ: createProxyDefinition(
         vtkSliceRepresentationProxy,
         proxyUI.Slice,
-        [{ link: 'SliceZ', property: 'slice', updateOnBind: true }].concat(
-          proxyLinks.Slice
-        )
+        [
+          {
+            link: 'SliceZ',
+            property: 'slice',
+            updateOnBind: true,
+            type: 'application',
+          },
+        ].concat(proxyLinks.Slice)
       ),
       Volume: createProxyDefinition(
         vtkVolumeRepresentationProxy,
@@ -132,17 +147,38 @@ export default {
       LabelMapSliceX: createProxyDefinition(
         vtkLabelMapSliceRepProxy,
         [], // ui
-        [] // links
+        [
+          {
+            link: 'SliceX',
+            property: 'slice',
+            updateOnBind: true,
+            type: 'application',
+          },
+        ] // links
       ),
       LabelMapSliceY: createProxyDefinition(
         vtkLabelMapSliceRepProxy,
         [], // ui
-        [] // links
+        [
+          {
+            link: 'SliceY',
+            property: 'slice',
+            updateOnBind: true,
+            type: 'application',
+          },
+        ] // links
       ),
       LabelMapSliceZ: createProxyDefinition(
         vtkLabelMapSliceRepProxy,
         [], // ui
-        [] // links
+        [
+          {
+            link: 'SliceZ',
+            property: 'slice',
+            updateOnBind: true,
+            type: 'application',
+          },
+        ] // links
       ),
     },
     Views: {

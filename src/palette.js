@@ -1,3 +1,17 @@
+export function createPaletteCycler(palette) {
+  let i = 0;
+  return {
+    reset: () => {
+      i = 0;
+    },
+    next: () => {
+      const color = palette[i];
+      i = (i + 1) % palette.length;
+      return color;
+    },
+  };
+}
+
 export const SPECTRAL = [
   '#9e0142',
   '#d53e4f',
@@ -13,5 +27,6 @@ export const SPECTRAL = [
 ];
 
 export default {
+  createPaletteCycler,
   SPECTRAL,
 };

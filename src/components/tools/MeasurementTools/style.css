@@ -1,0 +1,34 @@
+.container {
+  padding: 8px;
+}
+
+.container * {
+  user-select: none;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.headerRow {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  padding: 0;
+}
+
+.listRow {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: visible;
+}
+
+.popup {
+  width: 250px;
+}
+
+.measurementValue {
+  margin-left: 20px;
+}

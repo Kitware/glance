@@ -110,14 +110,12 @@ export default {
     );
 
     // attach keyboard shortcuts
-    shortcuts.forEach(({ key, action }) => {
-      if (Actions[action]) {
-        Mousetrap.bind(key, (e) => {
-          e.preventDefault();
-          this.$store.dispatch(Actions[action]);
-        });
-      }
-    });
+    shortcuts.forEach(({ key, action }) =>
+      Mousetrap.bind(key, (e) => {
+        e.preventDefault();
+        this.$store.dispatch(action);
+      })
+    );
 
     // listen for errors
     window.addEventListener('error', this.recordError);

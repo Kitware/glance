@@ -1,0 +1,100 @@
+<div>
+  <v-container :class="$style.container">
+    <v-layout wrap align-center>
+      <v-flex xs12>
+        <v-select
+          label="Target volume"
+          :items="getVolumes()"
+          item-text="name"
+          item-value="sourceId"
+          :value="volumeSelection"
+          @input="setTargetVolume"
+        ></v-select>
+      </v-flex>
+    </v-layout>
+  </v-container>
+  <v-container :class="$style.container">
+    <v-layout wrap align-center>
+      <v-btn
+        v-for="tool in toolList"
+        :key="tool.name"
+        icon
+        @click="enable(tool.name)"
+        :disabled="!targetVolume || !!pendingTool.toolInfo"
+      >
+        {{ tool.icon }}
+      </v-btn>
+    </v-layout>
+    <v-layout wrap align-center>
+      <v-list two-line :class="$style.fullWidth">
+        <v-subheader :class="$style.headerRow">
+          <span class="black--text subheading font-weight-medium">Measurements</span>
+        </v-subheader>
+        <v-list-tile
+          v-for="(tool,idx) in tools"
+          :key="idx"
+        >
+          <v-list-tile-content>
+            <v-list-tile-title>
+              <v-icon small @click="focusWidget(idx)">open_in_new</v-icon>
+              {{ tool.name || tool.toolInfo.name }}
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              <span :class="$style.measurementValue">
+                {{ tool.toolInfo.label }}: {{ tool.measurement.toFixed(3) }}
+              </span>
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+          <v-list-tile-action>
+            <pop-up>
+              <template v-slot:trigger>
+                <v-btn small flat icon>
+                  <v-icon>more_vert</v-icon>
+                </v-btn>
+              </template>
+              <template v-slot:popup="{ close }">
+                <v-container :class="[$style.container, $style.popup]">
+                  <v-layout wrap align-center>
+                    <v-flex xs12>
+                      <v-text-field
+                        label="Name"
+                        :placeholder="tool.toolInfo.name"
+                        :value="tool.name"
+                        @input="setToolName(idx, arguments[0])"
+                      />
+                    </v-flex>
+                    <v-flex xs12>
+                      <div>Tool color</div>
+                      <palette-picker
+                        :palette="palette"
+                        :size="28"
+                        :value="tool.color"
+                        @input="setToolColor(idx, arguments[0])"
+                      />
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-text-field
+                        type="number"
+                        label="Text size"
+                        min="8"
+                        max="32"
+                        step="1"
+                        :value="tool.size"
+                        @input="setToolSize(idx, arguments[0])"
+                      />
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-btn @click="deleteTool(idx); close()">
+                        <v-icon left>delete</v-icon> Delete
+                      </v-btn>
+                    </v-flex>
+                  </v-layout>
+                </v-container>
+              </template>
+            </pop-up>
+          </v-list-tile-action>
+        </v-list-tile>
+      </v-list>
+    </v-layout>
+  </v-container>
+</div>

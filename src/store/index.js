@@ -55,6 +55,19 @@ function getModuleDefinitions() {
   };
 }
 
+function changeActiveSliceDelta(proxyManager, delta) {
+  const view = proxyManager.getActiveView();
+  if (view.isA('vtkView2DProxy')) {
+    const sliceReps = view
+      .getRepresentations()
+      .filter((r) => r.isA('vtkSliceRepresentationProxy'));
+    if (sliceReps.length) {
+      const rep = sliceReps[0];
+      rep.setSlice(rep.getSlice() + delta);
+    }
+  }
+}
+
 export function registerProxyManagerHooks(pxm, store) {
   const subs = [];
   const modules = getModuleDefinitions();
@@ -253,6 +266,16 @@ function createStore(proxyManager = null) {
       },
       RESET_ACTIVE_CAMERA({ state }) {
         state.proxyManager.resetCamera();
+      },
+      INCREASE_SLICE({ state }) {
+        if (state.route === 'app') {
+          changeActiveSliceDelta(proxyManager, 1);
+        }
+      },
+      DECREASE_SLICE({ state }) {
+        if (state.route === 'app') {
+          changeActiveSliceDelta(proxyManager, -1);
+        }
       },
     },
   });

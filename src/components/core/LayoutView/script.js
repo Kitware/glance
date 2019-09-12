@@ -20,9 +20,6 @@ function setViewBackground(view, background) {
 
 export default {
   name: 'LayoutView',
-  props: {
-    widgetManager: { required: true },
-  },
   computed: Object.assign(
     {
       smallScreen() {

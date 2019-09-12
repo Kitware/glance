@@ -1,6 +1,6 @@
 import { mapMutations } from 'vuex';
 
-import { Breakpoints, Widgets } from 'paraview-glance/src/constants';
+import { Breakpoints } from 'paraview-glance/src/constants';
 import {
   DEFAULT_VIEW_TYPE,
   VIEW_TYPES,
@@ -40,22 +40,10 @@ function changeViewType(newType) {
 // ----------------------------------------------------------------------------
 
 function getAvailableActions() {
-  const actions = viewHelper.getViewActions(this.proxyManager);
-  actions.single = this.layoutCount > 1;
-  actions.split = this.layoutCount < 4;
-
-  if (actions.crop) {
-    actions.resetCrop = false;
-    const volumeRep = this.proxyManager
-      .getRepresentations()
-      .find((r) => r.getProxyName() === 'Volume');
-
-    if (volumeRep && volumeRep.getCropFilter) {
-      actions.resetCrop = volumeRep.getCropFilter().isResetAvailable();
-    }
-  }
-
-  return actions;
+  return {
+    single: this.layoutCount > 1,
+    split: this.layoutCount < 4,
+  };
 }
 
 // ----------------------------------------------------------------------------
@@ -68,103 +56,12 @@ function resetCamera() {
 
 // ----------------------------------------------------------------------------
 
-function resetCrop() {
-  const volumeRep = this.proxyManager
-    .getRepresentations()
-    .find((r) => r.getProxyName() === 'Volume');
-
-  if (volumeRep) {
-    this.widgetManager.resetWidget(Widgets.CROP, volumeRep);
-    this.$forceUpdate();
-    this.view.renderLater();
-  }
-}
-
-// ----------------------------------------------------------------------------
-
 function updateOrientation(mode) {
   if (this.view && !this.inAnimation) {
     this.inAnimation = true;
     const { axis, orientation, viewUp } = VIEW_ORIENTATIONS[mode];
     this.view.updateOrientation(axis, orientation, viewUp, 100).then(() => {
       this.inAnimation = false;
-    });
-  }
-}
-
-// ----------------------------------------------------------------------------
-
-function deleteCropWidget() {
-  const cropWidget = this.view.getReferenceByName('cropWidget');
-  this.widgetManager.destroyWidget(cropWidget);
-  this.view.set({ cropWidget: null }, true);
-  this.isCropping = false;
-}
-
-// ----------------------------------------------------------------------------
-
-function toggleCrop() {
-  let cropWidget = this.view.getReferenceByName('cropWidget');
-
-  if (cropWidget) {
-    this.deleteCropWidget();
-  } else {
-    const activeSource = this.proxyManager.getActiveSource();
-    if (!activeSource) {
-      return;
-    }
-
-    const volumeRep = this.proxyManager
-      .getRepresentations()
-      .find(
-        (r) => r.getProxyName() === 'Volume' && r.getInput() === activeSource
-      );
-
-    if (!volumeRep) {
-      // TODO warn user
-      console.warn('Cannot enable crop: no volume representation');
-      return;
-    }
-
-    cropWidget = this.widgetManager.newWidget(Widgets.CROP, volumeRep);
-    cropWidget.setInteractor(this.view.getInteractor());
-    cropWidget.setVolumeMapper(volumeRep.getMapper());
-    cropWidget.setHandleSize(12);
-
-    this.widgetManager.enable(cropWidget);
-
-    // Auto render any view when editing widget
-    cropWidget.onModified(() => {
-      this.proxyManager.autoAnimateViews();
-    });
-    this.view.set({ cropWidget }, true);
-    this.isCropping = true;
-
-    // Add subscription to monitor crop change
-    if (
-      this.subscriptions.length === this.initialSubscriptionLength &&
-      volumeRep.getCropFilter
-    ) {
-      this.subscriptions.push(
-        volumeRep
-          .getCropFilter()
-          .onModified(() => this.$nextTick(this.$forceUpdate)).unsubscribe
-      );
-    }
-
-    // work-around for deleting crop widget correctly
-    const pxmSub = this.proxyManager.onProxyRegistrationChange((changeInfo) => {
-      // remove crop widgets on volumes if volume is deleted
-      if (changeInfo.action === 'unregister') {
-        if (changeInfo.proxyName === 'Volume') {
-          this.widgetManager.destroyWidgetFromContextProxy(changeInfo.proxyId);
-          if (!this.widgetManager.hasWidget(cropWidget)) {
-            // this means the widget manager deleted the crop widget
-            this.deleteCropWidget();
-            pxmSub.unsubscribe();
-          }
-        }
-      }
     });
   }
 }
@@ -369,15 +266,11 @@ export default {
       required: true,
       type: Object,
     },
-    widgetManager: {
-      required: true,
-    },
   },
   data() {
     return {
       palette: BACKGROUND,
       backgroundSheet: false,
-      isCropping: false,
       inAnimation: false,
     };
   },
@@ -407,20 +300,17 @@ export default {
   methods: Object.assign(
     {
       changeViewType,
-      deleteCropWidget,
       getAvailableActions,
       onBeforeDestroy,
       onMounted,
       orientationLabels,
       quadView,
       resetCamera,
-      resetCrop,
       rollLeft,
       rollRight,
       screenCapture,
       singleView,
       splitView,
-      toggleCrop,
       updateOrientation,
       viewTypes,
     },

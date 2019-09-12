@@ -104,11 +104,7 @@
         v-on:open-urls="openSample"
         v-on:open-files="openFiles"
       />
-      <layout-view
-        v-else
-        key="if-landing"
-        :widgetManager="widgetManager"
-      />
+      <layout-view v-else key="if-landing" />
     </v-content>
 
     <v-navigation-drawer

@@ -64,11 +64,14 @@ export default {
         }
 
         // modify crop filter based on widget
-        const planesState =
-          this.cropWidget.getWidgetState().getCroppingPlanes();
-        this.stateSub.sub(planesState.onModified(() =>
-          cropFilter.setCroppingPlanes(planesState.getPlanes())
-        ));
+        const planesState = this.cropWidget
+          .getWidgetState()
+          .getCroppingPlanes();
+        this.stateSub.sub(
+          planesState.onModified(() =>
+            cropFilter.setCroppingPlanes(planesState.getPlanes())
+          )
+        );
 
         // add widget to views
         this.proxyManager
@@ -121,9 +124,9 @@ export default {
     },
     getCropFilter(volProxy) {
       // find 3d view
-      const view3d = this.proxyManager.getViews().find(
-        (v) => v.getProxyName() === 'View3D'
-      );
+      const view3d = this.proxyManager
+        .getViews()
+        .find((v) => v.getProxyName() === 'View3D');
 
       if (!view3d) {
         throw new Error('Cannot find 3D view!');
@@ -169,15 +172,13 @@ export default {
     },
     removeCropWidget() {
       if (this.cropWidget) {
-        this.proxyManager
-          .getViews()
-          .forEach((view) => {
-            const widgetManager = view.getReferenceByName('widgetManager');
-            if (widgetManager) {
-              widgetManager.removeWidget(this.cropWidget);
-              view.renderLater();
-            }
-          });
+        this.proxyManager.getViews().forEach((view) => {
+          const widgetManager = view.getReferenceByName('widgetManager');
+          if (widgetManager) {
+            widgetManager.removeWidget(this.cropWidget);
+            view.renderLater();
+          }
+        });
       }
     },
   },

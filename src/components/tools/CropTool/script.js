@@ -120,10 +120,17 @@ export default {
         }));
     },
     getCropFilter(volProxy) {
+      // find 3d view
+      const view3d = this.proxyManager.getViews().find(
+        (v) => v.getProxyName() === 'View3D'
+      );
+
+      if (!view3d) {
+        throw new Error('Cannot find 3D view!');
+      }
+
       // find volume rep
-      const volRep = this.proxyManager
-        .getRepresentations()
-        .find((rep) => rep.getInputDataSet() === volProxy.getDataset());
+      const volRep = this.proxyManager.getRepresentation(volProxy, view3d);
 
       if (!volRep || !volRep.getCropFilter) {
         throw new Error('Cannot find the volume rep with a crop filter!');

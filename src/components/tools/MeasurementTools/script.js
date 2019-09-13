@@ -264,15 +264,19 @@ export default {
               slice: Math.round(rep.getSlice()),
             });
 
-            // listen for tool final signal
-            this.widgetStateSub.sub(
-              widget.getWidgetState().onModified((state) => {
-                if (toolInfo.isWidgetFinalized(state)) {
-                  this.widgetStateSub.unsub();
-                  this.finalizeToolPlacement();
-                }
-              })
-            );
+            if (toolInfo.isWidgetFinalized(widget.getWidgetState())) {
+              this.finalizeToolPlacement();
+            } else {
+              // listen for tool final signal
+              this.widgetStateSub.sub(
+                widget.getWidgetState().onModified((state) => {
+                  if (toolInfo.isWidgetFinalized(state)) {
+                    this.widgetStateSub.unsub();
+                    this.finalizeToolPlacement();
+                  }
+                })
+              );
+            }
           }, viewWidget.getPriority() + 1)
         );
 
@@ -297,7 +301,9 @@ export default {
         stateSub.sub(
           widget.getWidgetState().onModified((state) => {
             toolInfo.onWidgetStateUpdate(toolInstance);
-            toolInstance.measurement = toolInfo.measurementCallback(widget);
+            if (toolInstance.measurementCallback) {
+              toolInstance.measurement = toolInfo.measurementCallback(widget);
+            }
           })
         );
       }
@@ -362,7 +368,9 @@ export default {
     },
     setToolName(idx, newName) {
       if (idx >= 0 && idx < this.tools.length) {
+        const { viewWidget } = this.tools[idx];
         this.tools[idx].name = newName;
+        this.tools[idx].toolInfo.setWidgetName(viewWidget, newName);
       }
     },
     setToolColor(idx, newColorHex) {

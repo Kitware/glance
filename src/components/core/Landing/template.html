@@ -114,6 +114,17 @@
       </v-flex>
     </v-layout>
   </v-container>
+  <v-container>
+    <v-layout column>
+      <v-flex v-if="loggedOut">
+        <GirderAuthentication register :oauth=true :key="girderRest.token" />
+      </v-flex>
+      <v-flex>
+        <GirderDataBrowser />
+      </v-flex>
+    </v-layout>
+  </v-container>
+
   <v-footer class="pa-2 d-flex" height="48px" color="transparent">
     <div class="mb-2 text-xs-center grey--text text--darken-2">
       <div>&copy; {{ new Date().getFullYear() }} — Kitware, Inc.</div>

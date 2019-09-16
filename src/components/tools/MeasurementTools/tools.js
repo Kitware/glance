@@ -150,7 +150,7 @@ export default [
   },
   {
     name: 'Text',
-    icon: 'angle-tool',
+    icon: 'text-tool',
     label: 'Text',
     widgetClass: vtkTextWidget,
     prepareWidget: (viewWidget) => {

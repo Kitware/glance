@@ -296,12 +296,11 @@ export default {
 
       const { toolInfo, widget, stateSub } = toolInstance;
       // attach widget state listener
-      // TODO unsub when removing the widget
       if (toolInfo.onWidgetStateUpdate) {
         stateSub.sub(
           widget.getWidgetState().onModified((state) => {
             toolInfo.onWidgetStateUpdate(toolInstance);
-            if (toolInstance.measurementCallback) {
+            if (toolInfo.measurementCallback) {
               toolInstance.measurement = toolInfo.measurementCallback(widget);
             }
           })

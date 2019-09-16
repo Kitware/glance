@@ -53,7 +53,7 @@
               <v-icon small @click="focusWidget(idx)">open_in_new</v-icon>
               {{ tool.name || tool.toolInfo.name }}
             </v-list-tile-title>
-            <v-list-tile-sub-title>
+            <v-list-tile-sub-title v-if="tool.measurement">
               <span :class="$style.measurementValue">
                 {{ tool.toolInfo.label }}: {{ tool.measurement.toFixed(3) }}
               </span>

@@ -37,6 +37,10 @@
   position: relative;
 }
 
+.activeToolButton {
+  background: #77a4ff;
+}
+
 .toolIcon {
   height: 25px;
   width: 25px;
@@ -51,3 +55,4 @@
   background-color: #fff;
   opacity: 0.75;
 }
+

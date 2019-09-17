@@ -57,6 +57,8 @@ export default {
       targetVolumeId: -1,
       palette: PALETTE,
       pendingViewWidgets: [],
+      // only used when enabling the measurement tools
+      nextTool: null,
     };
   },
   computed: {
@@ -77,23 +79,9 @@ export default {
   watch: {
     enabled(enabled) {
       if (enabled) {
-        const { toolInfo } = this.pendingTool;
-        if (!toolInfo) {
-          throw new Error('No tool enabled. This should not happen.');
-        }
-
-        const widget = toolInfo.widgetClass.newInstance();
-        this.pendingTool = Object.assign(this.pendingTool, {
-          widget,
-          color: this.paletteCycler.next(),
-        });
-
-        // add widget to views
-        this.proxyManager
-          .getViews()
-          .forEach((view) => this.addToolToView(this.pendingTool, view));
+        this.switchToTool(this.nextTool);
+        this.nextTool = null;
       } else {
-        // remove a pending tool if we disable measurements
         this.removePendingTool();
       }
     },
@@ -161,28 +149,44 @@ export default {
     setTargetVolume(sourceId) {
       this.targetVolumeId = sourceId;
     },
-    enable(toolName) {
+    toggle(toolName) {
       const toolInfo = this.toolList.find((info) => info.name === toolName);
       if (!toolInfo) {
         throw new Error('Failed to find tool. This should not happen.');
       }
 
-      if (this.pendingTool.toolInfo) {
-        throw new Error(
-          'Cannot enable widget when one is pending. This should not happen.'
-        );
+      if (this.enabled) {
+        if (this.pendingTool.toolInfo.name === toolName) {
+          this.disable();
+        } else {
+          this.switchToTool(toolInfo);
+        }
+      } else {
+        this.nextTool = toolInfo;
+        this.$emit('enable', true);
       }
-
-      // We wait for the "enabled" prop to switch to true.
-      // Enabling a tool when "enabled" is true should not happen. If it does,
-      // those enable requests will be ignored.
-      this.pendingTool.toolInfo = toolInfo;
-      this.$emit('enable', true);
     },
     disable() {
       this.removePendingTool();
-      unsubList(this.viewSubs);
       this.$emit('enable', false);
+    },
+    switchToTool(toolInfo) {
+      if (this.pendingTool.toolInfo) {
+        this.removePendingTool();
+      }
+
+      this.pendingTool.toolInfo = toolInfo;
+
+      const widget = toolInfo.widgetClass.newInstance();
+      this.pendingTool = Object.assign(this.pendingTool, {
+        widget,
+        color: this.paletteCycler.next(),
+      });
+
+      // add widget to views
+      this.proxyManager
+        .getViews()
+        .forEach((view) => this.addToolToView(this.pendingTool, view));
     },
     addToolToView(tool, view) {
       const widgetManager = view.getReferenceByName('widgetManager');
@@ -318,6 +322,8 @@ export default {
           .forEach((view) => this.removeWidgetFromView(widget, view));
       }
       this.pendingTool = emptyTool();
+      unsubList(this.viewSubs);
+      this.widgetStateSub.unsub();
     },
     removeTool(tool) {
       this.proxyManager
@@ -408,5 +414,13 @@ export default {
         }
       }
     },
+    getButtonStyle(toolName) {
+      return [
+        this.$style.toolButton,
+        this.pendingTool.toolInfo && this.pendingTool.toolInfo.name === toolName
+          ? this.$style.activeToolButton
+          : null,
+      ];
+    }
   },
 };

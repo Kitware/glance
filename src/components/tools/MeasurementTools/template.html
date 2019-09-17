@@ -26,15 +26,12 @@
         <v-btn
           slot="activator"
           icon
-          @click="enable(tool.name)"
-          :disabled="!targetVolume || !!pendingTool.toolInfo"
-          :class="$style.toolButton"
+          @click="toggle(tool.name)"
+          :disabled="!targetVolume"
+          :class="getButtonStyle(tool.name)"
         >
           <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
-          <div
-            v-show="!targetVolume || (!!pendingTool.toolInfo && pendingTool.toolInfo.name !== tool.name)"
-            :class="$style.toolIconOverlay"
-          />
+          <div v-show="!targetVolume" :class="$style.toolIconOverlay" />
         </v-btn>
         {{ tool.name }}
       </v-tooltip>

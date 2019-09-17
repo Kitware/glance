@@ -421,6 +421,6 @@ export default {
           ? this.$style.activeToolButton
           : null,
       ];
-    }
+    },
   },
 };

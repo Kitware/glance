@@ -8,6 +8,7 @@ import PopUp from 'paraview-glance/src/components/widgets/PopUp';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import toolList from 'paraview-glance/src/components/tools/MeasurementTools/tools';
 import utils from 'paraview-glance/src/utils';
+import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
 import { createPaletteCycler, SPECTRAL } from 'paraview-glance/src/palette';
@@ -48,6 +49,7 @@ export default {
     PopUp,
     PalettePicker,
     SvgIcon,
+    SourceSelect,
   },
   data() {
     return {
@@ -65,15 +67,6 @@ export default {
     ...mapState(['proxyManager']),
     targetVolume() {
       return this.proxyManager.getProxyById(this.targetVolumeId);
-    },
-    volumeSelection() {
-      if (this.targetVolume) {
-        return {
-          name: this.targetVolume.getName(),
-          sourceId: this.targetVolume.getProxyId(),
-        };
-      }
-      return null;
     },
   },
   watch: {
@@ -94,15 +87,7 @@ export default {
   proxyManager: {
     onProxyRegistrationChange(info) {
       const { proxyGroup, action, proxy, proxyId } = info;
-      if (proxyGroup === 'Sources') {
-        if (action === 'unregister') {
-          if (proxyId === this.targetVolumeId) {
-            this.targetVolumeId = -1;
-          }
-        }
-        // update image selection
-        this.$forceUpdate();
-      } else if (proxyGroup === 'Representations') {
+      if (proxyGroup === 'Representations') {
         if (action === 'register' && proxy.isA('vtkSliceRepresentationProxy')) {
           // listen to all slice representations
           // a bit expensive for reps that don't have measurements on them
@@ -137,14 +122,8 @@ export default {
     unsubList(this.viewSubs);
   },
   methods: {
-    getVolumes() {
-      return this.proxyManager
-        .getSources()
-        .filter((s) => s.getType() === 'vtkImageData')
-        .map((s) => ({
-          name: s.getName(),
-          sourceId: s.getProxyId(),
-        }));
+    filterImages(source) {
+      return source && source.getType() === 'vtkImageData';
     },
     setTargetVolume(sourceId) {
       this.targetVolumeId = sourceId;

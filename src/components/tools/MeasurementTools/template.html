@@ -2,14 +2,12 @@
   <v-container :class="$style.container">
     <v-layout wrap align-center>
       <v-flex xs12>
-        <v-select
+        <source-select
           label="Target volume"
-          :items="getVolumes()"
-          item-text="name"
-          item-value="sourceId"
-          :value="volumeSelection"
+          :filterFunc="filterImages"
+          bindToActiveSource
           @input="setTargetVolume"
-        ></v-select>
+        />
       </v-flex>
     </v-layout>
   </v-container>

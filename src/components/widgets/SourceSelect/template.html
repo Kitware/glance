@@ -1,0 +1,9 @@
+<v-select
+  :label="label"
+  :items="getSources()"
+  item-text="name"
+  item-value="proxyId"
+  :value="selection"
+  @input="makeSelection"
+></v-select>
+

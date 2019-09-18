@@ -69,7 +69,7 @@ export default {
       PiecewiseFunction: createProxyDefinition(vtkPiecewiseFunctionProxy),
     },
     Sources: {
-      TrivialProducer: createProxyDefinition(vtkProxySource),
+      TrivialProducer: activateOnCreate(createProxyDefinition(vtkProxySource)),
       Contour: proxyFilter.Contour,
     },
     Representations: {

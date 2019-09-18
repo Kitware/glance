@@ -125,8 +125,6 @@ export default {
           this.subs.pop().unsubscribe();
         }
       }
-
-      this.proxyManager.renderAllViews();
     },
   },
   methods: {

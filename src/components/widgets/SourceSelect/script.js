@@ -21,7 +21,7 @@ export default {
     },
     label: {
       type: String,
-      default: () =>  '',
+      default: () => '',
     },
     bindToActiveSource: {
       type: Boolean,

@@ -122,6 +122,9 @@ export default {
     unsubList(this.viewSubs);
   },
   methods: {
+    filterImages(source) {
+      return source && source.getType() === 'vtkImageData';
+    },
     setTargetVolume(sourceId) {
       this.targetVolumeId = sourceId;
     },

@@ -100,6 +100,9 @@ export default {
     this.stateSub.unsub();
   },
   methods: {
+    filterImages(source) {
+      return source && source.getType() === 'vtkImageData';
+    },
     getCropFilter(volProxy) {
       // find 3d view
       const view3d = this.proxyManager

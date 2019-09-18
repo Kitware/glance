@@ -10,6 +10,7 @@ import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import utils from 'paraview-glance/src/utils';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import PopUp from 'paraview-glance/src/components/widgets/PopUp';
+import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
 import { createPaletteCycler, SPECTRAL } from 'paraview-glance/src/palette';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 
@@ -25,6 +26,7 @@ export default {
   components: {
     PalettePicker,
     PopUp,
+    SourceSelect,
   },
   mixins: [ProxyManagerMixin],
   props: ['enabled'],
@@ -43,15 +45,6 @@ export default {
   },
   computed: {
     ...mapState(['proxyManager']),
-    masterSelection() {
-      if (this.master) {
-        return {
-          name: this.master.getName(),
-          sourceId: this.master.getProxyId(),
-        };
-      }
-      return null;
-    },
     labelmapSelection() {
       if (this.labelmapProxy) {
         return {
@@ -70,9 +63,6 @@ export default {
       const { proxyGroup, action, proxy, proxyId } = info;
       if (proxyGroup === 'Sources') {
         if (action === 'unregister') {
-          if (this.master && proxyId === this.master.getProxyId()) {
-            this.master = null;
-          }
           if (
             this.labelmapProxy &&
             proxyId === this.labelmapProxy.getProxyId()
@@ -140,6 +130,9 @@ export default {
     },
   },
   methods: {
+    filterImageData(source) {
+      return source.getType() === 'vtkImageData';
+    },
     getNextColorArray() {
       return this.fromHex(this.paletteCycler.next());
     },
@@ -166,15 +159,6 @@ export default {
       }
       return 100;
     },
-    getVolumes() {
-      return this.proxyManager
-        .getSources()
-        .filter((s) => s.getType() === 'vtkImageData')
-        .map((s) => ({
-          name: s.getName(),
-          sourceId: s.getProxyId(),
-        }));
-    },
     getLabelmaps() {
       const labelmaps = this.proxyManager
         .getSources()
@@ -193,14 +177,10 @@ export default {
     setMasterVolume(sourceId) {
       this.master = this.proxyManager.getProxyById(sourceId);
 
-      if (this.enabled) {
-        // refresh widgets when backing image changes
-        this.removeWidgetFromViews();
-        this.addWidgetToViews();
-      }
+      this.removeWidgetFromViews();
 
-      if (!this.master && this.enabled) {
-        this.removeWidgetFromViews();
+      if (this.master && this.enabled) {
+        this.addWidgetToViews();
       }
     },
     setLabelMap(selected) {
@@ -216,6 +196,9 @@ export default {
           imageRepresentation: paintImage,
         });
 
+        // restore original active source
+        const oldActiveSource = this.proxyManager.getActiveSource();
+
         ReaderFactory.registerReadersToProxyManager(
           [
             {
@@ -226,6 +209,8 @@ export default {
           this.proxyManager
         );
         this.labelmapProxy = this.proxyManager.getActiveSource();
+
+        this.proxyManager.setActiveSource(oldActiveSource);
 
         // set color of label 1
         const color = this.getNextColorArray();

@@ -249,6 +249,12 @@ function createStore(proxyManager = null) {
               state.proxyManager
                 .getSources()
                 .forEach(state.proxyManager.createRepresentationInAllViews);
+
+              // Activate first source
+              const firstSource = state.proxyManager.getSources()[0];
+              if (firstSource) {
+                firstSource.activate();
+              }
             }, 100);
           });
       },

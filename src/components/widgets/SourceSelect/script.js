@@ -27,6 +27,10 @@ export default {
       type: Boolean,
       default: () => false,
     },
+    hideIfOneDataset: {
+      type: Boolean,
+      default: () => false,
+    },
     value: {
       type: Number,
       default: () => -1,
@@ -80,6 +84,9 @@ export default {
     },
   },
   methods: {
+    shouldHide() {
+      return this.hideIfOneDataset && this.getSources().length <= 1;
+    },
     getSources() {
       const sources = this.proxyManager
         .getSources()

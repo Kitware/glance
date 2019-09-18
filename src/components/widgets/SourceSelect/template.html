@@ -1,4 +1,5 @@
 <v-select
+  v-show="!shouldHide()"
   :label="label"
   :items="getSources()"
   item-text="name"

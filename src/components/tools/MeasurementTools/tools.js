@@ -80,7 +80,7 @@ export default [
     icon: 'angle-tool',
     label: 'Angle',
     widgetClass: vtkAngleWidget,
-    measurementCallback: (w) => w.getAngle(),
+    measurementCallback: (w) => (w.getAngle() * 180) / Math.PI,
     prepareWidget: (viewWidget) => {
       viewWidget.setCircleProps({
         'stroke-width': 3,

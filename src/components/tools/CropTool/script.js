@@ -4,6 +4,7 @@ import macro from 'vtk.js/Sources/macro';
 import vtkImageCroppingWidget from 'vtk.js/Sources/Widgets/Widgets3D/ImageCroppingWidget';
 
 import utils from 'paraview-glance/src/utils';
+import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 
 const { vtkErrorMacro } = macro;
@@ -19,6 +20,9 @@ function unsubList(list) {
 
 export default {
   name: 'CropTool',
+  components: {
+    SourceSelect,
+  },
   mixins: [ProxyManagerMixin],
   props: ['enabled'],
   data() {
@@ -31,15 +35,6 @@ export default {
     ...mapState(['proxyManager']),
     targetVolume() {
       return this.proxyManager.getProxyById(this.targetVolumeId);
-    },
-    volumeSelection() {
-      if (this.targetVolume) {
-        return {
-          name: this.targetVolume.getName(),
-          sourceId: this.targetVolume.getProxyId(),
-        };
-      }
-      return null;
     },
   },
   watch: {
@@ -91,15 +86,7 @@ export default {
   proxyManager: {
     onProxyRegistrationChange(info) {
       const { proxyGroup, action, proxy, proxyId } = info;
-      if (proxyGroup === 'Sources') {
-        if (action === 'unregister') {
-          if (proxyId === this.targetVolumeId) {
-            this.targetVolumeId = -1;
-          }
-        }
-        // update image selection
-        this.$forceUpdate();
-      } else if (proxyGroup === 'Views' && action === 'register') {
+      if (proxyGroup === 'Views' && action === 'register') {
         if (this.enabled) {
           this.addCropToView(proxy);
         }
@@ -113,15 +100,6 @@ export default {
     this.stateSub.unsub();
   },
   methods: {
-    getVolumes() {
-      return this.proxyManager
-        .getSources()
-        .filter((s) => s.getType() === 'vtkImageData')
-        .map((s) => ({
-          name: s.getName(),
-          sourceId: s.getProxyId(),
-        }));
-    },
     getCropFilter(volProxy) {
       // find 3d view
       const view3d = this.proxyManager

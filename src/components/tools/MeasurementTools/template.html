@@ -52,7 +52,10 @@
                   {{ tool.extraInfo }}
                 </span>
               </div>
-              <div :class="$style.action">
+              <div
+                v-if="tool.slice !== currentSlice"
+                :class="$style.action"
+              >
                 <v-tooltip bottom>
                   <v-btn slot="activator" small icon>
                     <v-icon color="teal" @click="focusWidget(idx)">open_in_new</v-icon>

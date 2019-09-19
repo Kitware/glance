@@ -61,6 +61,7 @@ export default {
       pendingViewWidgets: [],
       // only used when enabling the measurement tools
       nextTool: null,
+      currentSlice: -1,
     };
   },
   computed: {
@@ -248,11 +249,15 @@ export default {
               this.targetVolume,
               view
             );
+            const slice = Math.round(rep.getSlice());
             this.pendingTool = Object.assign(this.pendingTool, {
               repId: rep.getProxyId(),
               viewWidget,
-              slice: Math.round(rep.getSlice()),
+              slice,
             });
+
+            // record current slice
+            this.currentSlice = slice;
 
             if (toolInfo.isWidgetFinalized(widget.getWidgetState())) {
               this.finalizeToolPlacement();
@@ -333,6 +338,8 @@ export default {
           this.disable();
         }
       }
+
+      this.currentSlice = repSlice;
 
       const id = rep.getProxyId();
       const toolsInScene = this.tools.filter((tool) => tool.repId === id);

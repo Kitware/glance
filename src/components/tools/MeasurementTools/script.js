@@ -11,12 +11,12 @@ import utils from 'paraview-glance/src/utils';
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
-import { createPaletteCycler, SPECTRAL } from 'paraview-glance/src/palette';
+import { createPaletteCycler, WIDGETS } from 'paraview-glance/src/palette';
 
 const { vtkErrorMacro } = macro;
 const { makeSubManager, forAllViews } = utils;
 
-const PALETTE = ['#ffee00'].concat(SPECTRAL);
+const PALETTE = ['#ffee00'].concat(WIDGETS);
 
 function unsubList(list) {
   while (list.length) {

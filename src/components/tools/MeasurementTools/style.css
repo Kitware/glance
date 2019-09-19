@@ -14,10 +14,6 @@
   width: 100%;
 }
 
-.card {
-  padding: 8px 16px;
-}
-
 .heading {
   padding: 8px 0;
 }
@@ -33,22 +29,9 @@
   padding: 8px;
 }
 
-.toolButton {
-  position: relative;
-}
-
-.activeToolButton {
-  background: #1976d2ad;
-}
-
 .toolIcon {
   height: 20px;
   width: 20px;
-}
-
-.smallToolIcon {
-  height: 16px;
-  width: 16px;
 }
 
 .row {

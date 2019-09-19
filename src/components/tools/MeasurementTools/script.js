@@ -68,6 +68,18 @@ export default {
     targetVolume() {
       return this.proxyManager.getProxyById(this.targetVolumeId);
     },
+    activeToolIndex: {
+      get() {
+        if (this.pendingTool.toolInfo) {
+          const name = this.pendingTool.toolInfo.name;
+          return this.toolList.findIndex((t) => t.name === name);
+        }
+        return;
+      },
+      set(index) {
+        this.toggle(this.toolList[index]);
+      },
+    },
   },
   watch: {
     enabled(enabled) {
@@ -128,14 +140,9 @@ export default {
     setTargetVolume(sourceId) {
       this.targetVolumeId = sourceId;
     },
-    toggle(toolName) {
-      const toolInfo = this.toolList.find((info) => info.name === toolName);
-      if (!toolInfo) {
-        throw new Error('Failed to find tool. This should not happen.');
-      }
-
+    toggle(toolInfo) {
       if (this.enabled) {
-        if (this.pendingTool.toolInfo.name === toolName) {
+        if (!toolInfo) {
           this.disable();
         } else {
           this.switchToTool(toolInfo);

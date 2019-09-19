@@ -11,32 +11,27 @@
         />
       </v-flex>
     </v-layout>
-  </v-container>
 
-  <v-card color="teal lighten-5">
-    <v-card-text :class="$style.tools">
-      <v-tooltip
-        bottom
-        v-for="tool in toolList"
-        :key="tool.name"
-      >
-        <v-btn
-          slot="activator"
-          small
-          icon
-          @click="toggle(tool.name)"
-          :disabled="!targetVolume"
-          :class="getButtonStyle(tool.name)"
-        >
-          <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
-          <div v-show="!targetVolume" :class="$style.toolIconOverlay" />
-        </v-btn>
-        {{ tool.name }}
-      </v-tooltip>
-    </v-card-text>
-  </v-card>
+    <v-card flat>
+      <div :class="$style.heading">
+        <span class="body-2">Tools</span>
+      </div>
+      <v-card-text :class="$style.tools">
+        <v-btn-toggle v-model="activeToolIndex">
+          <v-tooltip
+            bottom
+            v-for="tool in toolList"
+            :key="tool.name"
+          >
+            <v-btn slot="activator" flat>
+              <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
+            </v-btn>
+            {{ tool.name }}
+          </v-tooltip>
+        </v-btn-toggle>
+      </v-card-text>
+    </v-card>
 
-  <v-container :class="$style.container">
     <v-card flat>
       <div :class="$style.heading">
         <span class="body-2">Measurements</span>
@@ -58,9 +53,12 @@
                 </span>
               </div>
               <div :class="$style.action">
-                <v-btn small icon>
-                  <v-icon color="teal" @click="focusWidget(idx)">open_in_new</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                  <v-btn slot="activator" small icon>
+                    <v-icon color="teal" @click="focusWidget(idx)">open_in_new</v-icon>
+                  </v-btn>
+                  Jump to slice
+                </v-tooltip>
               </div>
               <div :class="$style.action">
                 <pop-up>

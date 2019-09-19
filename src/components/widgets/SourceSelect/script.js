@@ -65,19 +65,17 @@ export default {
   proxyManager: {
     onActiveSourceChange(source) {
       if (this.bindToActiveSource) {
-        if (source.getProxyId() !== this.internalValue) {
+        if (!source) {
+          this.internalValue = -1;
+        } else if (source.getProxyId() !== this.internalValue) {
           this.internalValue = source.getProxyId();
-          this.$emit('input', this.internalValue);
         }
+        this.$emit('input', this.internalValue);
       }
     },
     onProxyRegistrationChange(info) {
       const { proxyGroup, action, proxyId } = info;
       if (proxyGroup === 'Sources') {
-        if (action === 'unregister' && this.internalValue === proxyId) {
-          this.internalValue = -1;
-          this.$emit('input', this.internalValue);
-        }
         // re-render select list
         this.$forceUpdate();
       }

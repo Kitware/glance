@@ -53,15 +53,26 @@
     </v-card-text>
   </v-card>
 
-  <v-container :class="$style.container">
+  <v-container grid-list-md :class="$style.container">
     <v-layout
       v-show="master && labelmapProxy"
       wrap
       align-center
     >
-      <v-flex xs12>
+      <v-flex xs3>
+        <span class="body-1">Radius</span>
+      </v-flex>
+      <v-flex xs7>
+        <v-slider
+          min="1"
+          :max="getBrushSizeMax()"
+          step="1"
+          dirty
+          v-model="radius"
+        />
+      </v-flex>
+      <v-flex xs2>
         <v-text-field
-          label="Radius"
           type="number"
           min="1"
           :max="getBrushSizeMax()"

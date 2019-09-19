@@ -14,27 +14,25 @@
 
     <v-card flat>
       <div :class="$style.heading">
-        <span class="body-2">Tools</span>
-      </div>
-      <v-card-text :class="$style.tools">
-        <v-btn-toggle v-model="activeToolIndex">
-          <v-tooltip
-            bottom
-            v-for="tool in toolList"
-            :key="tool.name"
-          >
-            <v-btn slot="activator" flat>
-              <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
-            </v-btn>
-            {{ tool.name }}
-          </v-tooltip>
-        </v-btn-toggle>
-      </v-card-text>
-    </v-card>
-
-    <v-card flat>
-      <div :class="$style.heading">
-        <span class="body-2">Measurements</span>
+        <v-layout align-center>
+          <v-flex xs10>
+            <span class="body-2">Tool List</span>
+          </v-flex>
+          <v-flex xs6>
+            <v-btn-toggle v-model="activeToolIndex" :class="$style.thinBorder">
+              <v-tooltip
+                bottom
+                v-for="tool in toolList"
+                :key="tool.name"
+              >
+                <v-btn slot="activator" flat :class="$style.toolButton">
+                  <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
+                </v-btn>
+                {{ tool.name }}
+              </v-tooltip>
+            </v-btn-toggle>
+          </v-flex>
+        </v-layout>
       </div>
       <v-divider :class="$style.divider" />
       <div :class="$style.fullWidth">
@@ -82,18 +80,21 @@
                           />
                         </v-flex>
                         <v-flex xs12>
-                          <div>Tool color</div>
+                          <div class="body-1">Tool color</div>
+                          <v-divider :class="$style.divider" />
                           <palette-picker
+                            class="pt-2"
                             :palette="palette"
                             :size="28"
                             :value="tool.color"
                             @input="setToolColor(idx, arguments[0])"
                           />
                         </v-flex>
-                        <v-flex xs2>
-                          <span class="body-1">Text Size</span>
+                        <v-flex xs12>
+                          <div class="body-1">Text Size</div>
+                          <v-divider :class="$style.divider" />
                         </v-flex>
-                        <v-flex xs7>
+                        <v-flex xs9>
                           <v-slider
                             min="8"
                             max="32"
@@ -114,16 +115,17 @@
                           />
                         </v-flex>
                       </v-layout>
+                      <v-divider :class="$style.divider" />
                       <v-layout align-center>
+                        <v-flex xs2>
+                          <v-btn icon @click="close">
+                            <v-icon>save</v-icon>
+                          </v-btn>
+                        </v-flex>
                         <v-spacer />
                         <v-flex xs2>
                           <v-btn icon @click="deleteTool(idx); close()">
                             <v-icon color="red">delete</v-icon>
-                          </v-btn>
-                        </v-flex>
-                        <v-flex xs2>
-                          <v-btn icon @click="close">
-                            <v-icon>close</v-icon>
                           </v-btn>
                         </v-flex>
                         <v-flex xs1 />
@@ -137,7 +139,7 @@
           </template>
         </template>
         <template v-else>
-          <div class="body-1 teal--text text-xs-center">(none)</div>
+          <div class="pt-2 body-1 teal--text text-xs-center">No measurements yet</div>
         </template>
       </div>
     </v-card>

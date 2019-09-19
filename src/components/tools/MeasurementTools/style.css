@@ -23,11 +23,17 @@
   overflow: hidden;
 }
 
+.thinBorder {
+  border: 1px solid #ccc;
+  box-shadow: none;
+}
+
 .tools {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  padding: 8px;
+  text-align: center;
+}
+
+.toolButton {
+  height: 30px;
 }
 
 .toolIcon {

@@ -32,8 +32,8 @@ function emptyTool() {
     repId: -1,
     slice: -1,
     stateSub: makeSubManager(),
-    measurement: null,
     name: '',
+    extraInfo: '',
     size: 16,
     color: PALETTE[0],
   };
@@ -290,9 +290,6 @@ export default {
         stateSub.sub(
           widget.getWidgetState().onModified((state) => {
             toolInfo.onWidgetStateUpdate(toolInstance);
-            if (toolInfo.measurementCallback) {
-              toolInstance.measurement = toolInfo.measurementCallback(widget);
-            }
           })
         );
       }

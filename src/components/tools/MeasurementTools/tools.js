@@ -8,7 +8,6 @@ export default [
     icon: 'length-tool', // from static/icons/
     label: 'Length',
     widgetClass: vtkDistance2DWidget,
-    measurementCallback: (w) => w.getDistance(),
     prepareWidget: (viewWidget) => {
       viewWidget.setCircleProps({
         'stroke-width': 3,
@@ -46,8 +45,11 @@ export default [
     // tool structure: refer to emptyTool() in MeasurementTools
     onWidgetStateUpdate: (tool) => {
       const { widget, viewWidget } = tool;
-      const d = widget.getDistance();
-      viewWidget.setText(d.toFixed(3));
+      const d = `${widget.getDistance().toFixed(3)} mm`;
+      viewWidget.setText(d);
+      // set tool's extra info
+      /* eslint-disable-next-line no-param-reassign */
+      tool.extraInfo = d;
     },
     setWidgetColor: (viewWidget, colorHex) => {
       viewWidget.setCircleProps(
@@ -80,7 +82,6 @@ export default [
     icon: 'angle-tool',
     label: 'Angle',
     widgetClass: vtkAngleWidget,
-    measurementCallback: (w) => (w.getAngle() * 180) / Math.PI,
     prepareWidget: (viewWidget) => {
       viewWidget.setCircleProps({
         'stroke-width': 3,
@@ -119,8 +120,12 @@ export default [
     // tool structure: refer to emptyTool() in MeasurementTools
     onWidgetStateUpdate: (tool) => {
       const { widget, viewWidget } = tool;
-      const d = (widget.getAngle() * 180) / Math.PI;
-      viewWidget.setText(d.toFixed(3));
+      const deg = ((widget.getAngle() * 180) / Math.PI).toFixed(3);
+      const angle = `${deg}°`;
+      viewWidget.setText(angle);
+      // set extra info
+      /* eslint-disable-next-line no-param-reassign */
+      tool.extraInfo = angle;
     },
     setWidgetColor: (viewWidget, colorHex) => {
       viewWidget.setCircleProps(

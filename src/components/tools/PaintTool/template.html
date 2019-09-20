@@ -13,14 +13,29 @@
       <v-flex xs12>
         <v-select
           label="Output labelmap"
+          :append-outer-icon="labelmapSelection ? 'edit' : null"
           :items="getLabelmaps()"
           item-text="name"
           item-value="sourceId"
+          :disabled="!master"
           :value="labelmapSelection"
           @input="setLabelMap"
-          :disabled="!master"
+          @click:append-outer="editName"
         ></v-select>
       </v-flex>
+      <template v-if="editingName">
+        <v-flex xs10>
+          <v-text-field
+            label="Renaming labelmap"
+            v-model="labelmapName"
+          />
+        </v-flex>
+        <v-flex xs2>
+          <v-btn icon @click="editingName = false">
+            <v-icon>save</v-icon>
+          </v-btn>
+        </v-flex>
+      </template>
     </v-layout>
   </v-container>
 
@@ -83,7 +98,7 @@
       <v-flex xs12>
         <v-list :class="$style.fullWidth">
           <v-subheader :class="$style.headerRow">
-            <span class="black--text subheading font-weight-medium">Labels</span>
+            <span class="black--text subheading body-2">Labels</span>
             <v-spacer />
             <v-btn
               :class="$style.lowercaseText"

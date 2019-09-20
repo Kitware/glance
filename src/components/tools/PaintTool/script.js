@@ -41,6 +41,7 @@ export default {
       widget: null,
       label: 1,
       radius: 5,
+      editingName: false,
     };
   },
   computed: {
@@ -53,6 +54,18 @@ export default {
         };
       }
       return null;
+    },
+    labelmapName: {
+      get() {
+        if (this.labelmapProxy) {
+          return this.labelmapProxy.getName();
+        }
+        return '';
+      },
+      set(name) {
+        this.labelmapProxy.setName(name);
+        this.$forceUpdate();
+      },
     },
     canPaint() {
       return !!this.master && !!this.labelmapProxy;
@@ -126,8 +139,17 @@ export default {
         }
       }
     },
+    labelmapSelection() {
+      // always hide renaming field if we switch labelmaps
+      this.editingName = false;
+    },
   },
   methods: {
+    editName() {
+      if (this.labelmapSelection) {
+        this.editingName = !this.editingName;
+      }
+    },
     filterImageData(source) {
       return source.getType() === 'vtkImageData';
     },

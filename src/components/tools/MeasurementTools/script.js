@@ -31,6 +31,7 @@ function emptyTool() {
     viewWidget: null,
     repId: -1,
     slice: -1,
+    axis: '',
     stateSub: makeSubManager(),
     name: '',
     extraInfo: '',
@@ -261,6 +262,7 @@ export default {
               repId: rep.getProxyId(),
               viewWidget,
               slice,
+              axis: 'XYZ'[view.getAxis()],
             });
 
             // record current slice

@@ -26,7 +26,17 @@ export const SPECTRAL = [
   '#5e4fa2',
 ];
 
+export const WIDGETS = [
+  '#bbbe64',
+  '#f3b700',
+  '#91f5ad',
+  '#fdca40',
+  '#f79824',
+  '#e57c04',
+];
+
 export default {
   createPaletteCycler,
   SPECTRAL,
+  WIDGETS,
 };

@@ -18,7 +18,7 @@
 
 .datasetPanel :global(.v-expansion-panel__container):first-child {
   /* override vuetify's "border: none!important" rule */
-  border: 1px solid rgba(0,0,0,.12)!important;
+  border-top: 1px solid rgba(0,0,0,.12)!important;
 }
 
 .datasetPanel .datasetControls :global(.v-expansion-panel__header) {

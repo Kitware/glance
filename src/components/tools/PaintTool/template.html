@@ -1,4 +1,4 @@
-<div>
+<div :class="$style.top">
   <v-container :class="$style.container">
     <v-layout wrap align-center>
       <v-flex xs12>
@@ -6,20 +6,36 @@
           label="Master volume"
           :filterFunc="filterImageData"
           bindToActiveSource
+          hideIfOneDataset
           @input="setMasterVolume"
         />
       </v-flex>
       <v-flex xs12>
         <v-select
           label="Output labelmap"
+          :append-outer-icon="labelmapSelection ? 'edit' : null"
           :items="getLabelmaps()"
           item-text="name"
           item-value="sourceId"
+          :disabled="!master"
           :value="labelmapSelection"
           @input="setLabelMap"
-          :disabled="!master"
+          @click:append-outer="editName"
         ></v-select>
       </v-flex>
+      <template v-if="editingName">
+        <v-flex xs10>
+          <v-text-field
+            label="Renaming labelmap"
+            v-model="labelmapName"
+          />
+        </v-flex>
+        <v-flex xs2>
+          <v-btn icon @click="editingName = false">
+            <v-icon>save</v-icon>
+          </v-btn>
+        </v-flex>
+      </template>
     </v-layout>
   </v-container>
 
@@ -52,15 +68,26 @@
     </v-card-text>
   </v-card>
 
-  <v-container :class="$style.container">
+  <v-container grid-list-md :class="$style.container">
     <v-layout
       v-show="master && labelmapProxy"
       wrap
       align-center
     >
-      <v-flex xs12>
+      <v-flex xs3>
+        <span class="body-1">Radius</span>
+      </v-flex>
+      <v-flex xs7>
+        <v-slider
+          min="1"
+          :max="getBrushSizeMax()"
+          step="1"
+          dirty
+          v-model="radius"
+        />
+      </v-flex>
+      <v-flex xs2>
         <v-text-field
-          label="Radius"
           type="number"
           min="1"
           :max="getBrushSizeMax()"
@@ -71,7 +98,7 @@
       <v-flex xs12>
         <v-list :class="$style.fullWidth">
           <v-subheader :class="$style.headerRow">
-            <span class="black--text subheading font-weight-medium">Labels</span>
+            <span class="black--text subheading body-2">Labels</span>
             <v-spacer />
             <v-btn
               :class="$style.lowercaseText"

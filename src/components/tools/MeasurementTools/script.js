@@ -11,12 +11,12 @@ import utils from 'paraview-glance/src/utils';
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
-import { createPaletteCycler, SPECTRAL } from 'paraview-glance/src/palette';
+import { createPaletteCycler, WIDGETS } from 'paraview-glance/src/palette';
 
 const { vtkErrorMacro } = macro;
 const { makeSubManager, forAllViews } = utils;
 
-const PALETTE = ['#ffee00'].concat(SPECTRAL);
+const PALETTE = ['#ffee00'].concat(WIDGETS);
 
 function unsubList(list) {
   while (list.length) {
@@ -32,8 +32,8 @@ function emptyTool() {
     repId: -1,
     slice: -1,
     stateSub: makeSubManager(),
-    measurement: null,
     name: '',
+    extraInfo: '',
     size: 16,
     color: PALETTE[0],
   };
@@ -61,12 +61,25 @@ export default {
       pendingViewWidgets: [],
       // only used when enabling the measurement tools
       nextTool: null,
+      currentSlice: -1,
     };
   },
   computed: {
     ...mapState(['proxyManager']),
     targetVolume() {
       return this.proxyManager.getProxyById(this.targetVolumeId);
+    },
+    activeToolIndex: {
+      get() {
+        if (this.pendingTool.toolInfo) {
+          const name = this.pendingTool.toolInfo.name;
+          return this.toolList.findIndex((t) => t.name === name);
+        }
+        return;
+      },
+      set(index) {
+        this.toggle(this.toolList[index]);
+      },
     },
   },
   watch: {
@@ -128,14 +141,9 @@ export default {
     setTargetVolume(sourceId) {
       this.targetVolumeId = sourceId;
     },
-    toggle(toolName) {
-      const toolInfo = this.toolList.find((info) => info.name === toolName);
-      if (!toolInfo) {
-        throw new Error('Failed to find tool. This should not happen.');
-      }
-
+    toggle(toolInfo) {
       if (this.enabled) {
-        if (this.pendingTool.toolInfo.name === toolName) {
+        if (!toolInfo) {
           this.disable();
         } else {
           this.switchToTool(toolInfo);
@@ -241,11 +249,15 @@ export default {
               this.targetVolume,
               view
             );
+            const slice = Math.round(rep.getSlice());
             this.pendingTool = Object.assign(this.pendingTool, {
               repId: rep.getProxyId(),
               viewWidget,
-              slice: Math.round(rep.getSlice()),
+              slice,
             });
+
+            // record current slice
+            this.currentSlice = slice;
 
             if (toolInfo.isWidgetFinalized(widget.getWidgetState())) {
               this.finalizeToolPlacement();
@@ -283,9 +295,6 @@ export default {
         stateSub.sub(
           widget.getWidgetState().onModified((state) => {
             toolInfo.onWidgetStateUpdate(toolInstance);
-            if (toolInfo.measurementCallback) {
-              toolInstance.measurement = toolInfo.measurementCallback(widget);
-            }
           })
         );
       }
@@ -329,6 +338,8 @@ export default {
           this.disable();
         }
       }
+
+      this.currentSlice = repSlice;
 
       const id = rep.getProxyId();
       const toolsInScene = this.tools.filter((tool) => tool.repId === id);

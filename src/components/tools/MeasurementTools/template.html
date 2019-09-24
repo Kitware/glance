@@ -1,4 +1,4 @@
-<div>
+<div :class="$style.top">
   <v-container :class="$style.container">
     <v-layout wrap align-center>
       <v-flex xs12>
@@ -6,104 +6,142 @@
           label="Target volume"
           :filterFunc="filterImages"
           bindToActiveSource
+          hideIfOneDataset
           @input="setTargetVolume"
         />
       </v-flex>
     </v-layout>
-  </v-container>
-  <v-container :class="$style.container">
-    <v-subheader :class="$style.headerRow">
-      <span class="black--text subheading font-weight-medium">Tools</span>
-    </v-subheader>
-    <v-layout wrap align-center>
-      <v-tooltip
-        bottom
-        v-for="tool in toolList"
-        :key="tool.name"
-      >
-        <v-btn
-          slot="activator"
-          icon
-          @click="toggle(tool.name)"
-          :disabled="!targetVolume"
-          :class="getButtonStyle(tool.name)"
-        >
-          <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
-          <div v-show="!targetVolume" :class="$style.toolIconOverlay" />
-        </v-btn>
-        {{ tool.name }}
-      </v-tooltip>
-    </v-layout>
-    <v-layout wrap align-center>
-      <v-list two-line :class="$style.fullWidth">
-        <v-subheader :class="$style.headerRow">
-          <span class="black--text subheading font-weight-medium">Measurements</span>
-        </v-subheader>
-        <v-list-tile
-          v-for="(tool,idx) in tools"
-          :key="idx"
-        >
-          <v-list-tile-content>
-            <v-list-tile-title>
-              <v-icon small @click="focusWidget(idx)">open_in_new</v-icon>
-              {{ tool.name || tool.toolInfo.name }}
-            </v-list-tile-title>
-            <v-list-tile-sub-title v-if="tool.measurement">
-              <span :class="$style.measurementValue">
-                {{ tool.toolInfo.label }}: {{ tool.measurement.toFixed(3) }}
-              </span>
-            </v-list-tile-sub-title>
-          </v-list-tile-content>
-          <v-list-tile-action>
-            <pop-up>
-              <template v-slot:trigger>
-                <v-btn small flat icon>
-                  <v-icon>more_vert</v-icon>
+
+    <v-card flat>
+      <div :class="$style.heading">
+        <v-layout align-center>
+          <v-flex xs10>
+            <span class="body-2">Tool List</span>
+          </v-flex>
+          <v-flex xs6>
+            <v-btn-toggle v-model="activeToolIndex" :class="$style.thinBorder">
+              <v-tooltip
+                bottom
+                v-for="tool in toolList"
+                :key="tool.name"
+              >
+                <v-btn slot="activator" flat :class="$style.toolButton">
+                  <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
                 </v-btn>
-              </template>
-              <template v-slot:popup="{ close }">
-                <v-container :class="[$style.container, $style.popup]">
-                  <v-layout wrap align-center>
-                    <v-flex xs12>
-                      <v-text-field
-                        label="Name"
-                        :placeholder="tool.toolInfo.name"
-                        :value="tool.name"
-                        @input="setToolName(idx, arguments[0])"
-                      />
-                    </v-flex>
-                    <v-flex xs12>
-                      <div>Tool color</div>
-                      <palette-picker
-                        :palette="palette"
-                        :size="28"
-                        :value="tool.color"
-                        @input="setToolColor(idx, arguments[0])"
-                      />
-                    </v-flex>
-                    <v-flex xs12>
-                      <v-text-field
-                        type="number"
-                        label="Text size"
-                        min="8"
-                        max="32"
-                        step="1"
-                        :value="tool.size"
-                        @input="setToolSize(idx, arguments[0])"
-                      />
-                    </v-flex>
-                    <v-flex xs12>
-                      <v-btn @click="deleteTool(idx); close()">
-                        <v-icon left>delete</v-icon> Delete
-                      </v-btn>
-                    </v-flex>
-                  </v-layout>
-                </v-container>
-              </template>
-            </pop-up>
-          </v-list-tile-action>
-        </v-list-tile>
-      </v-list>
-    </v-layout>
+                {{ tool.name }}
+              </v-tooltip>
+            </v-btn-toggle>
+          </v-flex>
+        </v-layout>
+      </div>
+      <v-divider :class="$style.divider" />
+      <div :class="$style.fullWidth">
+        <template v-if="tools.length > 0">
+          <template v-for="(tool,idx) in tools">
+            <div :class="$style.row" :key="idx">
+              <span :class="$style.rowAvatar">
+                <svg-icon :icon="tool.toolInfo.icon" :class="$style.toolIcon" />
+              </span>
+              <div :class="$style.rowContent">
+                <span :class="$style.rowContentName" :title="tool.name">
+                  {{ tool.name || tool.toolInfo.name }}
+                </span>
+                <span :class="$style.rowContentDetails">
+                  {{ tool.extraInfo }}
+                </span>
+              </div>
+              <div
+                v-if="tool.slice !== currentSlice"
+                :class="$style.action"
+              >
+                <v-tooltip bottom>
+                  <v-btn slot="activator" small icon>
+                    <v-icon color="teal" @click="focusWidget(idx)">open_in_new</v-icon>
+                  </v-btn>
+                  Jump to slice
+                </v-tooltip>
+              </div>
+              <div :class="$style.action">
+                <pop-up>
+                  <template v-slot:trigger>
+                    <v-btn small icon>
+                      <v-icon>more_vert</v-icon>
+                    </v-btn>
+                  </template>
+                  <template v-slot:popup="{ close }">
+                    <v-container grid-list-md :class="[$style.container, $style.popup]">
+                      <v-layout wrap align-center>
+                        <v-flex xs12>
+                          <v-text-field
+                            label="Name"
+                            :placeholder="tool.toolInfo.name"
+                            :value="tool.name"
+                            @input="setToolName(idx, arguments[0])"
+                          />
+                        </v-flex>
+                        <v-flex xs12>
+                          <div class="body-1">Tool color</div>
+                          <v-divider :class="$style.divider" />
+                          <palette-picker
+                            class="pt-2"
+                            :palette="palette"
+                            :size="28"
+                            :value="tool.color"
+                            @input="setToolColor(idx, arguments[0])"
+                          />
+                        </v-flex>
+                        <v-flex xs12>
+                          <div class="body-1">Text Size</div>
+                          <v-divider :class="$style.divider" />
+                        </v-flex>
+                        <v-flex xs9>
+                          <v-slider
+                            min="8"
+                            max="32"
+                            step="1"
+                            dirty
+                            :value="tool.size"
+                            @input="setToolSize(idx, arguments[0])"
+                          />
+                        </v-flex>
+                        <v-flex xs3>
+                          <v-text-field
+                            type="number"
+                            min="8"
+                            max="32"
+                            step="1"
+                            :value="tool.size"
+                            @input="setToolSize(idx, arguments[0])"
+                          />
+                        </v-flex>
+                      </v-layout>
+                      <v-divider :class="$style.divider" />
+                      <v-layout align-center>
+                        <v-flex xs2>
+                          <v-btn icon @click="close">
+                            <v-icon>save</v-icon>
+                          </v-btn>
+                        </v-flex>
+                        <v-spacer />
+                        <v-flex xs2>
+                          <v-btn icon @click="deleteTool(idx); close()">
+                            <v-icon color="red">delete</v-icon>
+                          </v-btn>
+                        </v-flex>
+                        <v-flex xs1 />
+                      </v-layout>
+                    </v-container>
+                  </template>
+                </pop-up>
+              </div>
+            </div>
+            <v-divider :class="$style.divider" />
+          </template>
+        </template>
+        <template v-else>
+          <div class="pt-2 body-1 teal--text text-xs-center">No measurements yet</div>
+        </template>
+      </div>
+    </v-card>
   </v-container>
 </div>

@@ -1,3 +1,7 @@
+.top {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
 .container {
   padding: 8px;
 }
@@ -10,40 +14,69 @@
   width: 100%;
 }
 
-.headerRow {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  padding: 0;
-}
-
-.listRow {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-  justify-content: flex-start;
-  overflow: visible;
+.heading {
+  padding: 8px 0;
 }
 
 .popup {
   width: 250px;
+  overflow: hidden;
 }
 
-.measurementValue {
-  margin-left: 20px;
+.thinBorder {
+  border: 1px solid #ccc;
+  box-shadow: none;
+}
+
+.tools {
+  text-align: center;
 }
 
 .toolButton {
-  position: relative;
-}
-
-.activeToolButton {
-  background: #77a4ff;
+  height: 30px;
 }
 
 .toolIcon {
-  height: 25px;
-  width: 25px;
+  height: 20px;
+  width: 20px;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+
+.rowAvatar {
+  flex: 0;
+  margin: 8px;
+}
+
+.rowContent {
+  flex: 2;
+  display: flex;
+  flex-flow: column;
+  margin: 8px;
+  min-width: 0;
+}
+
+.rowContentName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 4px;
+}
+
+.rowContentDetails {
+  font-style: italic;
+  color: #444;
+  padding: 0 4px;
+}
+
+.rowAction {
+  flex: 0;
+  margin: 8px 6px;
 }
 
 .toolIconOverlay {

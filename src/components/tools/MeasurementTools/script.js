@@ -62,6 +62,7 @@ export default {
       // only used when enabling the measurement tools
       nextTool: null,
       currentSlice: -1,
+      threeDViewActive: false,
     };
   },
   computed: {
@@ -80,6 +81,9 @@ export default {
       set(index) {
         this.toggle(this.toolList[index]);
       },
+    },
+    show2DWarning() {
+      return this.threeDViewActive && this.pendingTool.toolInfo;
     },
   },
   watch: {
@@ -118,6 +122,9 @@ export default {
           this.addToolToView(this.pendingTool, proxy);
         }
       }
+    },
+    onActiveViewChange(view) {
+      this.threeDViewActive = view.getClassName() === 'vtkViewProxy';
     },
   },
   mounted() {

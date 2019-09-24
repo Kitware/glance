@@ -1,8 +1,8 @@
 import { mapState } from 'vuex';
 
 import macro from 'vtk.js/Sources/macro';
-import vtkImageCroppingWidget from 'vtk.js/Sources/Widgets/Widgets3D/ImageCroppingWidget';
 
+import vtkCropWidget from 'paraview-glance/src/vtk/CropWidget';
 import utils from 'paraview-glance/src/utils';
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
@@ -43,7 +43,7 @@ export default {
         const cropFilter = this.getCropFilter(this.targetVolume);
 
         // create crop widget
-        this.cropWidget = vtkImageCroppingWidget.newInstance();
+        this.cropWidget = vtkCropWidget.newInstance();
         this.cropWidget.setFaceHandlesEnabled(false);
         this.cropWidget.setEdgeHandlesEnabled(false);
 

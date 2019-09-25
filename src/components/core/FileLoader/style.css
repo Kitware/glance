@@ -30,17 +30,14 @@
   overflow: auto;
 }
 
-.loadingText {
-  text-align: center;
-}
-
-.icon {
-  margin: 0 4px;
-}
-
 /* should be after .overlay for precedence */
 .visible {
   visibility: visible;
   opacity: 1;
   transition-delay: 0s;
+}
+
+.headerText {
+  /* override vuetify's "disabled" coloring. This is vuetify's default color. */
+  color: rgba(0, 0, 0, .87);
 }

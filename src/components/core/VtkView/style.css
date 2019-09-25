@@ -26,26 +26,8 @@
   border-radius: 16px;
 }
 
-.activeButton {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-.relative {
-  position: relative;
-}
-
-.altButton {
-  position: absolute;
-  left: -40px;
-  top: -40px;
-}
-
 .toolbarWrapper {
   position: relative;
-}
-
-.smallCardText {
-  padding: 5px;
 }
 
 .button {
@@ -55,14 +37,6 @@
 
 .smallToolbar {
   overflow: hidden;
-}
-
-.smallToolbar :global(.v-toolbar__content) {
-  height: 45px !important;
-}
-
-.noSelect {
-  user-select: none;
 }
 
 .activeView {

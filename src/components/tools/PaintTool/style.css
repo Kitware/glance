@@ -1,16 +1,8 @@
-.top {
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-}
-
 .container {
   padding: 8px;
 }
 
 .container * {
-  user-select: none;
-}
-
-.noSelect {
   user-select: none;
 }
 
@@ -26,7 +18,7 @@
   display: flex;
   flex-flow: row;
   align-items: center;
-  padding: 8px;
+  padding: 16px;
 }
 
 .paintSwitch {
@@ -96,8 +88,4 @@
 
 .activeRadio {
   margin-right: -8px;
-}
-
-.deleteButton {
-  cursor: pointer;
 }

@@ -2,18 +2,18 @@
   v-if="available === 'geometry' || available === 'volume'"
 >
   <v-card flat :class="$style.block">
-    <v-container fluid grid-list-lg>
+    <v-container fluid grid-list-xs class="pa-0">
       <v-layout row wrap align-center>
         <v-flex xs3 v-show="available === 'geometry'">
-          Color By
+          <span class="body-2">Color By:</span>
         </v-flex>
         <v-flex xs9 v-show="available === 'geometry'">
           <v-select
-            :class="[$style.noTopPadding, $style.noSelect]"
+            class="pv-no-select"
+            :class="$style.slimInput"
             dense
             flat
             hide-details
-
             v-model="colorBy"
             :items="arrays"
           />
@@ -22,20 +22,25 @@
           <palette-picker
             :palette="palette"
             :value="solidColor"
-            :size="20"
+            :size="24"
+            class="pt-1 pb-1"
             v-on:input="setSolidColor"
           />
         </v-flex>
         <template v-if="colorBy.length">
-          <v-flex xs12 v-if="colorBy.length">
+          <v-flex
+            v-if="colorBy.length"
+            xs12
+            class="pt-2"
+          >
             <v-menu
               :close-on-content-click="false"
               offset-y
               v-model="presetMenu"
             >
               <template v-slot:activator="{ on }">
-                <div v-on="on">
-                  <span class="body-1">{{ presetName }}</span>
+                <div v-on="on" :class="$style.clickable">
+                  <span class="body-2">{{ presetName }}</span>
                   <img :src="lutImage" :class="$style.lutImage" />
                 </div>
               </template>
@@ -118,7 +123,7 @@
                 :max="shiftRange[1]"
                 step="0"
                 hide-details
-                :class="$style.noTopPadding"
+                :class="$style.slimInput"
               />
             </v-flex>
             <v-flex xs3>
@@ -129,7 +134,7 @@
                 :max="shiftRange[1]"
                 step="1"
                 hide-details
-                :class="$style.noTopPadding"
+                :class="$style.slimInput"
               />
             </v-flex>
           </v-layout>
@@ -145,7 +150,7 @@
               </v-icon>
             </v-flex>
             <v-flex xs10>
-              <span class="body-1">Interpolate scalar before mapping</span>
+              <span class="body-2">Interpolate scalar before mapping</span>
             </v-flex>
           </v-layout>
         </v-flex>

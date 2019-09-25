@@ -1,0 +1,4 @@
+/* vuetify override */
+.panelContent > :global(.v-expansion-panel-content__wrap) {
+  padding: 0;
+}

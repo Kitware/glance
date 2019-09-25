@@ -1,16 +1,12 @@
 <v-card>
-  <v-card-title>
-    <svg-icon icon="paraview-glance" :class="$style.glanceIcon" />
-    <v-spacer />
-    <v-btn
-      text
-      icon
-      v-on:click="$emit('close')"
-    >
+  <div :class="$style.close">
+    <v-btn text icon @click="$emit('close')">
       <v-icon>close</v-icon>
     </v-btn>
+  </div>
+  <v-card-title class="text-center">
+    <svg-icon icon="paraview-glance" :class="$style.glanceIcon" />
   </v-card-title>
-  <hr>
   <v-card-text>
     <p class="body-1">
       <a rel="noopener noreferrer" target="_blank" href="https://kitware.github.io/paraview-glance/">ParaView Glance</a>
@@ -25,7 +21,7 @@
       and
       <a rel="noopener noreferrer" target="_blank" href="https://kitware.github.io/vtk-js/">VTK.js</a>.
     </p>
-    <ul :class="$style.list">
+    <ul class="ml-5">
       <li class="body-1">
         <span>Here is our</span>
         <a rel="noopener noreferrer" target="_blank" href="https://kitware.github.io/paraview-glance/doc/">documentation</a>.
@@ -38,7 +34,7 @@
         <span>Current version: {{version}}</span>
       </li>
     </ul>
-    <v-layout row wrap class="text-xs-center" align-end>
+    <v-layout row wrap class="text-center" align-end>
       <v-flex xs4>
         <a rel="noopener noreferrer" target="_blank" href="https://www.kitware.com">
           <svg-icon icon="kitware" :class="$style.aboutIcon" />
@@ -57,7 +53,7 @@
         </a>
       </v-flex>
     </v-layout>
-    <div class="pt-4 d-block text-xs-center grey--text text--darken-2">
+    <div class="pt-4 d-block text-center grey--text text--darken-2">
       &copy; {{ new Date().getFullYear() }} — Kitware, Inc.
     </div>
   </v-card-text>

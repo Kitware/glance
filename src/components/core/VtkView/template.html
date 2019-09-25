@@ -4,12 +4,11 @@
       left
       :disabled="smallScreen"
     >
-      <span :class="$style.noSelect">Reset camera</span>
+      <span class="pv-no-select">Reset camera</span>
       <template v-slot:activator="{ on }">
         <v-btn
           icon
           dark
-          small
           v-on="on"
           v-on:click="resetCamera()"
         >
@@ -21,12 +20,11 @@
       left
       :disabled="smallScreen"
     >
-      <span :class="$style.noSelect">Rotate camera left 90°</span>
+      <span class="pv-no-select">Rotate camera left 90°</span>
       <template v-slot:activator="{ on }">
         <v-btn
           icon
           dark
-          small
           v-on="on"
           v-on:click="rollLeft()"
         >
@@ -38,12 +36,11 @@
       left
       :disabled="smallScreen"
     >
-      <span :class="$style.noSelect">Rotate camera right 90°</span>
+      <span class="pv-no-select">Rotate camera right 90°</span>
       <template v-slot:activator="{ on }">
         <v-btn
           icon
           dark
-          small
           v-on="on"
           v-on:click="rollRight()"
         >
@@ -56,12 +53,11 @@
       v-if="view.getProxyName() === 'View3D'"
       :disabled="smallScreen"
     >
-      <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[0]}}</span>
+      <span class="pv-no-select">Reset Camera to Orientation {{orientationLabels()[0]}}</span>
       <template v-slot:activator="{ on }">
         <v-btn
           icon
           dark
-          small
           v-on="on"
           v-on:click="updateOrientation('x')"
         >
@@ -74,12 +70,11 @@
       v-if="view.getProxyName() === 'View3D'"
       :disabled="smallScreen"
     >
-      <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[1]}}</span>
+      <span class="pv-no-select">Reset Camera to Orientation {{orientationLabels()[1]}}</span>
       <template v-slot:activator="{ on }">
         <v-btn
           icon
           dark
-          small
           v-on="on"
           v-on:click="updateOrientation('y')"
         >
@@ -92,12 +87,11 @@
       v-if="view.getProxyName() === 'View3D'"
       :disabled="smallScreen"
     >
-      <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[2]}}</span>
+      <span class="pv-no-select">Reset Camera to Orientation {{orientationLabels()[2]}}</span>
       <template v-slot:activator="{ on }">
         <v-btn
           icon
           dark
-          small
           v-on="on"
           v-on:click="updateOrientation('z')"
         >
@@ -119,24 +113,27 @@
     />
     <div :class="$style.toolbarWrapper">
       <toolbar-sheet v-model="backgroundSheet">
-        <v-card dark>
-          <v-card-text :class="$style.smallCardText">
-            <v-layout row>
-              <v-spacer />
-              <palette-picker
-                :size="20"
-                :palette="palette"
-                :value="viewData.background"
-                v-on:input="backgroundSheet = false; $emit('bg-change', $event)"
-              />
-            </v-layout>
-          </v-card-text>
-        </v-card>
+        <v-container grid-list-md>
+          <v-layout row>
+            <v-spacer />
+            <palette-picker
+              :size="24"
+              :palette="palette"
+              :value="viewData.background"
+              v-on:input="backgroundSheet = false; $emit('bg-change', $event)"
+            />
+          </v-layout>
+        </v-container>
       </toolbar-sheet>
-      <v-toolbar dark :class="$style.smallToolbar">
+      <v-toolbar
+        dark
+        height="45px"
+        :class="$style.smallToolbar"
+      >
         <v-select
           dense
           flat
+          hide-details
           :class="$style.viewTypeSelector"
           :items="viewTypes()"
           :value="viewType"
@@ -147,7 +144,7 @@
           top
           :disabled="smallScreen"
         >
-          <span :class="$style.noSelect">Background color</span>
+          <span class="pv-no-select">Background color</span>
           <template v-slot:activator="{ on }">
             <v-btn
               :class="$style.button"
@@ -164,7 +161,7 @@
           top
           :disabled="smallScreen"
         >
-          <span :class="$style.noSelect">Screenshot</span>
+          <span class="pv-no-select">Screenshot</span>
           <template v-slot:activator="{ on }">
             <v-btn
               :class="$style.button"
@@ -180,7 +177,7 @@
           top
           v-if="!smallScreen && singleViewButton"
         >
-          <span :class="$style.noSelect">Single view</span>
+          <span class="pv-no-select">Single view</span>
           <template v-slot:activator="{ on }">
             <v-btn
               :class="$style.button"
@@ -196,7 +193,7 @@
           top
           v-if="!smallScreen && flipViewButton"
           >
-          <span :class="$style.noSelect">Split view</span>
+          <span class="pv-no-select">Split view</span>
           <template v-slot:activator="{ on }">
             <v-btn
               :class="$style.button"
@@ -212,7 +209,7 @@
           top
           v-if="!smallScreen && quadViewButton"
           >
-          <span :class="$style.noSelect">Quad view</span>
+          <span class="pv-no-select">Quad view</span>
           <template v-slot:activator="{ on }">
             <v-btn
               :class="$style.button"

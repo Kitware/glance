@@ -6,15 +6,15 @@
     <v-app
       :class="$style.root"
     >
-      <!-- 960 is vuetify's md breakpoint -->
       <v-navigation-drawer
         v-model="controlsDrawer"
         :clipped="$vuetify.breakpoint.mdAndUp"
-        mobile-break-point="960"
+        :mobile-break-point="$vuetify.breakpoint.thresholds.md"
         app
         fixed
         disable-resize-watcher
         touchless
+        width="300"
       >
         <controls-drawer />
       </v-navigation-drawer>
@@ -46,53 +46,106 @@
           <span v-else key="if-landingVisible">Back to landing page</span>
         </v-tooltip>
         <v-spacer />
-        <v-btn
-          v-if="errors.length"
-          key="if-has-errors"
-          :class="$style.toolbarButton"
-          text
-          color="error"
-          v-on:click="errorDialog = true"
-        >
-          <v-icon>error</v-icon>
-          <span>{{ errors.length }}</span>
-          <span v-show="!smallScreen">error(s)</span>
-        </v-btn>
-        <v-btn
-          :class="$style.toolbarButton"
-          text
-          v-on:click="promptUserFiles"
-        >
-          <v-icon>folder</v-icon>
-          <span v-show="!smallScreen">Open</span>
-        </v-btn>
-        <v-btn
-          v-show="!landingVisible"
-          :class="$style.toolbarButton"
-          text
-          v-on:click="saveState()"
-        >
-          <v-icon>cloud_download</v-icon>
-          <span v-show="!smallScreen">Save state</span>
-        </v-btn>
-        <v-btn
-          v-show="!landingVisible"
-          :class="$style.toolbarButton"
-          text
-          v-on:click="screenshotsDrawer = true"
-        >
-          <v-icon>collections</v-icon>
-          <span v-show="!smallScreen">Screenshots ({{ screenshotCount }})</span>
-        </v-btn>
-        <v-btn
-          :class="$style.toolbarButton"
-          text
-          v-on:click="aboutDialog = true"
-        >
-          <!-- width of other icons in toolbar -->
-          <svg-icon icon="kitware-logo" width="24px" />
-          <span v-show="!smallScreen">About</span>
-        </v-btn>
+        <v-toolbar-items>
+          <v-btn
+            v-if="errors.length"
+            key="if-has-errors"
+            text
+            color="error"
+            v-on:click="errorDialog = true"
+          >
+            <v-icon left>error</v-icon>
+            <span>{{ errors.length }}</span>
+            &nbsp;
+            <span v-show="!smallScreen">error(s)</span>
+          </v-btn>
+        </v-toolbar-items>
+        <v-toolbar-items v-show="$vuetify.breakpoint.smAndUp">
+          <v-btn
+            text
+            v-on:click="promptUserFiles"
+          >
+            <v-icon left>folder</v-icon>
+            <span v-show="!smallScreen">Open</span>
+          </v-btn>
+          <v-btn
+            v-show="!landingVisible"
+            text
+            v-on:click="saveState()"
+          >
+            <v-icon left>cloud_download</v-icon>
+            <span v-show="!smallScreen">Save state</span>
+          </v-btn>
+          <v-btn
+            v-show="!landingVisible"
+            text
+            v-on:click="screenshotsDrawer = true"
+          >
+            <v-icon left>collections</v-icon>
+            <span v-show="!smallScreen">Screenshots ({{ screenshotCount }})</span>
+          </v-btn>
+          <v-btn
+            text
+            v-on:click="aboutDialog = true"
+          >
+            <!-- width of other icons in toolbar -->
+            <svg-icon
+              icon="kitware-logo"
+              width="24px"
+              class="mr-2"
+            />
+            <span v-show="!smallScreen">About</span>
+          </v-btn>
+        </v-toolbar-items>
+        <v-menu>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              v-show="$vuetify.breakpoint.xsOnly"
+              icon
+              v-on="on"
+            >
+              <v-icon>more_vert</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-show="!landingVisible"
+              link
+              @click="promptUserFiles"
+            >
+              <v-icon left>folder</v-icon>
+              <span>Open</span>
+            </v-list-item>
+            <v-list-item
+              v-show="!landingVisible"
+              link
+              @click="saveState"
+            >
+              <v-icon left>cloud_download</v-icon>
+              <span>Save State</span>
+            </v-list-item>
+            <v-list-item
+              link
+              @click="screenshotDrawer = true"
+            >
+              <v-icon left>collections</v-icon>
+              <span>Screenshots ({{ screenshotCount }})</span>
+            </v-list-item>
+            <v-list-item
+              v-show="!landingVisible"
+              link
+              @click="aboutDialog = true"
+            >
+              <!-- width of other icons in toolbar -->
+              <svg-icon
+                icon="kitware-logo"
+                width="24px"
+                class="mr-2"
+              />
+              <span>About</span>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-app-bar>
 
       <v-content :class="$style.appContent">
@@ -113,6 +166,7 @@
         right
         temporary
         touchless
+        width="300"
       >
         <screenshots
           v-on:screenshot-count="screenshotCount = $event"
@@ -132,7 +186,7 @@
       >
         <div :class="$style.overlayText">
           <div class="display-3">Drop files here</div>
-          <v-icon :class="[$style.noTransition, $style.dropIcon]">publish</v-icon>
+          <v-icon size="4.75rem">publish</v-icon>
         </div>
       </div>
 

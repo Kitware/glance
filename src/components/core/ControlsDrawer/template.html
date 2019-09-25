@@ -7,7 +7,11 @@
   <v-tab>Datasets</v-tab>
   <v-tab>Tools</v-tab>
   <v-tab>Global</v-tab>
-  <v-tabs-items touchless :class="$style.tabItems">
+  <v-tabs-items
+    v-model="activeTab"
+    touchless
+    :class="$style.tabItems"
+  >
     <v-tab-item :class="$style.tabItem">
       <datasets />
     </v-tab-item>

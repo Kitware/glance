@@ -1,4 +1,4 @@
-<div :class="$style.top">
+<div>
   <v-container :class="$style.container">
     <v-layout wrap align-center>
       <v-flex xs12>
@@ -33,7 +33,7 @@
             v-model="labelmapName"
           />
         </v-flex>
-        <v-flex xs2>
+        <v-flex xs2 class="text-center">
           <v-btn icon @click="editingName = false">
             <v-icon>save</v-icon>
           </v-btn>
@@ -52,9 +52,11 @@
           label="Paint Mode"
           :class="$style.paintSwitch"
         />
+        <v-spacer />
         <v-btn
           icon
           small
+          class="mr-3"
           @click="undo"
           :disabled="!master || !labelmapProxy"
         >
@@ -77,15 +79,16 @@
       wrap
       align-center
     >
-      <v-flex xs3>
-        <span class="body-1">Radius</span>
+      <v-flex xs2>
+        <span class="body-2">Radius</span>
       </v-flex>
-      <v-flex xs7>
+      <v-flex xs8>
         <v-slider
           min="1"
           :max="getBrushSizeMax()"
           step="1"
           dirty
+          hide-details
           v-model="radius"
         />
       </v-flex>
@@ -120,14 +123,14 @@
               v-for="(labelData, i) in colormapArray"
             >
               <v-divider :key="`divider_${i}`" />
-              <v-list-tile :key="labelData.label">
-                <v-list-tile-action>
+              <v-list-item :key="labelData.label">
+                <v-list-item-action>
                   <v-radio
                     :class="$style.activeRadio"
                     :value="labelData.label"
                   />
-                </v-list-tile-action>
-                <v-list-tile-content :class="$style.listRow">
+                </v-list-item-action>
+                <v-list-item-content :class="$style.listRow">
                   <template v-if="labelData.label === 0">
                     <div :class="$style.colorBoxBackground">
                       <div
@@ -138,7 +141,7 @@
                     <span class="pl-1">Eraser</span>
                   </template>
                   <template v-else>
-                    <pop-up>
+                    <pop-up class="flex-grow-0 flex-shrink-1">
                       <template v-slot:trigger>
                         <div :class="$style.colorBoxBackground">
                           <!-- hacky way to get PopUp to re-render when colormapArray changes,
@@ -173,17 +176,18 @@
                     </pop-up>
                     <span class="pl-1">Label {{ labelData.label }}</span>
                   </template>
-                </v-list-tile-content>
-                <v-list-tile-avatar>
-                  <div
-                    :class="$style.deleteButton"
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-btn
                     v-if="labelData.label !== 0"
+                    icon
+                    :class="$style.deleteButton"
                     @click="deleteLabel(labelData.label)"
                   >
                     <v-icon>delete</v-icon>
-                  </div>
-                </v-list-tile-avatar>
-              </v-list-tile>
+                  </v-btn>
+                </v-list-item-action>
+              </v-list-item>
             </template>
             <v-divider />
           </v-radio-group>

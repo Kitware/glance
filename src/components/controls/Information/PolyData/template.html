@@ -4,16 +4,18 @@
   v-if="dataset.isA('vtkPolyData')"
 >
   <v-card-title :class="$style.blockTitle">
-    <span class="body-2">vtkPolyData</span>
+    <span class="body-2 font-weight-medium">vtkPolyData</span>
   </v-card-title>
   <v-card-text :class="$style.blockContent">
-    <v-layout row align-center>
-      <v-flex xs6 class="body-1">Number of points:</v-flex>
-      <v-flex xs6 class="body-1" :class="$style.canSelect">{{ formatNumbersWithThousandSeparator(dataset.getPoints().getNumberOfPoints(), ',') }}</v-flex>
-    </v-layout>
-    <v-layout row align-center>
-      <v-flex xs6 class="body-1">Number of cells:</v-flex>
-      <v-flex xs6 class="body-1" :class="$style.canSelect">{{ formatNumbersWithThousandSeparator(dataset.getNumberOfCells(), ',') }}</v-flex>
-    </v-layout>
+    <v-container fluid grid-list-xs class="pa-0">
+      <v-layout row align-center>
+        <v-flex xs6 class="body-2"># of points:</v-flex>
+        <v-flex xs6 class="body-2" :class="$style.canSelect">{{ formatNumbersWithThousandSeparator(dataset.getPoints().getNumberOfPoints(), ',') }}</v-flex>
+      </v-layout>
+      <v-layout row align-center>
+        <v-flex xs6 class="body-2"># of cells:</v-flex>
+        <v-flex xs6 class="body-2" :class="$style.canSelect">{{ formatNumbersWithThousandSeparator(dataset.getNumberOfCells(), ',') }}</v-flex>
+      </v-layout>
+    </v-container>
   </v-card-text>
 </v-card>

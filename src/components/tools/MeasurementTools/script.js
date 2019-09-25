@@ -129,6 +129,9 @@ export default {
     },
   },
   mounted() {
+    this.threeDViewActive =
+      this.proxyManager.getActiveView().getClassName() === 'vtkViewProxy';
+
     this.paletteCycler = createPaletteCycler(this.palette);
     // used during the duration of widget placement
     this.viewSubs = [];

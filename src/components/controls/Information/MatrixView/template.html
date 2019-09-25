@@ -1,4 +1,4 @@
-<v-container>
+<v-container class="pa-1">
   <v-layout
     row
     align-center
@@ -9,7 +9,9 @@
       v-for="j in columns"
       :key="i*rows+j"
     >
-      <span :class="$style.canSelect">{{ matrix[(i-1)*rows + (j-1)] }}</span>
+      <span :class="$style.canSelect">
+        {{ (matrix[(i-1)*rows + (j-1)]).toFixed(2) }}
+      </span>
     </v-flex>
   </v-layout>
 </v-container>

@@ -1,4 +1,5 @@
 import { mapState } from 'vuex';
+
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { DEFAULT_VIEW_TYPE } from 'paraview-glance/src/components/core/VtkView/constants';
 

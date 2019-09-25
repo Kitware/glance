@@ -1,35 +1,37 @@
 <v-card flat :class="$style.card">
-  <v-layout row align-center>
-    <span class="body-2">Rendering</span>
-    <v-spacer />
-    <v-tooltip top>
-      <table :class="$style.table">
-        <tr>
-          <td class="body-2">WebGL</td>
-          <td class="body-1">{{ webgl }}</td>
-        </tr>
-        <tr>
-          <td class="body-2">Vendor</td>
-          <td class="body-1">{{ vendor }}</td>
-        </tr>
-        <tr>
-          <td class="body-2">GPU</td>
-          <td class="body-1">{{ gpu }}</td>
-        </tr>
-      </table>
-<!--       <v-layout row wrap>
-        <v-flex xs4 class="body-2">WebGL Version</v-flex>
-        <v-flex xs8 class="body-1">{{ webgl }}</v-flex>
-        <v-flex xs4 class="body-2">Vendor</v-flex>
-        <v-flex xs8 class="body-1">{{ vendor }}</v-flex>
-        <v-flex xs4 class="body-2">GPU</v-flex>
-        <v-flex xs8 class="body-1">{{ gpu }}</v-flex>
-      </v-layout> -->
-      <template v-slot:activator="{ on }">
-        <v-icon v-on="on" small>help</v-icon>
-      </template>
-    </v-tooltip>
-  </v-layout>
+  <v-container grid-list-xs class="pa-0">
+    <v-layout row align-center>
+      <span class="subtitle-2">Rendering</span>
+      <v-spacer />
+      <v-tooltip top>
+        <table :class="$style.table">
+          <tr>
+            <td class="body-2">WebGL</td>
+            <td class="body-1">{{ webgl }}</td>
+          </tr>
+          <tr>
+            <td class="body-2">Vendor</td>
+            <td class="body-1">{{ vendor }}</td>
+          </tr>
+          <tr>
+            <td class="body-2">GPU</td>
+            <td class="body-1">{{ gpu }}</td>
+          </tr>
+        </table>
+  <!--       <v-layout row wrap>
+          <v-flex xs4 class="body-2">WebGL Version</v-flex>
+          <v-flex xs8 class="body-1">{{ webgl }}</v-flex>
+          <v-flex xs4 class="body-2">Vendor</v-flex>
+          <v-flex xs8 class="body-1">{{ vendor }}</v-flex>
+          <v-flex xs4 class="body-2">GPU</v-flex>
+          <v-flex xs8 class="body-1">{{ gpu }}</v-flex>
+        </v-layout> -->
+        <template v-slot:activator="{ on }">
+          <v-icon v-on="on" small>help</v-icon>
+        </template>
+      </v-tooltip>
+    </v-layout>
+  </v-container>
   <v-divider :class="$style.divider" />
   <div :class="['js-monitor', $style.monitor]" />
 </v-card>

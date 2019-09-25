@@ -21,7 +21,10 @@ export default {
   computed: {
     style() {
       if (this.visible) {
-        return `background: ${this.colors[this.index]}; top: ${this.top}px;`;
+        return {
+          background: this.colors[this.index % this.colors.length],
+          top: `${this.top}px`,
+        };
       }
       return 'display: none;';
     },

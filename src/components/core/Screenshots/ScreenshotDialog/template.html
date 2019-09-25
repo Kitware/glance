@@ -4,38 +4,34 @@
   @input="close"
   max-width="60%"
 >
-  <v-toolbar color="grey lighten-4" flat>
-    <v-toolbar-title>Save Screenshot</v-toolbar-title>
-  </v-toolbar>
   <v-card
     flat
     v-if="screenshot"
   >
-    <v-container>
+    <v-card-title>Save Screenshot</v-card-title>
+    <v-container grid-list-md>
       <v-layout row wrap>
         <v-flex v-bind="flexLayout">
-          <v-card flat tile>
-            <v-img
-              :class="$style.imagePreview"
-              :src="imageUrl"
-              contain
-              :height="smallScreen ? '125px' : '250px'"
-            />
-          </v-card>
+          <v-img
+            :class="$style.imagePreview"
+            :src="imageUrl"
+            contain
+            :height="smallScreen ? '125px' : '250px'"
+          />
         </v-flex>
         <v-flex v-bind="flexLayout">
           <v-container
             :class="{ 'pa-1': smallScreen }"
           >
             <v-layout row>
-              <v-flex xs8>
+              <v-flex xs9>
                 <v-text-field
                   v-model="filename"
                   label="Filename"
                   v-on:keyup.enter="save(); close()"
                 />
               </v-flex>
-              <v-flex xs4>
+              <v-flex xs3>
                 <v-select
                   label="File type"
                   hide-details

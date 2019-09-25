@@ -6,6 +6,17 @@ import Controls from 'paraview-glance/src/components/controls';
 import ColorGroup from 'paraview-glance/src/components/widgets/ColorGroup';
 import { Mutations } from 'paraview-glance/src/store/types';
 
+// TODO clean up panel logic
+function panelValueOldToNew(value) {
+  const l = [];
+  for (let i = 0; i < value.length; i++) {
+    if (value[i]) {
+      l.push(i);
+    }
+  }
+  return l;
+}
+
 // ----------------------------------------------------------------------------
 // Component API
 // ----------------------------------------------------------------------------
@@ -14,7 +25,13 @@ function onMounted() {
   this.subscriptions = [
     this.proxyManager.onProxyRegistrationChange(({ proxyGroup }) => {
       if (proxyGroup === 'Sources') {
+        const oldPanelStates = Array(this.datasetLength).fill(false);
+        for (let i = 0; i < this.panelStates.length; i++) {
+          oldPanelStates[this.panelStates[i]] = true;
+        }
+
         this.datasets = this.proxyManager.getSources();
+        this.datasetLength = this.datasets.length;
 
         const newPanelStates = [];
         const newPanelStateIndexMap = new Map();
@@ -23,7 +40,7 @@ function onMounted() {
         this.datasets.forEach((ds, index) => {
           if (this.panelStateIndexMap.has(ds)) {
             const oldIndex = this.panelStateIndexMap.get(ds);
-            const state = this.panelStates[oldIndex];
+            const state = oldPanelStates[oldIndex];
 
             newPanelStates.push(state);
           } else {
@@ -34,11 +51,14 @@ function onMounted() {
           if (this.subpanelStateMap.has(ds)) {
             newSubpanelStateMap.set(ds, this.subpanelStateMap.get(ds));
           } else {
-            newSubpanelStateMap.set(ds, Controls.map((c) => c.defaultExpand));
+            newSubpanelStateMap.set(
+              ds,
+              panelValueOldToNew(Controls.map((c) => c.defaultExpand))
+            );
           }
         });
 
-        this.panelStates = newPanelStates;
+        this.panelStates = panelValueOldToNew(newPanelStates);
         this.panelStateIndexMap = newPanelStateIndexMap;
         this.subpanelStateMap = newSubpanelStateMap;
       }
@@ -100,6 +120,7 @@ export default {
   data() {
     return {
       datasets: [],
+      datasetLength: 0,
       panelStates: [],
       // dataset -> index into panelStates
       panelStateIndexMap: new Map(),

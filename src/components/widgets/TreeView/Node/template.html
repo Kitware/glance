@@ -13,7 +13,7 @@
         arrow_drop_down
       </v-icon>
     </div>
-    <span class="body-1" :class="$style.name">{{ item[labelKey] }}</span>
+    <span class="body-2" :class="$style.name">{{ item[labelKey] }}</span>
   </div>
   <ul v-if="item[childrenKey]" v-show="open || value">
     <node

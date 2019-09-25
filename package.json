@@ -42,7 +42,7 @@
   "dependencies": {
     "@linusborg/vue-simple-portal": "^0.1.3",
     "itk": "10.1.0",
-    "material-design-icons-iconfont": "4.0.2",
+    "material-design-icons-iconfont": "5.0.1",
     "mousetrap": "^1.6.3",
     "typeface-roboto": "0.0.54",
     "vtk.js": "11.11.0",
@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@babel/plugin-syntax-dynamic-import": "7.0.0",
+    "@mdi/font": "4.4.95",
     "eslint-plugin-vue": "4.5.0",
     "kw-doc": "1.2.2",
     "kw-web-suite": "8.0.0",

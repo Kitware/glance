@@ -63,6 +63,7 @@ export function createViewer(container, proxyConfig = null) {
     el: container,
     components: { App },
     store,
+    vuetify: new Vuetify(),
     template: '<App />',
   });
 

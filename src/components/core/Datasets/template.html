@@ -38,26 +38,30 @@
         :disabled="smallScreen"
       >
         <span :class="$style.noSelect">Activate source</span>
-        <v-btn
-          slot="activator"
-          :class="$style.headerMenuButton"
-          icon
-          small
-          v-on:click.stop="source.activate()"
-        >
-          <v-icon>{{ proxyManager.getActiveSource() === source ? 'bookmark' : 'bookmark_border' }}</v-icon>
-        </v-btn>
-      </v-tooltip>
-      <div v-on:click.stop> <!-- prevent panel expansion on menu click -->
-        <v-menu offset-x>
+        <template v-slot:activator="{ on }">
           <v-btn
-            slot="activator"
             :class="$style.headerMenuButton"
             icon
             small
+            v-on="on"
+            v-on:click.stop="source.activate()"
           >
-            <v-icon>more_vert</v-icon>
+            <v-icon>{{ proxyManager.getActiveSource() === source ? 'bookmark' : 'bookmark_border' }}</v-icon>
           </v-btn>
+        </template>
+      </v-tooltip>
+      <div v-on:click.stop> <!-- prevent panel expansion on menu click -->
+        <v-menu offset-x>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              :class="$style.headerMenuButton"
+              icon
+              small
+              v-on="on"
+            >
+              <v-icon>more_vert</v-icon>
+            </v-btn>
+          </template>
           <v-list dense>
             <v-list-tile
               v-on:click="deleteDataset(source)"

@@ -5,45 +5,51 @@
       :disabled="smallScreen"
     >
       <span :class="$style.noSelect">Reset camera</span>
-      <v-btn
-        slot="activator"
-        icon
-        dark
-        small
-        v-on:click="resetCamera()"
-      >
-        <v-icon>filter_center_focus</v-icon>
-      </v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          icon
+          dark
+          small
+          v-on="on"
+          v-on:click="resetCamera()"
+        >
+          <v-icon>filter_center_focus</v-icon>
+        </v-btn>
+      </template>
     </v-tooltip>
     <v-tooltip
       left
       :disabled="smallScreen"
     >
       <span :class="$style.noSelect">Rotate camera left 90°</span>
-      <v-btn
-        slot="activator"
-        icon
-        dark
-        small
-        v-on:click="rollLeft()"
-      >
-        <v-icon>rotate_left</v-icon>
-      </v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          icon
+          dark
+          small
+          v-on="on"
+          v-on:click="rollLeft()"
+        >
+          <v-icon>rotate_left</v-icon>
+        </v-btn>
+      </template>
     </v-tooltip>
     <v-tooltip
       left
       :disabled="smallScreen"
     >
       <span :class="$style.noSelect">Rotate camera right 90°</span>
-      <v-btn
-        slot="activator"
-        icon
-        dark
-        small
-        v-on:click="rollRight()"
-      >
-        <v-icon>rotate_right</v-icon>
-      </v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          icon
+          dark
+          small
+          v-on="on"
+          v-on:click="rollRight()"
+        >
+          <v-icon>rotate_right</v-icon>
+        </v-btn>
+      </template>
     </v-tooltip>
     <v-tooltip
       left
@@ -51,15 +57,17 @@
       :disabled="smallScreen"
     >
       <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[0]}}</span>
-      <v-btn
-        slot="activator"
-        icon
-        dark
-        small
-        v-on:click="updateOrientation('x')"
-      >
-        {{orientationLabels()[0]}}
-      </v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          icon
+          dark
+          small
+          v-on="on"
+          v-on:click="updateOrientation('x')"
+        >
+          {{orientationLabels()[0]}}
+        </v-btn>
+      </template>
     </v-tooltip>
     <v-tooltip
       left
@@ -67,15 +75,17 @@
       :disabled="smallScreen"
     >
       <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[1]}}</span>
-      <v-btn
-        slot="activator"
-        icon
-        dark
-        small
-        v-on:click="updateOrientation('y')"
-      >
-        {{orientationLabels()[1]}}
-      </v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          icon
+          dark
+          small
+          v-on="on"
+          v-on:click="updateOrientation('y')"
+        >
+          {{orientationLabels()[1]}}
+        </v-btn>
+      </template>
     </v-tooltip>
     <v-tooltip
       left
@@ -83,15 +93,17 @@
       :disabled="smallScreen"
     >
       <span :class="$style.noSelect">Reset Camera to Orientation {{orientationLabels()[2]}}</span>
-      <v-btn
-        slot="activator"
-        icon
-        dark
-        small
-        v-on:click="updateOrientation('z')"
-      >
-        {{orientationLabels()[2]}}
-      </v-btn>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          icon
+          dark
+          small
+          v-on="on"
+          v-on:click="updateOrientation('z')"
+        >
+          {{orientationLabels()[2]}}
+        </v-btn>
+      </template>
     </v-tooltip>
   </v-layout>
   <v-layout column fill-height>
@@ -136,71 +148,81 @@
           :disabled="smallScreen"
         >
           <span :class="$style.noSelect">Background color</span>
-          <v-btn
-            slot="activator"
-            :class="$style.button"
-            icon
-            :disabled="backgroundSheet || !view"
-            v-on:click="backgroundSheet = !backgroundSheet"
-          >
-            <v-icon>palette</v-icon>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              :class="$style.button"
+              icon
+              :disabled="backgroundSheet || !view"
+              v-on="on"
+              v-on:click="backgroundSheet = !backgroundSheet"
+            >
+              <v-icon>palette</v-icon>
+            </v-btn>
+          </template>
         </v-tooltip>
         <v-tooltip
           top
           :disabled="smallScreen"
         >
           <span :class="$style.noSelect">Screenshot</span>
-          <v-btn
-            slot="activator"
-            :class="$style.button"
-            icon
-            v-on:click="screenCapture()"
-          >
-            <v-icon>add_a_photo</v-icon>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              :class="$style.button"
+              icon
+              v-on="on"
+              v-on:click="screenCapture()"
+            >
+              <v-icon>add_a_photo</v-icon>
+            </v-btn>
+          </template>
         </v-tooltip>
         <v-tooltip
           top
           v-if="!smallScreen && singleViewButton"
         >
           <span :class="$style.noSelect">Single view</span>
-          <v-btn
-            slot="activator"
-            :class="$style.button"
-            icon
-            v-on:click="singleView()"
-          >
-            <v-icon>fullscreen</v-icon>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              :class="$style.button"
+              icon
+              v-on="on"
+              v-on:click="singleView()"
+            >
+              <v-icon>fullscreen</v-icon>
+            </v-btn>
+          </template>
         </v-tooltip>
         <v-tooltip
           top
           v-if="!smallScreen && flipViewButton"
           >
           <span :class="$style.noSelect">Split view</span>
-          <v-btn
-            slot="activator"
-            :class="$style.button"
-            icon
-            v-on:click="splitView()"
-          >
-            <v-icon>flip</v-icon>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              :class="$style.button"
+              icon
+              v-on="on"
+              v-on:click="splitView()"
+            >
+              <v-icon>flip</v-icon>
+            </v-btn>
+          </template>
         </v-tooltip>
         <v-tooltip
           top
           v-if="!smallScreen && quadViewButton"
           >
           <span :class="$style.noSelect">Quad view</span>
-          <v-btn
-            slot="activator"
-            :class="$style.button"
-            icon
-            v-on:click="quadView()"
-          >
-            <v-icon>widgets</v-icon>
-          </v-btn>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              :class="$style.button"
+              icon
+              v-on="on"
+              v-on:click="quadView()"
+            >
+              <v-icon>widgets</v-icon>
+            </v-btn>
+          </template>
         </v-tooltip>
       </v-toolbar>
     </div>

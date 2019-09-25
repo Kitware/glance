@@ -38,26 +38,27 @@
             :class="$style.dnd"
             v-on:drop="$emit('open-files', $event)"
           >
-            <div
-              slot-scope="{ dragHover }"
-              :class="{ [$style.fileUpload]: true, [$style.fileUploadHover]: dragHover }"
-              v-on:click.stop="$emit('open')"
-            >
-              <div :class="['white--text body-2', $style.fileUploadContents]">
-                <v-btn
-                  color="primary"
-                  raised="false"
-                  v-on:click.stop="$emit('open')"
-                >
-                  <span v-if="dragHover" :class="$style.buttonText">drop your file</span>
-                  <span v-else :class="$style.buttonText">open a file</span>
-                  <v-icon>folder_open</v-icon>
-                </v-btn>
-                <div :class="$style.noSelect">
-                  or drop one anywhere in this box to begin.
+            <template v-slot:default="{ dragHover }">
+              <div
+                :class="{ [$style.fileUpload]: true, [$style.fileUploadHover]: dragHover }"
+                v-on:click.stop="$emit('open')"
+              >
+                <div :class="['white--text body-2', $style.fileUploadContents]">
+                  <v-btn
+                    color="primary"
+                    raised="false"
+                    v-on:click.stop="$emit('open')"
+                  >
+                    <span v-if="dragHover" :class="$style.buttonText">drop your file</span>
+                    <span v-else :class="$style.buttonText">open a file</span>
+                    <v-icon>folder_open</v-icon>
+                  </v-btn>
+                  <div :class="$style.noSelect">
+                    or drop one anywhere in this box to begin.
+                  </div>
                 </div>
               </div>
-            </div>
+            </template>
           </drag-and-drop>
         </v-flex>
       </v-layout>

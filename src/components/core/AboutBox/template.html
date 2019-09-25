@@ -3,7 +3,7 @@
     <svg-icon icon="paraview-glance" :class="$style.glanceIcon" />
     <v-spacer />
     <v-btn
-      flat
+      text
       icon
       v-on:click="$emit('close')"
     >
@@ -57,7 +57,7 @@
         </a>
       </v-flex>
     </v-layout>
-    <div class="pt-3 d-block text-xs-center grey--text text--darken-2">
+    <div class="pt-4 d-block text-xs-center grey--text text--darken-2">
       &copy; {{ new Date().getFullYear() }} — Kitware, Inc.
     </div>
   </v-card-text>

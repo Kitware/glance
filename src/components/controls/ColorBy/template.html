@@ -33,10 +33,12 @@
               offset-y
               v-model="presetMenu"
             >
-              <div slot="activator">
-                <span class="body-1">{{ presetName }}</span>
-                <img :src="lutImage" :class="$style.lutImage" />
-              </div>
+              <template v-slot:activator="{ on }">
+                <div v-on="on">
+                  <span class="body-1">{{ presetName }}</span>
+                  <img :src="lutImage" :class="$style.lutImage" />
+                </div>
+              </template>
               <tree-view
                 v-if="presetMenu"
                 :class="$style.dropdownMenu"
@@ -66,15 +68,17 @@
               v-if="available === 'geometry'"
               bottom
             >
-              <v-btn
-                icon
-                small
-                slot="activator"
-                :class="$style.negativeTopSpacing"
-                @click="resetDataRange"
-              >
-                <v-icon>refresh</v-icon>
-              </v-btn>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  icon
+                  small
+                  :class="$style.negativeTopSpacing"
+                  v-on="on"
+                  @click="resetDataRange"
+                >
+                  <v-icon>refresh</v-icon>
+                </v-btn>
+              </template>
               Reset range
             </v-tooltip>
             <v-spacer v-else />

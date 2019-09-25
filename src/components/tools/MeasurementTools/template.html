@@ -25,9 +25,11 @@
                 v-for="tool in toolList"
                 :key="tool.name"
               >
-                <v-btn slot="activator" flat :class="$style.toolButton">
-                  <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
-                </v-btn>
+                <template v-slot:activator="{ on }">
+                  <v-btn v-on="on" text :class="$style.toolButton">
+                    <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
+                  </v-btn>
+                </template>
                 {{ tool.name }}
               </v-tooltip>
             </v-btn-toggle>
@@ -46,8 +48,10 @@
             <div :class="$style.row" :key="idx">
               <span :class="$style.rowAvatar">
                 <v-tooltip bottom>
-                  <svg-icon slot="activator" :icon="tool.toolInfo.icon" :class="$style.toolIcon" />
-                  {{ tool.axis }} Axis: slice {{ tool.slice }}
+                  <template v-slot:activator="{ on }">
+                    <svg-icon v-on="on" :icon="tool.toolInfo.icon" :class="$style.toolIcon" />
+                    {{ tool.axis }} Axis: slice {{ tool.slice }}
+                  </template>
                 </v-tooltip>
               </span>
               <div :class="$style.rowContent">
@@ -63,9 +67,11 @@
                 :class="$style.action"
               >
                 <v-tooltip bottom>
-                  <v-btn slot="activator" small icon>
-                    <v-icon color="teal" @click="focusWidget(idx)">open_in_new</v-icon>
-                  </v-btn>
+                  <template v-slot:activator="{ on }">
+                    <v-btn v-on="on" small icon>
+                      <v-icon color="teal" @click="focusWidget(idx)">open_in_new</v-icon>
+                    </v-btn>
+                  </template>
                   Jump to slice
                 </v-tooltip>
               </div>

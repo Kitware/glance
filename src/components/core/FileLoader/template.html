@@ -28,7 +28,7 @@
           <v-expansion-panel-content
             v-for="(file, i) in files"
             :key="i"
-            :hide-actions="!isRawFile(file)"
+            :hide-default-footer="!isRawFile(file)"
           >
             <div slot="header" class="body-2">
               <v-layout row align-center>
@@ -63,7 +63,7 @@
           <v-expansion-panel-content
             v-for="(file, i) in files"
             :key="i"
-            :hide-actions="!file.error"
+            :hide-default-footer="!file.error"
           >
             <div slot="header" class="body-2">
               {{ file.name }}

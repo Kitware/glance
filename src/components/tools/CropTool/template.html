@@ -14,9 +14,23 @@
   </v-container>
   <v-container :class="$style.container">
     <v-layout wrap align-center>
-      <v-btn v-if="enabled" @click="disable">Disable</v-btn>
-      <v-btn v-else @click="enable">Enable</v-btn>
-      <v-btn @click="reset" :disabled="!targetVolume">Reset</v-btn>
+      <template v-if="enabled">
+        <v-btn flat @click="disable">
+          <v-icon left>crop_free</v-icon>
+          Hide
+        </v-btn>
+      </template>
+      <template v-else>
+        <v-btn flat @click="enable">
+          <v-icon left>crop</v-icon>
+          Crop
+        </v-btn>
+      </template>
+      <v-spacer />
+      <v-btn @click="reset" :disabled="!canReset" flat>
+        <v-icon left>replay</v-icon>
+        Reset
+      </v-btn>
     </v-layout>
   </v-container>
 </div>

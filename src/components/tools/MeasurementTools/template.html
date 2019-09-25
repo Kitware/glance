@@ -34,13 +34,21 @@
           </v-flex>
         </v-layout>
       </div>
+      <v-card v-show="show2DWarning" flat color="orange" class="mb-2">
+        <v-card-text>
+          Only 2D annotations are currently supported.
+        </v-card-text>
+      </v-card>
       <v-divider :class="$style.divider" />
       <div :class="$style.fullWidth">
         <template v-if="tools.length > 0">
           <template v-for="(tool,idx) in tools">
             <div :class="$style.row" :key="idx">
               <span :class="$style.rowAvatar">
-                <svg-icon :icon="tool.toolInfo.icon" :class="$style.toolIcon" />
+                <v-tooltip bottom>
+                  <svg-icon slot="activator" :icon="tool.toolInfo.icon" :class="$style.toolIcon" />
+                  {{ tool.axis }} Axis: slice {{ tool.slice }}
+                </v-tooltip>
               </span>
               <div :class="$style.rowContent">
                 <span :class="$style.rowContentName" :title="tool.name">

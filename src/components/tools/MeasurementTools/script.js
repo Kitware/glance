@@ -31,6 +31,7 @@ function emptyTool() {
     viewWidget: null,
     repId: -1,
     slice: -1,
+    axis: '',
     stateSub: makeSubManager(),
     name: '',
     extraInfo: '',
@@ -62,6 +63,7 @@ export default {
       // only used when enabling the measurement tools
       nextTool: null,
       currentSlice: -1,
+      threeDViewActive: false,
     };
   },
   computed: {
@@ -80,6 +82,9 @@ export default {
       set(index) {
         this.toggle(this.toolList[index]);
       },
+    },
+    show2DWarning() {
+      return this.threeDViewActive && this.pendingTool.toolInfo;
     },
   },
   watch: {
@@ -118,6 +123,9 @@ export default {
           this.addToolToView(this.pendingTool, proxy);
         }
       }
+    },
+    onActiveViewChange(view) {
+      this.threeDViewActive = view.getClassName() === 'vtkViewProxy';
     },
   },
   mounted() {
@@ -254,6 +262,7 @@ export default {
               repId: rep.getProxyId(),
               viewWidget,
               slice,
+              axis: 'XYZ'[view.getAxis()],
             });
 
             // record current slice

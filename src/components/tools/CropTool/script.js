@@ -1,8 +1,8 @@
 import { mapState } from 'vuex';
 
 import macro from 'vtk.js/Sources/macro';
-import vtkImageCroppingWidget from 'vtk.js/Sources/Widgets/Widgets3D/ImageCroppingWidget';
 
+import vtkCropWidget from 'paraview-glance/src/vtk/CropWidget';
 import utils from 'paraview-glance/src/utils';
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
@@ -29,6 +29,7 @@ export default {
     return {
       targetVolumeId: -1,
       cropWidget: null,
+      canReset: false,
     };
   },
   computed: {
@@ -43,7 +44,7 @@ export default {
         const cropFilter = this.getCropFilter(this.targetVolume);
 
         // create crop widget
-        this.cropWidget = vtkImageCroppingWidget.newInstance();
+        this.cropWidget = vtkCropWidget.newInstance();
         this.cropWidget.setFaceHandlesEnabled(false);
         this.cropWidget.setEdgeHandlesEnabled(false);
 
@@ -63,9 +64,10 @@ export default {
           .getWidgetState()
           .getCroppingPlanes();
         this.stateSub.sub(
-          planesState.onModified(() =>
-            cropFilter.setCroppingPlanes(planesState.getPlanes())
-          )
+          planesState.onModified(() => {
+            cropFilter.setCroppingPlanes(planesState.getPlanes());
+            this.canReset = cropFilter.isResetAvailable();
+          })
         );
 
         // add widget to views
@@ -77,9 +79,15 @@ export default {
         this.stateSub.unsub();
       }
     },
-    targetVolumeId() {
+    targetVolumeId(id) {
       if (this.enabled) {
         this.disable();
+
+        // handle canReset flag
+        if (id !== -1) {
+          const cropFilter = this.getCropFilter(this.targetVolume);
+          this.canReset = cropFilter.isResetAvailable();
+        }
       }
     },
   },
@@ -136,6 +144,7 @@ export default {
         const filter = this.getCropFilter(this.targetVolume);
         if (filter.isResetAvailable()) {
           filter.reset();
+          this.canReset = false;
 
           if (this.cropWidget) {
             const state = this.cropWidget.getWidgetState().getCroppingPlanes();

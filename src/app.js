@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import Vue from 'vue';
 import Vuex from 'vuex';
-import Vuetify from 'vuetify';
+import Vuetify from 'vuetify/lib';
 
 import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
@@ -10,7 +10,6 @@ import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 import 'typeface-roboto';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import '@mdi/font/css/materialdesignicons.css';
-import 'vuetify/dist/vuetify.min.css';
 import 'paraview-glance/static/global.css';
 
 import 'paraview-glance/src/io/ParaViewGlanceReaders';

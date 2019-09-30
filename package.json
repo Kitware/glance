@@ -55,13 +55,18 @@
   "devDependencies": {
     "@babel/plugin-syntax-dynamic-import": "7.0.0",
     "@mdi/font": "4.4.95",
+    "deep-merge": "^1.0.0",
     "eslint-plugin-vue": "4.5.0",
+    "fibers": "^4.0.1",
     "kw-doc": "1.2.2",
     "kw-web-suite": "8.0.0",
     "paraview-glance": "3.5.10",
+    "sass": "^1.22.12",
+    "sass-loader": "^7.3.1",
     "vue-loader": "15.2.4",
     "vue-style-loader": "4.1.0",
     "vue-template-compiler": "2.6.6",
+    "vuetify-loader": "github:vuetifyjs/vuetify-loader#3a6a2ffcfc4233dbfdd88d549d55e6cea79ef4fb",
     "webpack-merge": "4.1.2",
     "workbox-webpack-plugin": "2.1.2",
     "write-file-webpack-plugin": "^4.3.2"

@@ -59,6 +59,7 @@
     "fibers": "^4.0.1",
     "kw-doc": "1.2.2",
     "kw-web-suite": "8.0.0",
+    "mini-css-extract-plugin": "^0.8.0",
     "paraview-glance": "3.5.10",
     "sass": "^1.22.12",
     "sass-loader": "^7.3.1",

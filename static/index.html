@@ -8,6 +8,9 @@
     <title>ParaView Glance</title>
     <meta name="description" content="Data Viewer in a browser">
     <link inline rel="icon" type="image/png" href="ParaView.png">
+    <% for (key in htmlWebpackPlugin.files.css) { %>
+    <link type="text/css" rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[key] %>" />
+    <% } %>
     <script inline type="text/javascript" src="version.js"></script>
     <% for (key in htmlWebpackPlugin.files.js) { %>
       <script

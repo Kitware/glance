@@ -1,4 +1,5 @@
 import { mapState, mapMutations } from 'vuex';
+import { VBottomSheet, VDialog } from 'vuetify/lib';
 
 import { Mutations } from 'paraview-glance/src/store/types';
 
@@ -64,6 +65,10 @@ function save() {
 
 export default {
   name: 'ScreenshotDialog',
+  components: {
+    VBottomSheet,
+    VDialog,
+  },
   data() {
     return {
       filename: '',

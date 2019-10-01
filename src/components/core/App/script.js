@@ -1,5 +1,6 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import Mousetrap from 'mousetrap';
+import { VBottomSheet, VDialog } from 'vuetify/lib';
 
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
@@ -34,6 +35,8 @@ export default {
     Screenshots,
     StateFileGenerator,
     SvgIcon,
+    VBottomSheet,
+    VDialog,
   },
   data() {
     return {

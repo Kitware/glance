@@ -33,7 +33,7 @@
             <v-expansion-panel-header class="body-2">
               <v-layout row align-center>
                 <v-flex shrink>
-                  <v-icon v-show="isRawFile(file)" left>error</v-icon>
+                  <v-icon v-show="isRawFile(file)" left>mdi-alert-circle</v-icon>
                 </v-flex>
                 <v-flex shrink>{{ file.name }}</v-flex>
               </v-layout>
@@ -70,7 +70,7 @@
                 class="flex-grow-0"
                 left
               >
-                error
+                mdi-alert-circle
               </v-icon>
               <v-icon
                 v-show="!file.error"
@@ -78,7 +78,7 @@
                 class="flex-grow-0"
                 left
               >
-                check_circle
+                mdi-check-circle
               </v-icon>
               {{ file.name }}
             </v-expansion-panel-header>

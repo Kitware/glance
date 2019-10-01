@@ -16,19 +16,19 @@
     <v-layout wrap align-center>
       <template v-if="enabled">
         <v-btn text @click="disable">
-          <v-icon left>crop_free</v-icon>
+          <v-icon left>mdi-crop-free</v-icon>
           Hide
         </v-btn>
       </template>
       <template v-else>
         <v-btn text @click="enable">
-          <v-icon left>crop</v-icon>
+          <v-icon left>mdi-crop</v-icon>
           Crop
         </v-btn>
       </template>
       <v-spacer />
       <v-btn @click="reset" :disabled="!canReset" text>
-        <v-icon left>replay</v-icon>
+        <v-icon left>mdi-replay</v-icon>
         Reset
       </v-btn>
     </v-layout>

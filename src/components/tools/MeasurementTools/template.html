@@ -82,7 +82,9 @@
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
                     <v-btn v-on="on" small icon>
-                      <v-icon color="teal" @click="focusWidget(idx)">open_in_new</v-icon>
+                      <v-icon color="teal" @click="focusWidget(idx)">
+                        mdi-open-in-new
+                      </v-icon>
                     </v-btn>
                   </template>
                   Jump to slice
@@ -92,7 +94,7 @@
                 <pop-up>
                   <template v-slot:trigger>
                     <v-btn small icon>
-                      <v-icon>more_vert</v-icon>
+                      <v-icon>mdi-dots-vertical</v-icon>
                     </v-btn>
                   </template>
                   <template v-slot:popup="{ close }">
@@ -147,13 +149,13 @@
                       <v-layout align-center>
                         <v-flex xs3 class="text-center">
                           <v-btn icon @click="close">
-                            <v-icon>save</v-icon>
+                            <v-icon>mdi-content-save</v-icon>
                           </v-btn>
                         </v-flex>
                         <v-spacer />
                         <v-flex xs3 class="text-center">
                           <v-btn icon @click="deleteTool(idx); close()">
-                            <v-icon color="red">delete</v-icon>
+                            <v-icon color="red">mdi-delete</v-icon>
                           </v-btn>
                         </v-flex>
                       </v-layout>

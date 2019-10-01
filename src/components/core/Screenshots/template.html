@@ -10,14 +10,14 @@
       icon
       v-on:click="$emit('close')"
     >
-      <v-icon>arrow_forward</v-icon>
+      <v-icon>mdi-arrow-right</v-icon>
     </v-btn>
   </v-toolbar>
   <div
     v-show="!atLeastOneScreenshot"
     :class="$style.emptyState"
   >
-    <v-icon large>photo_library</v-icon>
+    <v-icon large>mdi-image-multiple</v-icon>
     <span class="subtitle-1 grey--text text--darken-1">No screenshots yet!</span>
     <v-btn
       class="mt-4"
@@ -33,7 +33,7 @@
     <v-list-group
       v-for="name in Object.keys(screenshots)"
       :key="name"
-      prepend-icon="folder"
+      prepend-icon="mdi-folder"
       no-action
     >
       <template v-slot:activator>
@@ -70,7 +70,7 @@
                 :download="screenshot.filename"
                 v-on:click.stop
               >
-                <v-icon>get_app</v-icon>
+                <v-icon>mdi-download</v-icon>
               </v-btn>
             </v-list-item-action>
             <v-list-item-action :class="$style.action">
@@ -79,7 +79,7 @@
                 @click="deleteScreenshot(name, i)"
                 v-on:click.stop
               >
-                <v-icon>delete</v-icon>
+                <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-list-item-action>
           </v-list-item>

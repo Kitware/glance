@@ -14,7 +14,7 @@
       <v-flex xs10>
         <v-select
           label="Output labelmap"
-          :append-outer-icon="labelmapSelection ? 'edit' : null"
+          :append-outer-icon="labelmapSelection ? 'mdi-pencil' : null"
           :items="getLabelmaps()"
           item-text="name"
           item-value="sourceId"
@@ -35,7 +35,7 @@
         </v-flex>
         <v-flex xs2 class="text-center">
           <v-btn icon @click="editingName = false">
-            <v-icon>save</v-icon>
+            <v-icon>mdi-content-save</v-icon>
           </v-btn>
         </v-flex>
       </template>
@@ -60,7 +60,7 @@
           @click="undo"
           :disabled="!master || !labelmapProxy"
         >
-          <v-icon>undo</v-icon>
+          <v-icon>mdi-undo</v-icon>
         </v-btn>
         <v-btn
           icon
@@ -68,7 +68,7 @@
           @click="redo"
           :disabled="!master || !labelmapProxy"
         >
-          <v-icon>redo</v-icon>
+          <v-icon>mdi-redo</v-icon>
         </v-btn>
     </v-card-text>
   </v-card>
@@ -111,7 +111,7 @@
               text
               @click="addLabel"
             >
-              <v-icon small color="blue">add_circle</v-icon>
+              <v-icon small color="blue">mdi-plus-circle</v-icon>
               <span class="pl-2 grey--text text--darken-2">Add Label</span>
             </v-btn>
           </v-subheader>
@@ -184,7 +184,7 @@
                     :class="$style.deleteButton"
                     @click="deleteLabel(labelData.label)"
                   >
-                    <v-icon>delete</v-icon>
+                    <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </v-list-item-action>
               </v-list-item>

@@ -54,7 +54,7 @@
             color="error"
             v-on:click="errorDialog = true"
           >
-            <v-icon left>error</v-icon>
+            <v-icon left>mdi-alert-circle</v-icon>
             <span>{{ errors.length }}</span>
             &nbsp;
             <span v-show="!smallScreen">error(s)</span>
@@ -65,7 +65,7 @@
             text
             v-on:click="promptUserFiles"
           >
-            <v-icon left>folder</v-icon>
+            <v-icon left>mdi-folder</v-icon>
             <span v-show="!smallScreen">Open</span>
           </v-btn>
           <v-btn
@@ -73,7 +73,7 @@
             text
             v-on:click="saveState()"
           >
-            <v-icon left>cloud_download</v-icon>
+            <v-icon left>mdi-cloud-download</v-icon>
             <span v-show="!smallScreen">Save state</span>
           </v-btn>
           <v-btn
@@ -81,7 +81,7 @@
             text
             v-on:click="screenshotsDrawer = true"
           >
-            <v-icon left>collections</v-icon>
+            <v-icon left>mdi-image-multiple</v-icon>
             <span v-show="!smallScreen">Screenshots ({{ screenshotCount }})</span>
           </v-btn>
           <v-btn
@@ -104,7 +104,7 @@
               icon
               v-on="on"
             >
-              <v-icon>more_vert</v-icon>
+              <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -113,7 +113,7 @@
               link
               @click="promptUserFiles"
             >
-              <v-icon left>folder</v-icon>
+              <v-icon left>mdi-folder</v-icon>
               <span>Open</span>
             </v-list-item>
             <v-list-item
@@ -121,14 +121,14 @@
               link
               @click="saveState"
             >
-              <v-icon left>cloud_download</v-icon>
+              <v-icon left>mdi-cloud-download</v-icon>
               <span>Save State</span>
             </v-list-item>
             <v-list-item
               link
               @click="screenshotDrawer = true"
             >
-              <v-icon left>collections</v-icon>
+              <v-icon left>mdi-image-multiple</v-icon>
               <span>Screenshots ({{ screenshotCount }})</span>
             </v-list-item>
             <v-list-item
@@ -186,7 +186,7 @@
       >
         <div :class="$style.overlayText">
           <div class="display-3">Drop files here</div>
-          <v-icon size="4.75rem">publish</v-icon>
+          <v-icon size="4.75rem">mdi-publish</v-icon>
         </div>
       </div>
 

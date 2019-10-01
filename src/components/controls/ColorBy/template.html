@@ -81,7 +81,7 @@
                   v-on="on"
                   @click="resetDataRange"
                 >
-                  <v-icon>refresh</v-icon>
+                  <v-icon>mdi-arrow-expand-horizontal</v-icon>
                 </v-btn>
               </template>
               Reset range
@@ -146,7 +146,7 @@
                 :class="$style.click"
                 v-on:click.stop="interpolateScalarsBeforeMapping = !interpolateScalarsBeforeMapping"
               >
-                {{ interpolateScalarsBeforeMapping ? 'check_box' : 'check_box_outline_blank' }}
+                {{ interpolateScalarsBeforeMapping ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline' }}
               </v-icon>
             </v-flex>
             <v-flex xs10>

@@ -20,7 +20,7 @@
         v-on:click.stop="toggleDatasetVisibility(source)"
       >
         <v-icon>
-          {{ getDatasetVisibility(source) ? 'visibility' : 'visibility_off' }}
+          {{ getDatasetVisibility(source) ? 'mdi-eye' : 'mdi-eye-off' }}
         </v-icon>
       </v-btn>
       <div
@@ -44,7 +44,7 @@
             v-on:click.stop="source.activate()"
           >
             <v-icon>
-              {{ proxyManager.getActiveSource() === source ? 'bookmark' : 'bookmark_border' }}
+              {{ proxyManager.getActiveSource() === source ? 'mdi-bookmark-check' : 'mdi-bookmark-outline' }}
             </v-icon>
           </v-btn>
         </template>
@@ -58,7 +58,7 @@
               small
               v-on="on"
             >
-              <v-icon>more_vert</v-icon>
+              <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
           <v-list dense>

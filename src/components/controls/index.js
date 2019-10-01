@@ -8,7 +8,7 @@ export default [
   {
     component: Representation,
     defaultExpand: true,
-    icon: 'brightness_medium',
+    icon: 'mdi-brightness-6',
     name: 'Representation',
     visible: (source) =>
       source.getDataset().isA('vtkPolyData') ||
@@ -17,7 +17,7 @@ export default [
   {
     component: ColorBy,
     defaultExpand: true,
-    icon: 'invert_colors',
+    icon: 'mdi-invert-colors',
     name: 'Colors',
     visible: (source) =>
       source.getDataset().isA('vtkPolyData') ||
@@ -26,21 +26,21 @@ export default [
   {
     component: Slice,
     defaultExpand: true,
-    icon: 'tune',
+    icon: 'mdi-tune',
     name: 'Slice',
     visible: (source) => source.getDataset().isA('vtkImageData'),
   },
   {
     component: Molecule,
     defaultExpand: true,
-    icon: 'bubble_chart',
+    icon: 'mdi-molecule',
     name: 'Molecule',
     visible: (source) => source.getDataset().isA('vtkMolecule'),
   },
   {
     component: Information,
     defaultExpand: false,
-    icon: 'help_outline',
+    icon: 'mdi-help-circle-outline',
     name: 'Information',
     visible: (source) =>
       source.getDataset().isA('vtkPolyData') ||

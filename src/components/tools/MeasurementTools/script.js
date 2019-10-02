@@ -204,6 +204,11 @@ export default {
         // subscribe with a higher priority than the viewWidget
         this.viewSubs.push(
           view.getInteractor().onMouseMove(() => {
+            if (!viewWidget.hasFocus()) {
+              widgetManager.releaseFocus();
+              widgetManager.grabFocus(viewWidget);
+            }
+
             const rep = this.proxyManager.getRepresentation(
               this.targetVolume,
               view
@@ -285,8 +290,6 @@ export default {
         );
 
         widgetManager.enablePicking();
-        widgetManager.releaseFocus();
-        widgetManager.grabFocus(widget);
 
         view.renderLater();
       }

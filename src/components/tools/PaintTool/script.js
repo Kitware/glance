@@ -42,6 +42,7 @@ export default {
       label: 1,
       radius: 5,
       editingName: false,
+      lmnum: 1,
     };
   },
   computed: {
@@ -143,6 +144,9 @@ export default {
       // always hide renaming field if we switch labelmaps
       this.editingName = false;
     },
+    master() {
+      this.lmnum = 1;
+    },
   },
   methods: {
     editName() {
@@ -222,13 +226,15 @@ export default {
         ReaderFactory.registerReadersToProxyManager(
           [
             {
-              name: `Labelmap for ${this.master.getName()}`,
+              name: `Labelmap ${this.lmnum} for ${this.master.getName()}`,
               dataset: labelmap,
             },
           ],
           this.proxyManager
         );
         this.labelmapProxy = this.proxyManager.getActiveSource();
+
+        this.lmnum++;
 
         this.proxyManager.setActiveSource(oldActiveSource);
 

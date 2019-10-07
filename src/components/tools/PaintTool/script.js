@@ -129,14 +129,32 @@ export default {
       this.widget.setRadius(this.radius);
     },
     enabled(enabled) {
+      console.log('12223323223', enabled);
       if (enabled) {
+        this.labelmapProxy = this.findLabelmap();
+        if (!this.labelmapProxy) {
+          this.setLabelMap('CREATE_NEW_LABELMAP');
+        }
+        console.log('as;dlfja;sdlkfj', this.labelmapProxy);
         this.addWidgetToViews();
       } else {
         this.removeWidgetFromViews();
 
+        if (this.master) {
+          this.master.activate();
+        }
+
         while (this.subs.length) {
           this.subs.pop().unsubscribe();
         }
+      }
+    },
+    labelmapProxy() {
+      if (this.labelmapProxy) {
+        const labelmap = this.labelmapProxy.getDataset();
+        this.labelmapSub.sub(labelmap.onModified(this.updateColorMap));
+      } else {
+        this.labelmapSub.unsub();
       }
     },
     labelmapSelection() {
@@ -145,6 +163,19 @@ export default {
     },
   },
   methods: {
+    findLabelmap() {
+      if (!this.master) {
+        return null;
+      }
+      const masterId = this.master.getProxyId();
+      const source = this.proxyManager
+        .getSources()
+        .find((s) => s.getKey('masterId') === masterId);
+      if (!source) {
+        return null;
+      }
+      return source;
+    },
     editName() {
       if (this.labelmapSelection) {
         this.editingName = !this.editingName;
@@ -232,6 +263,8 @@ export default {
 
         this.proxyManager.setActiveSource(oldActiveSource);
 
+        this.labelmapProxy.setKey('masterId', this.master.getProxyId());
+
         // set color of label 1
         const color = this.getNextColorArray();
         labelmap.setLabelColor(1, color);
@@ -246,21 +279,21 @@ export default {
 
       if (this.labelmapProxy) {
         const labelmap = this.labelmapProxy.getDataset();
-        const updateColorMap = () => {
-          const cm = labelmap.getColorMap();
-          const numComp = (a, b) => a - b;
-          this.colormapArray = Object.keys(cm)
-            .sort(numComp)
-            .map((label) => ({
-              label: Number(label), // object keys are always strings
-              color: cm[label].slice(0, 3),
-              opacity: cm[label][3],
-            }));
-        };
-        this.labelmapSub.sub(labelmap.onModified(updateColorMap));
+        this.labelmapSub.sub(labelmap.onModified(this.updateColorMap));
         // initialize colormap
-        updateColorMap();
+        this.updateColorMap(labelmap);
       }
+    },
+    updateColorMap(labelmap) {
+      const cm = labelmap.getColorMap();
+      const numComp = (a, b) => a - b;
+      this.colormapArray = Object.keys(cm)
+        .sort(numComp)
+        .map((label) => ({
+          label: Number(label), // object keys are always strings
+          color: cm[label].slice(0, 3),
+          opacity: cm[label][3],
+        }));
     },
     setLabelColor(label, colorStr) {
       const lb = this.labelmapProxy.getDataset();
@@ -397,6 +430,7 @@ export default {
 
             widgetManager.grabFocus(this.widget);
 
+            console.log(this.labelmapProxy, rep);
             const rep = this.proxyManager.getRepresentation(
               this.labelmapProxy,
               view

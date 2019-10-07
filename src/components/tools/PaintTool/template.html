@@ -10,7 +10,8 @@
           @input="setMasterVolume"
         />
       </v-flex>
-      <v-flex xs12>
+      <!--
+      <v-flex xs10>
         <v-select
           label="Output labelmap"
           :append-outer-icon="labelmapSelection ? 'edit' : null"
@@ -19,10 +20,12 @@
           item-value="sourceId"
           :disabled="!master"
           :value="labelmapSelection"
+          style="overflow:hidden;text-overflow:ellipses;"
           @input="setLabelMap"
           @click:append-outer="editName"
         ></v-select>
       </v-flex>
+      <v-flex xs2><v-spacer /></v-flex>
       <template v-if="editingName">
         <v-flex xs10>
           <v-text-field
@@ -36,6 +39,7 @@
           </v-btn>
         </v-flex>
       </template>
+      -->
     </v-layout>
   </v-container>
 
@@ -47,7 +51,6 @@
           hide-details
           label="Paint Mode"
           :class="$style.paintSwitch"
-          :disabled="!canPaint"
         />
         <v-btn
           icon

@@ -64,14 +64,18 @@ export default {
   },
   proxyManager: {
     onActiveSourceChange(source) {
-      if (this.bindToActiveSource) {
-        if (!source) {
-          this.internalValue = -1;
-        } else if (source.getProxyId() !== this.internalValue) {
-          this.internalValue = source.getProxyId();
+      // HACK: when active source changes, the dataset might not yet be registered
+      // to the source, so this setTimeout gets around that issue.
+      setTimeout(() => {
+        if (this.bindToActiveSource) {
+          if (!source || !this.filterFunc(source)) {
+            this.internalValue = -1;
+          } else if (source.getProxyId() !== this.internalValue) {
+            this.internalValue = source.getProxyId();
+          }
+          this.$emit('input', this.internalValue);
         }
-        this.$emit('input', this.internalValue);
-      }
+      }, 0);
     },
     onProxyRegistrationChange(info) {
       const { proxyGroup, action, proxyId } = info;

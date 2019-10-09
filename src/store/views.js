@@ -5,11 +5,10 @@ import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { Actions, Getters, Mutations } from 'paraview-glance/src/store/types';
 
 function setViewData(state, viewId, data) {
-  Vue.set(
-    state.viewData,
-    viewId,
-    Object.assign({}, state.viewData[viewId] || {}, data)
-  );
+  Vue.set(state.viewData, viewId, {
+    ...(state.viewData[viewId] || {}),
+    ...data,
+  });
 }
 
 export default {

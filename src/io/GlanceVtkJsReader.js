@@ -20,7 +20,7 @@ function loadZip(zipContent) {
         sceneImporter.onReady(() => {
           // We need to wait for all DataSet to finish loading
           if (++dsCount === sceneImporter.getScene().length) {
-            const response = Object.assign({}, sceneImporter.getMetadata());
+            const response = { ...sceneImporter.getMetadata() };
             response.scene = sceneImporter.getScene();
             resolve(response);
           }

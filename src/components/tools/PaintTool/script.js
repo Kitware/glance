@@ -7,15 +7,14 @@ import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 
 import vtkLabelMap from 'paraview-glance/src/vtk/LabelMap';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
-import utils from 'paraview-glance/src/utils';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import PopUp from 'paraview-glance/src/components/widgets/PopUp';
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
 import { createPaletteCycler, SPECTRAL } from 'paraview-glance/src/palette';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
+import { makeSubManager, forAllViews } from 'paraview-glance/src/utils';
 
 const { vtkErrorMacro } = macro;
-const { makeSubManager, forAllViews } = utils;
 
 const SYNC = 'PaintToolSync';
 
@@ -73,7 +72,7 @@ export default {
   },
   proxyManager: {
     onProxyRegistrationChange(info) {
-      const { proxyGroup, action, proxy, proxyId } = info;
+      const { proxyGroup, action, proxyId } = info;
       if (proxyGroup === 'Sources') {
         if (action === 'unregister') {
           if (
@@ -188,9 +187,9 @@ export default {
       return this.fromHex(this.paletteCycler.next());
     },
     asHex(colorArray) {
-      return (
-        '#' + colorArray.map((c) => ('00' + c.toString(16)).slice(-2)).join('')
-      );
+      return `#${colorArray
+        .map((c) => `00${c.toString(16)}`.slice(-2))
+        .join('')}`;
     },
     fromHex(colorStr) {
       const hex = colorStr.slice(1); // remove leading #
@@ -430,7 +429,6 @@ export default {
 
             widgetManager.grabFocus(this.widget);
 
-            console.log(this.labelmapProxy, rep);
             const rep = this.proxyManager.getRepresentation(
               this.labelmapProxy,
               view
@@ -439,7 +437,7 @@ export default {
             // update handle position on mouse move from slice position and
             // handle position
             this.subs.push(
-              view.getInteractor().onMouseMove((callData) => {
+              view.getInteractor().onMouseMove(() => {
                 updateHandleOrientation(view);
 
                 // Update handle based on master representation.
@@ -447,11 +445,11 @@ export default {
                 // we run the risk of creating the labelmap rep before the
                 // master rep, which would result in the labelmap rep rendering
                 // first, and thus rendering behind the master slice rep.
-                const rep = this.proxyManager.getRepresentation(
+                const r = this.proxyManager.getRepresentation(
                   this.master,
                   view
                 );
-                updateHandleFromSlice(rep, view);
+                updateHandleFromSlice(r, view);
               }, viewWidget.getPriority() + 1)
             );
 

@@ -82,8 +82,9 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              localIdentName: '[name]-[local]-[sha512:hash:base32:5]',
-              modules: true,
+              modules: {
+                localIdentName: '[name]-[local]-[sha512:hash:base32:5]',
+              },
             },
           },
           {

@@ -9,7 +9,7 @@ function createProxyDefinition(
 ) {
   return {
     class: classFactory,
-    options: Object.assign({ links, ui }, definitionOptions),
+    options: { links, ui, ...definitionOptions },
     props,
   };
 }
@@ -26,7 +26,7 @@ function activateOnCreate(def) {
 
 function deepCopyPath(rootObj, pathSpec) {
   const path = typeof pathSpec === 'string' ? pathSpec.split('.') : pathSpec;
-  const newRootObj = Object.assign({}, rootObj);
+  const newRootObj = { ...rootObj };
 
   let obj = newRootObj;
   while (path.length) {
@@ -37,7 +37,7 @@ function deepCopyPath(rootObj, pathSpec) {
         obj[prop] = Array.from(obj[prop]);
       } else {
         // copy as object
-        obj[prop] = Object.assign({}, obj[prop]);
+        obj[prop] = { ...obj[prop] };
       }
       obj = obj[prop];
     } else {

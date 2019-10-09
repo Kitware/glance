@@ -21,11 +21,7 @@ function filter(tree, term, func) {
         func
       );
       if (subtreeFiltered.length) {
-        retval.push(
-          Object.assign({}, tree[i], {
-            [this.childrenKey]: subtreeFiltered,
-          })
-        );
+        retval.push({ ...tree[i], [this.childrenKey]: subtreeFiltered });
       }
     } else if (func(tree[i], term)) {
       retval.push(tree[i]);

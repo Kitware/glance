@@ -1,20 +1,15 @@
 import { mapState } from 'vuex';
 
-import macro from 'vtk.js/Sources/macro';
-import vtkDistanceWidget from 'vtk.js/Sources/Widgets/Widgets3D/DistanceWidget';
 import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 
 import PopUp from 'paraview-glance/src/components/widgets/PopUp';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import toolList from 'paraview-glance/src/components/tools/MeasurementTools/tools';
-import utils from 'paraview-glance/src/utils';
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
 import { createPaletteCycler, WIDGETS } from 'paraview-glance/src/palette';
-
-const { vtkErrorMacro } = macro;
-const { makeSubManager, forAllViews } = utils;
+import { makeSubManager } from 'paraview-glance/src/utils';
 
 const PALETTE = ['#ffee00'].concat(WIDGETS);
 
@@ -77,7 +72,7 @@ export default {
           const name = this.pendingTool.toolInfo.name;
           return this.toolList.findIndex((t) => t.name === name);
         }
-        return;
+        return -1;
       },
       set(index) {
         this.toggle(this.toolList[index]);
@@ -223,7 +218,7 @@ export default {
             if (!viewWidget.getVisibility()) {
               viewWidget.setVisibility(true);
               this.pendingViewWidgets
-                .filter((vw) => vw != viewWidget)
+                .filter((vw) => vw !== viewWidget)
                 .forEach((vw) => vw.setVisibility(false));
               // Need to update current widget for render
               widgetManager.enablePicking();
@@ -308,9 +303,9 @@ export default {
       // attach widget state listener
       if (toolInfo.onWidgetStateUpdate) {
         stateSub.sub(
-          widget.getWidgetState().onModified((state) => {
-            toolInfo.onWidgetStateUpdate(toolInstance);
-          })
+          widget
+            .getWidgetState()
+            .onModified(() => toolInfo.onWidgetStateUpdate(toolInstance))
         );
       }
 
@@ -328,6 +323,8 @@ export default {
       unsubList(this.viewSubs);
       this.widgetStateSub.unsub();
     },
+
+    /* eslint-disable no-param-reassign */
     removeTool(tool) {
       this.proxyManager
         .getViews()
@@ -338,6 +335,7 @@ export default {
       tool.widget = null;
       tool.viewWidget = null;
     },
+    /* eslint-enable no-param-reassign */
     removeWidgetFromView(widget, view) {
       const widgetManager = view.getReferenceByName('widgetManager');
       if (widgetManager) {

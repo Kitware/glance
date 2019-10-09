@@ -192,18 +192,21 @@ export default {
   representations: {
     View3D: proxyViewRepresentationMapping.View3D,
     View2D: proxyViewRepresentationMapping.View2D,
-    View2D_X: Object.assign({}, proxyViewRepresentationMapping.View2D, {
+    View2D_X: {
       vtkImageData: { name: 'SliceX' },
       vtkLabelMap: { name: 'LabelMapSliceX' },
-    }),
-    View2D_Y: Object.assign({}, proxyViewRepresentationMapping.View2D, {
+      ...proxyViewRepresentationMapping.View2D,
+    },
+    View2D_Y: {
       vtkImageData: { name: 'SliceY' },
       vtkLabelMap: { name: 'LabelMapSliceY' },
-    }),
-    View2D_Z: Object.assign({}, proxyViewRepresentationMapping.View2D, {
+      ...proxyViewRepresentationMapping.View2D,
+    },
+    View2D_Z: {
       vtkImageData: { name: 'SliceZ' },
       vtkLabelMap: { name: 'LabelMapSliceZ' },
-    }),
+      ...proxyViewRepresentationMapping.View2D,
+    },
   },
   filters: {
     vtkPolyData: [],

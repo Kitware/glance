@@ -4,7 +4,6 @@ import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
-import { Mutations, Actions } from 'paraview-glance/src/store/types';
 
 // ----------------------------------------------------------------------------
 
@@ -108,8 +107,8 @@ function readRawFile(file, { dimensions, spacing, dataType }) {
 // ----------------------------------------------------------------------------
 
 function onLoadOkay(commit) {
-  commit(Mutations.FILE_IDLE);
-  commit(Mutations.SHOW_APP);
+  commit('fileIdle');
+  commit('showApp');
 }
 
 // ----------------------------------------------------------------------------
@@ -117,13 +116,13 @@ function onLoadOkay(commit) {
 function onLoadErrored(commit, errors) {
   for (let i = 0; i < errors.length; ++i) {
     if (errors[i]) {
-      commit(Mutations.FILE_SET_ERROR, {
+      commit('fileSetError', {
         fileIndex: i,
         error: errors[i],
       });
     }
   }
-  commit(Mutations.FILE_ERROR);
+  commit('fileError');
 }
 
 // ----------------------------------------------------------------------------
@@ -138,10 +137,10 @@ export default {
   },
 
   getters: {
-    FILE_TOTAL_PROGRESS(state) {
+    fileTotalProgress(state) {
       return state.progresses.reduce((sum, v) => sum + (v || 0), 0);
     },
-    FILE_RAW_FILES_LOADABLE(state) {
+    fileRawFilesLoadable(state) {
       return state.files
         .filter((file) => file.isRaw)
         .reduce(
@@ -150,7 +149,7 @@ export default {
           true
         );
     },
-    FILE_INDETERMINATE_PROGRESS(state) {
+    fileIndeterminateProgress(state) {
       return state.files.reduce(
         (flag, { type }) => type === 'file' || flag,
         false
@@ -159,45 +158,45 @@ export default {
   },
 
   mutations: {
-    FILE_SET_URLS(state, urls) {
+    fileSetUrls(state, urls) {
       Vue.set(state, 'urls', urls);
     },
-    FILE_SET_FILES(state, files) {
+    fileSetFiles(state, files) {
       Vue.set(state, 'files', files);
     },
-    FILE_PRELOAD(state) {
+    filePreload(state) {
       state.stage = 'preload';
     },
-    FILE_LOAD(state) {
+    fileLoad(state) {
       state.stage = 'load';
       state.progresses = Array(state.files.length).fill(0);
     },
-    FILE_ERROR(state) {
+    fileError(state) {
       state.stage = 'error';
     },
-    FILE_IDLE(state) {
+    fileIdle(state) {
       state.stage = 'idle';
       state.files = [];
     },
-    FILE_SET_RAW_INFO(state, { fileIndex, rawInfo }) {
+    fileSetRawInfo(state, { fileIndex, rawInfo }) {
       Vue.set(state.rawInfos, fileIndex, rawInfo);
     },
-    FILE_CLEAR_RAW_INFO(state) {
+    fileClearRawInfo(state) {
       Vue.set(state, 'rawInfos', {});
     },
-    FILE_SET_ERROR(state, { fileIndex, error }) {
+    fileSetError(state, { fileIndex, error }) {
       Vue.set(state.files[fileIndex], 'error', error);
     },
-    FILE_UPDATE_PROGRESS(state, { index, progress }) {
+    fileUpdateProgress(state, { index, progress }) {
       Vue.set(state.progresses, index, progress);
     },
   },
 
   actions: {
-    PROMPT_FOR_FILES({ dispatch }) {
+    promptForFiles({ dispatch }) {
       const exts = getSupportedExtensions();
       ReaderFactory.openFiles(exts, (files) =>
-        dispatch(Actions.OPEN_FILES, Array.from(files))
+        dispatch('openFiles', Array.from(files))
       );
     },
     /**
@@ -207,14 +206,14 @@ export default {
      * @param {name?} fileList[].name full name of file
      * @param {isRaw?} fileList[].extension extension of ifle
      */
-    OPEN_FILES({ commit, state, dispatch, rootState }, fileList) {
-      commit(Mutations.FILE_SET_FILES, fileList);
+    openFiles({ commit, state, dispatch, rootState }, fileList) {
+      commit('fileSetFiles', fileList);
 
       const stateFile = fileList.find((f) => getExtension(f.name) === 'glance');
       if (stateFile) {
-        commit(Mutations.FILE_LOAD);
+        commit('fileLoad');
         // Don't load any other file except for the state file
-        return dispatch(Actions.LOAD_STATE, stateFile)
+        return dispatch('loadState', stateFile)
           .then(() => onLoadOkay(commit))
           .catch((error) => onLoadErrored(commit, [error]));
       }
@@ -229,9 +228,7 @@ export default {
             .then((zip) => Promise.all(zipGetSupportedFiles(zip)))
             .then((files) => newFileList.push(...files))
         );
-        return Promise.all(p).then(() =>
-          dispatch(Actions.OPEN_FILES, newFileList)
-        );
+        return Promise.all(p).then(() => dispatch('openFiles', newFileList));
       }
 
       const needsPreload =
@@ -239,10 +236,10 @@ export default {
         Object.keys(state.rawInfos).length;
 
       if (needsPreload) {
-        commit(Mutations.FILE_PRELOAD);
+        commit('filePreload');
         return Promise.resolve();
       }
-      commit(Mutations.FILE_LOAD);
+      commit('fileLoad');
 
       // split out dicom and single datasets
       const singleFileList = [];
@@ -289,7 +286,7 @@ export default {
         .catch((errors) => onLoadErrored(commit, errors))
         .finally(() => {
           // clear leftover raw info
-          commit(Mutations.FILE_CLEAR_RAW_INFO);
+          commit('fileClearRawInfo');
           // load all successful readers
           if (readers.length) {
             ReaderFactory.registerReadersToProxyManager(
@@ -299,7 +296,7 @@ export default {
           }
         });
     },
-    OPEN_REMOTE_FILES({ commit, dispatch }, { urls, names, types = [] }) {
+    openRemoteFiles({ commit, dispatch }, { urls, names, types = [] }) {
       if (urls && urls.length && names && names.length) {
         const urlsToProcess = urls.map((url, index) => ({
           name: names[index],
@@ -307,21 +304,21 @@ export default {
           url,
         }));
 
-        commit(Mutations.FILE_SET_FILES, urlsToProcess);
+        commit('fileSetFiles', urlsToProcess);
 
-        dispatch(Actions.FETCH_REMOTE, urlsToProcess)
+        dispatch('fetchRemote', urlsToProcess)
           .then((files) => {
-            commit(Mutations.FILE_SET_URLS, []);
-            return dispatch(Actions.OPEN_FILES, files);
+            commit('fileSetUrls', []);
+            return dispatch('openFiles', files);
           })
           .catch((errors) => onLoadErrored(commit, errors));
       }
     },
-    FETCH_REMOTE({ commit }, remotes) {
-      commit(Mutations.FILE_LOAD);
+    fetchRemote({ commit }, remotes) {
+      commit('fileLoad');
 
       const progressCb = (index) => (progress) =>
-        commit(Mutations.FILE_UPDATE_PROGRESS, {
+        commit('fileUpdateProgress', {
           index,
           progress: (100 * progress.loaded) / progress.total / remotes.length,
         });
@@ -339,15 +336,13 @@ export default {
 
       return allWithErrors(promises);
     },
-    LOAD_STATE({ dispatch }, stateFile) {
+    loadState({ dispatch }, stateFile) {
       return ReaderFactory.loadFiles([stateFile])
         .then((r) => r[0])
         .then(({ reader }) =>
           reader
             .parseAsArrayBuffer()
-            .then(() =>
-              dispatch(Actions.RESTORE_APP_STATE, reader.getAppState())
-            )
+            .then(() => dispatch('restoreAppState', reader.getAppState()))
         );
     },
   },

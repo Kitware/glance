@@ -1,7 +1,6 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 
 import RawFileReader from 'paraview-glance/src/components/core/RawFileReader';
-import { Actions, Getters, Mutations } from 'paraview-glance/src/store/types';
 
 // ----------------------------------------------------------------------------
 
@@ -31,17 +30,17 @@ export default {
       },
     }),
     mapGetters({
-      totalProgress: Getters.FILE_TOTAL_PROGRESS,
-      preloadCanLoad: Getters.FILE_RAW_FILES_LOADABLE,
-      indeterminateProgress: Getters.FILE_INDETERMINATE_PROGRESS,
+      totalProgress: 'fileTotalProgress',
+      preloadCanLoad: 'fileRawFilesLoadable',
+      indeterminateProgress: 'fileIndeterminateProgress',
     })
   ),
-  methods: Object.assign(
-    mapMutations({
+  methods: {
+    ...mapMutations({
       setFileRawInfo: (commit, fileIndex, rawInfo) =>
-        commit(Mutations.FILE_SET_RAW_INFO, { fileIndex, rawInfo }),
+        commit('fileSetRawInfo', { fileIndex, rawInfo }),
 
-      cancel: Mutations.FILE_IDLE,
+      cancel: 'fileIdle',
 
       closeAndTryToLoad(commit) {
         const allFilesErrored = this.files.reduce(
@@ -49,16 +48,12 @@ export default {
           true
         );
         if (!allFilesErrored) {
-          commit(Mutations.SHOW_APP);
+          commit('showApp');
         }
-        commit(Mutations.FILE_IDLE);
+        commit('fileIdle');
       },
     }),
-    mapActions({
-      openFiles: Actions.OPEN_FILES,
-    }),
-    {
-      isRawFile: (f) => f.name.toLowerCase().endsWith('.raw'),
-    }
-  ),
+    ...mapActions(['openFiles']),
+    isRawFile: (f) => f.name.toLowerCase().endsWith('.raw'),
+  },
 };

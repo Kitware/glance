@@ -18,7 +18,6 @@ import Config from 'paraview-glance/src/config';
 import createStore, {
   registerProxyManagerHooks,
 } from 'paraview-glance/src/store';
-import { Actions, Mutations } from 'paraview-glance/src/store/types';
 
 // Expose IO API to Glance global object
 export const {
@@ -70,9 +69,9 @@ export function createViewer(container, proxyConfig = null) {
   function onRoute(event) {
     const state = event.state || {};
     if (state.app) {
-      store.commit(Mutations.SHOW_APP);
+      store.commit('showApp');
     } else {
-      store.commit(Mutations.SHOW_LANDING);
+      store.commit('showLanding');
     }
   }
   store.watch(
@@ -97,16 +96,16 @@ export function createViewer(container, proxyConfig = null) {
         const names = typeof name === 'string' ? [name] : name;
         const urls = typeof url === 'string' ? [url] : url;
         const types = typeof type === 'string' ? [type] : type || [];
-        store.dispatch(Actions.OPEN_REMOTE_FILES, { urls, names, types });
+        store.dispatch('openRemoteFiles', { urls, names, types });
       }
     },
     // All components must have a unique name
     addDatasetPanel(component) {
-      store.commit(Mutations.ADD_PANEL, { component });
+      store.commit('addPanel', { component });
     },
     proxyManager,
     showApp() {
-      store.commit(Mutations.SHOW_APP);
+      store.commit('showApp');
     },
   };
 }

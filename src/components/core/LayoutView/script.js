@@ -3,14 +3,13 @@ import { mapActions, mapState } from 'vuex';
 import VtkView from 'paraview-glance/src/components/core/VtkView';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { Breakpoints } from 'paraview-glance/src/constants';
-import { Actions, Getters, Mutations } from 'paraview-glance/src/store/types';
 
 // ----------------------------------------------------------------------------
 // Component API
 // ----------------------------------------------------------------------------
 
 function setViewBackground(view, background) {
-  this.$store.commit(Mutations.VIEW_SET_BACKGROUND, {
+  this.$store.commit('viewSetBackground', {
     view,
     background,
   });
@@ -25,7 +24,7 @@ export default {
       return this.$vuetify.breakpoint.width < Breakpoints.md;
     },
     views() {
-      const views = this.$store.getters[Getters.VIEWS];
+      const views = this.$store.getters.views;
       return this.smallScreen ? views.slice(0, 1) : views;
     },
     gridTemplateRows() {
@@ -48,8 +47,8 @@ export default {
     setViewBackground,
     getViewType: viewHelper.getViewType,
     ...mapActions({
-      updateViews: Actions.UPDATE_VIEWS,
-      updateLayout: Actions.UPDATE_LAYOUT,
+      updateViews: 'updateViews',
+      updateLayout: 'updateLayout',
     }),
   },
   components: {

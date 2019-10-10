@@ -1,7 +1,6 @@
 import GpuInformation from 'paraview-glance/src/components/widgets/GPUInformation';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
-import { Mutations } from 'paraview-glance/src/store/types';
 
 const ORIENTATION_PRESETS = [
   { text: 'XYZ', value: 'default' },
@@ -98,7 +97,7 @@ export default {
         return this.$store.state.global.backgroundColor;
       },
       set(color) {
-        this.$store.commit(Mutations.GLOBAL_BG, color);
+        this.$store.commit('globalBackground', color);
       },
     },
     orientationAxis: {
@@ -106,7 +105,7 @@ export default {
         return this.$store.state.global.orientationAxis;
       },
       set(flag) {
-        this.$store.commit(Mutations.GLOBAL_ORIENT_AXIS, flag);
+        this.$store.commit('globalOrientAxis', flag);
       },
     },
     orientationPreset: {
@@ -114,7 +113,7 @@ export default {
         return this.$store.state.global.orientationPreset;
       },
       set(preset) {
-        this.$store.commit(Mutations.GLOBAL_ORIENT_PRESET, preset);
+        this.$store.commit('globalOrientPreset', preset);
       },
     },
     axisType: {
@@ -122,7 +121,7 @@ export default {
         return this.$store.state.global.axisType;
       },
       set(axisType) {
-        this.$store.commit(Mutations.GLOBAL_AXIS_TYPE, axisType);
+        this.$store.commit('globalAxisType', axisType);
       },
     },
   },

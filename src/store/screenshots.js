@@ -1,5 +1,4 @@
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
-import { Mutations } from 'paraview-glance/src/store/types';
 
 export default {
   state: {
@@ -8,21 +7,21 @@ export default {
   },
 
   mutations: {
-    OPEN_SCREENSHOT_DIALOG(state, screenshot) {
+    openScreenshotDialog(state, screenshot) {
       state.currentScreenshot = screenshot;
       state.showDialog = true;
     },
-    CLOSE_SCREENSHOT_DIALOG(state) {
+    closeScreenshotDialog(state) {
       state.showDialog = false;
     },
   },
 
   actions: {
-    TAKE_SCREENSHOT({ commit, rootState }, viewToUse = null) {
+    takeScreenshot({ commit, rootState }, viewToUse = null) {
       const view = viewToUse || rootState.proxyManager.getActiveView();
       if (view) {
         return view.captureImage().then((imgSrc) => {
-          commit(Mutations.OPEN_SCREENSHOT_DIALOG, {
+          commit('openScreenshotDialog', {
             imgSrc,
             viewName: view.getName(),
             viewData: rootState.views.viewData[viewHelper.getViewType(view)],

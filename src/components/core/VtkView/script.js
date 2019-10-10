@@ -12,7 +12,6 @@ import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker'
 import ToolbarSheet from 'paraview-glance/src/components/core/ToolbarSheet';
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
-import { Actions, Mutations } from 'paraview-glance/src/store/types';
 
 const ROTATION_STEP = 2;
 
@@ -109,7 +108,7 @@ function rollRight() {
 // ----------------------------------------------------------------------------
 
 function screenCapture() {
-  this.$store.dispatch(Actions.TAKE_SCREENSHOT, this.view);
+  this.$store.dispatch('takeScreenshot', this.view);
 }
 
 // ----------------------------------------------------------------------------
@@ -312,9 +311,7 @@ export default {
     splitView,
     updateOrientation,
     viewTypes,
-    ...mapMutations({
-      takeScreenshot: Mutations.TAKE_SCREENSHOT,
-    }),
+    ...mapMutations(['takeScreenshot']),
   },
   mounted() {
     this.$nextTick(this.onMounted);

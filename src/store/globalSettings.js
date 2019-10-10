@@ -15,16 +15,16 @@ export default {
     // External mutations
     // ------------------
 
-    GLOBAL_BG(state, bg) {
+    globalBackground(state, bg) {
       state.backgroundColor = bg;
     },
-    GLOBAL_ORIENT_AXIS(state, flag) {
+    globalOrientAxis(state, flag) {
       state.orientationAxis = flag;
     },
-    GLOBAL_ORIENT_PRESET(state, preset) {
+    globalOrientPreset(state, preset) {
       state.orientationPreset = preset;
     },
-    GLOBAL_AXIS_TYPE(state, axisType) {
+    globalAxisType(state, axisType) {
       state.axisType = axisType;
     },
   },

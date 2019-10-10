@@ -1,8 +1,6 @@
 import { mapState, mapMutations } from 'vuex';
 import { VBottomSheet, VDialog } from 'vuetify/lib';
 
-import { Mutations } from 'paraview-glance/src/store/types';
-
 const FILE_TYPES = ['.png', '.jpeg'];
 
 // ----------------------------------------------------------------------------
@@ -114,7 +112,7 @@ export default {
     backgroundToFillStyle,
     save,
     ...mapMutations({
-      close: Mutations.CLOSE_SCREENSHOT_DIALOG,
+      close: 'closeScreenshotDialog',
     }),
   },
   created() {

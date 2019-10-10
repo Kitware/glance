@@ -11,7 +11,6 @@ import global from 'paraview-glance/src/store/globalSettings';
 import files from 'paraview-glance/src/store/fileLoader';
 import screenshots from 'paraview-glance/src/store/screenshots';
 import views from 'paraview-glance/src/store/views';
-import { Actions, Mutations } from 'paraview-glance/src/store/types';
 
 // http://jsperf.com/typeofvar
 function typeOf(o) {
@@ -109,19 +108,19 @@ function createStore(proxyManager = null) {
     },
     modules: getModuleDefinitions(),
     mutations: {
-      SHOW_LANDING(state) {
+      showLanding(state) {
         state.route = 'landing';
       },
-      SHOW_APP(state) {
+      showApp(state) {
         state.route = 'app';
       },
-      SAVING_STATE(state, name = null) {
+      savingState(state, name = null) {
         state.savingStateName = name;
       },
-      LOADING_STATE(state, flag) {
+      loadingState(state, flag) {
         state.loadingState = flag;
       },
-      ADD_PANEL: (state, { component, priority = 0 }) => {
+      addPanel: (state, { component, priority = 0 }) => {
         if (!(priority in state.panels)) {
           Vue.set(state.panels, priority, []);
         }
@@ -129,14 +128,14 @@ function createStore(proxyManager = null) {
       },
     },
     actions: {
-      SAVE_STATE({ commit, state }, fileNameToUse) {
+      saveState({ commit, state }, fileNameToUse) {
         const t = new Date();
         const fileName =
           fileNameToUse ||
           `${t.getFullYear()}${t.getMonth() +
             1}${t.getDate()}_${t.getHours()}-${t.getMinutes()}-${t.getSeconds()}.glance`;
 
-        commit(Mutations.SAVING_STATE, fileName);
+        commit('savingState', fileName);
 
         const userData = reduceState(state);
         const options = {
@@ -176,14 +175,14 @@ function createStore(proxyManager = null) {
               document.body.removeChild(anchor);
 
               setTimeout(() => URL.revokeObjectURL(url), 60000);
-              commit(Mutations.SAVING_STATE, null);
+              commit('savingState', null);
             });
         });
       },
-      RESTORE_APP_STATE({ commit, dispatch, state }, appState) {
-        commit(Mutations.LOADING_STATE, true);
+      restoreAppState({ commit, dispatch, state }, appState) {
+        commit('loadingState', true);
 
-        dispatch(Actions.RESET_WORKSPACE);
+        dispatch('resetWorkspace');
         return state.proxyManager
           .loadState(appState, {
             datasetHandler(ds) {
@@ -228,7 +227,7 @@ function createStore(proxyManager = null) {
             // Wait for the layout to be done (nextTick is not enough)
             setTimeout(() => {
               // Advertise that state loading is done
-              commit(Mutations.LOADING_STATE, false);
+              commit('loadingState', false);
 
               // Force update
               state.proxyManager.modified();
@@ -252,7 +251,7 @@ function createStore(proxyManager = null) {
             }, 100);
           });
       },
-      RESET_WORKSPACE({ state }) {
+      resetWorkspace({ state }) {
         // use setTimeout to avoid some weird crashing with extractDomains
         state.proxyManager
           .getSources()
@@ -264,15 +263,15 @@ function createStore(proxyManager = null) {
           state.proxyManager.resetCameraInAllViews();
         }, 0);
       },
-      RESET_ACTIVE_CAMERA({ state }) {
+      resetActiveCamera({ state }) {
         state.proxyManager.resetCamera();
       },
-      INCREASE_SLICE({ state }) {
+      increaseSlice({ state }) {
         if (state.route === 'app') {
           changeActiveSliceDelta(proxyManager, 1);
         }
       },
-      DECREASE_SLICE({ state }) {
+      decreaseSlice({ state }) {
         if (state.route === 'app') {
           changeActiveSliceDelta(proxyManager, -1);
         }

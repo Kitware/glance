@@ -1,7 +1,6 @@
 import { mapState } from 'vuex';
 
 import ScreenshotDialog from 'paraview-glance/src/components/core/Screenshots/ScreenshotDialog';
-import { Actions } from 'paraview-glance/src/store/types';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -53,7 +52,7 @@ function getTotalCount() {
 // ----------------------------------------------------------------------------
 
 function takeScreenshot() {
-  this.$store.dispatch(Actions.TAKE_SCREENSHOT, this.activeView);
+  this.$store.dispatch('takeScreenshot', this.activeView);
 }
 
 // ----------------------------------------------------------------------------

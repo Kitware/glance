@@ -18,7 +18,6 @@ import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import CollapsibleToolbar from 'paraview-glance/src/components/widgets/CollapsibleToolbar';
 import CollapsibleToolbarItem from 'paraview-glance/src/components/widgets/CollapsibleToolbar/Item';
 
-import { Actions, Mutations } from 'paraview-glance/src/store/types';
 import shortcuts from 'paraview-glance/src/shortcuts';
 
 // ----------------------------------------------------------------------------
@@ -121,19 +120,15 @@ export default {
   beforeDestroy() {
     window.removeEventListener('error', this.recordError);
 
-    shortcuts.forEach(({ key, action }) => {
-      if (Actions[action]) {
-        Mousetrap.unbind(key);
-      }
-    });
+    shortcuts.forEach(({ key }) => Mousetrap.unbind(key));
 
     this.pxmSub.unsubscribe();
     this.renderListener.removeListeners();
   },
-  methods: Object.assign(
-    mapMutations({
-      showApp: Mutations.SHOW_APP,
-      showLanding: Mutations.SHOW_LANDING,
+  methods: {
+    ...mapMutations({
+      showApp: 'showApp',
+      showLanding: 'showLanding',
       toggleLanding() {
         if (this.landingVisible) {
           this.showApp();
@@ -142,26 +137,23 @@ export default {
         }
       },
     }),
-    mapActions({
-      promptUserFiles: Actions.PROMPT_FOR_FILES,
+    ...mapActions({
+      promptUserFiles: 'promptForFiles',
 
       openSample: (dispatch, urls, names) => {
         // dispatch: delete all loaded files since this is only called
         // by clicking on sample data
-        dispatch(Actions.OPEN_REMOTE_FILES, { urls, names }).then(() =>
-          dispatch(Actions.RESET_WORKSPACE)
+        dispatch('openRemoteFiles', { urls, names }).then(() =>
+          dispatch('resetWorkspace')
         );
       },
 
-      openFiles: (dispatch, files) =>
-        dispatch(Actions.OPEN_FILES, Array.from(files)),
+      openFiles: (dispatch, files) => dispatch('openFiles', Array.from(files)),
 
-      saveState: Actions.SAVE_STATE,
+      saveState: 'saveState',
     }),
-    {
-      recordError(error) {
-        this.errors.push(error);
-      },
-    }
-  ),
+    recordError(error) {
+      this.errors.push(error);
+    },
+  },
 };

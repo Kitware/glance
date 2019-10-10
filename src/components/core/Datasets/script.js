@@ -4,7 +4,6 @@ import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 
 import Controls from 'paraview-glance/src/components/controls';
 import ColorGroup from 'paraview-glance/src/components/widgets/ColorGroup';
-import { Mutations } from 'paraview-glance/src/store/types';
 
 // TODO clean up panel logic
 function panelValueOldToNew(value) {
@@ -168,7 +167,7 @@ export default {
     getDatasetVisibility,
     toggleDatasetVisibility,
     addPanel(component, priority) {
-      this.$store.commit(Mutations.ADD_PANEL, { component, priority });
+      this.$store.commit('addPanel', { component, priority });
     },
   },
 };

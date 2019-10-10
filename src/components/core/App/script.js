@@ -14,6 +14,9 @@ import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 import StateFileGenerator from 'paraview-glance/src/components/core/StateFileGenerator';
 import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
 import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
+import CollapsibleToolbar from 'paraview-glance/src/components/widgets/CollapsibleToolbar';
+import CollapsibleToolbarItem from 'paraview-glance/src/components/widgets/CollapsibleToolbar/Item';
+
 import { Actions, Mutations } from 'paraview-glance/src/store/types';
 import shortcuts from 'paraview-glance/src/shortcuts';
 
@@ -26,6 +29,8 @@ export default {
   components: {
     AboutBox,
     BrowserIssues,
+    CollapsibleToolbar,
+    CollapsibleToolbarItem,
     ControlsDrawer,
     DragAndDrop,
     ErrorBox,

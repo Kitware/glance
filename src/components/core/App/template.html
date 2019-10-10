@@ -24,7 +24,6 @@
           :disabled="landingVisible"
           @click.native.stop="controlsDrawer = !controlsDrawer"
         />
-        <!-- smaller than height of the toolbar -->
         <v-tooltip
           bottom
           :disabled="smallScreen"
@@ -60,81 +59,39 @@
             <span v-show="!smallScreen">error(s)</span>
           </v-btn>
         </v-toolbar-items>
-        <v-toolbar-items v-show="$vuetify.breakpoint.smAndUp">
-          <v-btn
-            text
-            v-on:click="promptUserFiles"
-          >
-            <v-icon left>mdi-folder</v-icon>
-            <span v-show="!smallScreen">Open</span>
-          </v-btn>
-          <v-btn
-            v-show="!landingVisible"
-            text
-            v-on:click="saveState()"
-          >
-            <v-icon left>mdi-cloud-download</v-icon>
-            <span v-show="!smallScreen">Save state</span>
-          </v-btn>
-          <v-btn
-            v-show="!landingVisible"
-            text
-            v-on:click="screenshotsDrawer = true"
-          >
-            <v-icon left>mdi-image-multiple</v-icon>
-            <span v-show="!smallScreen">Screenshots ({{ screenshotCount }})</span>
-          </v-btn>
-          <v-btn
-            text
-            v-on:click="aboutDialog = true"
-          >
-            <!-- width of other icons in toolbar -->
-            <svg-icon
-              icon="kitware-logo"
-              width="24px"
-              class="mr-2"
-            />
-            <span v-show="!smallScreen">About</span>
-          </v-btn>
-        </v-toolbar-items>
-        <v-menu>
-          <template v-slot:activator="{ on }">
-            <v-btn
-              v-show="$vuetify.breakpoint.xsOnly"
-              icon
-              v-on="on"
-            >
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              v-show="!landingVisible"
-              link
-              @click="promptUserFiles"
+        <collapsible-toolbar
+          :collapse="$vuetify.breakpoint.xsOnly"
+          :dense="smallScreen"
+        >
+          <template v-slot:default="{ state }">
+            <collapsible-toolbar-item
+              v-on:click="promptUserFiles"
+              :state="state"
             >
               <v-icon left>mdi-folder</v-icon>
-              <span>Open</span>
-            </v-list-item>
-            <v-list-item
+              <span v-show="state !== 'dense'">Open</span>
+            </collapsible-toolbar-item>
+            <collapsible-toolbar-item
               v-show="!landingVisible"
-              link
-              @click="saveState"
+              v-on:click="saveState"
+              :state="state"
             >
               <v-icon left>mdi-cloud-download</v-icon>
-              <span>Save State</span>
-            </v-list-item>
-            <v-list-item
-              link
-              @click="screenshotDrawer = true"
+              <span v-show="state !== 'dense'">Save state</span>
+            </collapsible-toolbar-item>
+            <collapsible-toolbar-item
+              v-show="!landingVisible"
+              v-on:click="screenshotsDrawer = true"
+              :state="state"
             >
               <v-icon left>mdi-image-multiple</v-icon>
-              <span>Screenshots ({{ screenshotCount }})</span>
-            </v-list-item>
-            <v-list-item
-              v-show="!landingVisible"
-              link
-              @click="aboutDialog = true"
+              <span v-show="state !== 'dense'">
+                Screenshots ({{ screenshotCount }})
+              </span>
+            </collapsible-toolbar-item>
+            <collapsible-toolbar-item
+              v-on:click="aboutDialog = true"
+              :state="state"
             >
               <!-- width of other icons in toolbar -->
               <svg-icon
@@ -142,10 +99,10 @@
                 width="24px"
                 class="mr-2"
               />
-              <span>About</span>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+              <span v-show="state !== 'dense'">About</span>
+            </collapsible-toolbar-item>
+          </template>
+        </collapsible-toolbar>
       </v-app-bar>
 
       <v-content :class="$style.appContent">

@@ -1,6 +1,7 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import Mousetrap from 'mousetrap';
 import { VBottomSheet, VDialog } from 'vuetify/lib';
+import macro from 'vtk.js/Sources/macro';
 
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
@@ -112,21 +113,14 @@ export default {
     // listen for errors
     window.addEventListener('error', this.recordError);
 
-    // listen for errors via console.error
-    if (window.console) {
-      this.origConsoleError = window.console.error;
-      window.console.error = (...args) => {
-        this.recordError(args.join(' '));
-        return this.origConsoleError(...args);
-      };
-    }
+    // listen for vtkErrorMacro
+    macro.setLoggerFunction('error', (...args) => {
+      this.recordError(args.join(' '));
+      window.console.error(...args);
+    });
   },
   beforeDestroy() {
     window.removeEventListener('error', this.recordError);
-
-    if (this.origConsoleError) {
-      window.console.error = this.origConsoleError;
-    }
 
     shortcuts.forEach(({ key, action }) => {
       if (Actions[action]) {

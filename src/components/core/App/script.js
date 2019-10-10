@@ -48,40 +48,39 @@ export default {
     return {
       aboutDialog: false,
       errorDialog: false,
-      controlsDrawer: false,
+      internalControlsDrawer: true,
       screenshotsDrawer: false,
       screenshotCount: 0,
       errors: [],
     };
   },
-  computed: mapState({
-    proxyManager: 'proxyManager',
-    loadingState: 'loadingState',
-    landingVisible: (state) => state.route === 'landing',
-    screenshotsDrawerStateless(state) {
-      // Keep screenshot drawer open if screenshot was taken from
-      // the "Capture Active View" button.
-      return this.screenshotsDrawer && !!state.screenshots.showDialog;
+  computed: {
+    controlsDrawer: {
+      get() {
+        return this.landingVisible ? false : this.internalControlsDrawer;
+      },
+      set(visible) {
+        if (!this.landingVisible) {
+          this.internalControlsDrawer = visible;
+        }
+      },
     },
-    smallScreen() {
-      return this.$vuetify.breakpoint.smAndDown;
-    },
-    dialogType() {
-      return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
-    },
-    iconLogo() {
-      return this.smallScreen ? 'paraview-glance-small' : 'paraview-glance';
-    },
-  }),
-  watch: {
-    landingVisible(value) {
-      // matches the mobile breakpoint for navigation-drawer
-      if (!value && this.$vuetify.breakpoint.mdAndUp) {
-        this.controlsDrawer = true;
-      } else if (value) {
-        this.controlsDrawer = false;
-      }
-    },
+    ...mapState({
+      proxyManager: 'proxyManager',
+      loadingState: 'loadingState',
+      landingVisible: (state) => state.route === 'landing',
+      screenshotsDrawerStateless(state) {
+        // Keep screenshot drawer open if screenshot was taken from
+        // the "Capture Active View" button.
+        return this.screenshotsDrawer && !!state.screenshots.showDialog;
+      },
+      smallScreen() {
+        return this.$vuetify.breakpoint.smAndDown;
+      },
+      dialogType() {
+        return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
+      },
+    }),
   },
   mounted() {
     // listen for proxyManager changes

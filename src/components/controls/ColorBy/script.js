@@ -79,7 +79,9 @@ function setColorBy(value) {
     const dataArray = myRepresentations[i].getDataArray();
     // solid coloring doesn't have a valid data array
     if (dataArray) {
-      this.dataRange = dataArray.getRange();
+      const dataRange = dataArray.getRange();
+      this.dataRange = dataRange;
+      this.origDataRange = [...dataRange];
     }
     // Update interpolateScalarsBeforeMapping
     this.interpolateScalarsBeforeMapping = myRepresentations[
@@ -258,8 +260,10 @@ function update() {
       if (propUI) {
         this.arrays = convertArrays(propUI.domain.arrays);
       }
+    }
 
-      // set preset
+    // set preset
+    if (this.arrayName) {
       const lutProxy = this.proxyManager.getLookupTable(this.arrayName);
       this.presetName = lutProxy.getPresetName();
       // usetPresetOpacity gets updated when presetName is set
@@ -305,6 +309,7 @@ export default {
       presetMenu: false,
       shift: 0, // simple transfer function shift
       dataRange: [0, 0],
+      origDataRange: [0, 0],
       interpolateScalarsBeforeMapping: true,
     };
   },
@@ -350,6 +355,12 @@ export default {
         pwfProxy.setMode(PwfMode.Gaussians);
       }
     },
+    dataRange() {
+      for (let i = 0; i < 2; i++) {
+        this.dataRange[i] = Number(this.dataRange[i]);
+      }
+      this.applyColorMap();
+    },
   },
   methods: {
     onChangePreset,
@@ -360,6 +371,10 @@ export default {
     applyColorMap,
     updateLookupTableImage,
     update,
+    resetDataRange() {
+      this.dataRange = this.origDataRange.slice();
+      this.proxyManager.renderAllViews();
+    },
   },
   mounted() {
     this.subscriptions = [

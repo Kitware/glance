@@ -26,26 +26,71 @@
             v-on:input="setSolidColor"
           />
         </v-flex>
-        <v-flex xs12 v-show="colorBy.length">
-          <v-menu
-            :close-on-content-click="false"
-            offset-y
-            v-model="presetMenu"
-          >
-            <div slot="activator">
-              <span class="body-1">{{ presetName }}</span>
-              <img :src="lutImage" :class="$style.lutImage" />
-            </div>
-            <tree-view
-              v-if="presetMenu"
-              :class="$style.dropdownMenu"
-              :tree="presets"
-              labelKey="Name"
-              childrenKey="Children"
-              v-on:input="onChangePreset"
+        <template v-if="colorBy.length">
+          <v-flex xs12 v-if="colorBy.length">
+            <v-menu
+              :close-on-content-click="false"
+              offset-y
+              v-model="presetMenu"
+            >
+              <div slot="activator">
+                <span class="body-1">{{ presetName }}</span>
+                <img :src="lutImage" :class="$style.lutImage" />
+              </div>
+              <tree-view
+                v-if="presetMenu"
+                :class="$style.dropdownMenu"
+                :tree="presets"
+                labelKey="Name"
+                childrenKey="Children"
+                v-on:input="onChangePreset"
+              />
+            </v-menu>
+          </v-flex>
+          <v-flex xs5 :class="$style.negativeTopSpacing">
+            <v-text-field
+              v-model="dataRange[0]"
+              @change="proxyManager.renderAllViews()"
+              step="any"
+              :disabled="available !== 'geometry'"
+              :class="$style.negativeTopSpacing"
+              hide-details
             />
-          </v-menu>
-        </v-flex>
+          </v-flex>
+          <v-flex
+            xs2
+            :class="$style.negativeTopSpacing"
+            style="padding: 0"
+          >
+            <v-tooltip
+              v-if="available === 'geometry'"
+              bottom
+            >
+              <v-btn
+                icon
+                small
+                slot="activator"
+                :class="$style.negativeTopSpacing"
+                @click="resetDataRange"
+              >
+                <v-icon>refresh</v-icon>
+              </v-btn>
+              Reset range
+            </v-tooltip>
+            <v-spacer v-else />
+          </v-flex>
+          <v-flex xs5 :class="$style.negativeTopSpacing">
+            <v-text-field
+              v-model="dataRange[1]"
+              @change="proxyManager.renderAllViews()"
+              step="any"
+              :disabled="available !== 'geometry'"
+              :class="$style.negativeTopSpacing"
+              reverse
+              hide-details
+            />
+          </v-flex>
+        </template>
         <v-flex
           xs12
           v-if="available === 'volume' && piecewiseFunction && !usePresetOpacity"

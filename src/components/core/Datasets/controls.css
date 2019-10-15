@@ -71,6 +71,5 @@
 }
 
 .negativeTopSpacing {
-  padding-top: 0 !important;
-  margin-top: -4px !important;
+  margin-top: -4px;
 }

@@ -362,7 +362,7 @@ export default {
     },
     dataRange() {
       for (let i = 0; i < 2; i++) {
-        this.dataRange[i] = Number(this.dataRange[i]);
+        this.dataRange[i] = Number(this.dataRange[i] || 0);
       }
       this.applyColorMap();
     },

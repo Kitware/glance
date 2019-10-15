@@ -54,10 +54,15 @@
               />
             </v-menu>
           </v-flex>
-          <v-flex xs5 :class="$style.negativeTopSpacing">
+          <v-flex
+            xs5
+            class="pb-4"
+            :class="$style.negativeTopSpacing"
+          >
             <v-text-field
               v-model="dataRange[0]"
               @change="proxyManager.renderAllViews()"
+              label="Min"
               step="any"
               :disabled="available !== 'geometry'"
               :class="$style.negativeTopSpacing"
@@ -66,8 +71,8 @@
           </v-flex>
           <v-flex
             xs2
+            class="text-center pb-4"
             :class="$style.negativeTopSpacing"
-            style="padding: 0"
           >
             <v-tooltip
               v-if="available === 'geometry'"
@@ -88,10 +93,15 @@
             </v-tooltip>
             <v-spacer v-else />
           </v-flex>
-          <v-flex xs5 :class="$style.negativeTopSpacing">
+          <v-flex
+            xs5
+            class="pb-4"
+            :class="$style.negativeTopSpacing"
+          >
             <v-text-field
               v-model="dataRange[1]"
               @change="proxyManager.renderAllViews()"
+              label="Max"
               step="any"
               :disabled="available !== 'geometry'"
               :class="$style.negativeTopSpacing"

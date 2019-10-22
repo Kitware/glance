@@ -73,7 +73,7 @@
             </collapsible-toolbar-item>
             <collapsible-toolbar-item
               v-show="!landingVisible"
-              v-on:click="saveState"
+              v-on:click="saveState()"
               :state="state"
             >
               <v-icon left>mdi-cloud-download</v-icon>

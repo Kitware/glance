@@ -70,7 +70,8 @@ function updateOpacity() {
   const sliceReps = this.$proxyManager
     .getRepresentations()
     .filter(
-      (r) => r.getInput() === this.source && r.isA('vtkSliceRepresentation')
+      (r) =>
+        r.getInput() === this.source && r.isA('vtkSliceRepresentationProxy')
     );
   for (let i = 0; i < sliceReps.length; i++) {
     sliceReps[i]

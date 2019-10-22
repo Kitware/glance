@@ -52,13 +52,13 @@ export default {
     Controls.forEach((control, i) => this.addPanel(control, i + 10));
   },
   proxyManagerHooks: {
-    onProxyCreated({ proxyId, proxyGroup }) {
+    onProxyCreated({ proxyId, proxyGroup, proxy }) {
       if (proxyGroup === 'Sources') {
         this.datasets.push(proxyId);
         this.internalPanelState[proxyId] = true;
-        this.subpanels[proxyId] = Controls.map((c, i) =>
-          c.defaultExpand ? i : -1
-        ).filter((v) => v > -1);
+        this.subpanels[proxyId] = Controls.filter((c) => c.visible(proxy))
+          .map((c, i) => (c.defaultExpand ? i : -1))
+          .filter((v) => v > -1);
       }
     },
     onProxyDeleted({ proxyId, proxyGroup }) {

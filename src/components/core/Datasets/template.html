@@ -1,12 +1,11 @@
 <v-expansion-panels
-  v-model="panelStates"
+  v-model="panelState"
   multiple
   accordion
 >
   <v-expansion-panel
-    v-for="(source, index) in datasets"
-    v-show="source !== proxyToDelete"
-    :key="source.getProxyId()"
+    v-for="(sourceId, index) in datasets"
+    :key="sourceId"
     :class="$style.datasetPanel"
   >
     <v-expansion-panel-header
@@ -17,21 +16,21 @@
         icon
         small
         class="flex-shrink-0"
-        v-on:click.stop="toggleDatasetVisibility(source)"
+        v-on:click.stop="toggleDatasetVisibility(sourceId)"
       >
         <v-icon>
-          {{ getDatasetVisibility(source) ? 'mdi-eye' : 'mdi-eye-off' }}
+          {{ getDatasetVisibility(sourceId) ? 'mdi-eye' : 'mdi-eye-off' }}
         </v-icon>
       </v-btn>
       <div
         class="subtitle-2 text-truncate pl-2 pr-2"
-        :title="source.getName()"
+        :title="getSourceName(sourceId)"
       >
-        {{ source.getName() }}
+        {{ getSourceName(sourceId) }}
       </div>
       <v-spacer />
       <v-tooltip
-        v-if="proxyManager.getSources().length > 1"
+        v-if="datasets.length > 1"
         bottom
       >
         <span class="pv-no-select">Activate source</span>
@@ -41,10 +40,10 @@
             icon
             small
             v-on="on"
-            v-on:click.stop="source.activate()"
+            v-on:click.stop="activateSource(sourceId)"
           >
             <v-icon>
-              {{ proxyManager.getActiveSource() === source ? 'mdi-bookmark-check' : 'mdi-bookmark-outline' }}
+              {{ activeSourceId === sourceId ? 'mdi-bookmark-check' : 'mdi-bookmark-outline' }}
             </v-icon>
           </v-btn>
         </template>
@@ -63,7 +62,7 @@
           </template>
           <v-list dense>
             <v-list-item
-              v-on:click="deleteDataset(source)"
+              v-on:click="deleteDataset(sourceId)"
             >
               <v-list-item-title>Delete</v-list-item-title>
             </v-list-item>
@@ -77,14 +76,14 @@
         :visible="datasets.length > 1"
       />
       <v-expansion-panels
-        v-model="subpanelStateMap.get(source)"
+        v-model="subpanels[sourceId]"
         multiple
         accordion
       >
         <v-expansion-panel
           v-for="(panel,i) in panels"
           :key="i"
-          v-show="panel.visible(source)"
+          v-if="panel.visible($proxyManager.getProxyById(sourceId))"
           :class="$style.subpanel"
         >
           <v-expansion-panel-header
@@ -96,9 +95,8 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content :class="$style.panelContent">
             <component
-              v-if="panel.visible(source)"
               :is="panel.component"
-              :source="source"
+              :sourceId="sourceId"
             />
           </v-expansion-panel-content>
         </v-expansion-panel>

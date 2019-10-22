@@ -57,7 +57,7 @@ const FIELDS = [
 // ----------------------------------------------------------------------------
 
 function isSliceAvailable(name) {
-  return !!this.proxyManager
+  return !!this.$proxyManager
     .getViews()
     .filter((v) => v.getContainer())
     .filter((v) => v.getName() === name).length;
@@ -67,7 +67,7 @@ function isSliceAvailable(name) {
 
 function updateOpacity() {
   // Look on the representations
-  const sliceReps = this.proxyManager
+  const sliceReps = this.$proxyManager
     .getRepresentations()
     .filter(
       (r) => r.getInput() === this.source && r.isA('vtkSliceRepresentation')

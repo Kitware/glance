@@ -5,7 +5,7 @@ import VtkPolyData from 'paraview-glance/src/components/controls/Information/Pol
 
 export default {
   name: 'Information',
-  props: ['source'],
+  props: ['sourceId'],
   components: {
     VtkFieldData,
     VtkImageData,
@@ -13,6 +13,9 @@ export default {
     VtkPolyData,
   },
   computed: {
+    source() {
+      return this.$proxyManager.getProxyById(this.sourceId);
+    },
     available() {
       if (this.source) {
         const ds = this.source.getDataset();

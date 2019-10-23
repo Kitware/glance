@@ -14,7 +14,6 @@ import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 import StateFileGenerator from 'paraview-glance/src/components/core/StateFileGenerator';
 import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
-import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 import CollapsibleToolbar from 'paraview-glance/src/components/widgets/CollapsibleToolbar';
 import CollapsibleToolbarItem from 'paraview-glance/src/components/widgets/CollapsibleToolbar/Item';
 
@@ -65,7 +64,6 @@ export default {
       },
     },
     ...mapState({
-      proxyManager: 'proxyManager',
       loadingState: 'loadingState',
       landingVisible: (state) => state.route === 'landing',
       screenshotsDrawerStateless(state) {
@@ -81,25 +79,14 @@ export default {
       },
     }),
   },
+  proxyManagerHooks: {
+    onProxyModified() {
+      if (!this.loadingState) {
+        this.$proxyManager.autoAnimateViews();
+      }
+    },
+  },
   mounted() {
-    // listen for proxyManager changes
-    this.renderListener = vtkListenerHelper.newInstance(
-      () => {
-        if (!this.loadingState) {
-          this.proxyManager.autoAnimateViews();
-        }
-      },
-      () =>
-        [].concat(
-          this.proxyManager.getSources(),
-          this.proxyManager.getRepresentations(),
-          this.proxyManager.getViews()
-        )
-    );
-    this.pxmSub = this.proxyManager.onProxyRegistrationChange(
-      this.renderListener.resetListeners
-    );
-
     // attach keyboard shortcuts
     shortcuts.forEach(({ key, action }) =>
       Mousetrap.bind(key, (e) => {
@@ -119,11 +106,7 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('error', this.recordError);
-
     shortcuts.forEach(({ key }) => Mousetrap.unbind(key));
-
-    this.pxmSub.unsubscribe();
-    this.renderListener.removeListeners();
   },
   methods: {
     ...mapMutations({

@@ -314,6 +314,9 @@ export default {
           this.available = 'geometry';
         } else if (repVolume) {
           this.available = 'volume';
+        } else {
+          this.available = '';
+          return;
         }
 
         const rep = repGeometry || repVolume;

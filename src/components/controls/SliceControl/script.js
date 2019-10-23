@@ -37,7 +37,6 @@ const FIELDS = [
   { name: 'xSliceVisibility', initialValue: false },
   { name: 'ySliceVisibility', initialValue: false },
   { name: 'zSliceVisibility', initialValue: false },
-  { name: 'zSliceVisibility', initialValue: false },
   { name: 'opacity', initialValue: 1.0 },
   // Fake props that don't exist on proxy
   {

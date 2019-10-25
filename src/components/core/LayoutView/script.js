@@ -7,15 +7,6 @@ import { Breakpoints } from 'paraview-glance/src/constants';
 // Component API
 // ----------------------------------------------------------------------------
 
-function setViewBackground(view, background) {
-  this.$store.commit('viewSetBackground', {
-    view,
-    background,
-  });
-}
-
-// ----------------------------------------------------------------------------
-
 export default {
   name: 'LayoutView',
   components: {
@@ -45,7 +36,6 @@ export default {
     }),
   },
   methods: {
-    setViewBackground,
     getView(viewType) {
       const [type, name] = viewType.split(':');
       return this.$proxyManager

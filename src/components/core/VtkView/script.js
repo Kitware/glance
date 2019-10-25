@@ -2,6 +2,7 @@ import { mapState, mapActions } from 'vuex';
 
 import { Breakpoints } from 'paraview-glance/src/constants';
 import {
+  ANNOTATIONS,
   DEFAULT_VIEW_TYPE,
   VIEW_TYPES,
   VIEW_TYPES_LPS,
@@ -10,7 +11,6 @@ import {
 
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import ToolbarSheet from 'paraview-glance/src/components/core/ToolbarSheet';
-import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 
 const ROTATION_STEP = 2;
@@ -117,7 +117,21 @@ export default {
       }
     },
     onProxyRegistrationChange() {
-      viewHelper.updateViewsAnnotation(this.$proxyManager);
+      // update views annotation
+      const hasImageData = this.$proxyManager
+        .getSources()
+        .find((s) => s.getDataset().isA && s.getDataset().isA('vtkImageData'));
+      const views = this.$proxyManager.getViews();
+
+      for (let i = 0; i < views.length; i++) {
+        const view = views[i];
+        view.setCornerAnnotation('se', '');
+        if (view.getProxyName().indexOf('2D') !== -1 && hasImageData) {
+          view.setCornerAnnotations(ANNOTATIONS, true);
+        } else {
+          view.setCornerAnnotation('nw', '');
+        }
+      }
     },
   },
   mounted() {

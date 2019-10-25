@@ -1,7 +1,6 @@
 import { mapActions, mapState } from 'vuex';
 
 import VtkView from 'paraview-glance/src/components/core/VtkView';
-import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { Breakpoints } from 'paraview-glance/src/constants';
 
 // ----------------------------------------------------------------------------
@@ -47,7 +46,6 @@ export default {
   },
   methods: {
     setViewBackground,
-    getViewType: viewHelper.getViewType,
     getView(viewType) {
       const [type, name] = viewType.split(':');
       return this.$proxyManager

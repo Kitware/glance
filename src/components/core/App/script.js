@@ -87,6 +87,8 @@ export default {
     },
   },
   mounted() {
+    this.initViews();
+
     // attach keyboard shortcuts
     shortcuts.forEach(({ key, action }) =>
       Mousetrap.bind(key, (e) => {
@@ -121,8 +123,6 @@ export default {
       },
     }),
     ...mapActions({
-      promptUserFiles: 'promptForFiles',
-
       openSample: (dispatch, urls, names) => {
         // dispatch: delete all loaded files since this is only called
         // by clicking on sample data
@@ -130,10 +130,10 @@ export default {
           dispatch('resetWorkspace')
         );
       },
-
+      promptUserFiles: 'promptForFiles',
       openFiles: (dispatch, files) => dispatch('openFiles', Array.from(files)),
-
       saveState: 'saveState',
+      initViews: 'initViews',
     }),
     recordError(error) {
       this.errors.push(error);

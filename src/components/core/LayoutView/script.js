@@ -19,68 +19,54 @@ function setViewBackground(view, background) {
 
 export default {
   name: 'LayoutView',
+  components: {
+    VtkView,
+  },
   computed: {
     smallScreen() {
       return this.$vuetify.breakpoint.width < Breakpoints.md;
     },
-    views() {
-      const views = this.$store.getters.views;
-      return this.smallScreen ? views.slice(0, 1) : views;
+    visibleViews() {
+      return this.visibleViews.slice(0, this.visibleCount);
     },
     gridTemplateRows() {
-      return this.viewCount < 4 ? '1fr' : '1fr 1fr';
+      return this.visibleCount < 4 ? '1fr' : '1fr 1fr';
     },
     gridTemplateColumns() {
-      return this.viewCount < 2 ? '1fr' : '1fr 1fr';
+      return this.visibleCount < 2 ? '1fr' : '1fr 1fr';
     },
     ...mapState({
-      proxyManager: 'proxyManager',
-      viewData: (state) => state.views.viewData,
-      order: (state) => state.views.viewOrder,
-      viewCount(state) {
+      visibleViews: (state) =>
+        state.views.viewOrder.filter((v, i) => i < state.views.visibleCount),
+      backgroundColors: (state) => state.views.backgroundColors,
+      visibleCount(state) {
         // only show 1 view on small screens
-        return this.smallScreen ? 1 : state.views.viewCount;
+        return this.smallScreen ? 1 : state.views.visibleCount;
       },
     }),
   },
   methods: {
     setViewBackground,
     getViewType: viewHelper.getViewType,
-    ...mapActions({
-      updateViews: 'updateViews',
-      updateLayout: 'updateLayout',
-    }),
+    getView(viewType) {
+      const [type, name] = viewType.split(':');
+      return this.$proxyManager
+        .getViews()
+        .find(
+          (v) => v.getProxyName() === type && (!name || v.getName() === name)
+        );
+    },
+    ...mapActions(['updateLayout']),
   },
-  components: {
-    VtkView,
-  },
-  created() {
-    this.subscriptions = [
+  proxyManagerHooks: {
+    onProxyCreated() {
       // reset cameras when first source is added
-      this.proxyManager.onProxyRegistrationChange(({ action, proxyGroup }) => {
-        if (
-          proxyGroup === 'Sources' &&
-          action === 'register' &&
-          this.proxyManager.getSources().length === 1
-        ) {
-          this.proxyManager.resetCameraInAllViews();
-        }
-      }),
-    ];
-  },
-  mounted() {
-    this.$nextTick(() => {
-      if (this.views.length === 0) {
-        this.updateViews();
+      if (this.$proxyManager.getSources().length === 1) {
+        this.$proxyManager.resetCameraInAllViews();
       }
-    });
+    },
   },
   updated() {
-    this.proxyManager.resizeAllViews();
-  },
-  beforeDestroy() {
-    while (this.subscriptions.length) {
-      this.subscriptions.pop().unsubscribe();
-    }
+    this.$proxyManager.resizeAllViews();
   },
 };

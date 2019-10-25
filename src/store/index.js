@@ -7,7 +7,6 @@ import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import Config from 'paraview-glance/src/config';
-import global from 'paraview-glance/src/store/globalSettings';
 import files from 'paraview-glance/src/store/fileLoader';
 import screenshots from 'paraview-glance/src/store/screenshots';
 import views from 'paraview-glance/src/store/views';
@@ -40,14 +39,12 @@ function merge(dst, src) {
 function reduceState(state) {
   return {
     route: state.route,
-    global: state.global,
     views: state.views,
   };
 }
 
 function getModuleDefinitions() {
   return {
-    global,
     files,
     screenshots,
     views,

@@ -16,51 +16,8 @@ const AXIS_TYPES = [
 // Component API
 // ----------------------------------------------------------------------------
 
-function setOrientationAxesVisible(visible) {
-  this.proxyManager.getViews().forEach((view) => {
-    view.setOrientationAxesVisibility(visible);
-    view.renderLater();
-  });
-}
-
-// ----------------------------------------------------------------------------
-
-function setAxisType(type) {
-  this.proxyManager.getViews().forEach((view) => {
-    view.setOrientationAxesType(type);
-  });
-  // will call view.renderLater()
-  this.setPresetToOrientationAxes(this.orientationPreset);
-}
-
-// ----------------------------------------------------------------------------
-
-function setPresetToOrientationAxes(presetName) {
-  this.proxyManager.getViews().forEach((view) => {
-    view.setPresetToOrientationAxes(presetName);
-    view.renderLater();
-  });
-}
-
-// ----------------------------------------------------------------------------
-
-function setAnnotationOpacity(opacity) {
-  this.proxyManager
-    .getViews()
-    .forEach((view) => view.setAnnotationOpacity(opacity));
-}
-
-// ----------------------------------------------------------------------------
-
-function pushGlobalSettings() {
-  this.setOrientationAxesVisible(this.orientationAxis);
-  this.setAnnotationOpacity(this.annotationOpacity);
-}
-
-// ----------------------------------------------------------------------------
-
 function getViewForVR() {
-  const views = this.proxyManager.getViews();
+  const views = this.$proxyManager.getViews();
   for (let i = 0; i < views.length; i++) {
     if (views[i].getProxyName() === 'View3D') {
       return views[i];
@@ -80,7 +37,6 @@ export default {
   data() {
     return {
       palette: BACKGROUND,
-      annotationOpacity: 1,
       orientationPresets: ORIENTATION_PRESETS,
       axisTypes: AXIS_TYPES,
       vrEnabled: false,
@@ -89,47 +45,48 @@ export default {
     };
   },
   computed: {
-    proxyManager() {
-      return this.$store.state.proxyManager;
-    },
     backgroundColor: {
       get() {
-        return this.$store.state.global.backgroundColor;
+        return this.$store.state.views.globalBackgroundColor;
       },
       set(color) {
-        this.$store.commit('globalBackground', color);
+        this.$store.dispatch('setGlobalBackground', color);
       },
     },
     orientationAxis: {
       get() {
-        return this.$store.state.global.orientationAxis;
+        return this.$store.state.views.axisVisible;
       },
       set(flag) {
-        this.$store.commit('globalOrientAxis', flag);
+        this.$store.dispatch('setAxisVisible', flag);
       },
     },
     orientationPreset: {
       get() {
-        return this.$store.state.global.orientationPreset;
+        return this.$store.state.views.axisPreset;
       },
       set(preset) {
-        this.$store.commit('globalOrientPreset', preset);
+        this.$store.dispatch('setAxisPreset', preset);
       },
     },
     axisType: {
       get() {
-        return this.$store.state.global.axisType;
+        return this.$store.state.views.axisType;
       },
       set(axisType) {
-        this.$store.commit('globalAxisType', axisType);
+        this.$store.dispatch('setAxisType', axisType);
+      },
+    },
+    annotationOpacity: {
+      get() {
+        return this.$store.state.views.annotationOpacity;
+      },
+      set(opacity) {
+        this.$store.dispatch('setAnnotationOpacity', opacity);
       },
     },
   },
   watch: {
-    orientationAxis: setOrientationAxesVisible,
-    orientationPreset: setPresetToOrientationAxes,
-    annotationOpacity: setAnnotationOpacity,
-    axisType: setAxisType,
     physicalScale() {
       const view = this.getViewForVR();
       if (view) {
@@ -146,11 +103,6 @@ export default {
       const view = this.getViewForVR();
       return view && !!view.getOpenglRenderWindow().getVrDisplay();
     },
-    setAxisType,
-    setOrientationAxesVisible,
-    setAnnotationOpacity,
-    setPresetToOrientationAxes,
-    pushGlobalSettings,
     getViewForVR,
     toggleVR(vr) {
       const view = this.getViewForVR();
@@ -189,13 +141,5 @@ export default {
         }
       }
     },
-  },
-  created() {
-    this.subscription = this.proxyManager.onProxyRegistrationChange(() => {
-      this.pushGlobalSettings();
-    });
-  },
-  beforeDestroy() {
-    this.subscription.unsubscribe();
   },
 };

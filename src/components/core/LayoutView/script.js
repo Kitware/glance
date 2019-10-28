@@ -47,9 +47,12 @@ export default {
     ...mapActions(['updateLayout']),
   },
   proxyManagerHooks: {
-    onProxyCreated() {
+    onProxyCreated({ proxyGroup }) {
       // reset cameras when first source is added
-      if (this.$proxyManager.getSources().length === 1) {
+      if (
+        proxyGroup === 'Sources' &&
+        this.$proxyManager.getSources().length === 1
+      ) {
         this.$proxyManager.resetCameraInAllViews();
       }
     },

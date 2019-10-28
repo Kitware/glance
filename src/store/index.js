@@ -5,6 +5,8 @@ import Vuex from 'vuex';
 import vtk from 'vtk.js/Sources/vtk';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
+import { ProxyManagerVuexPlugin } from 'paraview-glance/src/plugins';
+
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import Config from 'paraview-glance/src/config';
 import files from 'paraview-glance/src/store/fileLoader';
@@ -64,29 +66,6 @@ function changeActiveSliceDelta(proxyManager, delta) {
   }
 }
 
-export function registerProxyManagerHooks(pxm, store) {
-  const subs = [];
-  const modules = getModuleDefinitions();
-  const hookNames = ['onProxyRegistrationChange'];
-
-  Object.keys(modules)
-    .filter((mod) => Boolean(modules[mod].proxyManagerHooks))
-    .forEach((mod) => {
-      const hooks = modules[mod].proxyManagerHooks;
-      hookNames
-        .filter((name) => Boolean(hooks[name]))
-        .forEach((hookName) =>
-          subs.push(pxm[hookName](hooks[hookName](store)))
-        );
-    });
-
-  return () => {
-    while (subs.length) {
-      subs.pop().unsubscribe();
-    }
-  };
-}
-
 function createStore(proxyManager = null) {
   let pxm = proxyManager;
   if (!proxyManager) {
@@ -96,8 +75,9 @@ function createStore(proxyManager = null) {
   }
 
   return new Vuex.Store({
+    plugins: [ProxyManagerVuexPlugin(proxyManager)],
     state: {
-      proxyManager: pxm,
+      proxyManager: pxm, // TODO remove
       route: 'landing', // valid values: landing, app
       savingStateName: null,
       loadingState: false,

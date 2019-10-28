@@ -56,10 +56,6 @@ export function createViewer(container, proxyConfig = null) {
 
   const store = createStore(proxyManager);
 
-  // subscription won't be unsubscribed b/c we currently
-  // don't have a way to destroy a viewer
-  registerProxyManagerHooks(proxyManager, store);
-
   /* eslint-disable no-new */
   new Vue({
     el: container,

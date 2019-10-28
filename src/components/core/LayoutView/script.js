@@ -16,9 +16,6 @@ export default {
     smallScreen() {
       return this.$vuetify.breakpoint.width < Breakpoints.md;
     },
-    visibleViews() {
-      return this.visibleViews.slice(0, this.visibleCount);
-    },
     gridTemplateRows() {
       return this.visibleCount < 4 ? '1fr' : '1fr 1fr';
     },
@@ -26,8 +23,7 @@ export default {
       return this.visibleCount < 2 ? '1fr' : '1fr 1fr';
     },
     ...mapState({
-      visibleViews: (state) =>
-        state.views.viewOrder.filter((v, i) => i < state.views.visibleCount),
+      views: (state) => state.views.viewOrder,
       backgroundColors: (state) => state.views.backgroundColors,
       visibleCount(state) {
         // only show 1 view on small screens

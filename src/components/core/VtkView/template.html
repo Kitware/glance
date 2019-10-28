@@ -177,6 +177,7 @@
         <v-tooltip
           top
           v-if="!smallScreen && singleViewButton"
+          key="singleView"
         >
           <span class="pv-no-select">Single view</span>
           <template v-slot:activator="{ on }">
@@ -193,7 +194,8 @@
         <v-tooltip
           top
           v-if="!smallScreen && flipViewButton"
-          >
+          key="flipView"
+        >
           <span class="pv-no-select">Split view</span>
           <template v-slot:activator="{ on }">
             <v-btn
@@ -209,7 +211,8 @@
         <v-tooltip
           top
           v-if="!smallScreen && quadViewButton"
-          >
+          key="quadView"
+        >
           <span class="pv-no-select">Quad view</span>
           <template v-slot:activator="{ on }">
             <v-btn

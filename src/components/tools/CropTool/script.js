@@ -1,8 +1,4 @@
-import { mapState } from 'vuex';
-
-import vtkCropWidget from 'paraview-glance/src/vtk/CropWidget';
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
-import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
 import { makeSubManager } from 'paraview-glance/src/utils';
 
 // ----------------------------------------------------------------------------
@@ -12,19 +8,23 @@ export default {
   components: {
     SourceSelect,
   },
-  mixins: [ProxyManagerMixin],
   props: ['enabled'],
   data() {
     return {
       targetVolumeId: -1,
-      cropWidget: null,
+      widgetId: -1,
       canReset: false,
     };
   },
   computed: {
-    ...mapState(['proxyManager']),
     targetVolume() {
-      return this.proxyManager.getProxyById(this.targetVolumeId);
+      return this.$proxyManager.getProxyById(this.targetVolumeId);
+    },
+    cropProxy() {
+      return this.$proxyManager.getProxyById(this.widgetId);
+    },
+    canCrop() {
+      return this.targetVolumeId > -1;
     },
   },
   watch: {
@@ -32,27 +32,37 @@ export default {
       if (enabled) {
         const cropFilter = this.getCropFilter(this.targetVolume);
 
-        // create crop widget
-        // eslint-disable-next-line import/no-named-as-default-member
-        this.cropWidget = vtkCropWidget.newInstance();
-        this.cropWidget.setFaceHandlesEnabled(false);
-        this.cropWidget.setEdgeHandlesEnabled(false);
+        let cropProxy = this.cropProxy;
+        if (!cropProxy) {
+          cropProxy = this.$proxyManager
+            .getProxyInGroup('Widgets')
+            .find((w) => w.getProxyName() === 'Crop');
+          if (!cropProxy) {
+            cropProxy = this.$proxyManager.createProxy('Widgets', 'Crop');
+          }
+          this.widgetId = cropProxy.getProxyId();
+        }
+
+        const widget = cropProxy.getWidget();
+        const widgetState = cropProxy.getWidgetState();
+
+        // init
+        widget.setFaceHandlesEnabled(false);
+        widget.setEdgeHandlesEnabled(false);
 
         // copy image description to widget
         const imageData = this.targetVolume.getDataset();
-        this.cropWidget.copyImageDataDescription(imageData);
+        widget.copyImageDataDescription(imageData);
 
         // if the crop filter is resettable, that means we have
         // cropping planes to use.
         if (cropFilter.isResetAvailable()) {
-          const state = this.cropWidget.getWidgetState().getCroppingPlanes();
+          const state = widgetState.getCroppingPlanes();
           state.setPlanes(cropFilter.getCroppingPlanes());
         }
 
         // modify crop filter based on widget
-        const planesState = this.cropWidget
-          .getWidgetState()
-          .getCroppingPlanes();
+        const planesState = widgetState.getCroppingPlanes();
         this.stateSub.sub(
           planesState.onModified(() => {
             cropFilter.setCroppingPlanes(planesState.getPlanes());
@@ -60,12 +70,10 @@ export default {
           })
         );
 
-        // add widget to views
-        this.proxyManager
-          .getViews()
-          .forEach((view) => this.addCropToView(view));
+        cropProxy.addToViews();
       } else {
-        this.removeCropWidget();
+        this.$proxyManager.deleteProxy(this.cropProxy);
+        this.widgetId = -1;
         this.stateSub.unsub();
       }
     },
@@ -77,16 +85,6 @@ export default {
         if (id !== -1) {
           const cropFilter = this.getCropFilter(this.targetVolume);
           this.canReset = cropFilter.isResetAvailable();
-        }
-      }
-    },
-  },
-  proxyManager: {
-    onProxyRegistrationChange(info) {
-      const { proxyGroup, action, proxy } = info;
-      if (proxyGroup === 'Views' && action === 'register') {
-        if (this.enabled) {
-          this.addCropToView(proxy);
         }
       }
     },
@@ -103,7 +101,7 @@ export default {
     },
     getCropFilter(volProxy) {
       // find 3d view
-      const view3d = this.proxyManager
+      const view3d = this.$proxyManager
         .getViews()
         .find((v) => v.getProxyName() === 'View3D');
 
@@ -112,7 +110,7 @@ export default {
       }
 
       // find volume rep
-      const volRep = this.proxyManager.getRepresentation(volProxy, view3d);
+      const volRep = this.$proxyManager.getRepresentation(volProxy, view3d);
 
       if (!volRep || !volRep.getCropFilter) {
         throw new Error('Cannot find the volume rep with a crop filter!');
@@ -132,33 +130,13 @@ export default {
     reset() {
       if (this.targetVolume) {
         const filter = this.getCropFilter(this.targetVolume);
-        if (filter.isResetAvailable()) {
-          filter.reset();
-          this.canReset = false;
+        filter.reset();
+        this.canReset = false;
 
-          if (this.cropWidget) {
-            const state = this.cropWidget.getWidgetState().getCroppingPlanes();
-            state.setPlanes(filter.getCroppingPlanes());
-          }
+        if (this.cropProxy) {
+          const state = this.cropProxy.getWidgetState().getCroppingPlanes();
+          state.setPlanes(filter.getCroppingPlanes());
         }
-      }
-    },
-    addCropToView(view) {
-      const widgetManager = view.getReferenceByName('widgetManager');
-      widgetManager.addWidget(this.cropWidget);
-
-      widgetManager.enablePicking();
-      view.renderLater();
-    },
-    removeCropWidget() {
-      if (this.cropWidget) {
-        this.proxyManager.getViews().forEach((view) => {
-          const widgetManager = view.getReferenceByName('widgetManager');
-          if (widgetManager) {
-            widgetManager.removeWidget(this.cropWidget);
-            view.renderLater();
-          }
-        });
       }
     },
   },

@@ -10,8 +10,11 @@ import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/Sl
 import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
 import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
 
+import vtkCropWidget from 'paraview-glance/src/vtk/CropWidget';
+
 import vtkLabelMapVolumeRepProxy from 'paraview-glance/src/vtk/LabelMapVolumeRepProxy';
 import vtkLabelMapSliceRepProxy from 'paraview-glance/src/vtk/LabelMapSliceRepProxy';
+import vtkWidgetProxy from 'paraview-glance/src/vtk/WidgetProxy';
 
 import ConfigUtils from 'paraview-glance/src/config/configUtils';
 
@@ -67,6 +70,11 @@ export default {
         presetName: 'Default (Cool to Warm)',
       }),
       PiecewiseFunction: createProxyDefinition(vtkPiecewiseFunctionProxy),
+    },
+    Widgets: {
+      Crop: createProxyDefinition(vtkWidgetProxy, [], [], {
+        factory: vtkCropWidget,
+      }),
     },
     Sources: {
       TrivialProducer: activateOnCreate(createProxyDefinition(vtkProxySource)),

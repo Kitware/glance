@@ -22,7 +22,6 @@ function loadZip(zipContent) {
           if (++dsCount === sceneImporter.getScene().length) {
             const response = Object.assign({}, sceneImporter.getMetadata());
             response.scene = sceneImporter.getScene();
-            console.log(response);
             resolve(response);
           }
         });
@@ -32,6 +31,34 @@ function loadZip(zipContent) {
 }
 
 // ----------------------------------------------------------------------------
+/* eslint-disable no-param-reassign */
+// ----------------------------------------------------------------------------
+
+function updateRanges(container, name, dataRange) {
+  if (!container[name]) {
+    container[name] = dataRange.slice();
+  } else {
+    container[name][0] = Math.min(container[name][0], dataRange[0]);
+    container[name][1] = Math.max(container[name][1], dataRange[1]);
+  }
+
+  return container;
+}
+
+// ----------------------------------------------------------------------------
+
+function gatherRanges(container, dataset) {
+  const fn = (array) =>
+    updateRanges(container, array.getName(), array.getRange(-1));
+  dataset
+    .getPointData()
+    .getArrays()
+    .forEach(fn);
+  dataset
+    .getCellData()
+    .getArrays()
+    .forEach(fn);
+}
 
 // ----------------------------------------------------------------------------
 
@@ -65,6 +92,7 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
 
   publicAPI.setProxyManager = (proxyManager) => {
     const allViews = proxyManager.getViews();
+    const allDataRanges = {};
     model.scene.forEach(({ source, mapper, actor, name }) => {
       const actorState = actor.get('origin', 'scale', 'position');
       const propState = actor
@@ -93,9 +121,14 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
         source,
         source.getOutputData().getClassName()
       );
+
+      // Gather the range for each fields
+      gatherRanges(allDataRanges, source.getOutputData());
+
       for (let i = 0; i < allViews.length; i++) {
         const view = allViews[i];
         const rep = proxyManager.getRepresentation(sourceProxy, allViews[i]);
+        rep.setRescaleOnColorBy(false);
         const actorFromRep = rep.getActors()[0];
         actorFromRep.set(actorState);
         actorFromRep.getProperty().set(propState);
@@ -122,7 +155,13 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
       }
     });
 
-    // Update LookupTables
+    // Create LookupTable for each field with max range
+    Object.keys(allDataRanges).forEach((fieldName) => {
+      const lutProxy = proxyManager.getLookupTable(fieldName);
+      lutProxy.setDataRange(...allDataRanges[fieldName]);
+    });
+
+    // Update LookupTables with PV ranges
     Object.keys(model.lookupTables).forEach((fieldName) => {
       const lutState = model.lookupTables[fieldName];
       const lutProxy = proxyManager.getLookupTable(fieldName);
@@ -131,6 +170,7 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
       // Push state data into lookup table
       const min = lutState.nodes[0][0];
       const max = lutState.nodes[lutState.nodes.length - 1][0];
+      lutProxy.setPresetName('-');
       lutProxy.setDataRange(min, max);
       lutProxy.setMode(3); // use nodes
       lut.setColorSpace(lutState.colorSpace);

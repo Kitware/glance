@@ -80,7 +80,7 @@ function setColorBy(value) {
     // solid coloring doesn't have a valid data array
     if (dataArray) {
       const dataRange = dataArray.getRange();
-      this.dataRange = dataRange;
+      // this.dataRange = dataRange; // We want to keep the current range
       this.origDataRange = [...dataRange];
     }
     // Update interpolateScalarsBeforeMapping
@@ -245,6 +245,9 @@ function update() {
       }
       this.available = 'geometry';
       this.solidColor = float2hex(...repGeometry.getColor());
+      if (repGeometry.getDataArray()) {
+        this.origDataRange = repGeometry.getDataArray().getRange();
+      }
     }
     if (repVolume) {
       this.available = 'volume';
@@ -252,7 +255,7 @@ function update() {
       this.arrayName = colorByValue[0];
       // only get name and location of colorBy array
       this.colorBy = colorByValue.slice(0, 2).join(':');
-      this.dataRange = repVolume.getDataArray().getRange();
+      this.origDataRange = repVolume.getDataArray().getRange();
       const propUI = repVolume
         .getReferenceByName('ui')
         .find((item) => item.name === 'colorBy');
@@ -262,7 +265,7 @@ function update() {
       }
     }
 
-    // set preset
+    // set preset + color range
     if (this.arrayName) {
       const lutProxy = this.proxyManager.getLookupTable(this.arrayName);
       this.presetName = lutProxy.getPresetName();
@@ -273,6 +276,8 @@ function update() {
         const pwfRange = pwfProxy.getDataRange();
         this.shift = pwfRange[0] - this.shiftRange[0];
       }
+
+      this.dataRange = lutProxy.getDataRange();
     }
   }
 

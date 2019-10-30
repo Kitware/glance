@@ -1,9 +1,12 @@
 import vtkWidgetManager from 'vtk.js/Sources/Widgets/Core/WidgetManager';
+import WidgetManagerConstants from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 
 import {
   VIEW_ORIENTATIONS,
   ANNOTATIONS,
 } from 'paraview-glance/src/components/core/VtkView/constants';
+
+const { CaptureOn } = WidgetManagerConstants;
 
 // ----------------------------------------------------------------------------
 
@@ -65,6 +68,7 @@ function getView(proxyManager, viewType, container) {
 
   if (!view.getReferenceByName('widgetManager')) {
     const widgetManager = vtkWidgetManager.newInstance();
+    widgetManager.setCaptureOn(CaptureOn.MOUSE_MOVE);
     view.set({ widgetManager }, true);
   }
 

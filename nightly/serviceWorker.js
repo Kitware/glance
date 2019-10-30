@@ -420,7 +420,7 @@ workboxSW.precache([
   },
   {
     "url": "version.js",
-    "revision": "2a05f18d805ed85173371b0143e3cb57"
+    "revision": "b98c34e2aeb5a0483fdf5b074c157678"
   },
   {
     "url": "workbox-sw.prod.v2.1.2.js",

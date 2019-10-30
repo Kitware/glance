@@ -57,7 +57,7 @@
     "eslint-plugin-vue": "4.5.0",
     "kw-doc": "1.2.2",
     "kw-web-suite": "8.0.0",
-    "paraview-glance": "3.5.8",
+    "paraview-glance": "3.5.9",
     "vue-loader": "15.2.4",
     "vue-style-loader": "4.1.0",
     "vue-template-compiler": "2.6.6",

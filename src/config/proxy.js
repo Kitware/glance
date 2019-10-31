@@ -201,24 +201,24 @@ export default {
     View3D: proxyViewRepresentationMapping.View3D,
     View2D: proxyViewRepresentationMapping.View2D,
     View2D_X: {
+      ...proxyViewRepresentationMapping.View2D,
       vtkImageData: { name: 'SliceX' },
       vtkLabelMap: { name: 'LabelMapSliceX' },
-      ...proxyViewRepresentationMapping.View2D,
     },
     View2D_Y: {
+      ...proxyViewRepresentationMapping.View2D,
       vtkImageData: { name: 'SliceY' },
       vtkLabelMap: { name: 'LabelMapSliceY' },
-      ...proxyViewRepresentationMapping.View2D,
     },
     View2D_Z: {
+      ...proxyViewRepresentationMapping.View2D,
       vtkImageData: { name: 'SliceZ' },
       vtkLabelMap: { name: 'LabelMapSliceZ' },
-      ...proxyViewRepresentationMapping.View2D,
     },
   },
   filters: {
     vtkPolyData: [],
-    vtkImageData: ['Contour'],
+    vtkImageData: [],
     vtkMolecule: [],
     Glyph: [],
   },

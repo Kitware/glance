@@ -85,9 +85,11 @@ function addWatchers(vm, fields, onChange) {
   const subscriptions = [];
   for (let i = 0; i < fields.length; i++) {
     const { name } = fields[i];
-    vm.$watch(name, (newValue) => {
-      vm.updateProxies(name, newValue, onChange && onChange[name]);
-    });
+    subscriptions.push(
+      vm.$watch(name, (newValue) => {
+        vm.updateProxies(name, newValue, onChange && onChange[name]);
+      })
+    );
   }
   return subscriptions;
 }
@@ -138,7 +140,7 @@ function generateComponent(
     proxyManagerHooks: {
       onProxyModified(proxy) {
         if (
-          proxy.isA('vtkRepresentationProxy') &&
+          proxy.isA('vtkAbstractRepresentationProxy') &&
           proxy.getInput() &&
           proxy.getInput() === this.source
         ) {

@@ -7,7 +7,6 @@ function Matrix(rows, columns) {
   } else {
     this.rows = rows;
     this.columns = columns;
-
     this.data = new Array(rows * columns);
     this.data.fill(0.0);
   }

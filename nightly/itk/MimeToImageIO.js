@@ -1,11 +1,2 @@
-var mimeToIO = {};
-
-mimeToIO['image/jpeg'] = 'itkJPEGImageIOJSBinding';
-mimeToIO['image/png'] = 'itkPNGImageIOJSBinding';
-mimeToIO['image/tiff'] = 'itkTIFFImageIOJSBinding';
-mimeToIO['image/x-ms-bmp'] = 'itkBMPImageIOJSBinding';
-mimeToIO['image/x-bmp'] = 'itkBMPImageIOJSBinding';
-mimeToIO['image/bmp'] = 'itkBMPImageIOJSBinding';
-mimeToIO['application/dicom'] = 'itkDCMTKImageIOJSBinding';
-
+var mimeToIO = new Map([['image/jpeg', 'itkJPEGImageIOJSBinding'], ['image/png', 'itkPNGImageIOJSBinding'], ['image/tiff', 'itkTIFFImageIOJSBinding'], ['image/x-ms-bmp', 'itkBMPImageIOJSBinding'], ['image/x-bmp', 'itkBMPImageIOJSBinding'], ['image/bmp', 'itkBMPImageIOJSBinding'], ['application/dicom', 'itkDCMTKImageIOJSBinding']]);
 module.exports = mimeToIO;

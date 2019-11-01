@@ -70,7 +70,7 @@ function setColorBy(value) {
     return;
   }
 
-  const args = value.split(':');
+  const args = value.split('--:|:--');
   const myRepresentations = this.proxyManager
     .getRepresentations()
     .filter((r) => r.getInput() === this.source);
@@ -114,7 +114,7 @@ function setInterpolateScalarsBeforeMapping(value) {
 // ----------------------------------------------------------------------------
 
 function applyOpacity() {
-  const arrayName = this.colorBy.split(':')[0];
+  const arrayName = this.colorBy.split('--:|:--')[0];
   const pwfProxy = this.proxyManager.getPiecewiseFunction(arrayName);
   const preset = vtkColorMaps.getPresetByName(this.presetName);
 
@@ -141,7 +141,7 @@ function applyOpacity() {
 // ----------------------------------------------------------------------------
 
 function applyColorMap() {
-  const arrayName = this.colorBy.split(':')[0];
+  const arrayName = this.colorBy.split('--:|:--')[0];
   const lutProxy = this.proxyManager.getLookupTable(arrayName);
   lutProxy.setPresetName(this.presetName);
 
@@ -158,7 +158,7 @@ function applyColorMap() {
 // ----------------------------------------------------------------------------
 
 function updateLookupTableImage() {
-  const arrayName = this.colorBy.split(':')[0];
+  const arrayName = this.colorBy.split('--:|:--')[0];
   const lutProxy = this.proxyManager.getLookupTable(arrayName);
   this.lutImage = getLookupTableImage(
     lutProxy.getLookupTable(),
@@ -180,7 +180,7 @@ function convertArrays(arrays, addSolidColor = false) {
     const item = arrays[i];
     options.push({
       text: item.name,
-      value: `${item.name}:${item.location}`,
+      value: `${item.name}--:|:--${item.location}`,
     });
   }
   return options;
@@ -236,7 +236,7 @@ function update() {
       const colorByValue = repGeometry.getColorBy();
       this.arrayName = colorByValue[0];
       // only get name and location of colorBy array
-      this.colorBy = colorByValue.slice(0, 2).join(':');
+      this.colorBy = colorByValue.slice(0, 2).join('--:|:--');
       const propUI = repGeometry
         .getReferenceByName('ui')
         .find((item) => item.name === 'colorBy');
@@ -254,7 +254,7 @@ function update() {
       const colorByValue = repVolume.getColorBy();
       this.arrayName = colorByValue[0];
       // only get name and location of colorBy array
-      this.colorBy = colorByValue.slice(0, 2).join(':');
+      this.colorBy = colorByValue.slice(0, 2).join('--:|:--');
       this.origDataRange = repVolume.getDataArray().getRange();
       const propUI = repVolume
         .getReferenceByName('ui')
@@ -352,7 +352,7 @@ export default {
     presetName: setPreset,
     shift: setPreset,
     usePresetOpacity(value) {
-      const arrayName = this.colorBy.split(':')[0];
+      const arrayName = this.colorBy.split('--:|:--')[0];
       const pwfProxy = this.proxyManager.getPiecewiseFunction(arrayName);
       if (value) {
         pwfProxy.setMode(PwfMode.Points);

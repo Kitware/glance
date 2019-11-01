@@ -1,5 +1,4 @@
 import createWebworkerPromise from './createWebworkerPromise';
-
 import config from './itkConfig';
 
 var readMeshArrayBuffer = function readMeshArrayBuffer(webWorker, arrayBuffer, fileName, mimeType) {
@@ -7,7 +6,7 @@ var readMeshArrayBuffer = function readMeshArrayBuffer(webWorker, arrayBuffer, f
   return createWebworkerPromise('MeshIO', worker).then(function (_ref) {
     var webworkerPromise = _ref.webworkerPromise,
         usedWorker = _ref.worker;
-
+    worker = usedWorker;
     return webworkerPromise.postMessage({
       operation: 'readMesh',
       name: fileName,
@@ -15,7 +14,10 @@ var readMeshArrayBuffer = function readMeshArrayBuffer(webWorker, arrayBuffer, f
       data: arrayBuffer,
       config: config
     }, [arrayBuffer]).then(function (mesh) {
-      return Promise.resolve({ mesh: mesh, webWorker: worker });
+      return Promise.resolve({
+        mesh: mesh,
+        webWorker: worker
+      });
     });
   });
 };

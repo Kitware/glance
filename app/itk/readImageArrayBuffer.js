@@ -1,5 +1,4 @@
 import createWebworkerPromise from './createWebworkerPromise';
-
 import config from './itkConfig';
 
 var readImageArrayBuffer = function readImageArrayBuffer(webWorker, arrayBuffer, fileName, mimeType) {
@@ -7,7 +6,6 @@ var readImageArrayBuffer = function readImageArrayBuffer(webWorker, arrayBuffer,
   return createWebworkerPromise('ImageIO', worker).then(function (_ref) {
     var webworkerPromise = _ref.webworkerPromise,
         usedWorker = _ref.worker;
-
     worker = usedWorker;
     return webworkerPromise.postMessage({
       operation: 'readImage',
@@ -17,7 +15,10 @@ var readImageArrayBuffer = function readImageArrayBuffer(webWorker, arrayBuffer,
       config: config
     }, [arrayBuffer]);
   }).then(function (image) {
-    return Promise.resolve({ image: image, webWorker: worker });
+    return Promise.resolve({
+      image: image,
+      webWorker: worker
+    });
   });
 };
 

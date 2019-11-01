@@ -6,12 +6,10 @@ var Int32 = 'int32_t';
 var UInt32 = 'uint32_t';
 var Int64 = 'int64_t';
 var UInt64 = 'uint64_t';
-
 var SizeValueType = UInt64;
 var IdentifierType = SizeValueType;
 var IndexValueType = Int64;
 var OffsetValueType = Int64;
-
 module.exports = {
   Int8: Int8,
   UInt8: UInt8,

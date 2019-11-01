@@ -14,7 +14,6 @@ var Array = 12;
 var Matrix = 13;
 var VariableLengthVector = 14;
 var VariableSizeMatrix = 15;
-
 module.exports = {
   Unknown: Unknown,
   Scalar: Scalar,

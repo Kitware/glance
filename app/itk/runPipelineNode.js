@@ -1,4 +1,5 @@
 var loadEmscriptenModule = require('./loadEmscriptenModuleNode.js');
+
 var runPipelineEmscripten = require('./runPipelineEmscripten.js');
 
 var runPipelineNode = function runPipelineNode(pipelinePath, args, outputs, inputs) {

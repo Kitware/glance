@@ -4,9 +4,9 @@
 // - WebWorkers/
 // - ImageIOs/
 // - MeshIOs/
+// - PolyDataIOs/
 //
 var itkConfig = {
   itkModulesPath: 'itk'
 };
-
 export default itkConfig;

@@ -1,6 +1,2 @@
-var extensionToIO = {};
-
-extensionToIO['vtk'] = 'itkVTKPolyDataMeshIOJSBinding';
-extensionToIO['VTK'] = 'itkVTKPolyDataMeshIOJSBinding';
-
+var extensionToIO = new Map([['vtk', 'itkVTKPolyDataMeshIOJSBinding'], ['VTK', 'itkVTKPolyDataMeshIOJSBinding'], ['byu', 'itkBYUMeshIOJSBinding'], ['BYU', 'itkBYUMeshIOJSBinding'], ['fsa', 'itkFreeSurferAsciiMeshIOJSBinding'], ['FSA', 'itkFreeSurferAsciiMeshIOJSBinding'], ['fsb', 'itkFreeSurferBinaryMeshIOJSBinding'], ['FSB', 'itkFreeSurferBinaryMeshIOJSBinding'], ['obj', 'itkOBJMeshIOJSBinding'], ['OBJ', 'itkOBJMeshIOJSBinding'], ['off', 'itkOFFMeshIOJSBinding'], ['OFF', 'itkOFFMeshIOJSBinding'], ['stl', 'itkSTLMeshIOJSBinding'], ['STL', 'itkSTLMeshIOJSBinding']]);
 module.exports = extensionToIO;

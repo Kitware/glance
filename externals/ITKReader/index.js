@@ -8,7 +8,7 @@ import vtkITKDicomImageReader from './ITKDicomImageReader';
 vtkITKImageReader.setReadImageArrayBufferFromITK(readImageArrayBuffer);
 
 export const extensions = Array.from(
-  new Set(Object.keys(extensionToImageIO).map((ext) => ext.toLowerCase()))
+  new Set(Array.from(extensionToImageIO.keys()).map((ext) => ext.toLowerCase()))
 );
 
 export function registerToGlance(Glance) {

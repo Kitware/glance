@@ -237,6 +237,10 @@ export default {
         this.editingName = !this.editingName;
       }
     },
+    deleteLabelmap() {
+      this.$proxyManager.deleteProxy(this.activeLabelmapProxy);
+      this.activeLabelmapId = -1;
+    },
     filterImageData(source) {
       return (
         source.getProxyName() === 'TrivialProducer' &&

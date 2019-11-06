@@ -11,18 +11,37 @@
         />
       </v-flex>
       <v-flex xs12>
-        <v-select
-          label="Select a Labelmap"
-          :append-outer-icon="labelmapSelection ? 'mdi-pencil' : null"
-          :items="labelmaps"
-          item-text="name"
-          item-value="sourceId"
-          :disabled="targetImageId === -1"
-          :value="labelmapSelection"
-          style="overflow:hidden; text-overflow:ellipses;"
-          @input="setLabelMap"
-          @click:append-outer="editName"
-        ></v-select>
+        <v-menu offset-x>
+          <template v-slot:activator="{ on }">
+            <v-select
+              label="Select a Labelmap"
+              append-outer-icon="mdi-dots-vertical"
+              :items="labelmaps"
+              item-text="name"
+              item-value="sourceId"
+              :disabled="targetImageId === -1"
+              :value="labelmapSelection"
+              style="overflow:hidden; text-overflow:ellipses;"
+              @input="setLabelMap"
+              @click:append-outer="on.click"
+            ></v-select>
+          </template>
+          <v-list>
+            <template v-if="labelmapSelection">
+              <v-list-item @click="editName">
+                <v-list-item-title>Edit Name</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="deleteLabelmap">
+                <v-list-item-title>Delete</v-list-item-title>
+              </v-list-item>
+            </template>
+            <template v-else>
+              <v-list-item>
+                <v-list-item-title>(no labelmap selected)</v-list-item-title>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
       </v-flex>
       <template v-if="editingName">
         <v-flex xs10>

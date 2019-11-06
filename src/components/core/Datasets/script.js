@@ -52,8 +52,8 @@ export default {
     Controls.forEach((control, i) => this.addPanel(control, i + 10));
   },
   proxyManagerHooks: {
-    onProxyCreated({ proxyId, proxyGroup, proxy }) {
-      if (proxyGroup === 'Sources') {
+    onProxyCreated({ proxyId, proxyGroup, proxyName, proxy }) {
+      if (proxyGroup === 'Sources' && proxyName === 'TrivialProducer') {
         this.datasets.push(proxyId);
         this.internalPanelState[proxyId] = true;
         this.subpanels[proxyId] = Controls.filter((c) => c.visible(proxy))
@@ -61,8 +61,8 @@ export default {
           .filter((v) => v > -1);
       }
     },
-    onProxyDeleted({ proxyId, proxyGroup }) {
-      if (proxyGroup === 'Sources') {
+    onProxyDeleted({ proxyId, proxyGroup, proxyName }) {
+      if (proxyGroup === 'Sources' && proxyName === 'TrivialProducer') {
         const idx = this.datasets.indexOf(proxyId);
         if (idx > -1) {
           this.datasets.splice(idx, 1);

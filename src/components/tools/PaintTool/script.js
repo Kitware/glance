@@ -1,3 +1,5 @@
+import { mapState, mapActions } from 'vuex';
+
 import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkPaintFilter from 'vtk.js/Sources/Filters/General/PaintFilter';
 
@@ -58,8 +60,6 @@ export default {
     return {
       targetImageId: -1, // target image to paint
       activeLabelmapId: -1,
-      imageToLabelmaps: {}, // TODO STORE: image id -> [labelmap ids]
-      labelmapStates: {}, // TODO STORE: labelmap id -> { selectedLabel, lastColorIndex }
       internalLabelmaps: [],
       widgetId: -1,
       editingName: false,
@@ -72,6 +72,10 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      imageToLabelmaps: (state) => state.widgets.imageToLabelmaps,
+      labelmapStates: (state) => state.widgets.labelmapStates,
+    }),
     labelmaps() {
       return [
         {
@@ -211,6 +215,14 @@ export default {
     this.labelmapSub.unsub();
   },
   methods: {
+    ...mapActions({
+      addLabelmapToImage(dispatch, labelmapId, imageId) {
+        return dispatch('addLabelmapToImage', { imageId, labelmapId });
+      },
+      setLabelmapState(dispatch, labelmapId, labelmapState) {
+        return dispatch('setLabelmapState', { labelmapId, labelmapState });
+      },
+    }),
     setRadius(r) {
       this.radius = Math.max(1, Math.round(r));
     },
@@ -251,10 +263,7 @@ export default {
         const lmProxyId = lmProxy.getProxyId();
         this.activeLabelmapId = lmProxyId;
 
-        if (!(this.targetImageId in this.imageToLabelmaps)) {
-          this.$set(this.imageToLabelmaps, this.targetImageId, []);
-        }
-        this.imageToLabelmaps[this.targetImageId].push(lmProxyId);
+        this.addLabelmapToImage(lmProxyId, this.targetImageId);
         const labelmapNum = this.imageToLabelmaps[this.targetImageId].length;
 
         // stores state associated with each labelmap
@@ -264,7 +273,7 @@ export default {
           // the last generated color index
           lastColorIndex: 0,
         };
-        this.$set(this.labelmapStates, lmProxyId, lmState);
+        this.setLabelmapState(lmProxyId, lmState);
 
         const baseImageName = this.targetImageProxy.getName();
         lmProxy.setName(`Labelmap ${labelmapNum} (${baseImageName})`);

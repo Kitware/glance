@@ -12,6 +12,7 @@ import Config from 'paraview-glance/src/config';
 import files from 'paraview-glance/src/store/fileLoader';
 import screenshots from 'paraview-glance/src/store/screenshots';
 import views from 'paraview-glance/src/store/views';
+import widgets from 'paraview-glance/src/store/widgets';
 
 // http://jsperf.com/typeofvar
 function typeOf(o) {
@@ -45,14 +46,6 @@ function reduceState(state) {
   };
 }
 
-function getModuleDefinitions() {
-  return {
-    files,
-    screenshots,
-    views,
-  };
-}
-
 function changeActiveSliceDelta(proxyManager, delta) {
   const view = proxyManager.getActiveView();
   if (view.isA('vtkView2DProxy')) {
@@ -83,7 +76,12 @@ function createStore(proxyManager = null) {
       loadingState: false,
       panels: {},
     },
-    modules: getModuleDefinitions(),
+    modules: {
+      files,
+      screenshots,
+      views,
+      widgets: widgets(proxyManager),
+    },
     mutations: {
       showLanding(state) {
         state.route = 'landing';

@@ -20,10 +20,16 @@ import ConfigUtils from 'paraview-glance/src/config/configUtils';
 
 import proxyUI from 'paraview-glance/src/config/proxyUI';
 import proxyLinks from 'paraview-glance/src/config/proxyLinks';
-import proxyFilter from 'paraview-glance/src/config/proxyFilter';
 import proxyViewRepresentationMapping from 'paraview-glance/src/config/proxyViewRepresentationMapping';
 
 const { createProxyDefinition, activateOnCreate } = ConfigUtils;
+
+const ViewToWidgetTypes = {
+  View3D: 'VOLUME',
+  View2D_X: 'SLICE',
+  View2D_Y: 'SLICE',
+  View2D_Z: 'SLICE',
+};
 
 function createDefaultView(classFactory, ui, options, props) {
   return activateOnCreate(
@@ -74,11 +80,13 @@ export default {
     Widgets: {
       Crop: createProxyDefinition(vtkWidgetProxy, [], [], {
         factory: vtkCropWidget,
+        viewTypes: ViewToWidgetTypes,
       }),
     },
     Sources: {
       TrivialProducer: activateOnCreate(createProxyDefinition(vtkProxySource)),
-      Contour: proxyFilter.Contour,
+      // differentiate LabelMaps
+      LabelMap: createProxyDefinition(vtkProxySource),
     },
     Representations: {
       Geometry: createProxyDefinition(
@@ -152,6 +160,7 @@ export default {
         [], // ui
         [] // links
       ),
+      LabelMapSlice: createProxyDefinition(vtkLabelMapSliceRepProxy),
       LabelMapSliceX: createProxyDefinition(
         vtkLabelMapSliceRepProxy,
         [], // ui

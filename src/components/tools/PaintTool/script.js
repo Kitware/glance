@@ -1,22 +1,48 @@
-import { mapState } from 'vuex';
-
-import macro from 'vtk.js/Sources/macro';
-import vtkPaintWidget from 'vtk.js/Sources/Widgets/Widgets3D/PaintWidget';
+import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkPaintFilter from 'vtk.js/Sources/Filters/General/PaintFilter';
-import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 
 import vtkLabelMap from 'paraview-glance/src/vtk/LabelMap';
-import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import PopUp from 'paraview-glance/src/components/widgets/PopUp';
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
-import { createPaletteCycler, SPECTRAL } from 'paraview-glance/src/palette';
-import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
-import { makeSubManager, forAllViews } from 'paraview-glance/src/utils';
 
-const { vtkErrorMacro } = macro;
+import { SPECTRAL } from 'paraview-glance/src/palette';
+import { makeSubManager } from 'paraview-glance/src/utils';
 
 const SYNC = 'PaintToolSync';
+const NEW_LABELMAP = -2;
+
+// ----------------------------------------------------------------------------
+
+function fromHex(colorStr) {
+  const hex = colorStr.slice(1); // remove leading #
+  const colorArray = [];
+  for (let i = 0; i < hex.length; i += 2) {
+    colorArray.push(Number.parseInt(hex.slice(i, i + 2), 16));
+  }
+  return colorArray;
+}
+
+// ----------------------------------------------------------------------------
+
+function createLabelMapFromImage(imageData) {
+  /* eslint-disable-next-line import/no-named-as-default-member */
+  const labelMap = vtkLabelMap.newInstance(
+    imageData.get('spacing', 'origin', 'direction')
+  );
+  labelMap.setDimensions(imageData.getDimensions());
+
+  const values = new Uint16Array(imageData.getNumberOfPoints());
+  /* eslint-disable-next-line import/no-named-as-default-member */
+  const dataArray = vtkDataArray.newInstance({
+    numberOfComponents: 1,
+    values,
+  });
+  labelMap.getPointData().setScalars(dataArray);
+
+  labelMap.computeTransforms();
+  return labelMap;
+}
 
 // ----------------------------------------------------------------------------
 
@@ -27,153 +53,172 @@ export default {
     PopUp,
     SourceSelect,
   },
-  mixins: [ProxyManagerMixin],
   props: ['enabled'],
   data() {
     return {
-      master: null,
-      labelmapProxy: null,
-      palette: SPECTRAL,
+      targetImageId: -1, // target image to paint
+      activeLabelmapId: -1,
+      imageToLabelmaps: {}, // TODO STORE: image id -> [labelmap ids]
+      labelmapStates: {}, // TODO STORE: labelmap id -> { selectedLabel, lastColorIndex }
+      internalLabelmaps: [],
+      widgetId: -1,
+      editingName: false,
+      editableLabelmapName: '',
+      brushSizeMax: 100,
+      radius: 5,
       // for view purpose only
       // [ { label, color, opacity }, ... ], sorted by label asc
       colormapArray: [],
-      widget: null,
-      label: 1,
-      radius: 5,
-      editingName: false,
     };
   },
   computed: {
-    ...mapState(['proxyManager']),
+    labelmaps() {
+      return [
+        {
+          name: 'Create new labelmap',
+          sourceId: NEW_LABELMAP,
+        },
+      ].concat(this.internalLabelmaps);
+    },
+    activeLabel() {
+      if (this.activeLabelmapState) {
+        return this.activeLabelmapState.selectedLabel;
+      }
+      return -1;
+    },
+    activeLabelmapProxy() {
+      return this.$proxyManager.getProxyById(this.activeLabelmapId);
+    },
+    activeLabelmapState() {
+      return this.labelmapStates[this.activeLabelmapId];
+    },
+    targetImageProxy() {
+      return this.$proxyManager.getProxyById(this.targetImageId);
+    },
     labelmapSelection() {
-      if (this.labelmapProxy) {
+      if (this.activeLabelmapProxy) {
         return {
-          name: this.labelmapProxy.getName(),
-          sourceId: this.labelmapProxy.getProxyId(),
+          name: this.editableLabelmapName || this.activeLabelmapProxy.getName(),
+          sourceId: this.activeLabelmapProxy.getProxyId(),
         };
       }
       return null;
     },
-    labelmapName: {
-      get() {
-        if (this.labelmapProxy) {
-          return this.labelmapProxy.getName();
-        }
-        return '';
-      },
-      set(name) {
-        this.labelmapProxy.setName(name);
-        this.$forceUpdate();
-      },
-    },
     canPaint() {
-      return !!this.master && !!this.labelmapProxy;
+      return this.targetImageId > -1 && this.activeLabelmapId > -1;
     },
-  },
-  proxyManager: {
-    onProxyRegistrationChange(info) {
-      const { proxyGroup, action, proxyId } = info;
-      if (proxyGroup === 'Sources') {
-        if (action === 'unregister') {
-          if (
-            this.labelmapProxy &&
-            proxyId === this.labelmapProxy.getProxyId()
-          ) {
-            this.labelmapProxy = null;
-          }
-          this.$emit('enable', false);
-        }
-        // update image selection
-        this.$forceUpdate();
-      }
+    paintProxy() {
+      return this.$proxyManager.getProxyById(this.widgetId);
     },
-  },
-  mounted() {
-    this.widget = vtkPaintWidget.newInstance();
-    this.widget.setRadius(this.radius);
-    this.filter = null;
-    this.view3D = null;
-
-    this.paletteCycler = createPaletteCycler(this.palette);
-
-    this.subs = [];
-    this.labelmapSub = makeSubManager();
-  },
-  beforeDestroy() {
-    this.view3D = null;
-    this.labelmapSub.unsub();
-
-    while (this.subs.length) {
-      this.subs.pop().unsubscribe();
-    }
   },
   watch: {
-    label(label) {
-      if (label < 0) {
-        this.label = 0;
-      } else if (label !== Math.round(label)) {
-        // also handles case if label is a numerical string
-        this.label = Math.round(label);
+    editableLabelmapName(name) {
+      if (this.activeLabelmapProxy) {
+        this.activeLabelmapProxy.setName(name);
       }
-      this.filter.setLabel(this.label);
+    },
+    activeLabel(label) {
+      if (this.filter) {
+        this.filter.setLabel(label);
+      }
     },
     radius(radius) {
-      if (radius < 0) {
-        this.radius = 0;
-      } else if (radius !== Math.round(radius)) {
-        // also handles case if label is a numerical string
-        this.radius = Math.round(radius);
+      if (this.filter) {
+        this.filter.setRadius(radius);
       }
-      this.filter.setRadius(this.radius);
-      this.widget.setRadius(this.radius);
+      if (this.paintProxy) {
+        this.paintProxy.getWidget().setRadius(radius);
+      }
     },
     enabled(enabled) {
-      console.log('12223323223', enabled);
       if (enabled) {
-        this.labelmapProxy = this.findLabelmap();
-        if (!this.labelmapProxy) {
-          this.setLabelMap('CREATE_NEW_LABELMAP');
-        }
-        console.log('as;dlfja;sdlkfj', this.labelmapProxy);
-        this.addWidgetToViews();
+        this.enablePainting();
       } else {
-        this.removeWidgetFromViews();
-
-        if (this.master) {
-          this.master.activate();
-        }
-
-        while (this.subs.length) {
-          this.subs.pop().unsubscribe();
-        }
+        this.disablePainting();
       }
     },
-    labelmapProxy() {
-      if (this.labelmapProxy) {
-        const labelmap = this.labelmapProxy.getDataset();
+    activeLabelmapProxy() {
+      if (this.activeLabelmapProxy) {
+        this.editableLabelmapName = this.activeLabelmapProxy.getName();
+
+        const dims = this.activeLabelmapProxy.getDataset().getDimensions();
+        this.brushSizeMax = Math.floor(Math.max(...dims) / 2);
+
+        const labelmap = this.activeLabelmapProxy.getDataset();
         this.labelmapSub.sub(labelmap.onModified(this.updateColorMap));
+        this.updateColorMap();
       } else {
         this.labelmapSub.unsub();
       }
-    },
-    labelmapSelection() {
+
       // always hide renaming field if we switch labelmaps
       this.editingName = false;
     },
   },
+  proxyManagerHooks: {
+    onProxyModified(proxy) {
+      if (
+        this.enabled &&
+        proxy.getProxyGroup() === 'Representations' &&
+        proxy.getInput() === this.activeLabelmapProxy &&
+        this.mousedViewId > -1
+      ) {
+        const view = this.$proxyManager.getProxyById(this.mousedViewId);
+        this.updateHandleSlice(view);
+      }
+
+      if (
+        proxy.getProxyGroup() === 'Sources' &&
+        proxy.getProxyName() === 'LabelMap'
+      ) {
+        const entry = this.internalLabelmaps.find(
+          (l) => l.sourceId === proxy.getProxyId()
+        );
+        if (entry) {
+          entry.name = proxy.getName();
+        }
+      }
+    },
+    onProxyCreated({ proxy, proxyGroup, proxyName, proxyId }) {
+      if (proxyGroup === 'Sources' && proxyName === 'LabelMap') {
+        this.internalLabelmaps.push({
+          name: proxy.getName(),
+          sourceId: proxyId,
+        });
+      }
+    },
+    onProxyDeleted({ proxyGroup, proxyName, proxyId }) {
+      if (proxyGroup === 'Sources' && proxyName === 'LabelMap') {
+        const idx = this.internalLabelmaps.findIndex(
+          (l) => l.sourceId === proxyId
+        );
+        if (idx > -1) {
+          this.internalLabelmaps.splice(idx, 1);
+        }
+      }
+    },
+  },
+  created() {
+    this.palette = SPECTRAL;
+    this.mousedViewId = -1;
+    this.filter = null;
+    this.labelmapSub = makeSubManager();
+  },
+  beforeDestroy() {
+    if (this.enabled) {
+      this.disablePainting();
+    }
+    this.labelmapSub.unsub();
+  },
   methods: {
-    findLabelmap() {
-      if (!this.master) {
-        return null;
+    setRadius(r) {
+      this.radius = Math.max(1, Math.round(r));
+    },
+    setLabel(l) {
+      const lmState = this.activeLabelmapState;
+      if (lmState) {
+        lmState.selectedLabel = Number(l);
       }
-      const masterId = this.master.getProxyId();
-      const source = this.proxyManager
-        .getSources()
-        .find((s) => s.getKey('masterId') === masterId);
-      if (!source) {
-        return null;
-      }
-      return source;
     },
     editName() {
       if (this.labelmapSelection) {
@@ -181,133 +226,104 @@ export default {
       }
     },
     filterImageData(source) {
-      return source.getType() === 'vtkImageData';
-    },
-    getNextColorArray() {
-      return this.fromHex(this.paletteCycler.next());
+      return (
+        source.getProxyName() === 'TrivialProducer' &&
+        source.getType() === 'vtkImageData'
+      );
     },
     asHex(colorArray) {
       return `#${colorArray
         .map((c) => `00${c.toString(16)}`.slice(-2))
         .join('')}`;
     },
-    fromHex(colorStr) {
-      const hex = colorStr.slice(1); // remove leading #
-      const colorArray = [];
-      for (let i = 0; i < hex.length; i += 2) {
-        colorArray.push(Number.parseInt(hex.slice(i, i + 2), 16));
-      }
-      return colorArray;
+    setTargetVolume(sourceId) {
+      this.targetImageId = sourceId;
+      this.$emit('enable', false);
     },
-    getBrushSizeMax() {
-      if (this.labelmapProxy) {
-        const dims = this.labelmapProxy
-          .getDataset()
-          .getImageRepresentation()
-          .getDimensions();
-        return Math.floor(Math.max(...dims) / 2);
-      }
-      return 100;
-    },
-    getLabelmaps() {
-      const labelmaps = this.proxyManager
-        .getSources()
-        .filter((s) => s.getType() === 'vtkLabelMap')
-        .map((s) => ({
-          name: s.getName(),
-          sourceId: s.getProxyId(),
-        }));
+    setLabelMap(selectionId) {
+      this.filter = vtkPaintFilter.newInstance();
 
-      labelmaps.unshift({
-        name: 'Create new labelmap',
-        sourceId: 'CREATE_NEW_LABELMAP',
-      });
-      return labelmaps;
-    },
-    setMasterVolume(sourceId) {
-      this.master = this.proxyManager.getProxyById(sourceId);
+      if (selectionId === NEW_LABELMAP) {
+        const backgroundImage = this.targetImageProxy.getDataset();
+        this.filter.setBackgroundImage(backgroundImage);
 
-      this.removeWidgetFromViews();
+        const lmProxy = this.$proxyManager.createProxy('Sources', 'LabelMap');
+        const lmProxyId = lmProxy.getProxyId();
+        this.activeLabelmapId = lmProxyId;
 
-      if (this.master && this.enabled) {
-        this.addWidgetToViews();
-      }
-    },
-    setLabelMap(selected) {
-      if (selected === 'CREATE_NEW_LABELMAP') {
-        this.filter = vtkPaintFilter.newInstance();
-        this.filter.setBackgroundImage(this.master.getDataset());
-        this.filter.setRadius(this.radius);
-        this.filter.setLabel(this.label);
+        if (!(this.targetImageId in this.imageToLabelmaps)) {
+          this.$set(this.imageToLabelmaps, this.targetImageId, []);
+        }
+        this.imageToLabelmaps[this.targetImageId].push(lmProxyId);
+        const labelmapNum = this.imageToLabelmaps[this.targetImageId].length;
 
-        const paintImage = this.filter.getOutputData();
-        /* eslint-disable-next-line import/no-named-as-default-member */
-        const labelmap = vtkLabelMap.newInstance({
-          imageRepresentation: paintImage,
-        });
+        // stores state associated with each labelmap
+        const lmState = {
+          // selected label in the labelmap
+          selectedLabel: 1,
+          // the last generated color index
+          lastColorIndex: 0,
+        };
+        this.$set(this.labelmapStates, lmProxyId, lmState);
 
-        // restore original active source
-        const oldActiveSource = this.proxyManager.getActiveSource();
+        const baseImageName = this.targetImageProxy.getName();
+        lmProxy.setName(`Labelmap ${labelmapNum} (${baseImageName})`);
 
-        ReaderFactory.registerReadersToProxyManager(
-          [
-            {
-              name: `Labelmap for ${this.master.getName()}`,
-              dataset: labelmap,
-            },
-          ],
-          this.proxyManager
-        );
-        this.labelmapProxy = this.proxyManager.getActiveSource();
+        const labelMap = createLabelMapFromImage(backgroundImage);
+        labelMap.setLabelColor(lmState.selectedLabel, fromHex(this.palette[0]));
 
-        this.proxyManager.setActiveSource(oldActiveSource);
+        lmProxy.setInputData(labelMap);
+        this.filter.setLabelMap(labelMap);
 
-        this.labelmapProxy.setKey('masterId', this.master.getProxyId());
-
-        // set color of label 1
-        const color = this.getNextColorArray();
-        labelmap.setLabelColor(1, color);
-
-        // activate master source b/c we can't window/level nor slice scroll
-        // on the labelmap proxy due to lack of property domains on the
-        // labelmap proxy.
-        this.master.activate();
+        this.$proxyManager.createRepresentationInAllViews(lmProxy);
+        this.$proxyManager.renderAllViews();
       } else {
-        this.labelmapProxy = this.proxyManager.getProxyById(selected);
+        const lmProxy = this.$proxyManager.getProxyById(selectionId);
+        if (lmProxy) {
+          this.activeLabelmapId = lmProxy.getProxyId();
+          this.filter.setLabelMap(lmProxy.getDataset());
+        }
       }
 
-      if (this.labelmapProxy) {
-        const labelmap = this.labelmapProxy.getDataset();
-        this.labelmapSub.sub(labelmap.onModified(this.updateColorMap));
-        // initialize colormap
-        this.updateColorMap(labelmap);
-      }
+      this.filter.setLabel(this.activeLabelmapState.selectedLabel);
+      this.filter.setRadius(this.radius);
+
+      // need this so we can window/level/slice the original dataset
+      this.$proxyManager.getViews().forEach((view) => {
+        const source = this.targetImageProxy;
+        const rep = this.$proxyManager.getRepresentation(source, view);
+        if (view.bindRepresentationToManipulator && rep) {
+          view.bindRepresentationToManipulator(rep);
+        }
+      });
     },
-    updateColorMap(labelmap) {
-      const cm = labelmap.getColorMap();
-      const numComp = (a, b) => a - b;
-      this.colormapArray = Object.keys(cm)
-        .sort(numComp)
-        .map((label) => ({
-          label: Number(label), // object keys are always strings
-          color: cm[label].slice(0, 3),
-          opacity: cm[label][3],
-        }));
+    updateColorMap() {
+      const proxy = this.activeLabelmapProxy;
+      if (proxy) {
+        const labelmap = proxy.getDataset();
+        const cm = labelmap.getColorMap();
+        const numComp = (a, b) => a - b;
+        this.colormapArray = Object.keys(cm)
+          .sort(numComp)
+          .map((label) => ({
+            label: Number(label), // object keys are always strings
+            color: cm[label].slice(0, 3),
+            opacity: cm[label][3],
+          }));
+      }
     },
     setLabelColor(label, colorStr) {
-      const lb = this.labelmapProxy.getDataset();
+      const lb = this.activeLabelmapProxy.getDataset();
       const cm = lb.getColorMap();
       const origColor = cm[label];
-      const colorArray = this.fromHex(colorStr);
+      const colorArray = fromHex(colorStr);
       if (colorArray.length === 3) {
         lb.setLabelColor(label, [...colorArray, origColor[3]]);
-
-        this.$forceUpdate();
-        this.proxyManager.renderAllViews();
+        this.$proxyManager.renderAllViews();
       }
     },
     setLabelOpacity(label, opacityInput) {
-      const lb = this.labelmapProxy.getDataset();
+      const lb = this.activeLabelmapProxy.getDataset();
       const cm = lb.getColorMap();
       const color = cm[label].slice();
       if (opacityInput) {
@@ -316,8 +332,7 @@ export default {
         lb.setLabelColor(label, color);
       }
 
-      this.$forceUpdate();
-      this.proxyManager.renderAllViews();
+      this.$proxyManager.renderAllViews();
     },
     addLabel() {
       const labels = this.colormapArray.map((cm) => cm.label);
@@ -335,20 +350,22 @@ export default {
         }
         newLabel = l;
       }
-      this.label = newLabel;
 
-      const newColor = this.getNextColorArray();
-      this.labelmapProxy.getDataset().setLabelColor(newLabel, newColor);
+      const lmState = this.activeLabelmapState;
+      const colorIndex = (lmState.lastColorIndex + 1) % this.palette.length;
+      const newColor = fromHex(this.palette[colorIndex]);
 
-      this.$forceUpdate();
+      this.activeLabelmapProxy.getDataset().setLabelColor(newLabel, newColor);
+      lmState.lastColorIndex = colorIndex;
+
+      this.setLabel(newLabel);
     },
     deleteLabel(label) {
-      this.labelmapProxy.getDataset().removeLabel(label);
+      const labelmap = this.activeLabelmapProxy.getDataset();
+      labelmap.removeLabel(label);
 
-      // clear label from paintFilter's output image
-      // this will update the internal painted image.
-      const paintedImage = this.filter.getOutputData();
-      const data = paintedImage
+      // clear label
+      const data = labelmap
         .getPointData()
         .getScalars()
         .getData();
@@ -359,18 +376,17 @@ export default {
       }
 
       // set this.label to a valid label (0 is always valid)
-      this.label = 0;
+      this.setLabel(0);
 
-      this.proxyManager.renderAllViews();
-      this.$forceUpdate();
+      this.$proxyManager.renderAllViews();
     },
     undo() {
       this.filter.undo();
-      this.proxyManager.renderAllViews();
+      this.$proxyManager.renderAllViews();
     },
     redo() {
       this.filter.redo();
-      this.proxyManager.renderAllViews();
+      this.$proxyManager.renderAllViews();
     },
     colorToBackgroundCSS(cmArray, index) {
       const { color, opacity } = cmArray[index];
@@ -379,133 +395,110 @@ export default {
         backgroundColor: `rgba(${rgba.join(',')})`,
       };
     },
-    addWidgetToViews() {
-      // helper method to update handle pos from slice
-      const updateHandleFromSlice = (representation, view) => {
-        const position = [0, 0, 0];
-        // representation is in XYZ, not IJK, so slice is in world space
-        position[view.getAxis()] = representation.getSlice();
-        this.widget.getManipulator().setOrigin(position);
-      };
-
-      // helper method to update handle orientation
-      const updateHandleOrientation = (view) => {
-        if (view.isA('vtkView2DProxy')) {
-          const normal = view.getCamera().getDirectionOfProjection();
-          const handle = this.widget.getWidgetState().getHandle();
-          const manipulator = this.widget.getManipulator();
-          // since normal points away from camera, have handle normal point
-          // towards camera so the paint widget can render the handle on top
-          // of the image.
-          handle.rotateFromDirections(
-            handle.getDirection(),
-            normal.map((n) => n * -1)
-          );
-          manipulator.setNormal(normal);
-        }
-      };
-
-      // find 3d view; assume it always exists
-      this.view3D = this.proxyManager
-        .getViews()
-        .find((v) => v.getClassName() === 'vtkViewProxy');
-      if (!this.view3D) {
-        vtkErrorMacro('Could not find a 3D view!');
-        return;
-      }
-
-      // add widget to views
-      this.subs.push(
-        forAllViews(this.proxyManager, (view) => {
-          // synchronize view interactor animations
-          view.getInteractor().requestAnimation(SYNC);
-
-          const widgetManager = view.getReferenceByName('widgetManager');
-          if (view.isA('vtkView2DProxy')) {
-            const viewWidget = widgetManager.addWidget(
-              this.widget,
-              ViewTypes.SLICE
-            );
-
-            widgetManager.grabFocus(this.widget);
-
-            const rep = this.proxyManager.getRepresentation(
-              this.labelmapProxy,
-              view
-            );
-
-            // update handle position on mouse move from slice position and
-            // handle position
-            this.subs.push(
-              view.getInteractor().onMouseMove(() => {
-                updateHandleOrientation(view);
-
-                // Update handle based on master representation.
-                // If we go based on labelmap representation,
-                // we run the risk of creating the labelmap rep before the
-                // master rep, which would result in the labelmap rep rendering
-                // first, and thus rendering behind the master slice rep.
-                const r = this.proxyManager.getRepresentation(
-                  this.master,
-                  view
-                );
-                updateHandleFromSlice(r, view);
-              }, viewWidget.getPriority() + 1)
-            );
-
-            this.subs.push(
-              rep.onModified(() => updateHandleFromSlice(rep, view))
-            );
-
-            viewWidget.onStartInteractionEvent(() => {
-              this.filter.startStroke();
-              this.filter.addPoint(
-                this.widget.getWidgetState().getTrueOrigin()
-              );
-            });
-
-            viewWidget.onInteractionEvent(() => {
-              if (viewWidget.getPainting()) {
-                this.filter.addPoint(
-                  this.widget.getWidgetState().getTrueOrigin()
-                );
-              }
-            });
-
-            viewWidget.onEndInteractionEvent(() => {
-              this.filter.addPoint(
-                this.widget.getWidgetState().getTrueOrigin()
-              );
-              this.filter.endStroke();
-            });
-
-            this.proxyManager.renderAllViews();
-          } else {
-            // all other views assumed to be 3D views
-            widgetManager.disablePicking();
-            widgetManager.addWidget(this.widget, ViewTypes.VOLUME);
-          }
-        })
+    updateHandleOrientation(view) {
+      const normal = view.getCamera().getDirectionOfProjection();
+      const handle = this.paintProxy.getWidgetState().getHandle();
+      const manipulator = this.paintProxy.getWidget().getManipulator();
+      // since normal points away from camera, have handle normal point
+      // towards camera so the paint widget can render the handle on top
+      // of the image.
+      handle.rotateFromDirections(
+        handle.getDirection(),
+        normal.map((n) => n * -1)
       );
-
-      // first handle orientation update
-      updateHandleOrientation(this.proxyManager.getActiveView());
+      manipulator.setNormal(normal);
     },
-    removeWidgetFromViews() {
-      while (this.subs.length) {
-        this.subs.pop().unsubscribe();
-      }
+    updateHandleSlice(view) {
+      const position = [0, 0, 0];
+      const manipulator = this.paintProxy.getWidget().getManipulator();
+      const representation = this.$proxyManager.getRepresentation(
+        this.targetImageProxy,
+        view
+      );
+      // representation is in XYZ, not IJK, so slice is in world space
+      position[view.getAxis()] = representation.getSlice();
+      manipulator.setOrigin(position);
+    },
+    enablePainting() {
+      const paintProxy = this.$proxyManager.createProxy('Widgets', 'Paint');
+      paintProxy.getWidget().setRadius(this.radius);
 
-      this.proxyManager.getViews().forEach((view) => {
-        const widgetManager = view.getReferenceByName('widgetManager');
-        if (widgetManager) {
-          widgetManager.releaseFocus();
-          widgetManager.removeWidget(this.widget);
-        }
+      this.widgetId = paintProxy.getProxyId();
+      this.mousedViewId = -1;
 
-        // desynchronize view interactor animations
-        view.getInteractor().cancelAnimation(SYNC);
+      const view3DHandler = (view) => {
+        // sync animations across views
+        view.getInteractor().requestAnimation(SYNC);
+
+        // cleanup func
+        return () => {
+          view.getInteractor().cancelAnimation(SYNC);
+        };
+      };
+
+      const view2DHandler = (view, widgetManager, viewWidget) => {
+        // sync animations across views
+        view.getInteractor().requestAnimation(SYNC);
+
+        widgetManager.grabFocus(viewWidget);
+
+        // listeners must have higher priority than widgets
+        const priority = viewWidget.getPriority() + 1;
+
+        const vsub = view.getInteractor().onMouseMove(() => {
+          if (this.mousedViewId === view.getProxyId()) {
+            return;
+          }
+          this.mousedViewId = view.getProxyId();
+
+          this.updateHandleOrientation(view);
+          this.updateHandleSlice(view);
+        }, priority);
+
+        const s1 = viewWidget.onStartInteractionEvent(() => {
+          this.filter.startStroke();
+          this.filter.addPoint(
+            this.paintProxy.getWidgetState().getTrueOrigin()
+          );
+        });
+
+        const s2 = viewWidget.onInteractionEvent(() => {
+          if (viewWidget.getPainting()) {
+            this.filter.addPoint(
+              this.paintProxy.getWidgetState().getTrueOrigin()
+            );
+          }
+        });
+
+        const s3 = viewWidget.onEndInteractionEvent(() => {
+          this.filter.addPoint(
+            this.paintProxy.getWidgetState().getTrueOrigin()
+          );
+          this.filter.endStroke();
+        });
+
+        // cleanup funcs
+        return [
+          () => view.getInteractor().cancelAnimation(SYNC),
+          vsub.unsubscribe,
+          s1.unsubscribe,
+          s2.unsubscribe,
+          s3.unsubscribe,
+        ];
+      };
+
+      paintProxy.addToViews();
+
+      paintProxy.executeViewFuncs({
+        View3D: view3DHandler,
+        View2D_X: view2DHandler,
+        View2D_Y: view2DHandler,
+        View2D_Z: view2DHandler,
       });
+    },
+    disablePainting() {
+      this.$proxyManager.deleteProxy(this.paintProxy);
+      this.widgetId = -1;
     },
   },
 };

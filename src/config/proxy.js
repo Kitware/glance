@@ -11,6 +11,7 @@ import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
 import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
 
 import vtkCropWidget from 'paraview-glance/src/vtk/CropWidget';
+import vtkPaintWidget from 'vtk.js/Sources/Widgets/Widgets3D/PaintWidget';
 
 import vtkLabelMapVolumeRepProxy from 'paraview-glance/src/vtk/LabelMapVolumeRepProxy';
 import vtkLabelMapSliceRepProxy from 'paraview-glance/src/vtk/LabelMapSliceRepProxy';
@@ -80,6 +81,10 @@ export default {
     Widgets: {
       Crop: createProxyDefinition(vtkWidgetProxy, [], [], {
         factory: vtkCropWidget,
+        viewTypes: ViewToWidgetTypes,
+      }),
+      Paint: createProxyDefinition(vtkWidgetProxy, [], [], {
+        factory: vtkPaintWidget,
         viewTypes: ViewToWidgetTypes,
       }),
     },

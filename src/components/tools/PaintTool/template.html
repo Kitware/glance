@@ -3,34 +3,32 @@
     <v-layout wrap align-center>
       <v-flex xs12>
         <source-select
-          label="Master volume"
+          label="Select a Base Image"
           :filterFunc="filterImageData"
           bindToActiveSource
           hideIfOneDataset
-          @input="setMasterVolume"
+          @input="setTargetVolume"
         />
       </v-flex>
-      <!--
-      <v-flex xs10>
+      <v-flex xs12>
         <v-select
-          label="Output labelmap"
+          label="Select a Labelmap"
           :append-outer-icon="labelmapSelection ? 'mdi-pencil' : null"
-          :items="getLabelmaps()"
+          :items="labelmaps"
           item-text="name"
           item-value="sourceId"
-          :disabled="!master"
+          :disabled="targetImageId === -1"
           :value="labelmapSelection"
-          style="overflow:hidden;text-overflow:ellipses;"
+          style="overflow:hidden; text-overflow:ellipses;"
           @input="setLabelMap"
           @click:append-outer="editName"
         ></v-select>
       </v-flex>
-      <v-flex xs2><v-spacer /></v-flex>
       <template v-if="editingName">
         <v-flex xs10>
           <v-text-field
             label="Renaming labelmap"
-            v-model="labelmapName"
+            v-model="editableLabelmapName"
           />
         </v-flex>
         <v-flex xs2 class="text-center">
@@ -39,7 +37,6 @@
           </v-btn>
         </v-flex>
       </template>
-      -->
     </v-layout>
   </v-container>
 
@@ -50,6 +47,7 @@
           @change="$emit('enable', Boolean($event))"
           hide-details
           label="Paint Mode"
+          :disabled="!canPaint"
           :class="$style.paintSwitch"
         />
         <v-spacer />
@@ -58,7 +56,7 @@
           small
           class="mr-3"
           @click="undo"
-          :disabled="!master || !labelmapProxy"
+          :disabled="!canPaint"
         >
           <v-icon>mdi-undo</v-icon>
         </v-btn>
@@ -66,7 +64,7 @@
           icon
           small
           @click="redo"
-          :disabled="!master || !labelmapProxy"
+          :disabled="!canPaint"
         >
           <v-icon>mdi-redo</v-icon>
         </v-btn>
@@ -75,7 +73,7 @@
 
   <v-container grid-list-md :class="$style.container">
     <v-layout
-      v-show="master && labelmapProxy"
+      v-show="canPaint"
       wrap
       align-center
     >
@@ -85,20 +83,22 @@
       <v-flex xs8>
         <v-slider
           min="1"
-          :max="getBrushSizeMax()"
+          :max="brushSizeMax"
           step="1"
           dirty
           hide-details
-          v-model="radius"
+          :value="radius"
+          @input="setRadius"
         />
       </v-flex>
       <v-flex xs2>
         <v-text-field
           type="number"
           min="1"
-          :max="getBrushSizeMax()"
+          :max="brushSizeMax"
           step="1"
-          v-model="radius"
+          :value="radius"
+          @input="setRadius"
         />
       </v-flex>
       <v-flex xs12>
@@ -116,7 +116,8 @@
             </v-btn>
           </v-subheader>
           <v-radio-group
-            v-model="label"
+            :value="activeLabel"
+            @change="setLabel"
             :class="$style.radioGroup"
           >
             <template

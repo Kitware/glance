@@ -46,9 +46,7 @@ export default {
         }
         return err;
       });
-      return `ParaViewGlance: ${version}\n${
-        navigator.userAgent
-      }\n\n\`\`\`\n${errorStrings}\n\`\`\``;
+      return `ParaViewGlance: ${version}\n${navigator.userAgent}\n\n\`\`\`\n${errorStrings}\n\`\`\``;
     },
   },
   methods: {

@@ -3,3 +3,8 @@ html {
   position: fixed; top: 0; bottom: 0; left: 0; right: 0;
   overflow: hidden !important;
 }
+
+/* globally accessible and generic utility classes */
+:global(.pv-break-word) {
+  word-break: break-word;
+}

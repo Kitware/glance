@@ -1,20 +1,9 @@
 import { mapState } from 'vuex';
 
-import macro from 'vtk.js/Sources/macro';
-
 import vtkCropWidget from 'paraview-glance/src/vtk/CropWidget';
-import utils from 'paraview-glance/src/utils';
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
 import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
-
-const { vtkErrorMacro } = macro;
-const { makeSubManager, forAllViews } = utils;
-
-function unsubList(list) {
-  while (list.length) {
-    list.pop().unsubscribe();
-  }
-}
+import { makeSubManager } from 'paraview-glance/src/utils';
 
 // ----------------------------------------------------------------------------
 
@@ -44,6 +33,7 @@ export default {
         const cropFilter = this.getCropFilter(this.targetVolume);
 
         // create crop widget
+        // eslint-disable-next-line import/no-named-as-default-member
         this.cropWidget = vtkCropWidget.newInstance();
         this.cropWidget.setFaceHandlesEnabled(false);
         this.cropWidget.setEdgeHandlesEnabled(false);
@@ -93,7 +83,7 @@ export default {
   },
   proxyManager: {
     onProxyRegistrationChange(info) {
-      const { proxyGroup, action, proxy, proxyId } = info;
+      const { proxyGroup, action, proxy } = info;
       if (proxyGroup === 'Views' && action === 'register') {
         if (this.enabled) {
           this.addCropToView(proxy);
@@ -155,7 +145,7 @@ export default {
     },
     addCropToView(view) {
       const widgetManager = view.getReferenceByName('widgetManager');
-      const viewWidget = widgetManager.addWidget(this.cropWidget);
+      widgetManager.addWidget(this.cropWidget);
 
       widgetManager.enablePicking();
       view.renderLater();

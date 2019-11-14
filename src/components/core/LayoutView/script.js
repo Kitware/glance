@@ -20,23 +20,21 @@ function setViewBackground(view, background) {
 
 export default {
   name: 'LayoutView',
-  computed: Object.assign(
-    {
-      smallScreen() {
-        return this.$vuetify.breakpoint.width < Breakpoints.md;
-      },
-      views() {
-        const views = this.$store.getters[Getters.VIEWS];
-        return this.smallScreen ? views.slice(0, 1) : views;
-      },
-      gridTemplateRows() {
-        return this.viewCount < 4 ? '1fr' : '1fr 1fr';
-      },
-      gridTemplateColumns() {
-        return this.viewCount < 2 ? '1fr' : '1fr 1fr';
-      },
+  computed: {
+    smallScreen() {
+      return this.$vuetify.breakpoint.width < Breakpoints.md;
     },
-    mapState({
+    views() {
+      const views = this.$store.getters[Getters.VIEWS];
+      return this.smallScreen ? views.slice(0, 1) : views;
+    },
+    gridTemplateRows() {
+      return this.viewCount < 4 ? '1fr' : '1fr 1fr';
+    },
+    gridTemplateColumns() {
+      return this.viewCount < 2 ? '1fr' : '1fr 1fr';
+    },
+    ...mapState({
       proxyManager: 'proxyManager',
       viewData: (state) => state.views.viewData,
       order: (state) => state.views.viewOrder,
@@ -44,18 +42,16 @@ export default {
         // only show 1 view on small screens
         return this.smallScreen ? 1 : state.views.viewCount;
       },
-    })
-  ),
-  methods: Object.assign(
-    {
-      setViewBackground,
-      getViewType: viewHelper.getViewType,
-    },
-    mapActions({
+    }),
+  },
+  methods: {
+    setViewBackground,
+    getViewType: viewHelper.getViewType,
+    ...mapActions({
       updateViews: Actions.UPDATE_VIEWS,
       updateLayout: Actions.UPDATE_LAYOUT,
-    })
-  ),
+    }),
+  },
   components: {
     VtkView,
   },

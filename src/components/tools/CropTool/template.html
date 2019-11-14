@@ -1,4 +1,4 @@
-<div :class="$style.top">
+<div>
   <v-container :class="$style.container">
     <v-layout wrap align-center>
       <v-flex xs12>
@@ -15,20 +15,20 @@
   <v-container :class="$style.container">
     <v-layout wrap align-center>
       <template v-if="enabled">
-        <v-btn flat @click="disable">
-          <v-icon left>crop_free</v-icon>
+        <v-btn text @click="disable">
+          <v-icon left>mdi-crop-free</v-icon>
           Hide
         </v-btn>
       </template>
       <template v-else>
-        <v-btn flat @click="enable">
-          <v-icon left>crop</v-icon>
+        <v-btn text @click="enable">
+          <v-icon left>mdi-crop</v-icon>
           Crop
         </v-btn>
       </template>
       <v-spacer />
-      <v-btn @click="reset" :disabled="!canReset" flat>
-        <v-icon left>replay</v-icon>
+      <v-btn @click="reset" :disabled="!canReset" text>
+        <v-icon left>mdi-replay</v-icon>
         Reset
       </v-btn>
     </v-layout>

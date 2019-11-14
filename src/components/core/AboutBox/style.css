@@ -1,12 +1,15 @@
+.close {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+
 .aboutIcon {
   max-width: 100%;
-  height: 40px;
+  height: 56px;
 }
 
 .glanceIcon {
   width: 50%;
-}
-
-.list {
-  margin-left: 20px;
+  margin: 0 auto;
 }

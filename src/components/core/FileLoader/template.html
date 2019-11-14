@@ -5,7 +5,7 @@
         v-if="stage === 'load'"
         key="if-stage"
       >
-        <div :class="$style.loadingText">
+        <div class="text-center mb-4">
           <span class="display-1">
             Loading {{ loadingNames.join(', ') }}
           </span>
@@ -21,62 +21,76 @@
         v-else-if="stage === 'preload'"
         key="if-stage"
       >
-        <v-card-title class="title">
-          Please review your files before loading:
+        <v-card-title class="title grey--text text--darken-4">
+          A few files need extra details before loading:
         </v-card-title>
-        <v-expansion-panel expand>
-          <v-expansion-panel-content
+        <v-expansion-panels multiple accordion>
+          <v-expansion-panel
             v-for="(file, i) in files"
             :key="i"
-            :hide-actions="!isRawFile(file)"
+            :hide-default-footer="!isRawFile(file)"
           >
-            <div slot="header" class="body-2">
+            <v-expansion-panel-header class="body-2">
               <v-layout row align-center>
-                <v-flex shrink>{{ file.name }}</v-flex>
                 <v-flex shrink>
-                  <v-icon
-                    v-show="isRawFile(file)"
-                    :class="$style.icon"
-                  >
-                    error
-                  </v-icon>
+                  <v-icon v-show="isRawFile(file)" left>mdi-alert-circle</v-icon>
                 </v-flex>
+                <v-flex shrink>{{ file.name }}</v-flex>
               </v-layout>
-            </div>
-            <template v-if="isRawFile(file)">
+            </v-expansion-panel-header>
+            <v-expansion-panel-content v-if="isRawFile(file)">
               <raw-file-reader
                 :file="file"
                 v-on:change="setFileRawInfo(i, arguments[0])"
               />
-            </template>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-card-text>
       <v-card-text
         v-else-if="stage === 'error'"
         key="if-stage"
       >
-        <v-card-title class="title">
-          The following files errored while loading:
+        <v-card-title class="title grey--text text--darken-4">
+          A few files errored while loading, and won't be loaded:
         </v-card-title>
-        <v-expansion-panel expand>
-          <v-expansion-panel-content
+        <v-expansion-panels multiple accordion>
+          <v-expansion-panel
             v-for="(file, i) in files"
             :key="i"
-            :hide-actions="!file.error"
+            :disabled="!file.error"
           >
-            <div slot="header" class="body-2">
+            <v-expansion-panel-header
+              class="body-2"
+              :class="$style.headerText"
+            >
+              <v-icon
+                v-show="!!file.error"
+                color="red"
+                class="flex-grow-0"
+                left
+              >
+                mdi-alert-circle
+              </v-icon>
+              <v-icon
+                v-show="!file.error"
+                color="green"
+                class="flex-grow-0"
+                left
+              >
+                mdi-check-circle
+              </v-icon>
               {{ file.name }}
-              <v-icon v-show="!!file.error" color="red">error</v-icon>
-              <v-icon v-show="!file.error" color="green">check_circle</v-icon>
-            </div>
-            <v-card v-if="file.error">
-              <v-card-text>
-                Error: {{ file.error.message || 'Unknown or bad file' }}
-              </v-card-text>
-            </v-card>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-card v-if="file.error" flat>
+                <v-card-text>
+                  Error: {{ file.error.message || 'Unknown or bad file' }}
+                </v-card-text>
+              </v-card>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-card-text>
       <v-card-actions v-if="stage === 'preload'" key="if-actions">
         <v-spacer />

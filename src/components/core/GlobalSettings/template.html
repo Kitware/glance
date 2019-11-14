@@ -1,85 +1,94 @@
 <v-container :class="$style.container">
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
-      <span class="body-2">Background</span>
+      <span class="subtitle-2">Background</span>
     </div>
-    <v-divider :class="$style.divider" />
+    <v-divider class="mb-4" />
     <palette-picker
       :palette="palette"
-      :size="20"
+      :size="24"
       v-model="backgroundColor"
     />
   </v-card>
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
-      <span class="body-2">Overlay</span>
+      <span class="subtitle-2">Overlay</span>
     </div>
     <v-divider :class="$style.divider" />
-    <v-layout row align-center :class="$style.lineTopPadding">
-      <v-flex xs6>
-        <span class="body-2">Text opacity</span>
-      </v-flex>
-      <v-flex xs6>
-        <v-slider
-          :class="$style.noTopPadding"
-          hide-details
-
-          v-model="annotationOpacity"
-          :min="0"
-          :max="1"
-          :step="0.01"
-        />
-      </v-flex>
-    </v-layout>
-  </v-card>
-  <v-card flat :class="$style.card">
-    <div :class="$style.heading">
-      <v-layout row align-center>
-        <v-flex xs10>
-          <span class="body-2">Orientation Axis</span>
+    <v-container grid-list-xs class="pa-0">
+      <v-layout row align-center class="pt-1">
+        <v-flex xs6>
+          <span class="body-2">Text opacity</span>
         </v-flex>
-        <v-flex xs2>
-          <v-switch
-            v-model="orientationAxis"
+        <v-flex xs6>
+          <v-slider
+            :class="$style.slimInput"
             hide-details
+
+            v-model="annotationOpacity"
+            :min="0"
+            :max="1"
+            :step="0.01"
           />
         </v-flex>
       </v-layout>
+    </v-container>
+  </v-card>
+  <v-card flat :class="$style.card">
+    <div :class="$style.heading">
+      <v-container grid-list-xs class="pa-0">
+        <v-layout row align-center>
+          <v-flex xs10>
+            <span class="subtitle-2">Orientation Axis</span>
+          </v-flex>
+          <v-flex xs2>
+            <v-switch
+              v-model="orientationAxis"
+              :class="$style.slimInput"
+              hide-details
+            />
+          </v-flex>
+        </v-layout>
+      </v-container>
     </div>
     <v-divider :class="$style.divider" />
-    <v-layout row align-center :class="$style.lineTopPadding">
-      <v-flex xs3>
-        <span class="body-2">Type</span>
-      </v-flex>
-      <v-flex xs9>
-        <v-select
-          :class="[$style.noTopPadding, $style.noSelect]"
-          dense
-          flat
-          hide-details
-          :disabled="!orientationAxis"
+    <v-container grid-list-xs class="pa-0">
+      <v-layout row align-center class="pt-1">
+        <v-flex xs3>
+          <span class="body-2">Type</span>
+        </v-flex>
+        <v-flex xs9>
+          <v-select
+            class="pv-no-select"
+            :class="$style.slimInput"
+            dense
+            flat
+            hide-details
+            :disabled="!orientationAxis"
 
-          v-model="axisType"
-          :items="axisTypes"
-        />
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center :class="$style.lineTopPadding">
-      <v-flex xs3>
-        <span class="body-2">Preset</span>
-      </v-flex>
-      <v-flex xs9>
-        <v-select
-          :class="[$style.noTopPadding, $style.noSelect]"
-          dense
-          flat
-          hide-details
+            v-model="axisType"
+            :items="axisTypes"
+          />
+        </v-flex>
+      </v-layout>
+      <v-layout row align-center class="pt-1">
+        <v-flex xs3>
+          <span class="body-2">Preset</span>
+        </v-flex>
+        <v-flex xs9>
+          <v-select
+            class="pv-no-select"
+            :class="$style.slimInput"
+            dense
+            flat
+            hide-details
 
-          v-model="orientationPreset"
-          :items="orientationPresets"
-        />
-      </v-flex>
-    </v-layout>
+            v-model="orientationPreset"
+            :items="orientationPresets"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
   </v-card>
   <gpu-information
     :width="250"
@@ -87,35 +96,39 @@
   />
   <v-card flat :class="$style.card" v-if="hasVR()">
     <div :class="$style.heading">
-      <v-layout row align-center>
-        <v-flex xs10>
-          <span class="body-2">Virtual Reality</span>
+      <v-container grid-list-xs class="pa-0">
+        <v-layout row align-center>
+          <v-flex xs10>
+            <span class="subtitle-2">Virtual Reality</span>
+          </v-flex>
+          <v-flex xs2>
+            <v-switch
+              v-model="vrEnabled"
+              hide-details
+              v-on:change="toggleVR"
+            />
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </div>
+    <v-divider :class="$style.divider" />
+    <v-container grid-list-xs class="pa-0">
+      <v-layout row align-center class="pt-1" wrap>
+        <v-flex xs5>
+          <span class="body-2">Physical scale</span>
         </v-flex>
-        <v-flex xs2>
-          <v-switch
-            v-model="vrEnabled"
+        <v-flex xs7>
+          <v-slider
+            :class="$style.slimInput"
             hide-details
-            v-on:change="toggleVR"
+
+            v-model="physicalScale"
+            min="0.1"
+            max="10"
+            step="any"
           />
         </v-flex>
       </v-layout>
-    </div>
-    <v-divider :class="$style.divider" />
-    <v-layout row align-center :class="$style.lineTopPadding" wrap>
-      <v-flex xs5>
-        <span class="body-2">Physical scale</span>
-      </v-flex>
-      <v-flex xs7>
-        <v-slider
-          :class="$style.noTopPadding"
-          hide-details
-
-          v-model="physicalScale"
-          min="0.1"
-          max="10"
-          step="any"
-        />
-      </v-flex>
-    </v-layout>
+    </v-container>
   </v-card>
 </v-container>

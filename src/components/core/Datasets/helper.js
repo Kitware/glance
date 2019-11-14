@@ -13,7 +13,7 @@ function extractDomains(domains, uiList) {
   for (let i = 0; i < uiList.length; i++) {
     if (uiList[i].name && uiList[i].domain) {
       const { domain } = uiList[i];
-      domains[uiList[i].name] = Object.assign({}, domain);
+      domains[uiList[i].name] = { ...domain };
       if (domain.step && domain.step === 'any') {
         if (Number.isInteger(domain.min) && Number.isInteger(domain.max)) {
           domains[uiList[i].name].step = 0.01;

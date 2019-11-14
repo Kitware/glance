@@ -1,4 +1,5 @@
 import { mapState, mapMutations } from 'vuex';
+import { VBottomSheet, VDialog } from 'vuetify/lib';
 
 import { Mutations } from 'paraview-glance/src/store/types';
 
@@ -64,6 +65,10 @@ function save() {
 
 export default {
   name: 'ScreenshotDialog',
+  components: {
+    VBottomSheet,
+    VDialog,
+  },
   data() {
     return {
       filename: '',
@@ -73,28 +78,26 @@ export default {
       fileTypes: FILE_TYPES,
     };
   },
-  computed: Object.assign(
-    {
-      smallScreen() {
-        return this.$vuetify.breakpoint.smAndDown;
-      },
-      landscapeScreen() {
-        const { width, height } = this.$vuetify.breakpoint;
-        return width > height;
-      },
-      dialogType() {
-        return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
-      },
-      flexLayout() {
-        const size = !this.smallScreen || this.landscapeScreen ? 'xs6' : 'xs12';
-        return { [size]: true };
-      },
+  computed: {
+    smallScreen() {
+      return this.$vuetify.breakpoint.smAndDown;
     },
-    mapState({
+    landscapeScreen() {
+      const { width, height } = this.$vuetify.breakpoint;
+      return width > height;
+    },
+    dialogType() {
+      return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
+    },
+    flexLayout() {
+      const size = !this.smallScreen || this.landscapeScreen ? 'xs6' : 'xs12';
+      return { [size]: true };
+    },
+    ...mapState({
       screenshot: (state) => state.screenshots.currentScreenshot,
       showDialog: (state) => state.screenshots.showDialog,
-    })
-  ),
+    }),
+  },
   watch: {
     transparentBackground: generateImage,
     fileType: generateImage,
@@ -106,16 +109,14 @@ export default {
       }
     },
   },
-  methods: Object.assign(
-    {
-      generateImage,
-      backgroundToFillStyle,
-      save,
-    },
-    mapMutations({
+  methods: {
+    generateImage,
+    backgroundToFillStyle,
+    save,
+    ...mapMutations({
       close: Mutations.CLOSE_SCREENSHOT_DIALOG,
-    })
-  ),
+    }),
+  },
   created() {
     this.canvas = document.createElement('canvas');
   },

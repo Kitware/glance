@@ -1,8 +1,3 @@
-// import Backpack from './backpack.jpg';
-// import Foot from './foot.jpg';
-// import LIDC2 from './LIDC2.jpg';
-// import Skull from './skull.jpg';
-// import TieFighter from './tie-fighter.jpg';
 import Aneurism from './aneurism.jpg';
 import CAD from './cad.jpg';
 import Engine from './engine.jpg';

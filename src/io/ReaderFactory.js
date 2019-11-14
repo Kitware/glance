@@ -206,11 +206,10 @@ function registerReadersToProxyManager(readers, proxyManager) {
         (reader && reader.getOutputData) ||
         (dataset && dataset.isA && dataset.isA('vtkDataSet'));
       const source = needSource
-        ? proxyManager.createProxy(
-            'Sources',
-            'TrivialProducer',
-            Object.assign({ name }, metadata)
-          )
+        ? proxyManager.createProxy('Sources', 'TrivialProducer', {
+            name,
+            ...metadata,
+          })
         : null;
       if (dataset && dataset.isA && dataset.isA('vtkDataSet')) {
         source.setInputData(dataset, sourceType);

@@ -1,12 +1,12 @@
 <v-dialog v-model="dialog" width="90%" max-width="900px">
   <v-card>
     <v-card-title class="title">Welcome to ParaView Glance!</v-card-title>
-    <v-card-text>
+    <v-card-text class="body-2">
       <p>
         You may experience slower rendering speeds because of the following
         reason(s):
       </p>
-      <ul :class="$style.list">
+      <ul class="pl-10">
         <li v-if="issues.webglVersion">
           Detected WebGL version {{ issues.webglVersion }}. For best performance,
           please use a computer and/or browser with at least WebGL 2.
@@ -20,13 +20,13 @@
         </li>
       </ul>
     </v-card-text>
-    <v-card-actions>
+    <v-card-actions class="d-flex justify-space-between align-center pa-5">
       <v-checkbox
         v-model="suppressWarning"
         label="Don't show again"
+        class="mt-0 pt-0"
         hide-details
       />
-      <v-spacer />
       <v-btn
         color="primary"
         v-on:click="closeDialog"

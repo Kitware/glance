@@ -18,14 +18,7 @@
   margin-bottom: 16px;
 }
 
-.noTopPadding {
+.slimInput {
   padding-top: 0;
-}
-
-.lineTopPadding {
-  padding-top: 5px;
-}
-
-.noSelect {
-  user-select: none;
+  margin-top: 0;
 }

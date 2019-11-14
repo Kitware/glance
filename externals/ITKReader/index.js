@@ -25,15 +25,17 @@ export const extensions = imageExtensions.concat(polyDataExtensions);
 
 export function registerToGlance(Glance) {
   if (Glance) {
-    imageExtensions.filter((e) => e !== 'dcm').forEach((extension) =>
-      Glance.registerReader({
-        extension,
-        name: `${extension.toUpperCase()} Reader`,
-        vtkReader: vtkITKImageReader,
-        binary: true,
-        fileNameMethod: 'setFileName',
-      })
-    );
+    imageExtensions
+      .filter((e) => e !== 'dcm')
+      .forEach((extension) =>
+        Glance.registerReader({
+          extension,
+          name: `${extension.toUpperCase()} Reader`,
+          vtkReader: vtkITKImageReader,
+          binary: true,
+          fileNameMethod: 'setFileName',
+        })
+      );
 
     polyDataExtensions.forEach((extension) =>
       Glance.registerReader({

@@ -2,8 +2,10 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const autoprefixer = require('autoprefixer');
+const vtkRules = require('vtk.js/Utilities/config/dependency').webpack;
 
 const externals = require('./externals.js');
 
@@ -50,49 +52,29 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: /node_modules/,
-        use: [
-          'vue-style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              localIdentName: '[folder]-[local]-[sha512:hash:base32:5]',
-            },
-          },
-        ],
+        use: [], // prod/dev fills in the loaders
       },
       {
         test: /\.css$/,
         exclude: /\.module\.css$/,
         include: /node_modules/,
-        use: ['style-loader', 'css-loader'],
+        // prod/dev fills in the last loader
+        use: ['css-loader'],
+      },
+      {
+        test: /\.s[ca]ss$/,
+        // prod/dev fills in the last loader
+        use: [
+          'css-loader',
+          'sass-loader',
+        ],
       },
       {
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
         enforce: 'pre',
       },
-      /* for vtk.js */
-      {
-        test: /\.glsl$/,
-        include: /node_modules(\/|\\)vtk\.js(\/|\\)/,
-        loader: 'shader-loader',
-      },
-      {
-        test: /\.svg$/,
-        include: /node_modules(\/|\\)vtk\.js(\/|\\)/,
-        loader: 'raw-loader',
-      },
-      {
-        test: /\.worker\.js$/,
-        include: /node_modules(\/|\\)vtk\.js(\/|\\)/,
-        use: [
-          {
-            loader: 'worker-loader',
-            options: { inline: true, fallback: false },
-          },
-        ],
-      },
+      /* for vtk.js styles */
       {
         test: /\.module\.css$/,
         use: [
@@ -100,8 +82,9 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              localIdentName: '[name]-[local]-[sha512:hash:base32:5]',
-              modules: true,
+              modules: {
+                localIdentName: '[name]-[local]-[sha512:hash:base32:5]',
+              },
             },
           },
           {
@@ -112,10 +95,11 @@ module.exports = {
           },
         ],
       },
-    ],
+    ].concat(vtkRules.core.rules),
   },
   plugins: [
     new VueLoaderPlugin(),
+    new VuetifyLoaderPlugin(),
     new WriteFilePlugin(),
     new CopyPlugin([
       {

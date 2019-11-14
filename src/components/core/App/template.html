@@ -2,167 +2,221 @@
   :enabled="!landingVisible"
   v-on:drop="openFiles"
 >
-  <v-app
-    slot-scope="{ dragHover }"
-    :class="$style.root"
-  >
-    <!-- 960 is vuetify's md breakpoint -->
-    <v-navigation-drawer
-      v-model="controlsDrawer"
-      :clipped="$vuetify.breakpoint.mdAndUp"
-      mobile-break-point="960"
-      app
-      fixed
-      disable-resize-watcher
-      touchless
+  <template v-slot:default="{ dragHover }">
+    <v-app
+      :class="$style.root"
     >
-      <controls-drawer />
-    </v-navigation-drawer>
-
-    <v-toolbar
-      clipped-left
-      app
-    >
-      <v-toolbar-side-icon
-        :disabled="landingVisible"
-        @click.native.stop="controlsDrawer = !controlsDrawer"
-      />
-      <!-- smaller than height of the toolbar -->
-      <v-tooltip
-        bottom
-        :disabled="smallScreen"
+      <v-navigation-drawer
+        v-model="controlsDrawer"
+        :clipped="$vuetify.breakpoint.mdAndUp"
+        :mobile-break-point="$vuetify.breakpoint.thresholds.md"
+        app
+        fixed
+        disable-resize-watcher
+        touchless
+        width="300"
       >
-        <a
-          slot="activator"
-          href="#"
-          v-on:click.prevent="toggleLanding"
+        <controls-drawer />
+      </v-navigation-drawer>
+
+      <v-app-bar app clipped-left>
+        <v-app-bar-nav-icon
+          :disabled="landingVisible"
+          @click.native.stop="controlsDrawer = !controlsDrawer"
+        />
+        <!-- smaller than height of the toolbar -->
+        <v-tooltip
+          bottom
+          :disabled="smallScreen"
         >
-          <svg-icon
-            :icon="iconLogo"
-            height="52px"
-            style="margin-top: 6px"
-          />
-        </a>
-        <span v-if="landingVisible" key="if-landingVisible">Go to app</span>
-        <span v-else key="if-landingVisible">Back to landing page</span>
-      </v-tooltip>
-      <v-spacer />
-      <v-btn
-        v-if="errors.length"
-        key="if-has-errors"
-        :class="$style.toolbarButton"
-        flat
-        color="error"
-        v-on:click="errorDialog = true"
-      >
-        <v-icon>error</v-icon>
-        <span>{{ errors.length }}</span>
-        <span v-show="!smallScreen">error(s)</span>
-      </v-btn>
-      <v-btn
-        :class="$style.toolbarButton"
-        flat
-        v-on:click="promptUserFiles"
-      >
-        <v-icon>folder</v-icon>
-        <span v-show="!smallScreen">Open</span>
-      </v-btn>
-      <v-btn
-        v-show="!landingVisible"
-        :class="$style.toolbarButton"
-        flat
-        v-on:click="saveState()"
-      >
-        <v-icon>cloud_download</v-icon>
-        <span v-show="!smallScreen">Save state</span>
-      </v-btn>
-      <v-btn
-        v-show="!landingVisible"
-        :class="$style.toolbarButton"
-        flat
-        v-on:click="screenshotsDrawer = true"
-      >
-        <v-icon>collections</v-icon>
-        <span v-show="!smallScreen">Screenshots ({{ screenshotCount }})</span>
-      </v-btn>
-      <v-btn
-        :class="$style.toolbarButton"
-        flat
-        v-on:click="aboutDialog = true"
-      >
-        <!-- width of other icons in toolbar -->
-        <svg-icon icon="kitware-logo" width="24px" />
-        <span v-show="!smallScreen">About</span>
-      </v-btn>
-    </v-toolbar>
+          <template v-slot:activator="{ on }">
+            <a
+              href="#"
+              v-on="on"
+              v-on:click.prevent="toggleLanding"
+            >
+              <svg-icon
+                :icon="iconLogo"
+                height="52px"
+                style="margin-top: 6px"
+              />
+            </a>
+          </template>
+          <span v-if="landingVisible" key="if-landingVisible">Go to app</span>
+          <span v-else key="if-landingVisible">Back to landing page</span>
+        </v-tooltip>
+        <v-spacer />
+        <v-toolbar-items>
+          <v-btn
+            v-if="errors.length"
+            key="if-has-errors"
+            text
+            color="error"
+            v-on:click="errorDialog = true"
+          >
+            <v-icon left>mdi-alert-circle</v-icon>
+            <span>{{ errors.length }}</span>
+            &nbsp;
+            <span v-show="!smallScreen">error(s)</span>
+          </v-btn>
+        </v-toolbar-items>
+        <v-toolbar-items v-show="$vuetify.breakpoint.smAndUp">
+          <v-btn
+            text
+            v-on:click="promptUserFiles"
+          >
+            <v-icon left>mdi-folder</v-icon>
+            <span v-show="!smallScreen">Open</span>
+          </v-btn>
+          <v-btn
+            v-show="!landingVisible"
+            text
+            v-on:click="saveState()"
+          >
+            <v-icon left>mdi-cloud-download</v-icon>
+            <span v-show="!smallScreen">Save state</span>
+          </v-btn>
+          <v-btn
+            v-show="!landingVisible"
+            text
+            v-on:click="screenshotsDrawer = true"
+          >
+            <v-icon left>mdi-image-multiple</v-icon>
+            <span v-show="!smallScreen">Screenshots ({{ screenshotCount }})</span>
+          </v-btn>
+          <v-btn
+            text
+            v-on:click="aboutDialog = true"
+          >
+            <!-- width of other icons in toolbar -->
+            <svg-icon
+              icon="kitware-logo"
+              width="24px"
+              class="mr-2"
+            />
+            <span v-show="!smallScreen">About</span>
+          </v-btn>
+        </v-toolbar-items>
+        <v-menu>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              v-show="$vuetify.breakpoint.xsOnly"
+              icon
+              v-on="on"
+            >
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-show="!landingVisible"
+              link
+              @click="promptUserFiles"
+            >
+              <v-icon left>mdi-folder</v-icon>
+              <span>Open</span>
+            </v-list-item>
+            <v-list-item
+              v-show="!landingVisible"
+              link
+              @click="saveState"
+            >
+              <v-icon left>mdi-cloud-download</v-icon>
+              <span>Save State</span>
+            </v-list-item>
+            <v-list-item
+              link
+              @click="screenshotDrawer = true"
+            >
+              <v-icon left>mdi-image-multiple</v-icon>
+              <span>Screenshots ({{ screenshotCount }})</span>
+            </v-list-item>
+            <v-list-item
+              v-show="!landingVisible"
+              link
+              @click="aboutDialog = true"
+            >
+              <!-- width of other icons in toolbar -->
+              <svg-icon
+                icon="kitware-logo"
+                width="24px"
+                class="mr-2"
+              />
+              <span>About</span>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-app-bar>
 
-    <v-content :class="$style.appContent">
-      <landing
-        v-if="landingVisible"
-        key="if-landing"
-        v-on:open="promptUserFiles"
-        v-on:open-urls="openSample"
-        v-on:open-files="openFiles"
-      />
-      <layout-view v-else key="if-landing" />
-    </v-content>
+      <v-content :class="$style.appContent">
+        <landing
+          v-if="landingVisible"
+          key="if-landing"
+          v-on:open="promptUserFiles"
+          v-on:open-urls="openSample"
+          v-on:open-files="openFiles"
+        />
+        <layout-view v-else key="if-landing" />
+      </v-content>
 
-    <v-navigation-drawer
-      v-model="screenshotsDrawer"
-      :stateless="screenshotsDrawerStateless"
-      app
-      right
-      temporary
-      touchless
-    >
-      <screenshots
-        v-on:screenshot-count="screenshotCount = $event"
-        v-on:close="screenshotsDrawer = false"
-      />
-    </v-navigation-drawer>
+      <v-navigation-drawer
+        v-model="screenshotsDrawer"
+        :stateless="screenshotsDrawerStateless"
+        app
+        right
+        temporary
+        touchless
+        width="300"
+      >
+        <screenshots
+          v-on:screenshot-count="screenshotCount = $event"
+          v-on:close="screenshotsDrawer = false"
+        />
+      </v-navigation-drawer>
 
-    <!-- file loader -->
-    <file-loader v-on:load="showApp" />
+      <!-- file loader -->
+      <file-loader v-on:load="showApp" />
 
-    <!-- state generator -->
-    <state-file-generator />
+      <!-- state generator -->
+      <state-file-generator />
 
-    <!-- dnd overlay -->
-    <div
-      :class="{ [$style.overlay]: true, [$style.overlayVisible]: dragHover }"
-    >
-      <div :class="$style.overlayText">
-        <div class="display-3">Drop files here</div>
-        <v-icon :class="[$style.noTransition, $style.dropIcon]">publish</v-icon>
+      <!-- dnd overlay -->
+      <div
+        :class="{ [$style.overlay]: true, [$style.overlayVisible]: dragHover }"
+      >
+        <div :class="$style.overlayText">
+          <div class="display-3">Drop files here</div>
+          <v-icon size="4.75rem">mdi-publish</v-icon>
+        </div>
       </div>
-    </div>
 
-    <!-- browser issues -->
-    <browser-issues />
+      <!-- browser issues -->
+      <browser-issues />
 
-    <!-- about dialog -->
-    <component
-      :is="dialogType"
-      v-model="aboutDialog"
-      max-width="50%"
-    >
-      <about-box v-on:close="aboutDialog = false" />
-    </component>
+      <!-- about dialog -->
+      <component
+        :is="dialogType"
+        v-model="aboutDialog"
+        max-width="50%"
+      >
+        <about-box v-on:close="aboutDialog = false" />
+      </component>
 
-    <!-- error dialog-->
-    <component
-      :is="dialogType"
-      v-model="errorDialog"
-      max-width="50%"
-    >
-      <error-box
-        :errors="errors"
-        v-on:close="errorDialog = false"
-        v-on:clear="errors = []"
-      />
-    </component>
+      <!-- error dialog-->
+      <component
+        :is="dialogType"
+        v-model="errorDialog"
+        max-width="50%"
+      >
+        <error-box
+          :errors="errors"
+          v-on:close="errorDialog = false"
+          v-on:clear="errors = []"
+        />
+      </component>
 
-    <!-- portal mount point -->
-    <div id="app-portal-mount" />
-  </v-app>
+      <!-- portal mount point -->
+      <div id="app-portal-mount" />
+    </v-app>
+  </template>
 </drag-and-drop>

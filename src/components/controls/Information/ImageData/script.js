@@ -7,6 +7,6 @@ export default {
     MatrixView,
   },
   methods: {
-    showVect: (vect, d = ', ') => vect.join(`${d}`),
+    showVect: (vect, d = ', ') => vect.map((c) => c.toFixed(2)).join(d),
   },
 };

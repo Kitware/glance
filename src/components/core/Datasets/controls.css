@@ -1,0 +1,75 @@
+.block {
+  padding: 4px 0;
+  padding-right: 6px;
+}
+
+.blockTitle {
+  padding: 8px 4px;
+}
+
+.blockContent {
+  padding: 4px;
+}
+
+.blockRow {
+  margin: 4px 0;
+}
+
+.slimInput {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.canSelect {
+  user-select: text;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.smallLabel {
+  font-size: 12px;
+}
+
+.active {
+  color: rgba(0,0,0,0.54) !important;
+}
+
+.inactive {
+  color: rgba(0,0,0,0.25) !important;
+}
+
+.matrix {
+  padding: 0;
+}
+
+.disable {
+  opacity: 0.25;
+}
+
+.lutImage {
+  width: 100%;
+  height: 20px;
+  border: solid 1px #eee;
+}
+
+.dropdownMenu {
+  min-width: 300px;
+  max-height: 500px;
+}
+
+.button {
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+}
+
+.click {
+  cursor: pointer;
+}
+
+.negativeTopSpacing {
+  margin-top: -4px;
+}

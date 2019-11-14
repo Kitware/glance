@@ -1,7 +1,3 @@
-.top {
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-}
-
 .container {
   padding: 8px;
 }
@@ -23,17 +19,15 @@
   overflow: hidden;
 }
 
-.thinBorder {
-  border: 1px solid #ccc;
-  box-shadow: none;
+.toolButton {
+  /* override vuetify */
+  min-width: unset !important;
+  /* override vuetify */
+  padding: 0 6px !important;
 }
 
 .tools {
   text-align: center;
-}
-
-.toolButton {
-  height: 30px;
 }
 
 .toolIcon {

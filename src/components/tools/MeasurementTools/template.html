@@ -1,4 +1,4 @@
-<div :class="$style.top">
+<div>
   <v-container :class="$style.container">
     <v-layout wrap align-center>
       <v-flex xs12>
@@ -19,15 +19,25 @@
             <span class="body-2">Tool List</span>
           </v-flex>
           <v-flex xs6>
-            <v-btn-toggle v-model="activeToolIndex" :class="$style.thinBorder">
+            <v-btn-toggle
+              v-model="activeToolIndex"
+              :class="$style.toolList"
+            >
               <v-tooltip
                 bottom
                 v-for="tool in toolList"
                 :key="tool.name"
               >
-                <v-btn slot="activator" flat :class="$style.toolButton">
-                  <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
-                </v-btn>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    small
+                    text
+                    v-on="on"
+                    :class="$style.toolButton"
+                  >
+                    <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
+                  </v-btn>
+                </template>
                 {{ tool.name }}
               </v-tooltip>
             </v-btn-toggle>
@@ -46,8 +56,15 @@
             <div :class="$style.row" :key="idx">
               <span :class="$style.rowAvatar">
                 <v-tooltip bottom>
-                  <svg-icon slot="activator" :icon="tool.toolInfo.icon" :class="$style.toolIcon" />
-                  {{ tool.axis }} Axis: slice {{ tool.slice }}
+                  <template v-slot:activator="{ on }">
+                    <span v-on="on">
+                      <svg-icon
+                        :icon="tool.toolInfo.icon"
+                        :class="$style.toolIcon"
+                      />
+                    </span>
+                  </template>
+                  <span>{{ tool.axis }} Axis: slice {{ tool.slice }}</span>
                 </v-tooltip>
               </span>
               <div :class="$style.rowContent">
@@ -63,9 +80,13 @@
                 :class="$style.action"
               >
                 <v-tooltip bottom>
-                  <v-btn slot="activator" small icon>
-                    <v-icon color="teal" @click="focusWidget(idx)">open_in_new</v-icon>
-                  </v-btn>
+                  <template v-slot:activator="{ on }">
+                    <v-btn v-on="on" small icon>
+                      <v-icon color="teal" @click="focusWidget(idx)">
+                        mdi-open-in-new
+                      </v-icon>
+                    </v-btn>
+                  </template>
                   Jump to slice
                 </v-tooltip>
               </div>
@@ -73,7 +94,7 @@
                 <pop-up>
                   <template v-slot:trigger>
                     <v-btn small icon>
-                      <v-icon>more_vert</v-icon>
+                      <v-icon>mdi-dots-vertical</v-icon>
                     </v-btn>
                   </template>
                   <template v-slot:popup="{ close }">
@@ -108,6 +129,7 @@
                             max="32"
                             step="1"
                             dirty
+                            hide-details
                             :value="tool.size"
                             @input="setToolSize(idx, arguments[0])"
                           />
@@ -125,18 +147,17 @@
                       </v-layout>
                       <v-divider :class="$style.divider" />
                       <v-layout align-center>
-                        <v-flex xs2>
+                        <v-flex xs3 class="text-center">
                           <v-btn icon @click="close">
-                            <v-icon>save</v-icon>
+                            <v-icon>mdi-content-save</v-icon>
                           </v-btn>
                         </v-flex>
                         <v-spacer />
-                        <v-flex xs2>
+                        <v-flex xs3 class="text-center">
                           <v-btn icon @click="deleteTool(idx); close()">
-                            <v-icon color="red">delete</v-icon>
+                            <v-icon color="red">mdi-delete</v-icon>
                           </v-btn>
                         </v-flex>
-                        <v-flex xs1 />
                       </v-layout>
                     </v-container>
                   </template>
@@ -147,7 +168,7 @@
           </template>
         </template>
         <template v-else>
-          <div class="pt-2 body-1 teal--text text-xs-center">No measurements yet</div>
+          <div class="pt-2 body-1 teal--text text-center">No measurements yet</div>
         </template>
       </div>
     </v-card>

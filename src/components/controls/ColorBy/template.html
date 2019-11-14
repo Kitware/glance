@@ -2,18 +2,18 @@
   v-if="available === 'geometry' || available === 'volume'"
 >
   <v-card flat :class="$style.block">
-    <v-container fluid grid-list-lg>
+    <v-container fluid grid-list-xs class="pa-0">
       <v-layout row wrap align-center>
         <v-flex xs3 v-show="available === 'geometry'">
-          Color By
+          <span class="body-2">Color By:</span>
         </v-flex>
         <v-flex xs9 v-show="available === 'geometry'">
           <v-select
-            :class="[$style.noTopPadding, $style.noSelect]"
+            class="pv-no-select"
+            :class="$style.slimInput"
             dense
             flat
             hide-details
-
             v-model="colorBy"
             :items="arrays"
           />
@@ -22,21 +22,28 @@
           <palette-picker
             :palette="palette"
             :value="solidColor"
-            :size="20"
+            :size="24"
+            class="pt-1 pb-1"
             v-on:input="setSolidColor"
           />
         </v-flex>
         <template v-if="colorBy.length">
-          <v-flex xs12 v-if="colorBy.length">
+          <v-flex
+            v-if="colorBy.length"
+            xs12
+            class="pt-2"
+          >
             <v-menu
               :close-on-content-click="false"
               offset-y
               v-model="presetMenu"
             >
-              <div slot="activator">
-                <span class="body-1">{{ presetName }}</span>
-                <img :src="lutImage" :class="$style.lutImage" />
-              </div>
+              <template v-slot:activator="{ on }">
+                <div v-on="on" :class="$style.clickable">
+                  <span class="body-2">{{ presetName }}</span>
+                  <img :src="lutImage" :class="$style.lutImage" />
+                </div>
+              </template>
               <tree-view
                 v-if="presetMenu"
                 :class="$style.dropdownMenu"
@@ -47,10 +54,15 @@
               />
             </v-menu>
           </v-flex>
-          <v-flex xs5 :class="$style.negativeTopSpacing">
+          <v-flex
+            xs5
+            class="pb-4"
+            :class="$style.negativeTopSpacing"
+          >
             <v-text-field
               v-model="dataRange[0]"
               @change="proxyManager.renderAllViews()"
+              label="Min"
               step="any"
               :disabled="available !== 'geometry'"
               :class="$style.negativeTopSpacing"
@@ -59,30 +71,37 @@
           </v-flex>
           <v-flex
             xs2
+            class="text-center pb-4"
             :class="$style.negativeTopSpacing"
-            style="padding: 0"
           >
             <v-tooltip
               v-if="available === 'geometry'"
               bottom
             >
-              <v-btn
-                icon
-                small
-                slot="activator"
-                :class="$style.negativeTopSpacing"
-                @click="resetDataRange"
-              >
-                <v-icon>refresh</v-icon>
-              </v-btn>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  icon
+                  small
+                  :class="$style.negativeTopSpacing"
+                  v-on="on"
+                  @click="resetDataRange"
+                >
+                  <v-icon>mdi-arrow-expand-horizontal</v-icon>
+                </v-btn>
+              </template>
               Reset range
             </v-tooltip>
             <v-spacer v-else />
           </v-flex>
-          <v-flex xs5 :class="$style.negativeTopSpacing">
+          <v-flex
+            xs5
+            class="pb-4"
+            :class="$style.negativeTopSpacing"
+          >
             <v-text-field
               v-model="dataRange[1]"
               @change="proxyManager.renderAllViews()"
+              label="Max"
               step="any"
               :disabled="available !== 'geometry'"
               :class="$style.negativeTopSpacing"
@@ -114,7 +133,7 @@
                 :max="shiftRange[1]"
                 step="0"
                 hide-details
-                :class="$style.noTopPadding"
+                :class="$style.slimInput"
               />
             </v-flex>
             <v-flex xs3>
@@ -125,7 +144,7 @@
                 :max="shiftRange[1]"
                 step="1"
                 hide-details
-                :class="$style.noTopPadding"
+                :class="$style.slimInput"
               />
             </v-flex>
           </v-layout>
@@ -137,11 +156,11 @@
                 :class="$style.click"
                 v-on:click.stop="interpolateScalarsBeforeMapping = !interpolateScalarsBeforeMapping"
               >
-                {{ interpolateScalarsBeforeMapping ? 'check_box' : 'check_box_outline_blank' }}
+                {{ interpolateScalarsBeforeMapping ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline' }}
               </v-icon>
             </v-flex>
             <v-flex xs10>
-              <span class="body-1">Interpolate scalar before mapping</span>
+              <span class="body-2">Interpolate scalar before mapping</span>
             </v-flex>
           </v-layout>
         </v-flex>

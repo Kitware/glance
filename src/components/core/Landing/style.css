@@ -9,6 +9,10 @@
   height: 100%;
 }
 
+.banner {
+  min-height: 250px;
+}
+
 .fileUpload {
   display: flex;
   flex-flow: row;
@@ -33,18 +37,12 @@
   padding: 15px;
 }
 
-.buttonText {
-  margin-right: 8px;
-  text-transform: uppercase;
-}
-
 .sampleData {
   flex: 1;
   border-radius: 5px;
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  /*max-width: 256px;*/
 }
 
 .linkOverlay {
@@ -54,7 +52,7 @@
   width: 100%;
   z-index: 1;
   opacity: 0;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
   font-size: 300%;
   text-align: center;
   font-weight: bolder;
@@ -78,10 +76,6 @@
   position: absolute;
   bottom: 0px;
   width: 100%;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.75);
   padding: 10px;
-}
-
-.noSelect {
-  user-select: none;
 }

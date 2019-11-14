@@ -4,37 +4,39 @@
   v-if="dataset.isA('vtkImageData')"
 >
   <v-card-title :class="$style.blockTitle">
-    <span class="body-2">vtkImageData</span>
+    <span class="body-2 font-weight-medium">vtkImageData</span>
   </v-card-title>
   <v-card-text :class="$style.blockContent">
-    <v-layout row align-center>
-      <v-flex xs6 class="body-1">Dimensions:</v-flex>
-      <v-flex xs6 class="body-1" :class="$style.canSelect">
-        {{ showVect(dataset.getDimensions(), ' x ') }}
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center>
-      <v-flex xs6 class="body-1">Origin:</v-flex>
-      <v-flex xs6 class="body-1" :class="$style.canSelect">
-        {{ showVect(dataset.getOrigin()) }}
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center>
-      <v-flex xs6 class="body-1">Spacing:</v-flex>
-      <v-flex xs6 class="body-1" :class="$style.canSelect">
-        {{ showVect(dataset.getSpacing()) }}
-      </v-flex>
-    </v-layout>
-    <v-layout row align-center>
-      <v-flex xs6 class="body-1">Orientation:</v-flex>
-      <v-flex xs6 class="body-1" :class="$style.canSelect">
-        <matrix-view
-          :class="$style.matrix"
-          :matrix="dataset.getDirection()"
-          :rows="3"
-          :columns="3"
-        />
-      </v-flex>
-    </v-layout>
+    <v-container fluid grid-list-xs class="pa-0">
+      <v-layout row align-center>
+        <v-flex xs5 class="body-2">Dimensions:</v-flex>
+        <v-flex xs7 class="body-2" :class="$style.canSelect">
+          ({{ showVect(dataset.getDimensions(), ', ') }})
+        </v-flex>
+      </v-layout>
+      <v-layout row align-center>
+        <v-flex xs5 class="body-2">Origin:</v-flex>
+        <v-flex xs7 class="body-2" :class="$style.canSelect">
+          ({{ showVect(dataset.getOrigin()) }})
+        </v-flex>
+      </v-layout>
+      <v-layout row align-center>
+        <v-flex xs5 class="body-2">Spacing:</v-flex>
+        <v-flex xs7 class="body-2" :class="$style.canSelect">
+          ({{ showVect(dataset.getSpacing()) }})
+        </v-flex>
+      </v-layout>
+      <v-layout row align-top>
+        <v-flex xs5 class="body-2">Orientation:</v-flex>
+        <v-flex xs7 class="body-2" :class="$style.canSelect">
+          <matrix-view
+            :class="$style.matrix"
+            :matrix="dataset.getDirection()"
+            :rows="3"
+            :columns="3"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
   </v-card-text>
 </v-card>

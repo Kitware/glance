@@ -3,16 +3,16 @@
 >
   <v-card light flat :class="$style.block">
     <v-card-text :class="$style.blockContent">
-      <v-container fluid grid-list-lg>
+      <v-container fluid grid-list-xs class="pa-0">
         <v-layout row wrap align-center>
           <v-flex xs3>
             <label :class="$style.smallLabel">Tolerance</label>
           </v-flex>
           <v-flex xs6>
             <v-slider
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
-
+              always-dirty
               v-model="tolerance"
               :min="domains.tolerance.min"
               :max="domains.tolerance.max"
@@ -21,10 +21,9 @@
           </v-flex>
           <v-flex xs3>
             <v-text-field
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
               type="number"
-
               v-model="tolerance"
               :min="domains.tolerance.min"
               :max="domains.tolerance.max"
@@ -36,9 +35,9 @@
           </v-flex>
           <v-flex xs6>
             <v-slider
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
-
+              always-dirty
               v-model="atomicRadiusScaleFactor"
               :min="domains.atomicRadiusScaleFactor.min"
               :max="domains.atomicRadiusScaleFactor.max"
@@ -47,10 +46,9 @@
           </v-flex>
           <v-flex xs3>
             <v-text-field
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
               type="number"
-
               v-model="atomicRadiusScaleFactor"
               :min="domains.atomicRadiusScaleFactor.min"
               :max="domains.atomicRadiusScaleFactor.max"
@@ -62,9 +60,9 @@
           </v-flex>
           <v-flex xs6>
             <v-slider
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
-
+              always-dirty
               v-model="bondRadius"
               :min="domains.bondRadius.min"
               :max="atomicRadiusScaleFactor"
@@ -73,10 +71,9 @@
           </v-flex>
           <v-flex xs3>
             <v-text-field
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
               type="number"
-
               v-model="bondRadius"
               :min="domains.bondRadius.min"
               :max="atomicRadiusScaleFactor"
@@ -88,9 +85,8 @@
           </v-flex>
           <v-flex xs9>
             <v-text-field
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
-
               v-model="hideElements"
             />
           </v-flex>

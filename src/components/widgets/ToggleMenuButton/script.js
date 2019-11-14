@@ -12,7 +12,7 @@ export default {
   },
   computed: {
     icon() {
-      return this.visible ? 'keyboard_arrow_left' : 'keyboard_arrow_right';
+      return this.visible ? 'mdi-chevron-left' : 'mdi-chevron-right';
     },
   },
 };

@@ -1,15 +1,14 @@
 /* eslint-disable import/prefer-default-export */
 import Vue from 'vue';
 import Vuex from 'vuex';
-import Vuetify from 'vuetify';
+import Vuetify from 'vuetify/lib';
 
 import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
 /* eslint-disable-next-line import/extensions */
 import 'typeface-roboto';
-import 'material-design-icons-iconfont/dist/material-design-icons.css';
-import 'vuetify/dist/vuetify.min.css';
+import '@mdi/font/css/materialdesignicons.css';
 import 'paraview-glance/static/global.css';
 
 import 'paraview-glance/src/io/ParaViewGlanceReaders';
@@ -63,6 +62,7 @@ export function createViewer(container, proxyConfig = null) {
     el: container,
     components: { App },
     store,
+    vuetify: new Vuetify(),
     template: '<App />',
   });
 

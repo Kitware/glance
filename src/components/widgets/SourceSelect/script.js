@@ -78,7 +78,7 @@ export default {
       }, 0);
     },
     onProxyRegistrationChange(info) {
-      const { proxyGroup, action, proxyId } = info;
+      const { proxyGroup } = info;
       if (proxyGroup === 'Sources') {
         // re-render select list
         this.$forceUpdate();

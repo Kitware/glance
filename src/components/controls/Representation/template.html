@@ -2,7 +2,7 @@
   v-if="domains.representation || domains.opacity || domains.sampleDistance"
 >
   <v-card flat :class="$style.block" v-if="domains.representation">
-    <v-container fluid grid-list-lg>
+    <v-container fluid grid-list-xs class="pa-0">
       <v-layout row wrap align-center>
         <v-flex xs12>
           <v-select
@@ -10,7 +10,6 @@
             flat
             hide-details
             label="Type"
-
             v-model="representation"
             :items="domains.representation.items"
           />
@@ -23,16 +22,16 @@
       <span class="body-2">Mesh</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">
-      <v-container fluid grid-list-lg>
+      <v-container fluid grid-list-xs class="pa-0">
         <v-layout row wrap align-center>
           <v-flex xs3>
             <label :class="$style.smallLabel">Point Size</label>
           </v-flex>
           <v-flex xs6>
             <v-slider
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
-
+              always-dirty
               v-model="pointSize"
               :min="domains.pointSize.min"
               :max="domains.pointSize.max"
@@ -41,10 +40,9 @@
           </v-flex>
           <v-flex xs3>
             <v-text-field
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
               type="number"
-
               v-model="pointSize"
               :min="domains.pointSize.min"
               :max="domains.pointSize.max"
@@ -56,9 +54,9 @@
           </v-flex>
           <v-flex xs6>
             <v-slider
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
-
+              always-dirty
               v-model="opacity"
               :min="domains.opacity.min"
               :max="domains.opacity.max"
@@ -67,10 +65,9 @@
           </v-flex>
           <v-flex xs3>
             <v-text-field
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
               type="number"
-
               v-model="opacity"
               :min="domains.opacity.min"
               :max="domains.opacity.max"
@@ -83,19 +80,19 @@
   </v-card>
   <v-card flat :class="$style.block" v-if="domains.sampleDistance && domains.edgeGradient">
     <v-card-title flat :class="$style.blockTitle">
-      <span class="body-2">Shadow & Edge</span>
+      <span class="body-2">Shadow &amp; Edge</span>
     </v-card-title>
     <v-card-text :class="$style.blockContent">
-      <v-container fluid grid-list-lg>
+      <v-container fluid grid-list-xs class="pa-0">
         <v-layout row wrap align-center>
           <v-flex xs3>
             <label :class="$style.smallLabel">Sample Distance</label>
           </v-flex>
           <v-flex xs6>
             <v-slider
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
-
+              always-dirty
               v-model="sampleDistance"
               :min="domains.sampleDistance.min"
               :max="domains.sampleDistance.max"
@@ -104,10 +101,9 @@
           </v-flex>
           <v-flex xs3>
             <v-text-field
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
               type="number"
-
               v-model="sampleDistance"
               :min="domains.sampleDistance.min"
               :max="domains.sampleDistance.max"
@@ -119,9 +115,9 @@
           </v-flex>
           <v-flex xs6>
             <v-slider
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
-
+              always-dirty
               v-model="edgeGradient"
               :min="domains.edgeGradient.min"
               :max="domains.edgeGradient.max"
@@ -130,10 +126,9 @@
           </v-flex>
           <v-flex xs3>
             <v-text-field
-              :class="$style.noTopPadding"
+              :class="$style.slimInput"
               hide-details
               type="number"
-
               v-model="edgeGradient"
               :min="domains.edgeGradient.min"
               :max="domains.edgeGradient.max"

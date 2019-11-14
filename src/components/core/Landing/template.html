@@ -1,17 +1,15 @@
-<div :class="['grey lighten-3', $style.root]">
-  <v-responsive
-    color="grey darken-3"
-    class="grey darken-3"
-    :height="smallScreen ? '360px' : '250px'"
-  >
-    <v-container fill-height>
+<div class="grey lighten-3" :class="$style.root">
+  <v-responsive class="grey darken-3">
+    <v-container grid-list-lg fill-height :class="$style.banner">
       <v-layout row align-center>
         <v-flex
-          :xs6="!smallScreen"
-          :xs12="smallScreen"
+          :xs6="!$vuetify.breakpoint.smAndDown"
+          :xs12="$vuetify.breakpoint.smAndDown"
         >
           <v-card flat dark>
-            <v-card-title class="display-1">Visualize your data with ParaView Glance</v-card-title>
+            <v-card-title class="display-1 text-center pv-break-word">
+              Visualize your data with ParaView Glance
+            </v-card-title>
             <v-card-text>
               A general purpose standalone web application by
               <a
@@ -26,9 +24,8 @@
             </v-card-text>
           </v-card>
         </v-flex>
-        <!-- iPads have width 768, so show controls on them -->
         <v-flex
-          v-if="!smallScreen"
+          v-if="!$vuetify.breakpoint.smAndDown"
           key="if-large-enough-screen"
           xs6
           fill-height
@@ -36,37 +33,35 @@
           <drag-and-drop
             enabled
             :class="$style.dnd"
-            v-on:drop="$emit('open-files', $event)"
+            @drop="$emit('open-files', $event)"
           >
-            <div
-              slot-scope="{ dragHover }"
-              :class="{ [$style.fileUpload]: true, [$style.fileUploadHover]: dragHover }"
-              v-on:click.stop="$emit('open')"
-            >
-              <div :class="['white--text body-2', $style.fileUploadContents]">
-                <v-btn
-                  color="primary"
-                  raised="false"
-                  v-on:click.stop="$emit('open')"
-                >
-                  <span v-if="dragHover" :class="$style.buttonText">drop your file</span>
-                  <span v-else :class="$style.buttonText">open a file</span>
-                  <v-icon>folder_open</v-icon>
-                </v-btn>
-                <div :class="$style.noSelect">
-                  or drop one anywhere in this box to begin.
+            <template v-slot:default="{ dragHover }">
+              <div
+                :class="{ [$style.fileUpload]: true, [$style.fileUploadHover]: dragHover }"
+                @click.stop="$emit('open')"
+              >
+                <div class="white--text body-2" :class="$style.fileUploadContents">
+                  <v-btn
+                    color="primary"
+                    raised="false"
+                    @click.stop="$emit('open')"
+                  >
+                    <span v-if="dragHover" class="text-uppercase mr-2">drop your file</span>
+                    <span v-else class="text-uppercase mr-2">open a file</span>
+                    <v-icon>mdi-folder-outline</v-icon>
+                  </v-btn>
+                  <div class="pv-no-select mt-2">
+                    or drop one anywhere in this box to begin.
+                  </div>
                 </div>
               </div>
-            </div>
+            </template>
           </drag-and-drop>
         </v-flex>
       </v-layout>
     </v-container>
   </v-responsive>
-  <v-container
-    :class="$style.noSelect"
-    grid-list-xl
-  >
+  <v-container class="mt-4 pv-no-select" grid-list-lg>
     <v-layout row wrap>
       <v-flex xs12>
         <span class="title">Sample Data</span>
@@ -78,18 +73,11 @@
         :xs6="$vuetify.breakpoint.sm"
         :xs12="$vuetify.breakpoint.xs"
       >
-        <v-card
-          :class="$style.sampleData"
-          flat
-          tile
-        >
-          <v-img
-            :src="sample.image"
-            height="300px"
-          />
+        <v-card :class="$style.sampleData" flat tile>
+          <v-img :src="sample.image" height="300px" />
           <div
             :class="$style.linkOverlay"
-            v-on:click.stop="openSample(sample)"
+            @click.stop="openSample(sample)"
           >
             <div :class="$style.linkOverlayText" class="body-2">
               {{ sample.label }} ({{ sample.size }})
@@ -105,8 +93,8 @@
       </v-flex>
     </v-layout>
   </v-container>
-  <v-footer class="pa-2 d-flex" height="48px" color="transparent">
-    <div class="mb-2 text-xs-center grey--text text--darken-2">
+  <v-footer class="d-flex flex-column" height="48px" color="transparent">
+    <div class="mb-2 text-center grey--text text--darken-2">
       <div>&copy; {{ new Date().getFullYear() }} — Kitware, Inc.</div>
       <div>ParaView Glance ({{version}})</div>
     </div>

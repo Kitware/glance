@@ -73,7 +73,7 @@ function updateOpacity() {
       (r) => r.getInput() === this.source && r.isA('vtkSliceRepresentation')
     );
   for (let i = 0; i < sliceReps.length; i++) {
-    const actors = sliceReps[i]
+    sliceReps[i]
       .getActors()
       .map((actor) => actor.getProperty())
       .filter((property) => property.isA('vtkImageProperty'))

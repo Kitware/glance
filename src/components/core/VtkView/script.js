@@ -297,27 +297,25 @@ export default {
       return this.layoutCount === 2 && this.layoutIndex === 1;
     },
   },
-  methods: Object.assign(
-    {
-      changeViewType,
-      getAvailableActions,
-      onBeforeDestroy,
-      onMounted,
-      orientationLabels,
-      quadView,
-      resetCamera,
-      rollLeft,
-      rollRight,
-      screenCapture,
-      singleView,
-      splitView,
-      updateOrientation,
-      viewTypes,
-    },
-    mapMutations({
+  methods: {
+    changeViewType,
+    getAvailableActions,
+    onBeforeDestroy,
+    onMounted,
+    orientationLabels,
+    quadView,
+    resetCamera,
+    rollLeft,
+    rollRight,
+    screenCapture,
+    singleView,
+    splitView,
+    updateOrientation,
+    viewTypes,
+    ...mapMutations({
       takeScreenshot: Mutations.TAKE_SCREENSHOT,
-    })
-  ),
+    }),
+  },
   mounted() {
     this.$nextTick(this.onMounted);
   },

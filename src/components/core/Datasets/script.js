@@ -74,8 +74,9 @@ export default {
     onActiveSourceChange(source) {
       if (source) {
         this.activeSourceId = source.getProxyId();
+      } else {
+        this.activeSourceId = -1;
       }
-      this.activeSourceId = -1;
     },
   },
   methods: {

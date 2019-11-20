@@ -56,7 +56,7 @@ const DEFAULT_VALUES = {
 export function extend(publicAPI, model, initialValues = {}) {
   Object.assign(model, DEFAULT_VALUES, initialValues);
 
-  vtkImageData.extend(publicAPI, model);
+  vtkImageData.extend(publicAPI, model, initialValues);
 
   macro.setGet(publicAPI, model, ['colorMap']);
 

@@ -86,6 +86,9 @@ export default {
       }
     },
   },
+  created() {
+    this.internalControlsDrawer = !this.smallScreen;
+  },
   mounted() {
     this.initViews();
 

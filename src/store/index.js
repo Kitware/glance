@@ -7,10 +7,10 @@ import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
 import { ProxyManagerVuexPlugin } from 'paraview-glance/src/plugins';
 
+import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import Config from 'paraview-glance/src/config';
 import files from 'paraview-glance/src/store/fileLoader';
-import screenshots from 'paraview-glance/src/store/screenshots';
 import views from 'paraview-glance/src/store/views';
 import widgets from 'paraview-glance/src/store/widgets';
 
@@ -70,11 +70,12 @@ function createStore(pxm = null) {
       route: 'landing', // valid values: landing, app
       savingStateName: null,
       loadingState: false,
+      screenshotDialog: false,
+      pendingScreenshot: null,
       panels: {},
     },
     modules: {
       files: files(proxyManager),
-      screenshots: screenshots(proxyManager),
       views: views(proxyManager),
       widgets: widgets(proxyManager),
     },
@@ -97,8 +98,18 @@ function createStore(pxm = null) {
         }
         state.panels[priority].push(component);
       },
+      openScreenshotDialog(state, screenshot) {
+        state.pendingScreenshot = screenshot;
+        state.screenshotDialog = true;
+      },
+      closeScreenshotDialog(state) {
+        state.pendingScreenshot = null;
+        state.screenshotDialog = false;
+      },
     },
     actions: {
+      addPanel: wrapMutationAsAction('addPanel'),
+      closeScreenshotDialog: wrapMutationAsAction('closeScreenshotDialog'),
       saveState({ commit, state }, fileNameToUse) {
         const t = new Date();
         const fileName =
@@ -272,7 +283,22 @@ function createStore(pxm = null) {
           changeActiveSliceDelta(proxyManager, -1);
         }
       },
-      addPanel: wrapMutationAsAction('addPanel'),
+      takeScreenshot({ commit, state }, viewToUse = null) {
+        const view = viewToUse || proxyManager.getActiveView();
+        const viewType = viewHelper.getViewType(view);
+        if (view) {
+          return view.captureImage().then((imgSrc) => {
+            commit('openScreenshotDialog', {
+              imgSrc,
+              viewName: view.getName(),
+              viewData: {
+                background: state.views.backgroundColors[viewType],
+              },
+            });
+          });
+        }
+        return Promise.resolve();
+      },
     },
   });
 }

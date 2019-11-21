@@ -69,7 +69,7 @@ export default {
       screenshotsDrawerStateless(state) {
         // Keep screenshot drawer open if screenshot was taken from
         // the "Capture Active View" button.
-        return this.screenshotsDrawer && !!state.screenshots.showDialog;
+        return this.screenshotsDrawer && !!state.screenshotDialog;
       },
       smallScreen() {
         return this.$vuetify.breakpoint.smAndDown;

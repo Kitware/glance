@@ -1,4 +1,4 @@
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { VBottomSheet, VDialog } from 'vuetify/lib';
 
 const FILE_TYPES = ['.png', '.jpeg'];
@@ -91,9 +91,9 @@ export default {
       const size = !this.smallScreen || this.landscapeScreen ? 'xs6' : 'xs12';
       return { [size]: true };
     },
-    ...mapState('screenshots', {
-      screenshot: (state) => state.currentScreenshot,
-      showDialog: (state) => state.showDialog,
+    ...mapState({
+      screenshot: (state) => state.pendingScreenshot,
+      showDialog: (state) => state.screenshotDialog,
     }),
   },
   watch: {
@@ -111,8 +111,8 @@ export default {
     generateImage,
     backgroundToFillStyle,
     save,
-    ...mapMutations({
-      close: 'screenshots/closeScreenshotDialog',
+    ...mapActions({
+      close: 'closeScreenshotDialog',
     }),
   },
   created() {

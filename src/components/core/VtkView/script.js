@@ -246,6 +246,6 @@ export default {
       'splitView',
       'quadView',
     ]),
-    ...mapActions('screenshots', ['takeScreenshot']),
+    ...mapActions(['takeScreenshot']),
   },
 };

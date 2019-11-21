@@ -1,6 +1,10 @@
 import Vue from 'vue';
 
-import { wrapMutationAsAction } from 'paraview-glance/src/utils';
+import {
+  wrapMutationAsAction,
+  remapIdKeys,
+  remapIdList,
+} from 'paraview-glance/src/utils';
 
 export default () => ({
   namespaced: true,
@@ -19,9 +23,24 @@ export default () => ({
     setLabelmapState(state, { labelmapId, labelmapState }) {
       Vue.set(state.labelmapStates, labelmapId, labelmapState);
     },
+    rewriteProxyIds(state, idMapping) {
+      state.imageToLabelmaps = remapIdKeys(state.imageToLabelmaps, idMapping);
+      state.labelmapStates = remapIdKeys(state.labelmapStates, idMapping);
+
+      Object.keys(state.imageToLabelmaps).forEach((id) => {
+        state.imageToLabelmaps[id] = remapIdList(
+          state.imageToLabelmaps[id],
+          idMapping
+        );
+      });
+    },
   },
   actions: {
     addLabelmapToImage: wrapMutationAsAction('addLabelmapToImage'),
     setLabelmapState: wrapMutationAsAction('setLabelmapState'),
+    rewriteProxyIds: {
+      root: true,
+      handler: wrapMutationAsAction('rewriteProxyIds'),
+    },
   },
 });

@@ -14,6 +14,10 @@ import screenshots from 'paraview-glance/src/store/screenshots';
 import views from 'paraview-glance/src/store/views';
 import widgets from 'paraview-glance/src/store/widgets';
 
+import { wrapMutationAsAction } from 'paraview-glance/src/utils';
+
+const STATE_VERSION = 2;
+
 // http://jsperf.com/typeofvar
 function typeOf(o) {
   return {}.toString
@@ -38,14 +42,6 @@ function merge(dst, src) {
 }
 /* eslint-enable no-param-reassign */
 
-// Reduces app state to relevant persistent state
-function reduceState(state) {
-  return {
-    route: state.route,
-    views: state.views,
-  };
-}
-
 function changeActiveSliceDelta(proxyManager, delta) {
   const view = proxyManager.getActiveView();
   if (view.isA('vtkView2DProxy')) {
@@ -59,10 +55,10 @@ function changeActiveSliceDelta(proxyManager, delta) {
   }
 }
 
-function createStore(proxyManager = null) {
-  let pxm = proxyManager;
+function createStore(pxm = null) {
+  let proxyManager = pxm;
   if (!proxyManager) {
-    pxm = vtkProxyManager.newInstance({
+    proxyManager = vtkProxyManager.newInstance({
       proxyConfiguration: Config.Proxy,
     });
   }
@@ -70,7 +66,7 @@ function createStore(proxyManager = null) {
   return new Vuex.Store({
     plugins: [ProxyManagerVuexPlugin(proxyManager)],
     state: {
-      proxyManager: pxm, // TODO remove
+      proxyManager, // TODO remove
       route: 'landing', // valid values: landing, app
       savingStateName: null,
       loadingState: false,
@@ -112,7 +108,20 @@ function createStore(proxyManager = null) {
 
         commit('savingState', fileName);
 
-        const userData = reduceState(state);
+        const activeSourceId = proxyManager.getActiveSource()
+          ? proxyManager.getActiveSource().getProxyId()
+          : -1;
+
+        const userData = {
+          version: STATE_VERSION,
+          activeSourceId,
+          store: {
+            route: state.route,
+            views: state.views,
+            widgets: state.widgets,
+          },
+        };
+
         const options = {
           recycleViews: true,
           datasetHandler(dataset, source) {
@@ -128,7 +137,7 @@ function createStore(proxyManager = null) {
         };
 
         const zip = new JSZip();
-        state.proxyManager.saveState(options, userData).then((stateObject) => {
+        proxyManager.saveState(options, userData).then((stateObject) => {
           zip.file('state.json', JSON.stringify(stateObject));
           zip
             .generateAsync({
@@ -150,15 +159,15 @@ function createStore(proxyManager = null) {
               document.body.removeChild(anchor);
 
               setTimeout(() => URL.revokeObjectURL(url), 60000);
-              commit('savingState', null);
-            });
+            })
+            .then(() => commit('savingState', null));
         });
       },
       restoreAppState({ commit, dispatch, state }, appState) {
         commit('loadingState', true);
 
         dispatch('resetWorkspace');
-        return state.proxyManager
+        return proxyManager
           .loadState(appState, {
             datasetHandler(ds) {
               if (ds.vtkClass) {
@@ -178,7 +187,7 @@ function createStore(proxyManager = null) {
                     return dataset;
                   }
                   if (reader && reader.setProxyManager) {
-                    reader.setProxyManager(state.proxyManager);
+                    reader.setProxyManager(proxyManager);
                     return null;
                   }
                   throw new Error('Invalid dataset');
@@ -197,18 +206,21 @@ function createStore(proxyManager = null) {
             },
           })
           .then((userData) => {
-            this.replaceState(merge(state, userData));
+            const { version, store, $oldToNewIdMapping } = userData;
+            if (version >= 2) {
+              this.replaceState(merge(state, store));
+            } else {
+              this.replaceState(merge(state, userData));
+            }
 
-            // Wait for the layout to be done (nextTick is not enough)
-            setTimeout(() => {
-              // Advertise that state loading is done
-              commit('loadingState', false);
-
+            // make sure store modules have a chance to rewrite their saved mappings
+            // before we re-populate proxy manager state
+            dispatch('rewriteProxyIds', $oldToNewIdMapping).then(() => {
               // Force update
-              state.proxyManager.modified();
+              proxyManager.modified();
 
               // Activate visible view with a preference for the 3D one
-              const visibleViews = state.proxyManager
+              const visibleViews = proxyManager
                 .getViews()
                 .filter((view) => view.getContainer());
               const view3D = visibleViews.find(
@@ -220,26 +232,35 @@ function createStore(proxyManager = null) {
               }
 
               // Make sure pre-existing view (not expected in state) have a representation
-              state.proxyManager
+              proxyManager
                 .getSources()
-                .forEach(state.proxyManager.createRepresentationInAllViews);
-            }, 100);
-          });
+                .forEach(proxyManager.createRepresentationInAllViews);
+
+              if (version >= 2) {
+                const { activeSourceId } = userData;
+                const source = proxyManager.getProxyById(activeSourceId);
+                if (source) {
+                  source.activate();
+                }
+              }
+            });
+          })
+          .then(() => commit('loadingState', false));
       },
-      resetWorkspace({ state }) {
+      resetWorkspace() {
         // use setTimeout to avoid some weird crashing with extractDomains
-        state.proxyManager
+        proxyManager
           .getSources()
           .forEach((source) =>
-            setTimeout(() => state.proxyManager.deleteProxy(source), 0)
+            setTimeout(() => proxyManager.deleteProxy(source), 0)
           );
         setTimeout(() => {
-          state.proxyManager.renderAllViews();
-          state.proxyManager.resetCameraInAllViews();
+          proxyManager.renderAllViews();
+          proxyManager.resetCameraInAllViews();
         }, 0);
       },
-      resetActiveCamera({ state }) {
-        state.proxyManager.resetCamera();
+      resetActiveCamera() {
+        proxyManager.resetCamera();
       },
       increaseSlice({ state }) {
         if (state.route === 'app') {
@@ -251,6 +272,7 @@ function createStore(proxyManager = null) {
           changeActiveSliceDelta(proxyManager, -1);
         }
       },
+      addPanel: wrapMutationAsAction('addPanel'),
     },
   });
 }

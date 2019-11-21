@@ -32,7 +32,7 @@ export function wrapMutationAsAction(mutation) {
 /**
  * Renames keys according to a mapping from old to new key.
  */
-function remapIdKeys(obj, mapping) {
+export function remapIdKeys(obj, mapping) {
   const newObj = {};
   Object.keys(obj).forEach((id) => {
     let newId = id;
@@ -47,7 +47,7 @@ function remapIdKeys(obj, mapping) {
 /**
  * Replaces elements in a list according to a mapping.
  */
-function remapIdList(list, mapping) {
+export function remapIdList(list, mapping) {
   return list.map((id) => {
     if (id in mapping) {
       return mapping[id];

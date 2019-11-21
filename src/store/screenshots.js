@@ -1,5 +1,4 @@
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
-import { wrapMutationAsAction } from 'paraview-glance/src/utils';
 
 export default {
   namespaced: true,

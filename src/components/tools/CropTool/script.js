@@ -82,6 +82,7 @@ export default {
         this.disable();
 
         // handle canReset flag
+        this.canReset = false;
         if (id !== -1) {
           const cropFilter = this.getCropFilter(this.targetVolume);
           this.canReset = cropFilter.isResetAvailable();

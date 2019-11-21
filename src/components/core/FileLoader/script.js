@@ -10,13 +10,13 @@ export default {
     RawFileReader,
   },
   computed: Object.assign(
-    mapState({
-      stage: (state) => state.files.stage,
-      files: (state) => state.files.files,
+    mapState('files', {
+      stage: (state) => state.stage,
+      files: (state) => state.files,
       loadingNames: (state) =>
-        [].concat(state.files.urls, state.files.files).map((o) => o.name),
+        [].concat(state.urls, state.files).map((o) => o.name),
       preloadCanContinue(state) {
-        const { files, rawInfos } = state.files;
+        const { files, rawInfos } = state;
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (
@@ -29,7 +29,7 @@ export default {
         return true;
       },
     }),
-    mapGetters({
+    mapGetters('files', {
       totalProgress: 'fileTotalProgress',
       preloadCanLoad: 'fileRawFilesLoadable',
       indeterminateProgress: 'fileIndeterminateProgress',
@@ -48,12 +48,12 @@ export default {
           true
         );
         if (!allFilesErrored) {
-          commit('showApp');
+          commit('showApp', null, { root: true });
         }
         commit('fileIdle');
       },
     }),
-    ...mapActions(['openFiles']),
+    ...mapActions('files', ['openFiles']),
     isRawFile: (f) => f.name.toLowerCase().endsWith('.raw'),
   },
 };

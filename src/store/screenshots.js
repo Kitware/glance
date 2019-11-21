@@ -1,6 +1,9 @@
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
+import { wrapMutationAsAction } from 'paraview-glance/src/utils';
 
 export default {
+  namespaced: true,
+
   state: {
     showDialog: false,
     currentScreenshot: null,
@@ -19,12 +22,15 @@ export default {
   actions: {
     takeScreenshot({ commit, rootState }, viewToUse = null) {
       const view = viewToUse || rootState.proxyManager.getActiveView();
+      const viewType = viewHelper.getViewType(view);
       if (view) {
         return view.captureImage().then((imgSrc) => {
           commit('openScreenshotDialog', {
             imgSrc,
             viewName: view.getName(),
-            viewData: rootState.views.viewData[viewHelper.getViewType(view)],
+            viewData: {
+              background: rootState.views.backgroundColors[viewType],
+            },
           });
         });
       }

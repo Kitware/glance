@@ -97,7 +97,7 @@ export function createViewer(container, proxyConfig = null) {
         const names = typeof name === 'string' ? [name] : name;
         const urls = typeof url === 'string' ? [url] : url;
         const types = typeof type === 'string' ? [type] : type || [];
-        store.dispatch('openRemoteFiles', { urls, names, types });
+        store.dispatch('files/openRemoteFiles', { urls, names, types });
       }
     },
     // All components must have a unique name

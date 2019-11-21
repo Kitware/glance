@@ -12,6 +12,7 @@ import { DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/
 const { CaptureOn } = WidgetManagerConstants;
 
 export default {
+  namespaced: true,
   state: {
     viewsInitialized: false,
     viewTypeToId: {}, // viewType -> view ID

@@ -108,7 +108,7 @@ function readRawFile(file, { dimensions, spacing, dataType }) {
 
 function onLoadOkay(commit) {
   commit('fileIdle');
-  commit('showApp');
+  commit('showApp', null, { root: true });
 }
 
 // ----------------------------------------------------------------------------
@@ -128,6 +128,7 @@ function onLoadErrored(commit, errors) {
 // ----------------------------------------------------------------------------
 
 export default {
+  namespaced: true,
   state: {
     stage: 'idle',
     files: [],
@@ -342,7 +343,9 @@ export default {
         .then(({ reader }) =>
           reader
             .parseAsArrayBuffer()
-            .then(() => dispatch('restoreAppState', reader.getAppState()))
+            .then(() =>
+              dispatch('restoreAppState', reader.getAppState(), { root: true })
+            )
         );
     },
   },

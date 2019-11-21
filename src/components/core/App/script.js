@@ -129,14 +129,15 @@ export default {
       openSample: (dispatch, urls, names) => {
         // dispatch: delete all loaded files since this is only called
         // by clicking on sample data
-        dispatch('openRemoteFiles', { urls, names }).then(() =>
+        dispatch('files/openRemoteFiles', { urls, names }).then(() =>
           dispatch('resetWorkspace')
         );
       },
-      promptUserFiles: 'promptForFiles',
-      openFiles: (dispatch, files) => dispatch('openFiles', Array.from(files)),
+      promptUserFiles: 'files/promptForFiles',
+      openFiles: (dispatch, files) =>
+        dispatch('files/openFiles', Array.from(files)),
       saveState: 'saveState',
-      initViews: 'initViews',
+      initViews: 'views/initViews',
     }),
     recordError(error) {
       this.errors.push(error);

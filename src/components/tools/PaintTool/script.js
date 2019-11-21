@@ -72,9 +72,9 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      imageToLabelmaps: (state) => state.widgets.imageToLabelmaps,
-      labelmapStates: (state) => state.widgets.labelmapStates,
+    ...mapState('widgets', {
+      imageToLabelmaps: (state) => state.imageToLabelmaps,
+      labelmapStates: (state) => state.labelmapStates,
     }),
     labelmaps() {
       return [
@@ -207,6 +207,15 @@ export default {
     this.mousedViewId = -1;
     this.filter = null;
     this.labelmapSub = makeSubManager();
+
+    // populate initial labelmap list
+    this.internalLabelmaps = this.$proxyManager
+      .getSources()
+      .filter((s) => s.getProxyName() === 'LabelMap')
+      .map((s) => ({
+        name: s.getName(),
+        sourceId: s.getProxyId(),
+      }));
   },
   beforeDestroy() {
     if (this.enabled) {
@@ -217,10 +226,13 @@ export default {
   methods: {
     ...mapActions({
       addLabelmapToImage(dispatch, labelmapId, imageId) {
-        return dispatch('addLabelmapToImage', { imageId, labelmapId });
+        return dispatch('widgets/addLabelmapToImage', { imageId, labelmapId });
       },
       setLabelmapState(dispatch, labelmapId, labelmapState) {
-        return dispatch('setLabelmapState', { labelmapId, labelmapState });
+        return dispatch('widgets/setLabelmapState', {
+          labelmapId,
+          labelmapState,
+        });
       },
     }),
     setRadius(r) {

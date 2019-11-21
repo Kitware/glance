@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { wrapMutationAsAction } from 'paraview-glance/src/utils';
 
 export default () => ({
+  namespaced: true,
   state: {
     // paint
     imageToLabelmaps: {}, // image id -> [labelmap ids]

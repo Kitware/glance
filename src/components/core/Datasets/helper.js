@@ -123,8 +123,8 @@ function generateComponent(
     },
     computed: {
       ...computed,
-      ...mapState({
-        viewOrder: (state) => state.views.viewOrder,
+      ...mapState('views', {
+        viewOrder: (state) => state.viewOrder,
       }),
       source() {
         return this.$proxyManager.getProxyById(this.sourceId);

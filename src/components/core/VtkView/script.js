@@ -52,20 +52,20 @@ export default {
     };
   },
   computed: {
-    ...mapState({
+    ...mapState('views', {
       view(state) {
         return this.$proxyManager.getProxyById(
-          state.views.viewTypeToId[this.viewType]
+          state.viewTypeToId[this.viewType]
         );
       },
       axisVisible(state) {
-        return state.views.axisVisible;
+        return state.axisVisible;
       },
       axisType(state) {
-        return state.views.axisType;
+        return state.axisType;
       },
       axisPreset(state) {
-        return state.views.axisPreset;
+        return state.axisPreset;
       },
     }),
     type() {
@@ -239,13 +239,13 @@ export default {
         color,
       });
     },
-    ...mapActions([
+    ...mapActions('views', [
       'changeBackground',
       'swapViews',
       'singleView',
       'splitView',
       'quadView',
-      'takeScreenshot',
     ]),
+    ...mapActions('screenshots', ['takeScreenshot']),
   },
 };

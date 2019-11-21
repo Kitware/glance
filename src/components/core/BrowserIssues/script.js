@@ -1,5 +1,3 @@
-import { mapState } from 'vuex';
-
 const WARNING_KEY = 'BrowserIssues.suppressWarning';
 
 // ----------------------------------------------------------------------------
@@ -52,7 +50,6 @@ export default {
       suppressWarning: false,
     };
   },
-  computed: mapState(['proxyManager']),
   created() {
     if (window.localStorage) {
       this.suppressWarning = !!window.localStorage.getItem(WARNING_KEY);

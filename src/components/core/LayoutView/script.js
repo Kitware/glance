@@ -22,12 +22,12 @@ export default {
     gridTemplateColumns() {
       return this.visibleCount < 2 ? '1fr' : '1fr 1fr';
     },
-    ...mapState({
-      views: (state) => state.views.viewOrder,
-      backgroundColors: (state) => state.views.backgroundColors,
+    ...mapState('views', {
+      views: (state) => state.viewOrder,
+      backgroundColors: (state) => state.backgroundColors,
       visibleCount(state) {
         // only show 1 view on small screens
-        return this.smallScreen ? 1 : state.views.visibleCount;
+        return this.smallScreen ? 1 : state.visibleCount;
       },
     }),
   },
@@ -40,7 +40,7 @@ export default {
           (v) => v.getProxyName() === type && (!name || v.getName() === name)
         );
     },
-    ...mapActions(['updateLayout']),
+    ...mapActions('views', ['updateLayout']),
   },
   proxyManagerHooks: {
     onProxyCreated({ proxyGroup, proxyName }) {

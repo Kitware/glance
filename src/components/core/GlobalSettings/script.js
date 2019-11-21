@@ -50,7 +50,7 @@ export default {
         return this.$store.state.views.globalBackgroundColor;
       },
       set(color) {
-        this.$store.dispatch('setGlobalBackground', color);
+        this.$store.dispatch('views/setGlobalBackground', color);
       },
     },
     orientationAxis: {
@@ -58,7 +58,7 @@ export default {
         return this.$store.state.views.axisVisible;
       },
       set(flag) {
-        this.$store.dispatch('setAxisVisible', flag);
+        this.$store.dispatch('views/setAxisVisible', flag);
       },
     },
     orientationPreset: {
@@ -66,7 +66,7 @@ export default {
         return this.$store.state.views.axisPreset;
       },
       set(preset) {
-        this.$store.dispatch('setAxisPreset', preset);
+        this.$store.dispatch('views/setAxisPreset', preset);
       },
     },
     axisType: {
@@ -74,7 +74,7 @@ export default {
         return this.$store.state.views.axisType;
       },
       set(axisType) {
-        this.$store.dispatch('setAxisType', axisType);
+        this.$store.dispatch('views/setAxisType', axisType);
       },
     },
     annotationOpacity: {
@@ -82,7 +82,7 @@ export default {
         return this.$store.state.views.annotationOpacity;
       },
       set(opacity) {
-        this.$store.dispatch('setAnnotationOpacity', opacity);
+        this.$store.dispatch('views/setAnnotationOpacity', opacity);
       },
     },
   },

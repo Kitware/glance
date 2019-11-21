@@ -91,9 +91,9 @@ export default {
       const size = !this.smallScreen || this.landscapeScreen ? 'xs6' : 'xs12';
       return { [size]: true };
     },
-    ...mapState({
-      screenshot: (state) => state.screenshots.currentScreenshot,
-      showDialog: (state) => state.screenshots.showDialog,
+    ...mapState('screenshots', {
+      screenshot: (state) => state.currentScreenshot,
+      showDialog: (state) => state.showDialog,
     }),
   },
   watch: {
@@ -112,7 +112,7 @@ export default {
     backgroundToFillStyle,
     save,
     ...mapMutations({
-      close: 'closeScreenshotDialog',
+      close: 'screenshots/closeScreenshotDialog',
     }),
   },
   created() {

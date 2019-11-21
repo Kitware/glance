@@ -200,6 +200,14 @@ export default {
           this.internalLabelmaps.splice(idx, 1);
         }
       }
+
+      if (proxyId === this.activeLabelmapId) {
+        this.activeLabelmapId = -1;
+        this.$emit('enable', false);
+      } else if (proxyId === this.targetImageId) {
+        this.targetImageId = -1;
+        this.$emit('enable', false);
+      }
     },
   },
   created() {
@@ -251,7 +259,6 @@ export default {
     },
     deleteLabelmap() {
       this.$proxyManager.deleteProxy(this.activeLabelmapProxy);
-      this.activeLabelmapId = -1;
     },
     filterImageData(source) {
       return (

@@ -22,15 +22,6 @@ export function wrapSub(sub) {
   return subManager.sub(sub);
 }
 
-export function forAllViews(pxm, callback) {
-  pxm.getViews().forEach((view) => callback(view));
-  return pxm.onProxyRegistrationChange((info) => {
-    if (info.proxyGroup === 'Views' && info.action === 'register') {
-      callback(info.proxy);
-    }
-  });
-}
-
 /**
  * Wrap a mutation as a vuex action.
  */
@@ -38,9 +29,37 @@ export function wrapMutationAsAction(mutation) {
   return ({ commit }, value) => commit(mutation, value);
 }
 
+/**
+ * Renames keys according to a mapping from old to new key.
+ */
+function remapIdKeys(obj, mapping) {
+  const newObj = {};
+  Object.keys(obj).forEach((id) => {
+    let newId = id;
+    if (id in mapping) {
+      newId = mapping[id];
+    }
+    newObj[newId] = obj[id];
+  });
+  return newObj;
+}
+
+/**
+ * Replaces elements in a list according to a mapping.
+ */
+function remapIdList(list, mapping) {
+  return list.map((id) => {
+    if (id in mapping) {
+      return mapping[id];
+    }
+    return id;
+  });
+}
+
 export default {
   makeSubManager,
   wrapSub,
-  forAllViews,
   wrapMutationAsAction,
+  remapIdKeys,
+  remapIdList,
 };

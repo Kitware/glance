@@ -1,6 +1,6 @@
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 
-export default {
+export default (proxyManager) => ({
   namespaced: true,
 
   state: {
@@ -20,7 +20,7 @@ export default {
 
   actions: {
     takeScreenshot({ commit, rootState }, viewToUse = null) {
-      const view = viewToUse || rootState.proxyManager.getActiveView();
+      const view = viewToUse || proxyManager.getActiveView();
       const viewType = viewHelper.getViewType(view);
       if (view) {
         return view.captureImage().then((imgSrc) => {
@@ -36,4 +36,4 @@ export default {
       return Promise.resolve();
     },
   },
-};
+});

@@ -11,7 +11,7 @@ import { DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/
 
 const { CaptureOn } = WidgetManagerConstants;
 
-export default {
+export default (proxyManager) => ({
   namespaced: true,
   state: {
     viewsInitialized: false,
@@ -67,11 +67,10 @@ export default {
     },
   },
   actions: {
-    initViews({ commit, state, rootState }) {
+    initViews({ commit, state }) {
       if (!state.viewsInitialized) {
         commit('viewsInitialized');
 
-        const { proxyManager } = rootState;
         let defaultView = null;
         state.viewOrder.forEach((viewType) => {
           const [type, name] = viewType.split(':');
@@ -139,33 +138,29 @@ export default {
     changeBackground({ commit }, { viewType, color }) {
       commit('changeBackground', { viewType, color });
     },
-    setAxisType({ rootState, commit }, axisType) {
-      const { proxyManager } = rootState;
+    setAxisType({ commit }, axisType) {
       proxyManager.getViews().forEach((view) => {
         view.setOrientationAxesType(axisType);
       });
       commit('setAxisType', axisType);
     },
-    setAxisPreset({ rootState, commit }, axisPreset) {
-      const { proxyManager } = rootState;
+    setAxisPreset({ commit }, axisPreset) {
       proxyManager.getViews().forEach((view) => {
         view.setPresetToOrientationAxes(axisPreset);
       });
       commit('setAxisPreset', axisPreset);
     },
-    setAxisVisible({ rootState, commit }, visible) {
-      const { proxyManager } = rootState;
+    setAxisVisible({ commit }, visible) {
       proxyManager.getViews().forEach((view) => {
         view.setOrientationAxesVisibility(visible);
       });
       commit('setAxisVisible', visible);
     },
-    setAnnotationOpacity({ rootState, commit }, opacity) {
-      const { proxyManager } = rootState;
+    setAnnotationOpacity({ commit }, opacity) {
       proxyManager.getViews().forEach((view) => {
         view.setAnnotationOpacity(opacity);
       });
       commit('setAnnotationOpacity', opacity);
     },
   },
-};
+});

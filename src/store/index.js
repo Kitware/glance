@@ -73,9 +73,9 @@ function createStore(pxm = null) {
       panels: {},
     },
     modules: {
-      files,
-      screenshots,
-      views,
+      files: files(proxyManager),
+      screenshots: screenshots(proxyManager),
+      views: views(proxyManager),
       widgets: widgets(proxyManager),
     },
     mutations: {

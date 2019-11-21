@@ -127,7 +127,7 @@ function onLoadErrored(commit, errors) {
 
 // ----------------------------------------------------------------------------
 
-export default {
+export default (proxyManager) => ({
   namespaced: true,
   state: {
     stage: 'idle',
@@ -207,7 +207,7 @@ export default {
      * @param {name?} fileList[].name full name of file
      * @param {isRaw?} fileList[].extension extension of ifle
      */
-    openFiles({ commit, state, dispatch, rootState }, fileList) {
+    openFiles({ commit, state, dispatch }, fileList) {
       commit('fileSetFiles', fileList);
 
       const stateFile = fileList.find((f) => getExtension(f.name) === 'glance');
@@ -290,10 +290,7 @@ export default {
           commit('fileClearRawInfo');
           // load all successful readers
           if (readers.length) {
-            ReaderFactory.registerReadersToProxyManager(
-              readers,
-              rootState.proxyManager
-            );
+            ReaderFactory.registerReadersToProxyManager(readers, proxyManager);
           }
         });
     },
@@ -349,4 +346,4 @@ export default {
         );
     },
   },
-};
+});

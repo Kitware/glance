@@ -12,6 +12,8 @@ export const Actions = objEnum([
   'RESTORE_APP_STATE',
   'RESET_WORKSPACE',
   'RESET_ACTIVE_CAMERA',
+  'SET_CAMERA_VIEW_POINTS',
+  'CHANGE_CAMERA_VIEW_POINT',
 
   // files
   'PROMPT_FOR_FILES',
@@ -30,6 +32,9 @@ export const Actions = objEnum([
 ]);
 
 export const Getters = objEnum([
+  // index
+  'CAMERA_VIEW_POINTS',
+
   // files
   'FILE_TOTAL_PROGRESS',
   'FILE_RAW_FILES_LOADABLE',

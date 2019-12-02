@@ -114,6 +114,12 @@ function screenCapture() {
 
 // ----------------------------------------------------------------------------
 
+function changeCameraViewPoint(viewPointKey) {
+  this.$store.dispatch(Actions.CHANGE_CAMERA_VIEW_POINT, viewPointKey);
+}
+
+// ----------------------------------------------------------------------------
+
 function splitView() {
   this.$emit('layout-update', {
     index: this.layoutIndex,
@@ -272,9 +278,13 @@ export default {
       palette: BACKGROUND,
       backgroundSheet: false,
       inAnimation: false,
+      viewPointMenuVisible: false,
     };
   },
   computed: {
+    cameraViewPoints() {
+      return Object.keys(this.$store.state.cameraViewPoints);
+    },
     proxyManager() {
       return this.$store.state.proxyManager;
     },
@@ -298,6 +308,7 @@ export default {
     },
   },
   methods: {
+    changeCameraViewPoint,
     changeViewType,
     getAvailableActions,
     onBeforeDestroy,

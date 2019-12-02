@@ -290,6 +290,16 @@ export default {
         .finally(() => {
           // clear leftover raw info
           commit(Mutations.FILE_CLEAR_RAW_INFO);
+
+          readers.forEach(({ reader }) => {
+            if (reader.getCameraViewPoints) {
+              dispatch(
+                Actions.SET_CAMERA_VIEW_POINTS,
+                reader.getCameraViewPoints()
+              );
+            }
+          });
+
           // load all successful readers
           if (readers.length) {
             ReaderFactory.registerReadersToProxyManager(

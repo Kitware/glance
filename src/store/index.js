@@ -106,6 +106,15 @@ function createStore(proxyManager = null) {
       savingStateName: null,
       loadingState: false,
       panels: {},
+      cameraViewPoints: {},
+    },
+    getters: {
+      CAMERA_VIEW_POINTS(state) {
+        return state.cameraViewPoints;
+      },
+      PROXY_MANAGER(state) {
+        return state.proxyManager;
+      },
     },
     modules: getModuleDefinitions(),
     mutations: {
@@ -266,6 +275,22 @@ function createStore(proxyManager = null) {
       },
       RESET_ACTIVE_CAMERA({ state }) {
         state.proxyManager.resetCamera();
+      },
+      SET_CAMERA_VIEW_POINTS({ state }, viewPoints) {
+        state.cameraViewPoints = viewPoints;
+      },
+      CHANGE_CAMERA_VIEW_POINT({ getters, state }, viewPointKey) {
+        const allViews = state.proxyManager.getViews();
+        const cameraSettings = getters.CAMERA_VIEW_POINTS[viewPointKey] || {};
+        const pxManager = getters.PROXY_MANAGER;
+
+        allViews
+          .filter((v) => v.getName() === 'default')
+          .forEach((v) => {
+            v.getCamera().set(cameraSettings);
+          });
+
+        pxManager.renderAllViews();
       },
       INCREASE_SLICE({ state }) {
         if (state.route === 'app') {

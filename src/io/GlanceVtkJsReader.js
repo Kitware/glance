@@ -75,11 +75,12 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
     model.rawDataBuffer = arrayBuffer;
 
     return loadZip(arrayBuffer).then(
-      ({ scene, camera, background, lookupTables }) => {
+      ({ scene, camera, background, lookupTables, cameraViewPoints }) => {
         model.scene = scene;
         model.camera = camera;
         model.background = background;
         model.lookupTables = lookupTables;
+        model.cameraViewPoints = cameraViewPoints;
         publicAPI.modified();
         return model.scene;
       }
@@ -199,7 +200,12 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Build VTK API
   macro.obj(publicAPI, model);
-  macro.get(publicAPI, model, ['scene', 'camera', 'background']);
+  macro.get(publicAPI, model, [
+    'scene',
+    'camera',
+    'background',
+    'cameraViewPoints',
+  ]);
 
   // vtkGlanceStateReader methods
   vtkGlanceVtkJsReader(publicAPI, model);

@@ -281,14 +281,38 @@ function createStore(proxyManager = null) {
       },
       CHANGE_CAMERA_VIEW_POINT({ getters, state }, viewPointKey) {
         const allViews = state.proxyManager.getViews();
-        const cameraSettings = getters.CAMERA_VIEW_POINTS[viewPointKey] || {};
         const pxManager = getters.PROXY_MANAGER;
+
+        const viewPoints = getters.CAMERA_VIEW_POINTS[viewPointKey] || {};
+        const cameraSettings = viewPoints.camera;
+        const showSources = viewPoints.show;
+        const hideSources = viewPoints.hide;
 
         allViews
           .filter((v) => v.getName() === 'default')
           .forEach((v) => {
             v.getCamera().set(cameraSettings);
           });
+
+        // Modify the source visibilities from the view point settings
+        pxManager.getSources().forEach((source) => {
+          const name = source.getName();
+
+          if (!showSources.includes(name) && !hideSources.includes(name)) {
+            // Don't change the visibility
+            return;
+          }
+
+          const visible = showSources.includes(name);
+
+          const rep = pxManager
+            .getRepresentations()
+            .filter((r) => r.getInput() === source)[0];
+
+          if (rep.getVisibility() !== visible) {
+            rep.setVisibility(visible);
+          }
+        });
 
         pxManager.renderAllViews();
       },

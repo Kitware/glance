@@ -284,37 +284,47 @@ function createStore(proxyManager = null) {
         const pxManager = getters.PROXY_MANAGER;
 
         const viewPoints = getters.CAMERA_VIEW_POINTS[viewPointKey] || {};
-        const cameraSettings = viewPoints.camera;
+        const camera = viewPoints.camera;
         const showSources = viewPoints.show;
         const hideSources = viewPoints.hide;
+
+        const moveCameraPromiseList = [];
 
         allViews
           .filter((v) => v.getName() === 'default')
           .forEach((v) => {
-            v.getCamera().set(cameraSettings);
+            const promise = v.moveCamera(
+              camera.focalPoint,
+              camera.position,
+              camera.viewUp,
+              100
+            );
+            moveCameraPromiseList.push(promise);
           });
 
-        // Modify the source visibilities from the view point settings
-        pxManager.getSources().forEach((source) => {
-          const name = source.getName();
+        Promise.all(moveCameraPromiseList).then(() => {
+          // Modify the source visibilities from the view point settings
+          pxManager.getSources().forEach((source) => {
+            const name = source.getName();
 
-          if (!showSources.includes(name) && !hideSources.includes(name)) {
-            // Don't change the visibility
-            return;
-          }
+            if (!showSources.includes(name) && !hideSources.includes(name)) {
+              // Don't change the visibility
+              return;
+            }
 
-          const visible = showSources.includes(name);
+            const visible = showSources.includes(name);
 
-          const rep = pxManager
-            .getRepresentations()
-            .filter((r) => r.getInput() === source)[0];
+            const rep = pxManager
+              .getRepresentations()
+              .filter((r) => r.getInput() === source)[0];
 
-          if (rep.getVisibility() !== visible) {
-            rep.setVisibility(visible);
-          }
+            if (rep.getVisibility() !== visible) {
+              rep.setVisibility(visible);
+            }
+          });
+
+          pxManager.renderAllViews();
         });
-
-        pxManager.renderAllViews();
       },
       INCREASE_SLICE({ state }) {
         if (state.route === 'app') {

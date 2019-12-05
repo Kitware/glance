@@ -68,6 +68,25 @@ export const ProxyManagerVuePlugin = {
             hooks.onProxyDeleted ||
             hooks.onProxyRegistrationChange
           ) {
+            if (hooks.onProxyModified) {
+              // hook into all existing proxies
+              // I hope this doesn't incur much perf issues
+              const groups = this.$proxyManager.getProxyGroups();
+              let proxies = [];
+              for (let i = 0; i < groups.length; i++) {
+                const name = groups[i];
+                proxies = proxies.concat(
+                  this.$proxyManager.getProxyInGroup(name)
+                );
+              }
+              for (let i = 0; i < proxies.length; i++) {
+                const proxy = proxies[i];
+                proxySubs[proxy.getProxyId()] = proxy.onModified((p) =>
+                  hooks.onProxyModified.call(this, p)
+                );
+              }
+            }
+
             pxmSubs.push(
               this.$proxyManager.onProxyRegistrationChange((info) => {
                 const { action, proxyId, proxy } = info;
@@ -83,6 +102,7 @@ export const ProxyManagerVuePlugin = {
                 } else if (action === 'unregister') {
                   if (proxyId in proxySubs) {
                     proxySubs[proxyId].unsubscribe();
+                    delete proxySubs[proxyId];
                   }
                   if (hooks.onProxyDeleted) {
                     hooks.onProxyDeleted.call(this, info);
@@ -120,7 +140,8 @@ export const ProxyManagerVuePlugin = {
           unsubscribeList(this[pxmSubsKey]);
         }
         if (this[proxySubsKey]) {
-          unsubscribeList(this[proxySubsKey]);
+          unsubscribeList(Object.values(this[proxySubsKey]));
+          this[proxySubsKey] = {};
         }
       },
     });

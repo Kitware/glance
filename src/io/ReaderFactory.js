@@ -1,5 +1,7 @@
 import vtkHttpDataAccessHelper from 'vtk.js/Sources/IO/Core/DataAccessHelper/HttpDataAccessHelper';
 
+import { Actions } from 'paraview-glance/src/store/types';
+
 const READER_MAPPING = {};
 
 const FETCH_DATA = {
@@ -224,6 +226,15 @@ function registerReadersToProxyManager(readers, proxyManager) {
       if (source) {
         proxyManager.createRepresentationInAllViews(source);
         proxyManager.renderAllViews();
+      }
+
+      if (reader.getCameraViewPoints) {
+        proxyManager
+          .getReferenceByName('$store')
+          .dispatch(
+            Actions.SET_CAMERA_VIEW_POINTS,
+            reader.getCameraViewPoints()
+          );
       }
     }
   }

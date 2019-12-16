@@ -69,6 +69,9 @@ function changeActiveSliceDelta(proxyManager, delta) {
 }
 
 export function registerProxyManagerHooks(pxm, store) {
+  // Allow the store to be accessed from the proxy manager
+  pxm.set({ $store: store }, true);
+
   const subs = [];
   const modules = getModuleDefinitions();
   const hookNames = ['onProxyRegistrationChange'];

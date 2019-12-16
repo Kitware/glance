@@ -296,8 +296,23 @@ function createStore(proxyManager = null) {
         allViews
           .filter((v) => v.getName() === 'default')
           .forEach((v) => {
+            // Keep the same focal distance, or else some kind of
+            // shaking sometimes happens during camera interaction.
+            const distance = v.getCamera().getDistance();
+            const direction = [
+              camera.focalPoint[0] - camera.position[0],
+              camera.focalPoint[1] - camera.position[1],
+              camera.focalPoint[2] - camera.position[2],
+            ];
+
+            const adjustedFocalPoint = [
+              camera.position[0] + direction[0] * distance,
+              camera.position[1] + direction[1] * distance,
+              camera.position[2] + direction[2] * distance,
+            ];
+
             const promise = v.moveCamera(
-              camera.focalPoint,
+              adjustedFocalPoint,
               camera.position,
               camera.viewUp,
               100

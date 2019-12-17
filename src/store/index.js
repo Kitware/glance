@@ -279,8 +279,13 @@ function createStore(proxyManager = null) {
       RESET_ACTIVE_CAMERA({ state }) {
         state.proxyManager.resetCamera();
       },
-      SET_CAMERA_VIEW_POINTS({ state }, viewPoints) {
+      SET_CAMERA_VIEW_POINTS({ dispatch, state }, viewPoints) {
         state.cameraViewPoints = viewPoints;
+        const keys = Object.keys(viewPoints);
+        if (keys.length !== 0) {
+          // Set the camera to the first view point
+          dispatch(Actions.CHANGE_CAMERA_VIEW_POINT, keys[0]);
+        }
       },
       CHANGE_CAMERA_VIEW_POINT({ getters, state }, viewPointKey) {
         const allViews = state.proxyManager.getViews();

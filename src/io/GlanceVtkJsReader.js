@@ -94,7 +94,8 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
   publicAPI.setProxyManager = (proxyManager) => {
     const allViews = proxyManager.getViews();
     const allDataRanges = {};
-    model.scene.forEach(({ source, mapper, actor, name }) => {
+    model.scene.forEach((sceneItem) => {
+      const { source, mapper, actor, name } = sceneItem;
       const actorState = actor.get('origin', 'scale', 'position');
       const propState = actor
         .getProperty()
@@ -153,6 +154,13 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
         if (view.getName() === 'default') {
           view.getCamera().set(model.camera);
         }
+      }
+
+      if (sceneItem.textureLODsDownloader) {
+        // Trigger re-renders when new textures are downloaded
+        sceneItem.textureLODsDownloader.setStepFinishedCallback(
+          proxyManager.renderAllViews
+        );
       }
     });
 

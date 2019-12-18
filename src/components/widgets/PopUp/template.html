@@ -1,10 +1,10 @@
-<div :class="$style.container">
-  <div @click="visible = true">
+<div :class="$style.container" ref="container">
+  <div @click="visible = !visible">
     <slot name="trigger" />
     <div ref="anchor" style="width: 0; height: 0; margin: 0; padding: 0;" />
   </div>
   <portal v-if="visible" selector="#app-portal-mount">
-    <div :class="$style.popup" :style="getPositioning()" ref="container">
+    <div :class="$style.popup" :style="getPositioning()" ref="popup">
       <slot name="popup" v-bind:close="close" />
     </div>
   </portal>

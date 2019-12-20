@@ -3,11 +3,9 @@
     <v-layout wrap align-center>
       <v-flex xs12>
         <source-select
-          label="Target volume"
-          :filterFunc="filterImages"
+          label="Target Dataset"
           bindToActiveSource
-          hideIfOneDataset
-          @input="setTargetVolume"
+          @input="setTargetDataset"
         />
       </v-flex>
     </v-layout>
@@ -20,13 +18,14 @@
           </v-flex>
           <v-flex xs6>
             <v-btn-toggle
-              v-model="activeToolIndex"
+              :value="activeToolIndex"
+              @change="toggleActiveTool"
               :class="$style.toolList"
             >
               <v-tooltip
-                bottom
-                v-for="tool in toolList"
+                v-for="tool in uiToolList"
                 :key="tool.name"
+                bottom
               >
                 <template v-slot:activator="{ on }">
                   <v-btn
@@ -34,6 +33,7 @@
                     text
                     v-on="on"
                     :class="$style.toolButton"
+                    :disabled="targetPid === -1"
                   >
                     <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
                   </v-btn>
@@ -44,51 +44,35 @@
           </v-flex>
         </v-layout>
       </div>
-      <v-card v-show="show2DWarning" flat color="orange" class="mb-2">
-        <v-card-text>
-          Only 2D annotations are currently supported.
-        </v-card-text>
-      </v-card>
       <v-divider :class="$style.divider" />
       <div :class="$style.fullWidth">
         <template v-if="tools.length > 0">
-          <template v-for="(tool,idx) in tools">
-            <div :class="$style.row" :key="idx">
+          <component
+            v-for="(tool, idx) in tools"
+            :key="idx"
+
+            :is="tool.component"
+            :targetPid="targetPid"
+            :tool-data="tool.data"
+            @remove="removeTool(idx)"
+            @saveData="saveToolData(idx, $event)"
+            v-slot="toolState"
+          >
+            <div :class="$style.row">
               <span :class="$style.rowAvatar">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <span v-on="on">
-                      <svg-icon
-                        :icon="tool.toolInfo.icon"
-                        :class="$style.toolIcon"
-                      />
-                    </span>
-                  </template>
-                  <span>{{ tool.axis }} Axis: slice {{ tool.slice }}</span>
-                </v-tooltip>
+                <svg-icon :icon="tool.icon" :class="$style.toolIcon" />
               </span>
               <div :class="$style.rowContent">
-                <span :class="$style.rowContentName" :title="tool.name">
-                  {{ tool.name || tool.toolInfo.name }}
+                <span :class="$style.rowContentName" :title="toolState.toolName">
+                  {{ toolState.toolName || tool.name }}
                 </span>
-                <span :class="$style.rowContentDetails">
-                  {{ tool.extraInfo }}
+                <span
+                  v-for="label in toolState.labels"
+                  :key="label"
+                  :class="$style.rowContentDetails"
+                >
+                  {{ label }}: {{ toolState.measurements[label] }}
                 </span>
-              </div>
-              <div
-                v-if="tool.slice !== currentSlice"
-                :class="$style.action"
-              >
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn v-on="on" small icon>
-                      <v-icon color="teal" @click="focusWidget(idx)">
-                        mdi-open-in-new
-                      </v-icon>
-                    </v-btn>
-                  </template>
-                  Jump to slice
-                </v-tooltip>
               </div>
               <div :class="$style.action">
                 <pop-up>
@@ -103,9 +87,9 @@
                         <v-flex xs12>
                           <v-text-field
                             label="Name"
-                            :placeholder="tool.toolInfo.name"
-                            :value="tool.name"
-                            @input="setToolName(idx, arguments[0])"
+                            :placeholder="tool.name"
+                            :value="toolState.toolName"
+                            @input="toolState.setName"
                           />
                         </v-flex>
                         <v-flex xs12>
@@ -115,8 +99,8 @@
                             class="pt-2"
                             :palette="palette"
                             :size="28"
-                            :value="tool.color"
-                            @input="setToolColor(idx, arguments[0])"
+                            :value="toolState.color"
+                            @input="toolState.setColor"
                           />
                         </v-flex>
                         <v-flex xs12>
@@ -130,8 +114,8 @@
                             step="1"
                             dirty
                             hide-details
-                            :value="tool.size"
-                            @input="setToolSize(idx, arguments[0])"
+                            :value="toolState.textSize"
+                            @input="toolState.setTextSize"
                           />
                         </v-flex>
                         <v-flex xs3>
@@ -140,8 +124,8 @@
                             min="8"
                             max="32"
                             step="1"
-                            :value="tool.size"
-                            @input="setToolSize(idx, arguments[0])"
+                            :value="toolState.textSize"
+                            @input="toolState.setTextSize"
                           />
                         </v-flex>
                       </v-layout>
@@ -154,7 +138,7 @@
                         </v-flex>
                         <v-spacer />
                         <v-flex xs3 class="text-center">
-                          <v-btn icon @click="deleteTool(idx); close()">
+                          <v-btn icon @click="toolState.remove(); close()">
                             <v-icon color="red">mdi-delete</v-icon>
                           </v-btn>
                         </v-flex>
@@ -164,8 +148,7 @@
                 </pop-up>
               </div>
             </div>
-            <v-divider :class="$style.divider" />
-          </template>
+          </component>
         </template>
         <template v-else>
           <div class="pt-2 body-1 teal--text text-center">No measurements yet</div>

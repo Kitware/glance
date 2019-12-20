@@ -11,6 +11,9 @@ import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
 import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
 
 import vtkCropWidget from 'paraview-glance/src/vtk/CropWidget';
+import vtkAngleWidget from 'paraview-glance/src/vtk/AngleWidget';
+import vtkDistance2DWidget from 'paraview-glance/src/vtk/Distance2DWidget';
+import vtkTextWidget from 'paraview-glance/src/vtk/TextWidget';
 import vtkPaintWidget from 'vtk.js/Sources/Widgets/Widgets3D/PaintWidget';
 
 import vtkLabelMapVolumeRepProxy from 'paraview-glance/src/vtk/LabelMapVolumeRepProxy';
@@ -85,6 +88,18 @@ export default {
       }),
       Paint: createProxyDefinition(vtkWidgetProxy, [], [], {
         factory: vtkPaintWidget,
+        viewTypes: ViewToWidgetTypes,
+      }),
+      Angle: createProxyDefinition(vtkWidgetProxy, [], [], {
+        factory: vtkAngleWidget,
+        viewTypes: ViewToWidgetTypes,
+      }),
+      Ruler: createProxyDefinition(vtkWidgetProxy, [], [], {
+        factory: vtkDistance2DWidget,
+        viewTypes: ViewToWidgetTypes,
+      }),
+      Text: createProxyDefinition(vtkWidgetProxy, [], [], {
+        factory: vtkTextWidget,
         viewTypes: ViewToWidgetTypes,
       }),
     },

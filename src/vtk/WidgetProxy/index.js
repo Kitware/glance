@@ -7,7 +7,6 @@ function addWidgetToView(widget, view, widgetType) {
   const widgetManager = view.getReferenceByName('widgetManager');
   if (widgetManager) {
     const viewWidget = widgetManager.addWidget(widget, widgetType);
-
     widgetManager.enablePicking();
     view.renderLater();
     return viewWidget;
@@ -19,6 +18,7 @@ function removeWidgetFromView(widget, view) {
   const widgetManager = view.getReferenceByName('widgetManager');
   if (widgetManager) {
     widgetManager.removeWidget(widget);
+    widgetManager.enablePicking();
     view.renderLater();
   }
 }
@@ -31,9 +31,13 @@ function vtkWidgetProxy(publicAPI, model) {
   // Set our className
   model.classHierarchy.push('vtkWidgetProxy');
 
-  const cleanupCallbacks = [];
-
   model.widget = model.factory.newInstance();
+
+  const cleanupCallbacks = [];
+  const stateSub = model.widget
+    .getWidgetState()
+    .onModified(() => publicAPI.modified());
+  const viewWidgets = new WeakSet();
 
   function forEachView(cb) {
     model.proxyManager.getViews().forEach((view) => {
@@ -47,7 +51,10 @@ function vtkWidgetProxy(publicAPI, model) {
   publicAPI.addToViews = () =>
     forEachView((view) => {
       const widgetType = ViewTypes[model.viewTypes[view.getProxyName()]];
-      addWidgetToView(model.widget, view, widgetType);
+      const viewWidget = addWidgetToView(model.widget, view, widgetType);
+      if (viewWidget) {
+        viewWidgets.add(viewWidget);
+      }
     });
 
   publicAPI.removeFromViews = () =>
@@ -72,6 +79,12 @@ function vtkWidgetProxy(publicAPI, model) {
     return null;
   };
 
+  publicAPI.getAllViewWidgets = () =>
+    model.proxyManager
+      .getViews()
+      .map((view) => publicAPI.getViewWidget(view))
+      .filter(Boolean);
+
   publicAPI.executeViewFuncs = (funcs) => {
     forEachView((view, widgetManager) => {
       const fn = funcs[view.getProxyName()];
@@ -93,8 +106,9 @@ function vtkWidgetProxy(publicAPI, model) {
 
   const superDelete = publicAPI.delete;
   publicAPI.delete = () => {
-    publicAPI.releaseFocus();
-    publicAPI.removeFromViews();
+    stateSub.unsubscribe();
+    // publicAPI.releaseFocus();
+    // publicAPI.removeFromViews();
     for (let i = 0; i < cleanupCallbacks.length; i++) {
       cleanupCallbacks[i]();
     }

@@ -27,6 +27,7 @@ export const SPECTRAL = [
 ];
 
 export const WIDGETS = [
+  '#ffee00',
   '#bbbe64',
   '#f3b700',
   '#91f5ad',

@@ -9,6 +9,8 @@ import {
 export default () => ({
   namespaced: true,
   state: {
+    measurements: {}, // dataset id -> [{component name, ...{measurement info}}]
+
     // paint
     imageToLabelmaps: {}, // image id -> [labelmap ids]
     labelmapStates: {}, // labelmap id -> { selectedLabel, lastColorIndex }
@@ -23,7 +25,27 @@ export default () => ({
     setLabelmapState(state, { labelmapId, labelmapState }) {
       Vue.set(state.labelmapStates, labelmapId, labelmapState);
     },
+    addMeasurementTool(state, { datasetId, componentName, data }) {
+      if (!(datasetId in state.measurements)) {
+        Vue.set(state.measurements, datasetId, []);
+      }
+      state.measurements[datasetId].push({
+        componentName,
+        data,
+      });
+    },
+    updateMeasurementTool(state, { datasetId, index, data }) {
+      if (datasetId in state.measurements) {
+        Vue.set(state.measurements[datasetId][index], 'data', data);
+      }
+    },
+    removeMeasurementTool(state, { datasetId, index }) {
+      if (datasetId in state.measurements) {
+        state.measurements[datasetId].splice(index, 1);
+      }
+    },
     rewriteProxyIds(state, idMapping) {
+      state.measurements = remapIdKeys(state.measurements, idMapping);
       state.imageToLabelmaps = remapIdKeys(state.imageToLabelmaps, idMapping);
       state.labelmapStates = remapIdKeys(state.labelmapStates, idMapping);
 
@@ -38,6 +60,9 @@ export default () => ({
   actions: {
     addLabelmapToImage: wrapMutationAsAction('addLabelmapToImage'),
     setLabelmapState: wrapMutationAsAction('setLabelmapState'),
+    addMeasurementTool: wrapMutationAsAction('addMeasurementTool'),
+    removeMeasurementTool: wrapMutationAsAction('removeMeasurementTool'),
+    updateMeasurementTool: wrapMutationAsAction('updateMeasurementTool'),
     rewriteProxyIds: {
       root: true,
       handler: wrapMutationAsAction('rewriteProxyIds'),

@@ -279,12 +279,22 @@ function createStore(proxyManager = null) {
       RESET_ACTIVE_CAMERA({ state }) {
         state.proxyManager.resetCamera();
       },
-      SET_CAMERA_VIEW_POINTS({ dispatch, state }, viewPoints) {
+      SET_CAMERA_VIEW_POINTS({ commit, dispatch, state }, viewPoints) {
         state.cameraViewPoints = viewPoints;
         const keys = Object.keys(viewPoints);
         if (keys.length !== 0) {
           // Set the camera to the first view point
           dispatch(Actions.CHANGE_CAMERA_VIEW_POINT, keys[0]);
+
+          // Begin first person interaction
+          const interactionStyle = 'FirstPerson';
+          state.proxyManager
+            .getViews()
+            .filter((v) => v.getName() === 'default')
+            .forEach((view) => {
+              view.setPresetToInteractor3D(interactionStyle);
+            });
+          commit(Mutations.GLOBAL_INTERACTION_STYLE_3D, interactionStyle);
         }
       },
       CHANGE_CAMERA_VIEW_POINT({ getters, state }, viewPointKey) {

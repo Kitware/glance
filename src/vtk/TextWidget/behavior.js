@@ -164,14 +164,16 @@ export default function widgetBehavior(publicAPI, model) {
   // --------------------------------------------------------------------------
 
   const setHandleScaleFromCamera = () => {
-    let scale;
-    if (model.camera.getParallelProjection()) {
-      scale = model.camera.getParallelScale() / 1.25;
-    } else {
-      scale = model.camera.getDistance() / 6;
-    }
+    if (model.camera) {
+      let scale;
+      if (model.camera.getParallelProjection()) {
+        scale = model.camera.getParallelScale() / 1.25;
+      } else {
+        scale = model.camera.getDistance() / 6;
+      }
 
-    publicAPI.setHandleScale(scale);
+      publicAPI.setHandleScale(scale);
+    }
   };
 
   // listen to camera so we can scale the handles to the screen

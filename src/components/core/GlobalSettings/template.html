@@ -12,6 +12,46 @@
   </v-card>
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
+      <span class="subtitle-2">Interaction Style</span>
+    </div>
+    <v-divider :class="$style.divider" />
+    <v-container grid-list-xs class="pa-0">
+      <v-layout row align-center class="pt-1">
+        <v-flex xs6>
+          <span class="body-2">3D</span>
+        </v-flex>
+        <v-flex xs6>
+          <v-select
+            class="pv-no-select"
+            :class="$style.slimInput"
+            dense
+            flat
+            hide-details
+            v-model="interactionStyle3D"
+            :items="interactionStyles3D"
+          />
+        </v-flex>
+        <v-flex xs6>
+          <span class="body-2" v-if="firstPersonInteraction">
+            Movement Speed
+          </span>
+        </v-flex>
+        <v-flex xs6>
+          <v-text-field
+            :class="$style.slimInput"
+            hide-details
+            type="number"
+            v-model="firstPersonMovementSpeed"
+            v-if="firstPersonInteraction"
+            :min="0"
+            :step="0.1"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-card>
+  <v-card flat :class="$style.card">
+    <div :class="$style.heading">
       <span class="subtitle-2">Overlay</span>
     </div>
     <v-divider :class="$style.divider" />

@@ -3,6 +3,11 @@ import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker'
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 import { Mutations } from 'paraview-glance/src/store/types';
 
+const INTERACTION_STYLES_3D = [
+  { text: 'Default', value: '3D' },
+  { text: 'First Person', value: 'FirstPerson' },
+];
+
 const ORIENTATION_PRESETS = [
   { text: 'XYZ', value: 'default' },
   { text: 'LPS', value: 'lps' },
@@ -15,6 +20,50 @@ const AXIS_TYPES = [
 
 // ----------------------------------------------------------------------------
 // Component API
+// ----------------------------------------------------------------------------
+
+function getDefaultViews(pxm) {
+  return pxm.getViews().filter((v) => v.getName() === 'default');
+}
+
+// ----------------------------------------------------------------------------
+
+function setInteractionStyle3D(type) {
+  getDefaultViews(this.proxyManager).forEach((view) => {
+    view.setPresetToInteractor3D(type);
+  });
+}
+
+// ----------------------------------------------------------------------------
+
+function getFirstPersonMovementSpeed(pxm) {
+  const views = getDefaultViews(pxm);
+  for (let i = 0; i < views.length; ++i) {
+    const interactorStyle = views[i].getInteractorStyle3D();
+    const manipulators = interactorStyle.getKeyboardManipulators();
+    for (let j = 0; j < manipulators.length; ++j) {
+      if (manipulators[j].getMovementSpeed) {
+        return manipulators[j].getMovementSpeed();
+      }
+    }
+  }
+  return undefined;
+}
+
+// ----------------------------------------------------------------------------
+
+function setFirstPersonMovementSpeed(pxm, speed) {
+  getDefaultViews(pxm).forEach((view) => {
+    const interactorStyle = view.getInteractorStyle3D();
+    const manipulators = interactorStyle.getKeyboardManipulators();
+    manipulators.forEach((manipulator) => {
+      if (manipulator.setMovementSpeed) {
+        manipulator.setMovementSpeed(speed);
+      }
+    });
+  });
+}
+
 // ----------------------------------------------------------------------------
 
 function setOrientationAxesVisible(visible) {
@@ -81,6 +130,7 @@ export default {
   data() {
     return {
       palette: BACKGROUND,
+      interactionStyles3D: INTERACTION_STYLES_3D,
       annotationOpacity: 1,
       orientationPresets: ORIENTATION_PRESETS,
       axisTypes: AXIS_TYPES,
@@ -99,6 +149,25 @@ export default {
       },
       set(color) {
         this.$store.commit(Mutations.GLOBAL_BG, color);
+      },
+    },
+    interactionStyle3D: {
+      get() {
+        return this.$store.state.global.interactionStyle3D;
+      },
+      set(style) {
+        this.$store.commit(Mutations.GLOBAL_INTERACTION_STYLE_3D, style);
+      },
+    },
+    firstPersonInteraction() {
+      return this.$store.state.global.interactionStyle3D === 'FirstPerson';
+    },
+    firstPersonMovementSpeed: {
+      get() {
+        return getFirstPersonMovementSpeed(this.proxyManager);
+      },
+      set(speed) {
+        setFirstPersonMovementSpeed(this.proxyManager, speed);
       },
     },
     orientationAxis: {
@@ -127,6 +196,7 @@ export default {
     },
   },
   watch: {
+    interactionStyle3D: setInteractionStyle3D,
     orientationAxis: setOrientationAxesVisible,
     orientationPreset: setPresetToOrientationAxes,
     annotationOpacity: setAnnotationOpacity,

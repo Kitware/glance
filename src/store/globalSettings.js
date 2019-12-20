@@ -8,6 +8,7 @@ export default {
     orientationPreset: 'default',
     // from VtkView
     axisType: 'arrow',
+    interactionStyle3D: '3D',
   },
 
   mutations: {
@@ -26,6 +27,9 @@ export default {
     },
     GLOBAL_AXIS_TYPE(state, axisType) {
       state.axisType = axisType;
+    },
+    GLOBAL_INTERACTION_STYLE_3D(state, style) {
+      state.interactionStyle3D = style;
     },
   },
 };

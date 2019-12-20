@@ -57,6 +57,7 @@ export const Mutations = objEnum([
   'GLOBAL_ORIENT_AXIS',
   'GLOBAL_ORIENT_PRESET',
   'GLOBAL_AXIS_TYPE',
+  'GLOBAL_INTERACTION_STYLE_3D',
 
   // files
   'FILE_SET_URLS', // private

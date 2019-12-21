@@ -110,6 +110,7 @@ function createStore(proxyManager = null) {
       loadingState: false,
       panels: {},
       cameraViewPoints: {},
+      mostRecentViewPoint: null,
     },
     getters: {
       CAMERA_VIEW_POINTS(state) {
@@ -117,6 +118,9 @@ function createStore(proxyManager = null) {
       },
       PROXY_MANAGER(state) {
         return state.proxyManager;
+      },
+      MOST_RECENT_VIEW_POINT(state) {
+        return state.mostRecentViewPoint;
       },
     },
     modules: getModuleDefinitions(),
@@ -138,6 +142,9 @@ function createStore(proxyManager = null) {
           Vue.set(state.panels, priority, []);
         }
         state.panels[priority].push(component);
+      },
+      MOST_RECENT_VIEW_POINT(state, viewPoint) {
+        state.mostRecentViewPoint = viewPoint;
       },
     },
     actions: {
@@ -297,7 +304,7 @@ function createStore(proxyManager = null) {
           commit(Mutations.GLOBAL_INTERACTION_STYLE_3D, interactionStyle);
         }
       },
-      CHANGE_CAMERA_VIEW_POINT({ getters, state }, viewPointKey) {
+      CHANGE_CAMERA_VIEW_POINT({ commit, getters, state }, viewPointKey) {
         const allViews = state.proxyManager.getViews();
         const pxManager = getters.PROXY_MANAGER;
 
@@ -358,6 +365,39 @@ function createStore(proxyManager = null) {
 
           pxManager.renderAllViews();
         });
+
+        commit(Mutations.MOST_RECENT_VIEW_POINT, viewPointKey);
+      },
+      PREVIOUS_VIEW_POINT({ dispatch, getters }) {
+        const lastViewPoint = getters.MOST_RECENT_VIEW_POINT;
+        if (!lastViewPoint) {
+          // Nothing to do
+          return;
+        }
+
+        const keys = Object.keys(getters.CAMERA_VIEW_POINTS);
+        if (!keys.includes(lastViewPoint)) {
+          return;
+        }
+
+        const length = keys.length;
+        const ind = (keys.indexOf(lastViewPoint) + length - 1) % length;
+        dispatch(Actions.CHANGE_CAMERA_VIEW_POINT, keys[ind]);
+      },
+      NEXT_VIEW_POINT({ dispatch, getters }) {
+        const lastViewPoint = getters.MOST_RECENT_VIEW_POINT;
+        if (!lastViewPoint) {
+          // Nothing to do
+          return;
+        }
+
+        const keys = Object.keys(getters.CAMERA_VIEW_POINTS);
+        if (!keys.includes(lastViewPoint)) {
+          return;
+        }
+
+        const ind = (keys.indexOf(lastViewPoint) + 1) % keys.length;
+        dispatch(Actions.CHANGE_CAMERA_VIEW_POINT, keys[ind]);
       },
       INCREASE_SLICE({ state }) {
         if (state.route === 'app') {

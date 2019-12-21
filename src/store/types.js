@@ -14,6 +14,8 @@ export const Actions = objEnum([
   'RESET_ACTIVE_CAMERA',
   'SET_CAMERA_VIEW_POINTS',
   'CHANGE_CAMERA_VIEW_POINT',
+  'PREVIOUS_VIEW_POINT',
+  'NEXT_VIEW_POINT',
 
   // files
   'PROMPT_FOR_FILES',
@@ -34,6 +36,7 @@ export const Actions = objEnum([
 export const Getters = objEnum([
   // index
   'CAMERA_VIEW_POINTS',
+  'MOST_RECENT_VIEW_POINT',
 
   // files
   'FILE_TOTAL_PROGRESS',
@@ -51,6 +54,7 @@ export const Mutations = objEnum([
   'ADD_PANEL',
   'SAVING_STATE', // private
   'LOADING_STATE', // private
+  'MOST_RECENT_VIEW_POINT',
 
   // globalSettings
   'GLOBAL_BG',

@@ -162,6 +162,19 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
           proxyManager.renderAllViews
         );
       }
+
+      if (sceneItem.dataSetLODsLoader) {
+        const callback = () => {
+          // We must set the new source on the proxy to get paraview
+          // glance to update.
+          const newSource = sceneItem.dataSetLODsLoader.getCurrentSource();
+          sourceProxy.setInputAlgorithm(
+            newSource,
+            newSource.getOutputData().getClassName()
+          );
+        };
+        sceneItem.dataSetLODsLoader.setStepFinishedCallback(callback);
+      }
     });
 
     // Create LookupTable for each field with max range

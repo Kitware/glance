@@ -29,6 +29,15 @@ export default {
       state.axisType = axisType;
     },
     GLOBAL_INTERACTION_STYLE_3D(state, style) {
+      // First, set the interaction style to all the views
+      const allViews = this.state.proxyManager.getViews();
+      allViews
+        .filter((v) => v.getName() === 'default')
+        .forEach((view) => {
+          view.setPresetToInteractor3D(style);
+        });
+
+      // Now, modify the state
       state.interactionStyle3D = style;
     },
   },

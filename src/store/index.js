@@ -295,12 +295,6 @@ function createStore(proxyManager = null) {
 
           // Begin first person interaction
           const interactionStyle = 'FirstPerson';
-          state.proxyManager
-            .getViews()
-            .filter((v) => v.getName() === 'default')
-            .forEach((view) => {
-              view.setPresetToInteractor3D(interactionStyle);
-            });
           commit(Mutations.GLOBAL_INTERACTION_STYLE_3D, interactionStyle);
         }
       },

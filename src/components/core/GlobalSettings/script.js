@@ -28,14 +28,6 @@ function getDefaultViews(pxm) {
 
 // ----------------------------------------------------------------------------
 
-function setInteractionStyle3D(type) {
-  getDefaultViews(this.proxyManager).forEach((view) => {
-    view.setPresetToInteractor3D(type);
-  });
-}
-
-// ----------------------------------------------------------------------------
-
 function getFirstPersonMovementSpeed(pxm) {
   const views = getDefaultViews(pxm);
   for (let i = 0; i < views.length; ++i) {
@@ -196,7 +188,6 @@ export default {
     },
   },
   watch: {
-    interactionStyle3D: setInteractionStyle3D,
     orientationAxis: setOrientationAxesVisible,
     orientationPreset: setPresetToOrientationAxes,
     annotationOpacity: setAnnotationOpacity,

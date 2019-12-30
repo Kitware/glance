@@ -72,6 +72,7 @@ export default {
 
         cropProxy.addToViews();
       } else {
+        this.cropProxy.removeFromViews();
         this.$proxyManager.deleteProxy(this.cropProxy);
         this.widgetId = -1;
         this.stateSub.unsub();

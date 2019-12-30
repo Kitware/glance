@@ -107,8 +107,6 @@ function vtkWidgetProxy(publicAPI, model) {
   const superDelete = publicAPI.delete;
   publicAPI.delete = () => {
     stateSub.unsubscribe();
-    // publicAPI.releaseFocus();
-    // publicAPI.removeFromViews();
     for (let i = 0; i < cleanupCallbacks.length; i++) {
       cleanupCallbacks[i]();
     }

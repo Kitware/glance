@@ -529,6 +529,7 @@ export default {
       });
     },
     disablePainting() {
+      this.paintProxy.removeFromViews();
       this.$proxyManager.deleteProxy(this.paintProxy);
       this.widgetId = -1;
     },

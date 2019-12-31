@@ -43,19 +43,10 @@ function vtkLabelMapSliceRepProxy(publicAPI, model) {
     updateTransferFunctions(labelmap);
   }
 
-  // override to return the image representation as the input dataset
-  publicAPI.getInputDataSet = () =>
-    model.input && model.input.getDataset().getImageRepresentation();
-
   // override because we manage our own color/opacity functions
   publicAPI.setColorBy = () => {};
 
   publicAPI.delete = macro.chain(publicAPI.delete, () => labelMapSub.unsub());
-
-  model.sourceDependencies = model.sourceDependencies.map((dep) => ({
-    setInputData: (labelMap) =>
-      dep.setInputData(labelMap.getImageRepresentation()),
-  }));
 
   // Keep things updated
   model.sourceDependencies.push({ setInputData });

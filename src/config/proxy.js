@@ -10,17 +10,30 @@ import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/Sl
 import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
 import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
 
+import vtkCropWidget from 'paraview-glance/src/vtk/CropWidget';
+import vtkAngleWidget from 'paraview-glance/src/vtk/AngleWidget';
+import vtkDistance2DWidget from 'paraview-glance/src/vtk/Distance2DWidget';
+import vtkTextWidget from 'paraview-glance/src/vtk/TextWidget';
+import vtkPaintWidget from 'vtk.js/Sources/Widgets/Widgets3D/PaintWidget';
+
 import vtkLabelMapVolumeRepProxy from 'paraview-glance/src/vtk/LabelMapVolumeRepProxy';
 import vtkLabelMapSliceRepProxy from 'paraview-glance/src/vtk/LabelMapSliceRepProxy';
+import vtkWidgetProxy from 'paraview-glance/src/vtk/WidgetProxy';
 
 import ConfigUtils from 'paraview-glance/src/config/configUtils';
 
 import proxyUI from 'paraview-glance/src/config/proxyUI';
 import proxyLinks from 'paraview-glance/src/config/proxyLinks';
-import proxyFilter from 'paraview-glance/src/config/proxyFilter';
 import proxyViewRepresentationMapping from 'paraview-glance/src/config/proxyViewRepresentationMapping';
 
 const { createProxyDefinition, activateOnCreate } = ConfigUtils;
+
+const ViewToWidgetTypes = {
+  View3D: 'VOLUME',
+  View2D_X: 'SLICE',
+  View2D_Y: 'SLICE',
+  View2D_Z: 'SLICE',
+};
 
 function createDefaultView(classFactory, ui, options, props) {
   return activateOnCreate(
@@ -68,9 +81,32 @@ export default {
       }),
       PiecewiseFunction: createProxyDefinition(vtkPiecewiseFunctionProxy),
     },
+    Widgets: {
+      Crop: createProxyDefinition(vtkWidgetProxy, [], [], {
+        factory: vtkCropWidget,
+        viewTypes: ViewToWidgetTypes,
+      }),
+      Paint: createProxyDefinition(vtkWidgetProxy, [], [], {
+        factory: vtkPaintWidget,
+        viewTypes: ViewToWidgetTypes,
+      }),
+      Angle: createProxyDefinition(vtkWidgetProxy, [], [], {
+        factory: vtkAngleWidget,
+        viewTypes: ViewToWidgetTypes,
+      }),
+      Ruler: createProxyDefinition(vtkWidgetProxy, [], [], {
+        factory: vtkDistance2DWidget,
+        viewTypes: ViewToWidgetTypes,
+      }),
+      Text: createProxyDefinition(vtkWidgetProxy, [], [], {
+        factory: vtkTextWidget,
+        viewTypes: ViewToWidgetTypes,
+      }),
+    },
     Sources: {
       TrivialProducer: activateOnCreate(createProxyDefinition(vtkProxySource)),
-      Contour: proxyFilter.Contour,
+      // differentiate LabelMaps
+      LabelMap: createProxyDefinition(vtkProxySource),
     },
     Representations: {
       Geometry: createProxyDefinition(
@@ -144,6 +180,7 @@ export default {
         [], // ui
         [] // links
       ),
+      LabelMapSlice: createProxyDefinition(vtkLabelMapSliceRepProxy),
       LabelMapSliceX: createProxyDefinition(
         vtkLabelMapSliceRepProxy,
         [], // ui
@@ -193,24 +230,24 @@ export default {
     View3D: proxyViewRepresentationMapping.View3D,
     View2D: proxyViewRepresentationMapping.View2D,
     View2D_X: {
+      ...proxyViewRepresentationMapping.View2D,
       vtkImageData: { name: 'SliceX' },
       vtkLabelMap: { name: 'LabelMapSliceX' },
-      ...proxyViewRepresentationMapping.View2D,
     },
     View2D_Y: {
+      ...proxyViewRepresentationMapping.View2D,
       vtkImageData: { name: 'SliceY' },
       vtkLabelMap: { name: 'LabelMapSliceY' },
-      ...proxyViewRepresentationMapping.View2D,
     },
     View2D_Z: {
+      ...proxyViewRepresentationMapping.View2D,
       vtkImageData: { name: 'SliceZ' },
       vtkLabelMap: { name: 'LabelMapSliceZ' },
-      ...proxyViewRepresentationMapping.View2D,
     },
   },
   filters: {
     vtkPolyData: [],
-    vtkImageData: ['Contour'],
+    vtkImageData: [],
     vtkMolecule: [],
     Glyph: [],
   },

@@ -8,6 +8,13 @@
     <title>ParaView Glance</title>
     <meta name="description" content="Data Viewer in a browser">
     <link inline rel="icon" type="image/png" href="ParaView.png">
+    <style type="text/css">
+    /* override vuetify for mobile */
+    html {
+      position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+      overflow: hidden !important;
+    }
+    </style>
     <% for (key in htmlWebpackPlugin.files.css) { %>
     <link type="text/css" rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[key] %>" />
     <% } %>

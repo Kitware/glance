@@ -26,7 +26,11 @@ export default {
     handleMouse(ev) {
       if (this.visible) {
         let parent = ev.target;
-        while (parent && parent !== this.$refs.container) {
+        while (
+          parent &&
+          parent !== this.$refs.container &&
+          parent !== this.$refs.popup
+        ) {
           parent = parent.parentElement;
         }
         if (parent === null) {

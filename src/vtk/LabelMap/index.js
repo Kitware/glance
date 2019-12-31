@@ -1,5 +1,5 @@
 import macro from 'vtk.js/Sources/macro';
-import vtkDataSet from 'vtk.js/Sources/Common/DataModel/DataSet';
+import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
 const { vtkWarningMacro } = macro;
 
@@ -47,8 +47,6 @@ function vtkLabelMap(publicAPI, model) {
 // ----------------------------------------------------------------------------
 
 const DEFAULT_VALUES = {
-  // only representation for now
-  imageRepresentation: null,
   // default opacity map uses 0 as the transparent pixel
   colorMap: null,
 };
@@ -58,9 +56,9 @@ const DEFAULT_VALUES = {
 export function extend(publicAPI, model, initialValues = {}) {
   Object.assign(model, DEFAULT_VALUES, initialValues);
 
-  vtkDataSet.extend(publicAPI, model);
+  vtkImageData.extend(publicAPI, model, initialValues);
 
-  macro.setGet(publicAPI, model, ['imageRepresentation', 'colorMap']);
+  macro.setGet(publicAPI, model, ['colorMap']);
 
   // Object specific methods
   vtkLabelMap(publicAPI, model);

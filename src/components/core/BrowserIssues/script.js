@@ -1,8 +1,3 @@
-import { mapState } from 'vuex';
-
-import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
-import { DEFAULT_VIEW_TYPE } from 'paraview-glance/src/components/core/VtkView/constants';
-
 const WARNING_KEY = 'BrowserIssues.suppressWarning';
 
 // ----------------------------------------------------------------------------
@@ -10,7 +5,7 @@ const WARNING_KEY = 'BrowserIssues.suppressWarning';
 // ----------------------------------------------------------------------------
 
 function getBrowserIssues() {
-  const view = viewHelper.getView(this.proxyManager, DEFAULT_VIEW_TYPE);
+  const view = this.$proxyManager.getViews()[0];
   if (view) {
     const glRW = view.getOpenglRenderWindow();
     const allInfo = glRW.getGLInformations();
@@ -55,14 +50,13 @@ export default {
       suppressWarning: false,
     };
   },
-  computed: mapState(['proxyManager']),
   created() {
     if (window.localStorage) {
       this.suppressWarning = !!window.localStorage.getItem(WARNING_KEY);
     }
   },
   mounted() {
-    this.$nextTick(this.getBrowserIssues);
+    this.getBrowserIssues();
   },
   methods: {
     closeDialog,

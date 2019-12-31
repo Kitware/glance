@@ -1,6 +1,5 @@
 import { mapState } from 'vuex';
 import macro from 'vtk.js/Sources/macro';
-import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
 
 const MAX_SLIDER_STEPS = 500;
 
@@ -33,22 +32,15 @@ function extractDomains(domains, uiList) {
 
 function findProxiesWithMethod(self, methodName) {
   const proxies = [];
-  // Look on the source
-  if (self.source[methodName]) {
-    proxies.push(self.source);
-  }
 
-  // Look in the views
-  const allViews = self.proxyManager.getViews();
-  for (let i = 0; i < allViews.length; i++) {
-    const view = allViews[i];
-    if (view[methodName]) {
-      proxies.push(view);
-    }
+  // Look on source
+  const source = self.$proxyManager.getProxyById(self.sourceId);
+  if (source[methodName]) {
+    proxies.push(source);
   }
 
   // Look on the representations
-  const myRepresentations = self.proxyManager
+  const myRepresentations = self.$proxyManager
     .getRepresentations()
     .filter((r) => r.getInput() === self.source);
   for (let i = 0; i < myRepresentations.length; i++) {
@@ -58,7 +50,6 @@ function findProxiesWithMethod(self, methodName) {
     }
   }
 
-  // Not found
   return proxies;
 }
 
@@ -87,95 +78,20 @@ function computedGenerator(fields) {
   }
   return computedMethods;
 }
-// ----------------------------------------------------------------------------
-
-function proxyUpdated(fieldName, onChange, value) {
-  const methodName = `set${macro.capitalize(fieldName)}`;
-  const proxies = findProxiesWithMethod(this, methodName);
-  let changeDetected = !proxies.length;
-
-  while (proxies.length) {
-    changeDetected = proxies.pop()[methodName](value) || changeDetected;
-  }
-  if (changeDetected && onChange && this[onChange]) {
-    this[onChange](fieldName, value);
-  }
-}
 
 // ----------------------------------------------------------------------------
 
-export function addWatchers(instance, fields, onChange) {
+function addWatchers(vm, fields, onChange) {
   const subscriptions = [];
   for (let i = 0; i < fields.length; i++) {
     const { name } = fields[i];
     subscriptions.push(
-      instance.$watch(
-        name,
-        proxyUpdated.bind(instance, name, onChange && onChange[name])
-      )
+      vm.$watch(name, (newValue) => {
+        vm.updateProxies(name, newValue, onChange && onChange[name]);
+      })
     );
   }
   return subscriptions;
-}
-
-// ----------------------------------------------------------------------------
-// Generic component methods
-// ----------------------------------------------------------------------------
-
-function updateDomains() {
-  if (this.inUpdateDomains) {
-    return;
-  }
-
-  this.inUpdateDomains = true;
-  const allViews = this.proxyManager.getViews();
-  const myRepresentations = this.proxyManager
-    .getRepresentations()
-    .filter((r) => r.getInput() === this.source);
-
-  const myDomains = {};
-  const objectsToControls = [this.source].concat(myRepresentations, allViews);
-  while (objectsToControls.length) {
-    const uiList = objectsToControls.pop().getReferenceByName('ui');
-    extractDomains(myDomains, uiList);
-  }
-  this.inUpdateDomains = false;
-  this.domains = myDomains;
-}
-
-// ----------------------------------------------------------------------------
-
-function updateData() {
-  if (this.inUpdateData) {
-    return;
-  }
-  this.inUpdateData = true;
-
-  for (let i = 0; i < this.fields.length; i++) {
-    const { name } = this.fields[i];
-    const methodName = `get${macro.capitalize(name)}`;
-    const proxies = findProxiesWithMethod(this, methodName);
-    if (proxies.length) {
-      const newValue = proxies[0][methodName]();
-      if (this[name] !== newValue) {
-        this[name] = newValue;
-      }
-    }
-  }
-  this.inUpdateData = false;
-}
-
-// ----------------------------------------------------------------------------
-
-function getProxyWithFields() {
-  const allProxies = new Set();
-  for (let i = 0; i < this.fields.length; i++) {
-    const { name } = this.fields[i];
-    const methodName = `get${macro.capitalize(name)}`;
-    const proxies = findProxiesWithMethod(this, methodName);
-    proxies.forEach((p) => allProxies.add(p));
-  }
-  return Array.from(allProxies);
 }
 
 // ----------------------------------------------------------------------------
@@ -192,29 +108,28 @@ function generateComponent(
   }
 ) {
   const computed = computedGenerator(fields);
-  const methods = {
-    updateDomains,
-    updateData,
-    getProxyWithFields,
-  };
+  const extraMethods = {};
+  // TODO is this used?
   Object.keys(computed).forEach((prop) => {
-    methods[`get${macro.capitalize(prop)}`] = computed[prop].get;
-    methods[`set${macro.capitalize(prop)}`] = computed[prop].set;
+    extraMethods[`get${macro.capitalize(prop)}`] = computed[prop].get;
+    extraMethods[`set${macro.capitalize(prop)}`] = computed[prop].set;
   });
+
   return {
     name,
-    props: ['source'],
-    methods,
-    data: function data() {
+    props: ['sourceId'],
+    data() {
       return dataGenerator(fields);
     },
-    computed: Object.assign(
-      computed,
-      mapState({
-        proxyManager: 'proxyManager',
-        viewOrder: (state) => state.views.viewOrder,
-      })
-    ),
+    computed: {
+      ...computed,
+      ...mapState('views', {
+        viewOrder: (state) => state.viewOrder,
+      }),
+      source() {
+        return this.$proxyManager.getProxyById(this.sourceId);
+      },
+    },
     watch: {
       viewOrder() {
         if (dependOnLayout) {
@@ -222,43 +137,100 @@ function generateComponent(
         }
       },
     },
+    proxyManagerHooks: {
+      onProxyModified(proxy) {
+        if (
+          proxy.isA('vtkAbstractRepresentationProxy') &&
+          proxy.getInput() &&
+          proxy.getInput() === this.source
+        ) {
+          this.updateData();
+        }
+      },
+      onProxyCreated(info) {
+        const { proxyGroup, proxy } = info;
+        if (
+          proxyGroup === 'Representations' &&
+          proxy.getInput() === this.source
+        ) {
+          this.updateAll();
+        }
+      },
+    },
     created() {
-      this.listenerHelper = vtkListenerHelper.newInstance(
-        () => {
-          this.updateData();
-          this.$nextTick(this.$forceUpdate);
-        },
-        () => this.getProxyWithFields()
-      );
-
       this.subscriptions = addWatchers(this, fields, options.onChange);
-      this.subscriptions.push(
-        this.proxyManager.onProxyRegistrationChange(() => {
-          this.updateDomains();
-          this.updateData();
-          if (options.onUpdate) {
-            for (let i = 0; i < options.onUpdate.length; i++) {
-              this[options.onUpdate[i]]();
-            }
-          }
-          this.listenerHelper.resetListeners();
-        }).unsubscribe
-      );
     },
     mounted() {
-      this.updateDomains();
-      this.updateData();
-      if (options.onUpdate) {
-        for (let i = 0; i < options.onUpdate.length; i++) {
-          this[options.onUpdate[i]]();
-        }
-      }
+      this.updateAll();
     },
     beforeDestroy() {
-      this.listenerHelper.removeListeners();
       while (this.subscriptions.length) {
         this.subscriptions.pop()();
       }
+    },
+    methods: {
+      ...extraMethods,
+      updateAll() {
+        this.updateDomains();
+        this.updateData();
+        if (options.onUpdate) {
+          for (let i = 0; i < options.onUpdate.length; i++) {
+            this[options.onUpdate[i]]();
+          }
+        }
+      },
+      updateDomains() {
+        if (this.inUpdateDomains) {
+          return;
+        }
+
+        this.inUpdateDomains = true;
+        const myRepresentations = this.$proxyManager
+          .getRepresentations()
+          .filter((r) => r.getInput() === this.source);
+
+        const objs = [this.$proxyManager.getProxyById(this.sourceId)].concat(
+          myRepresentations
+        );
+        const myDomains = {};
+        while (objs.length) {
+          const uiList = objs.pop().getReferenceByName('ui');
+          extractDomains(myDomains, uiList);
+        }
+        this.inUpdateDomains = false;
+        this.domains = myDomains;
+      },
+      updateData() {
+        if (this.inUpdateData) {
+          return;
+        }
+        this.inUpdateData = true;
+
+        for (let i = 0; i < this.fields.length; i++) {
+          const { name: fieldName } = this.fields[i];
+          const methodName = `get${macro.capitalize(fieldName)}`;
+          const proxies = findProxiesWithMethod(this, methodName);
+          if (proxies.length) {
+            const newValue = proxies[0][methodName]();
+            if (this[fieldName] !== newValue) {
+              this[fieldName] = newValue;
+            }
+          }
+        }
+        this.inUpdateData = false;
+      },
+      updateProxies(fieldName, value, onChange) {
+        const methodName = `set${macro.capitalize(fieldName)}`;
+        const proxies = findProxiesWithMethod(this, methodName);
+        let changeDetected = !proxies.length;
+
+        while (proxies.length) {
+          changeDetected = proxies.pop()[methodName](value) || changeDetected;
+        }
+        if (changeDetected && onChange && this[onChange]) {
+          this[onChange](fieldName, value);
+        }
+      },
     },
   };
 }

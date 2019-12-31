@@ -3,7 +3,7 @@
     <v-expansion-panel-header class="subtitle-2">
       Measurements
     </v-expansion-panel-header>
-    <v-expansion-panel-content :class="$style.panelContent">
+    <v-expansion-panel-content eager :class="$style.panelContent">
       <measurement-tools
         :enabled="enabledTool === 'measurement'"
         @enable="setEnabledTool('measurement', $event)"

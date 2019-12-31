@@ -21,7 +21,7 @@
         </v-btn>
       </template>
       <template v-else>
-        <v-btn text @click="enable">
+        <v-btn text @click="enable" :disabled="!canCrop">
           <v-icon left>mdi-crop</v-icon>
           Crop
         </v-btn>

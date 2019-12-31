@@ -1,95 +1,166 @@
 import Vue from 'vue';
+import vtkWidgetManager from 'vtk.js/Sources/Widgets/Core/WidgetManager';
+import WidgetManagerConstants from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 
-import { VIEW_TYPES } from 'paraview-glance/src/components/core/VtkView/constants';
-import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
-import { Actions, Getters, Mutations } from 'paraview-glance/src/store/types';
+import {
+  DEFAULT_VIEW_TYPE,
+  VIEW_TYPES,
+  VIEW_ORIENTATIONS,
+} from 'paraview-glance/src/components/core/VtkView/constants';
+import { DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 
-function setViewData(state, viewId, data) {
-  Vue.set(state.viewData, viewId, {
-    ...(state.viewData[viewId] || {}),
-    ...data,
-  });
-}
+const { CaptureOn } = WidgetManagerConstants;
 
-export default {
+export default (proxyManager) => ({
+  namespaced: true,
   state: {
-    viewData: {},
+    viewsInitialized: false,
+    viewTypeToId: {}, // viewType -> view ID
+    backgroundColors: {}, // viewType -> bg
+    globalBackgroundColor: DEFAULT_BACKGROUND,
+    axisType: 'arrow',
+    axisPreset: 'default',
+    axisVisible: true,
+    annotationOpacity: 1,
     viewOrder: VIEW_TYPES.map((v) => v.value),
-    viewCount: 0,
-  },
-  getters: {
-    VIEWS: (state, getters, rootState) =>
-      state.viewOrder
-        .filter((v, i) => i < state.viewCount)
-        .map((t) => viewHelper.getView(rootState.proxyManager, t)),
+    visibleCount: 1,
   },
   mutations: {
-    GLOBAL_BG(state, background) {
-      // iterate over viewData keys since views[] represents
-      // the existing view set, not all views that have existed
-      Object.keys(state.viewData).forEach((viewType) =>
-        setViewData(state, viewType, { background })
-      );
+    setGlobalBackground(state, background) {
+      // if global bg color changes, then all bgs change.
+      state.globalBackgroundColor = background;
+      const keys = Object.keys(state.backgroundColors);
+      for (let i = 0; i < keys.length; i++) {
+        state.backgroundColors[keys[i]] = background;
+      }
     },
-    VIEW_SET_BACKGROUND(state, { view, background }) {
-      setViewData(state, viewHelper.getViewType(view), { background });
+    setAxisType(state, type) {
+      state.axisType = type;
     },
-    VIEWS_SWAP_ORDER(state, { index, newType }) {
-      const result = state.viewOrder.slice();
-      const oldViewType = result[index];
-      const destIndex = result.indexOf(newType);
-      result[index] = newType;
-      result[destIndex] = oldViewType;
-      state.viewOrder = result;
+    setAxisPreset(state, preset) {
+      state.axisPreset = preset;
     },
-    VIEWS_REORDER_QUAD(state) {
-      state.viewOrder = [
-        state.viewOrder[2],
-        state.viewOrder[3],
-        state.viewOrder[0],
-        state.viewOrder[1],
-      ];
+    setAxisVisible(state, visible) {
+      state.axisVisible = visible;
     },
-    SET_VIEW_COUNT(state, count) {
-      state.viewCount = count;
+    setAnnotationOpacity(state, opacity) {
+      state.annotationOpacity = opacity;
+    },
+    mapViewTypeToId(state, { viewType, viewId }) {
+      Vue.set(state.viewTypeToId, viewType, viewId);
+    },
+    changeBackground(state, { viewType, color }) {
+      state.backgroundColors[viewType] = color;
+    },
+    viewsInitialized(state) {
+      state.viewsInitialized = true;
+    },
+    visibleCount(state, count) {
+      state.visibleCount = count;
+    },
+    swapViews(state, { index, viewType }) {
+      // swap target view index with viewType view
+      const dstIndex = state.viewOrder.indexOf(viewType);
+      const srcViewType = state.viewOrder[index];
+      Vue.set(state.viewOrder, index, viewType);
+      Vue.set(state.viewOrder, dstIndex, srcViewType);
     },
   },
   actions: {
-    UPDATE_LAYOUT({ dispatch, commit, state }, { index, count, newType }) {
-      if (newType) {
-        // swap views
-        commit(Mutations.VIEWS_SWAP_ORDER, { index, newType });
-      } else if (count === 1) {
-        // Shrink
-        commit(Mutations.VIEWS_SWAP_ORDER, {
-          index: 0,
-          newType: state.viewOrder[index],
+    initViews({ commit, state }) {
+      if (!state.viewsInitialized) {
+        commit('viewsInitialized');
+
+        let defaultView = null;
+        state.viewOrder.forEach((viewType) => {
+          const [type, name] = viewType.split(':');
+          const view = proxyManager.createProxy('Views', type, { name });
+
+          // Update orientation
+          const { axis, orientation, viewUp } = VIEW_ORIENTATIONS[name];
+          view.updateOrientation(axis, orientation, viewUp);
+
+          // set background to transparent
+          view.setBackground(0, 0, 0, 0);
+          // set actual background from global bg color
+          Vue.set(
+            state.backgroundColors,
+            viewType,
+            state.globalBackgroundColor
+          );
+
+          view.setPresetToOrientationAxes('default');
+
+          if (!view.getReferenceByName('widgetManager')) {
+            const widgetManager = vtkWidgetManager.newInstance();
+            widgetManager.setCaptureOn(CaptureOn.MOUSE_MOVE);
+            view.set({ widgetManager }, true);
+          }
+
+          if (viewType === DEFAULT_VIEW_TYPE) {
+            defaultView = view;
+          }
+
+          commit('mapViewTypeToId', {
+            viewType,
+            viewId: view.getProxyId(),
+          });
         });
-      } else if (index === 0 && count === 2) {
-        // Current view should appear as second
-        commit(Mutations.VIEWS_SWAP_ORDER, {
-          index,
-          newType: state.viewOrder[1],
-        });
-      } else if (state.viewCount === 4 && count === 2 && index !== 1) {
-        commit(Mutations.VIEWS_REORDER_QUAD);
-      }
-      dispatch(Actions.UPDATE_VIEWS, count);
-    },
-    UPDATE_VIEWS({ dispatch, commit, rootState }, count = 1) {
-      commit(Mutations.SET_VIEW_COUNT, count);
-      dispatch(Actions.INIT_VIEWS_DATA, {
-        background: rootState.global.backgroundColor,
-      });
-    },
-    INIT_VIEWS_DATA({ getters, state }, initialData) {
-      // initialize viewData for new views
-      getters[Getters.VIEWS].forEach((view) => {
-        const viewType = viewHelper.getViewType(view);
-        if (!(viewType in state.viewData)) {
-          setViewData(state, viewType, initialData);
+
+        if (defaultView) {
+          defaultView.activate();
         }
+      }
+    },
+    swapViews({ commit }, { index, viewType }) {
+      commit('swapViews', { index, viewType });
+    },
+    singleView({ state, commit }, index) {
+      commit('swapViews', {
+        index: 0,
+        viewType: state.viewOrder[index],
       });
+      commit('visibleCount', 1);
+    },
+    splitView({ state, commit }, index) {
+      commit('swapViews', {
+        index,
+        viewType: state.viewOrder[1],
+      });
+      commit('visibleCount', 2);
+    },
+    quadView({ commit }) {
+      commit('visibleCount', 4);
+    },
+    setGlobalBackground({ commit }, background) {
+      commit('setGlobalBackground', background);
+    },
+    changeBackground({ commit }, { viewType, color }) {
+      commit('changeBackground', { viewType, color });
+    },
+    setAxisType({ commit }, axisType) {
+      proxyManager.getViews().forEach((view) => {
+        view.setOrientationAxesType(axisType);
+      });
+      commit('setAxisType', axisType);
+    },
+    setAxisPreset({ commit }, axisPreset) {
+      proxyManager.getViews().forEach((view) => {
+        view.setPresetToOrientationAxes(axisPreset);
+      });
+      commit('setAxisPreset', axisPreset);
+    },
+    setAxisVisible({ commit }, visible) {
+      proxyManager.getViews().forEach((view) => {
+        view.setOrientationAxesVisibility(visible);
+      });
+      commit('setAxisVisible', visible);
+    },
+    setAnnotationOpacity({ commit }, opacity) {
+      proxyManager.getViews().forEach((view) => {
+        view.setAnnotationOpacity(opacity);
+      });
+      commit('setAnnotationOpacity', opacity);
     },
   },
-};
+});

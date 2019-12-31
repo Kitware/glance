@@ -1,7 +1,8 @@
-import { mapMutations } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import { Breakpoints } from 'paraview-glance/src/constants';
 import {
+  ANNOTATIONS,
   DEFAULT_VIEW_TYPE,
   VIEW_TYPES,
   VIEW_TYPES_LPS,
@@ -10,227 +11,9 @@ import {
 
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import ToolbarSheet from 'paraview-glance/src/components/core/ToolbarSheet';
-import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
-import { Actions, Mutations } from 'paraview-glance/src/store/types';
 
 const ROTATION_STEP = 2;
-
-// ----------------------------------------------------------------------------
-// Component API
-// ----------------------------------------------------------------------------
-
-function changeViewType(newType) {
-  if (this.layoutManager) {
-    this.$emit('layout-update', {
-      count: this.layoutCount,
-      index: this.layoutIndex,
-      view: this.view,
-      newType,
-    });
-  } else {
-    this.view = viewHelper.bindView(
-      this.proxyManager,
-      newType,
-      this.$el.querySelector('.js-view')
-    );
-  }
-}
-
-// ----------------------------------------------------------------------------
-
-function getAvailableActions() {
-  return {
-    single: this.layoutCount > 1,
-    split: this.layoutCount < 4,
-  };
-}
-
-// ----------------------------------------------------------------------------
-
-function resetCamera() {
-  if (this.view) {
-    this.view.resetCamera();
-  }
-}
-
-// ----------------------------------------------------------------------------
-
-function updateOrientation(mode) {
-  if (this.view && !this.inAnimation) {
-    this.inAnimation = true;
-    const { axis, orientation, viewUp } = VIEW_ORIENTATIONS[mode];
-    this.view.updateOrientation(axis, orientation, viewUp, 100).then(() => {
-      this.inAnimation = false;
-    });
-  }
-}
-
-// ----------------------------------------------------------------------------
-
-function rollLeft() {
-  if (this.view) {
-    this.view.setAnimation(true, this);
-    let count = 0;
-    let intervalId = null;
-    const rotate = () => {
-      if (count < 90) {
-        count += ROTATION_STEP;
-        this.view.rotate(+ROTATION_STEP);
-      } else {
-        clearInterval(intervalId);
-        this.view.setAnimation(false, this);
-      }
-    };
-    intervalId = setInterval(rotate, 1);
-  }
-}
-
-// ----------------------------------------------------------------------------
-
-function rollRight() {
-  if (this.view) {
-    this.view.setAnimation(true, this);
-    let count = 0;
-    let intervalId = null;
-    const rotate = () => {
-      if (count < 90) {
-        count += ROTATION_STEP;
-        this.view.rotate(-ROTATION_STEP);
-      } else {
-        clearInterval(intervalId);
-        this.view.setAnimation(false, this);
-      }
-    };
-    intervalId = setInterval(rotate, 1);
-  }
-}
-
-// ----------------------------------------------------------------------------
-
-function screenCapture() {
-  this.$store.dispatch(Actions.TAKE_SCREENSHOT, this.view);
-}
-
-// ----------------------------------------------------------------------------
-
-function splitView() {
-  this.$emit('layout-update', {
-    index: this.layoutIndex,
-    count: 2,
-    view: this.view,
-  });
-}
-
-// ----------------------------------------------------------------------------
-
-function quadView() {
-  this.$emit('layout-update', {
-    index: this.layoutIndex,
-    count: 4,
-    view: this.view,
-  });
-}
-
-// ----------------------------------------------------------------------------
-
-function singleView() {
-  this.$emit('layout-update', {
-    index: this.layoutIndex,
-    count: 1,
-    view: this.view,
-  });
-}
-
-// ----------------------------------------------------------------------------
-
-function orientationLabels() {
-  return this.view.getPresetToOrientationAxes() === 'lps'
-    ? ['L', 'P', 'S']
-    : ['X', 'Y', 'Z'];
-}
-
-// ----------------------------------------------------------------------------
-
-function viewTypes() {
-  return this.view.getPresetToOrientationAxes() === 'lps'
-    ? VIEW_TYPES_LPS
-    : VIEW_TYPES;
-}
-
-// ----------------------------------------------------------------------------
-// Vue LifeCycle
-// ----------------------------------------------------------------------------
-
-function onMounted() {
-  if (this.view) {
-    this.view.setContainer(this.$el.querySelector('.js-view'));
-    const widgetManager = this.view.getReferenceByName('widgetManager');
-    if (widgetManager) {
-      const enabled = widgetManager.getPickingEnabled();
-      widgetManager.setRenderer(this.view.getRenderer());
-      // workaround to disable picking if previously disabled
-      if (!enabled) {
-        widgetManager.disablePicking();
-      }
-    }
-  }
-
-  // Closure creation for callback
-  this.resizeCurrentView = () => {
-    if (this.view) {
-      this.view.resize();
-    }
-  };
-
-  // Event handling
-  window.addEventListener('resize', this.resizeCurrentView);
-
-  // Capture event handler to release then at exit
-  this.subscriptions = [
-    () => window.removeEventListener('resize', this.resizeCurrentView),
-    this.proxyManager.onProxyRegistrationChange(() => {
-      // When proxy change, just re-render widget
-      viewHelper.updateViewsAnnotation(this.proxyManager);
-      this.$forceUpdate();
-    }).unsubscribe,
-
-    this.view.onModified(() => {
-      this.$forceUpdate();
-    }).unsubscribe,
-
-    this.proxyManager.onActiveViewChange(() => {
-      this.$forceUpdate();
-    }).unsubscribe,
-
-    this.proxyManager.onActiveSourceChange(() => {
-      if (this.view.bindRepresentationToManipulator) {
-        const activeSource = this.proxyManager.getActiveSource();
-        const representation = this.proxyManager.getRepresentation(
-          activeSource,
-          this.view
-        );
-        this.view.bindRepresentationToManipulator(representation);
-        this.view.updateWidthHeightAnnotation();
-      }
-    }).unsubscribe,
-  ];
-  this.initialSubscriptionLength = this.subscriptions.length;
-
-  // Initial setup
-  this.resizeCurrentView();
-}
-
-// ----------------------------------------------------------------------------
-
-function onBeforeDestroy() {
-  if (this.view) {
-    this.view.setContainer(null);
-  }
-  while (this.subscriptions.length) {
-    this.subscriptions.pop()();
-  }
-}
 
 // ----------------------------------------------------------------------------
 // Component
@@ -243,9 +26,6 @@ export default {
     ToolbarSheet,
   },
   props: {
-    view: {
-      default: null,
-    },
     layoutIndex: {
       default: 0,
       type: Number,
@@ -254,32 +34,51 @@ export default {
       default: 1,
       type: Number,
     },
-    layoutManager: {
-      default: false,
-      type: Boolean,
-    },
-    layoutViewType: {
+    viewType: {
       default: '',
       type: String,
     },
-    viewData: {
-      required: true,
-      type: Object,
+    backgroundColor: {
+      default: '#000',
+      type: String,
     },
   },
   data() {
     return {
+      internalIsActive: false,
       palette: BACKGROUND,
       backgroundSheet: false,
       inAnimation: false,
     };
   },
   computed: {
-    proxyManager() {
-      return this.$store.state.proxyManager;
+    ...mapState('views', {
+      view(state) {
+        return this.$proxyManager.getProxyById(
+          state.viewTypeToId[this.viewType]
+        );
+      },
+      axisVisible(state) {
+        return state.axisVisible;
+      },
+      axisType(state) {
+        return state.axisType;
+      },
+      axisPreset(state) {
+        return state.axisPreset;
+      },
+    }),
+    type() {
+      return this.viewType.split(':')[0];
     },
-    viewType() {
-      return this.layoutViewType || viewHelper.getViewType(this.view);
+    name() {
+      return this.viewType.split(':')[1];
+    },
+    orientationLabels() {
+      return this.axisPreset === 'lps' ? ['L', 'P', 'S'] : ['X', 'Y', 'Z'];
+    },
+    viewTypes() {
+      return this.axisPreset === 'lps' ? VIEW_TYPES_LPS : VIEW_TYPES;
     },
     smallScreen() {
       return this.$vuetify.breakpoint.width < Breakpoints.md;
@@ -296,33 +95,157 @@ export default {
     quadViewButton() {
       return this.layoutCount === 2 && this.layoutIndex === 1;
     },
+    isActive() {
+      return (
+        this.internalIsActive ||
+        this.view === this.$proxyManager.getActiveView()
+      );
+    },
   },
-  methods: {
-    changeViewType,
-    getAvailableActions,
-    onBeforeDestroy,
-    onMounted,
-    orientationLabels,
-    quadView,
-    resetCamera,
-    rollLeft,
-    rollRight,
-    screenCapture,
-    singleView,
-    splitView,
-    updateOrientation,
-    viewTypes,
-    ...mapMutations({
-      takeScreenshot: Mutations.TAKE_SCREENSHOT,
-    }),
+  proxyManagerHooks: {
+    onActiveViewChange(view) {
+      this.internalIsActive = view === this.view;
+    },
+    onActiveSourceChange(source) {
+      if (this.view.bindRepresentationToManipulator) {
+        const representation = this.$proxyManager.getRepresentation(
+          source,
+          this.view
+        );
+        this.view.bindRepresentationToManipulator(representation);
+        this.view.updateWidthHeightAnnotation();
+      }
+    },
+    onProxyRegistrationChange() {
+      // update views annotation
+      const hasImageData = this.$proxyManager
+        .getSources()
+        .find((s) => s.getDataset().isA && s.getDataset().isA('vtkImageData'));
+      const views = this.$proxyManager.getViews();
+
+      for (let i = 0; i < views.length; i++) {
+        const view = views[i];
+        view.setCornerAnnotation('se', '');
+        if (view.getProxyName().indexOf('2D') !== -1 && hasImageData) {
+          view.setCornerAnnotations(ANNOTATIONS, true);
+        } else {
+          view.setCornerAnnotation('nw', '');
+        }
+      }
+    },
   },
   mounted() {
-    this.$nextTick(this.onMounted);
+    if (this.view) {
+      this.view.setContainer(this.$el.querySelector('.js-view'));
+      const widgetManager = this.view.getReferenceByName('widgetManager');
+      if (widgetManager) {
+        const enabled = widgetManager.getPickingEnabled();
+        widgetManager.setRenderer(this.view.getRenderer());
+        // workaround to disable picking if previously disabled
+        if (!enabled) {
+          widgetManager.disablePicking();
+        }
+      }
+    }
+
+    window.addEventListener('resize', this.resizeCurrentView);
+
+    // Initial setup
+    this.resizeCurrentView();
   },
-  beforeDestroy: onBeforeDestroy,
+  beforeDestroy() {
+    if (this.view) {
+      this.view.setContainer(null);
+    }
+    window.removeEventListener('resize', this.resizeCurrentView);
+  },
   beforeUpdate() {
     if (!this.view) {
       this.changeViewType(DEFAULT_VIEW_TYPE);
     }
+  },
+  methods: {
+    changeViewType(viewType) {
+      this.swapViews({
+        index: this.layoutIndex,
+        viewType,
+      });
+    },
+    getAvailableActions() {
+      return {
+        single: this.layoutCount > 1,
+        split: this.layoutCount < 4,
+      };
+    },
+    resetCamera() {
+      if (this.view) {
+        this.view.resetCamera();
+      }
+    },
+    rollLeft() {
+      if (this.view) {
+        this.view.setAnimation(true, this);
+        let count = 0;
+        let intervalId = null;
+        const rotate = () => {
+          if (count < 90) {
+            count += ROTATION_STEP;
+            this.view.rotate(+ROTATION_STEP);
+          } else {
+            clearInterval(intervalId);
+            this.view.setAnimation(false, this);
+          }
+        };
+        intervalId = setInterval(rotate, 1);
+      }
+    },
+    rollRight() {
+      if (this.view) {
+        this.view.setAnimation(true, this);
+        let count = 0;
+        let intervalId = null;
+        const rotate = () => {
+          if (count < 90) {
+            count += ROTATION_STEP;
+            this.view.rotate(-ROTATION_STEP);
+          } else {
+            clearInterval(intervalId);
+            this.view.setAnimation(false, this);
+          }
+        };
+        intervalId = setInterval(rotate, 1);
+      }
+    },
+    updateOrientation(mode) {
+      if (this.view && !this.inAnimation) {
+        this.inAnimation = true;
+        const { axis, orientation, viewUp } = VIEW_ORIENTATIONS[mode];
+        this.view.updateOrientation(axis, orientation, viewUp, 100).then(() => {
+          this.inAnimation = false;
+        });
+      }
+    },
+    resizeCurrentView() {
+      if (this.view) {
+        this.view.resize();
+      }
+    },
+    screenCapture() {
+      this.takeScreenshot(this.view);
+    },
+    changeBackgroundColor(color) {
+      this.changeBackground({
+        viewType: this.viewType,
+        color,
+      });
+    },
+    ...mapActions('views', [
+      'changeBackground',
+      'swapViews',
+      'singleView',
+      'splitView',
+      'quadView',
+    ]),
+    ...mapActions(['takeScreenshot']),
   },
 };

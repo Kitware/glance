@@ -3,34 +3,51 @@
     <v-layout wrap align-center>
       <v-flex xs12>
         <source-select
-          label="Master volume"
+          label="Select a Base Image"
           :filterFunc="filterImageData"
           bindToActiveSource
           hideIfOneDataset
-          @input="setMasterVolume"
+          @input="setTargetVolume"
         />
       </v-flex>
-      <!--
-      <v-flex xs10>
-        <v-select
-          label="Output labelmap"
-          :append-outer-icon="labelmapSelection ? 'mdi-pencil' : null"
-          :items="getLabelmaps()"
-          item-text="name"
-          item-value="sourceId"
-          :disabled="!master"
-          :value="labelmapSelection"
-          style="overflow:hidden;text-overflow:ellipses;"
-          @input="setLabelMap"
-          @click:append-outer="editName"
-        ></v-select>
+      <v-flex xs12>
+        <v-menu offset-x>
+          <template v-slot:activator="{ on }">
+            <v-select
+              label="Select a Labelmap"
+              append-outer-icon="mdi-dots-vertical"
+              :items="labelmaps"
+              item-text="name"
+              item-value="sourceId"
+              :disabled="targetImageId === -1"
+              :value="labelmapSelection"
+              style="overflow:hidden; text-overflow:ellipses;"
+              @input="setLabelMap"
+              @click:append-outer="on.click"
+            ></v-select>
+          </template>
+          <v-list>
+            <template v-if="labelmapSelection">
+              <v-list-item @click="editName">
+                <v-list-item-title>Edit Name</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="deleteLabelmap">
+                <v-list-item-title>Delete</v-list-item-title>
+              </v-list-item>
+            </template>
+            <template v-else>
+              <v-list-item>
+                <v-list-item-title>(no labelmap selected)</v-list-item-title>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
       </v-flex>
-      <v-flex xs2><v-spacer /></v-flex>
       <template v-if="editingName">
         <v-flex xs10>
           <v-text-field
             label="Renaming labelmap"
-            v-model="labelmapName"
+            v-model="editableLabelmapName"
           />
         </v-flex>
         <v-flex xs2 class="text-center">
@@ -39,7 +56,6 @@
           </v-btn>
         </v-flex>
       </template>
-      -->
     </v-layout>
   </v-container>
 
@@ -50,6 +66,7 @@
           @change="$emit('enable', Boolean($event))"
           hide-details
           label="Paint Mode"
+          :disabled="!canPaint"
           :class="$style.paintSwitch"
         />
         <v-spacer />
@@ -58,7 +75,7 @@
           small
           class="mr-3"
           @click="undo"
-          :disabled="!master || !labelmapProxy"
+          :disabled="!canPaint"
         >
           <v-icon>mdi-undo</v-icon>
         </v-btn>
@@ -66,7 +83,7 @@
           icon
           small
           @click="redo"
-          :disabled="!master || !labelmapProxy"
+          :disabled="!canPaint"
         >
           <v-icon>mdi-redo</v-icon>
         </v-btn>
@@ -75,7 +92,7 @@
 
   <v-container grid-list-md :class="$style.container">
     <v-layout
-      v-show="master && labelmapProxy"
+      v-show="canPaint"
       wrap
       align-center
     >
@@ -85,20 +102,22 @@
       <v-flex xs8>
         <v-slider
           min="1"
-          :max="getBrushSizeMax()"
+          :max="brushSizeMax"
           step="1"
           dirty
           hide-details
-          v-model="radius"
+          :value="radius"
+          @input="setRadius"
         />
       </v-flex>
       <v-flex xs2>
         <v-text-field
           type="number"
           min="1"
-          :max="getBrushSizeMax()"
+          :max="brushSizeMax"
           step="1"
-          v-model="radius"
+          :value="radius"
+          @input="setRadius"
         />
       </v-flex>
       <v-flex xs12>
@@ -116,7 +135,8 @@
             </v-btn>
           </v-subheader>
           <v-radio-group
-            v-model="label"
+            :value="activeLabel"
+            @change="setLabel"
             :class="$style.radioGroup"
           >
             <template

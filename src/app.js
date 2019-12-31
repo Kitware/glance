@@ -11,14 +11,16 @@ import 'typeface-roboto';
 import '@mdi/font/css/materialdesignicons.css';
 import 'paraview-glance/static/global.css';
 
+// side-effect: register readers
 import 'paraview-glance/src/io/ParaViewGlanceReaders';
+// side-effect: register presets
+import 'paraview-glance/src/config/ColorMaps';
+
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
-import createStore, {
-  registerProxyManagerHooks,
-} from 'paraview-glance/src/store';
-import { Actions, Mutations } from 'paraview-glance/src/store/types';
+import createStore from 'paraview-glance/src/store';
+import { ProxyManagerVuePlugin } from 'paraview-glance/src/plugins';
 
 // Expose IO API to Glance global object
 export const {
@@ -34,6 +36,7 @@ export const {
 
 Vue.use(Vuex);
 Vue.use(Vuetify);
+Vue.use(ProxyManagerVuePlugin);
 
 let activeProxyConfig = null;
 /**
@@ -53,16 +56,13 @@ export function createViewer(container, proxyConfig = null) {
 
   const store = createStore(proxyManager);
 
-  // subscription won't be unsubscribed b/c we currently
-  // don't have a way to destroy a viewer
-  registerProxyManagerHooks(proxyManager, store);
-
   /* eslint-disable no-new */
   new Vue({
     el: container,
     components: { App },
     store,
     vuetify: new Vuetify(),
+    proxyManager,
     template: '<App />',
   });
 
@@ -70,9 +70,9 @@ export function createViewer(container, proxyConfig = null) {
   function onRoute(event) {
     const state = event.state || {};
     if (state.app) {
-      store.commit(Mutations.SHOW_APP);
+      store.commit('showApp');
     } else {
-      store.commit(Mutations.SHOW_LANDING);
+      store.commit('showLanding');
     }
   }
   store.watch(
@@ -97,16 +97,16 @@ export function createViewer(container, proxyConfig = null) {
         const names = typeof name === 'string' ? [name] : name;
         const urls = typeof url === 'string' ? [url] : url;
         const types = typeof type === 'string' ? [type] : type || [];
-        store.dispatch(Actions.OPEN_REMOTE_FILES, { urls, names, types });
+        store.dispatch('files/openRemoteFiles', { urls, names, types });
       }
     },
     // All components must have a unique name
     addDatasetPanel(component) {
-      store.commit(Mutations.ADD_PANEL, { component });
+      store.commit('addPanel', { component });
     },
     proxyManager,
     showApp() {
-      store.commit(Mutations.SHOW_APP);
+      store.commit('showApp');
     },
   };
 }

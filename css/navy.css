@@ -341,6 +341,13 @@ body {
     font-size: 18px;
   }
 }
+#banner-start-image {
+  max-width: 90%;
+  max-height: 15em;
+}
+#banner-start-captionbox {
+  margin: 2em 0em 3em 0em;
+}
 #banner-start-command {
   background: #283542;
   font-family: "Source Code Pro", Monaco, Menlo, Consolas, monospace;

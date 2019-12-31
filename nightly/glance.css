@@ -1,9 +1,3 @@
-/* override vuetify for mobile */
-html {
-  position: fixed; top: 0; bottom: 0; left: 0; right: 0;
-  overflow: hidden !important;
-}
-
 /* globally accessible and generic utility classes */
 .pv-break-word {
   word-break: break-word;
@@ -188,8 +182,12 @@ html {
 
 /* vuetify override */
 /* This sets flex-grow to 0 for header contents */
-.Datasets-panelHeader-2ddr7 > :not(.Datasets-v-expansion-panel-header__icon-uhztp) {
+.Datasets-panelHeader-2ddr7 > :not(.v-expansion-panel-header__icon) {
   flex: unset;
+}
+.Datasets-headerMenuButton-q4ggj {
+  /* maintain icon width */
+  flex: 0 0 auto !important;
 }
 .Datasets-subpanelHeader-qj2zk {
   /* the 12px is to line up the expansion panel hide/show icons */

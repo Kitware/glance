@@ -14,6 +14,21 @@ export default {
   },
 
   getters: {
+    GLOBAL_BG(state) {
+      return state.backgroundColor;
+    },
+    GLOBAL_ORIENT_AXIS(state) {
+      return state.orientationAxis;
+    },
+    GLOBAL_ORIENT_PRESET(state) {
+      return state.orientationPreset;
+    },
+    GLOBAL_AXIS_TYPE(state) {
+      return state.axisType;
+    },
+    GLOBAL_INTERACTION_STYLE_3D(state) {
+      return state.interactionStyle3D;
+    },
     GLOBAL_MAX_TEXTURE_LOD_SIZE(state) {
       return state.maxTextureLODSize;
     },
@@ -37,6 +52,8 @@ export default {
       state.axisType = axisType;
     },
     GLOBAL_INTERACTION_STYLE_3D(state, style) {
+      // TODO: it might be better for us to modify the views in an action
+      // instead of a mutation
       // First, set the interaction style to all the views
       const allViews = this.state.proxyManager.getViews();
       allViews

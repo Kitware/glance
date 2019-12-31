@@ -44,6 +44,11 @@ export const Getters = objEnum([
   'FILE_INDETERMINATE_PROGRESS',
 
   // globalSettings
+  'GLOBAL_BG',
+  'GLOBAL_ORIENT_AXIS',
+  'GLOBAL_ORIENT_PRESET',
+  'GLOBAL_AXIS_TYPE',
+  'GLOBAL_INTERACTION_STYLE_3D',
   'GLOBAL_MAX_TEXTURE_LOD_SIZE',
 
   // views

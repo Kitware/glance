@@ -1,7 +1,9 @@
+import { mapGetters, mapMutations, mapState } from 'vuex';
+
 import GpuInformation from 'paraview-glance/src/components/widgets/GPUInformation';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
-import { Mutations } from 'paraview-glance/src/store/types';
+import { Getters, Mutations } from 'paraview-glance/src/store/types';
 
 const INTERACTION_STYLES_3D = [
   { text: 'Default', value: '3D' },
@@ -138,27 +140,24 @@ export default {
     };
   },
   computed: {
-    proxyManager() {
-      return this.$store.state.proxyManager;
-    },
-    backgroundColor: {
+    backgroundColorModel: {
       get() {
-        return this.$store.state.global.backgroundColor;
+        return this.backgroundColor;
       },
       set(color) {
-        this.$store.commit(Mutations.GLOBAL_BG, color);
+        this.setBackgroundColor(color);
       },
     },
-    interactionStyle3D: {
+    interactionStyle3DModel: {
       get() {
-        return this.$store.state.global.interactionStyle3D;
+        return this.interactionStyle3D;
       },
       set(style) {
-        this.$store.commit(Mutations.GLOBAL_INTERACTION_STYLE_3D, style);
+        this.setInteractionStyle3D(style);
       },
     },
     firstPersonInteraction() {
-      return this.$store.state.global.interactionStyle3D === 'FirstPerson';
+      return this.interactionStyle3D === 'FirstPerson';
     },
     firstPersonMovementSpeed: {
       get() {
@@ -168,38 +167,47 @@ export default {
         setFirstPersonMovementSpeed(this.proxyManager, speed);
       },
     },
-    orientationAxis: {
+    orientationAxisModel: {
       get() {
-        return this.$store.state.global.orientationAxis;
+        return this.orientationAxis;
       },
       set(flag) {
-        this.$store.commit(Mutations.GLOBAL_ORIENT_AXIS, flag);
+        this.setOrientationAxis(flag);
       },
     },
-    orientationPreset: {
+    orientationPresetModel: {
       get() {
-        return this.$store.state.global.orientationPreset;
+        return this.orientationPreset;
       },
       set(preset) {
-        this.$store.commit(Mutations.GLOBAL_ORIENT_PRESET, preset);
+        this.setOrientationPreset(preset);
       },
     },
-    axisType: {
+    axisTypeModel: {
       get() {
-        return this.$store.state.global.axisType;
+        return this.axisType;
       },
       set(axisType) {
-        this.$store.commit(Mutations.GLOBAL_AXIS_TYPE, axisType);
+        this.setAxisType(axisType);
       },
     },
-    maxTextureLODSize: {
+    maxTextureLODSizeModel: {
       get() {
-        return this.$store.state.global.maxTextureLODSize;
+        return this.maxTextureLODSize;
       },
       set(size) {
-        this.$store.commit(Mutations.GLOBAL_MAX_TEXTURE_LOD_SIZE, size);
+        this.setMaxTextureLODSize(size);
       },
     },
+    ...mapGetters({
+      backgroundColor: Getters.GLOBAL_BG,
+      interactionStyle3D: Getters.GLOBAL_INTERACTION_STYLE_3D,
+      orientationAxis: Getters.GLOBAL_ORIENT_AXIS,
+      orientationPreset: Getters.GLOBAL_ORIENT_PRESET,
+      axisType: Getters.GLOBAL_AXIS_TYPE,
+      maxTextureLODSize: Getters.GLOBAL_MAX_TEXTURE_LOD_SIZE,
+    }),
+    ...mapState(['proxyManager']),
   },
   watch: {
     orientationAxis: setOrientationAxesVisible,
@@ -265,6 +273,19 @@ export default {
         }
       }
     },
+    ...mapMutations({
+      setBackgroundColor: (commit, bg) => commit(Mutations.GLOBAL_BG, bg),
+      setInteractionStyle3D: (commit, style) =>
+        commit(Mutations.GLOBAL_INTERACTION_STYLE_3D, style),
+      setOrientationAxis: (commit, flag) =>
+        commit(Mutations.GLOBAL_ORIENT_AXIS, flag),
+      setOrientationPreset: (commit, preset) =>
+        commit(Mutations.GLOBAL_ORIENT_PRESET, preset),
+      setAxisType: (commit, axisType) =>
+        commit(Mutations.GLOBAL_AXIS_TYPE, axisType),
+      setMaxTextureLODSize: (commit, size) =>
+        commit(Mutations.GLOBAL_MAX_TEXTURE_LOD_SIZE, size),
+    }),
   },
   created() {
     this.subscription = this.proxyManager.onProxyRegistrationChange(() => {

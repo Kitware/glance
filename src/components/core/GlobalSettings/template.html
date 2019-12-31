@@ -7,7 +7,7 @@
     <palette-picker
       :palette="palette"
       :size="24"
-      v-model="backgroundColor"
+      v-model="backgroundColorModel"
     />
   </v-card>
   <v-card flat :class="$style.card">
@@ -27,7 +27,7 @@
             dense
             flat
             hide-details
-            v-model="interactionStyle3D"
+            v-model="interactionStyle3DModel"
             :items="interactionStyles3D"
           />
         </v-flex>
@@ -83,7 +83,7 @@
           </v-flex>
           <v-flex xs2>
             <v-switch
-              v-model="orientationAxis"
+              v-model="orientationAxisModel"
               :class="$style.slimInput"
               hide-details
             />
@@ -106,7 +106,7 @@
             hide-details
             :disabled="!orientationAxis"
 
-            v-model="axisType"
+            v-model="axisTypeModel"
             :items="axisTypes"
           />
         </v-flex>
@@ -123,7 +123,7 @@
             flat
             hide-details
 
-            v-model="orientationPreset"
+            v-model="orientationPresetModel"
             :items="orientationPresets"
           />
         </v-flex>
@@ -186,7 +186,7 @@
             :class="$style.slimInput"
             hide-details
             type="number"
-            v-model="maxTextureLODSize"
+            v-model="maxTextureLODSizeModel"
             :min="100"
             suffix='KiB'
           />

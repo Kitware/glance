@@ -3,6 +3,8 @@ import macro from 'vtk.js/Sources/macro';
 import vtkHttpSceneLoader from 'vtk.js/Sources/IO/Core/HttpSceneLoader';
 import vtkMapper from 'vtk.js/Sources/Rendering/Core/Mapper';
 
+import { Getters } from 'paraview-glance/src/store/types';
+
 // ----------------------------------------------------------------------------
 // vtkGlanceVtkJsReader methods
 // ----------------------------------------------------------------------------
@@ -15,6 +17,7 @@ function loadZip(zipContent) {
       callback() {
         const sceneImporter = vtkHttpSceneLoader.newInstance({
           dataAccessHelper,
+          startLODLoaders: false,
         });
         sceneImporter.setUrl('index.json');
         sceneImporter.onReady(() => {
@@ -156,24 +159,36 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
         }
       }
 
-      if (sceneItem.textureLODsDownloader) {
+      const { textureLODsDownloader } = sceneItem;
+      if (textureLODsDownloader) {
         // Trigger re-renders when new textures are downloaded
-        sceneItem.textureLODsDownloader.setStepFinishedCallback(
+        textureLODsDownloader.setStepFinishedCallback(
           proxyManager.renderAllViews
         );
+
+        const maxTextureLODSize = proxyManager.getReferenceByName('$store')
+          .getters[Getters.GLOBAL_MAX_TEXTURE_LOD_SIZE];
+        textureLODsDownloader.setMaxTextureLODSize(maxTextureLODSize);
+
+        // Start the downloads
+        textureLODsDownloader.startDownloads();
       }
 
-      if (sceneItem.dataSetLODsLoader) {
+      const { dataSetLODsLoader } = sceneItem;
+      if (dataSetLODsLoader) {
         const callback = () => {
           // We must set the new source on the proxy to get paraview
           // glance to update.
-          const newSource = sceneItem.dataSetLODsLoader.getCurrentSource();
+          const newSource = dataSetLODsLoader.getCurrentSource();
           sourceProxy.setInputAlgorithm(
             newSource,
             newSource.getOutputData().getClassName()
           );
         };
-        sceneItem.dataSetLODsLoader.setStepFinishedCallback(callback);
+        dataSetLODsLoader.setStepFinishedCallback(callback);
+
+        // Start the downloads
+        dataSetLODsLoader.startDownloads();
       }
     });
 

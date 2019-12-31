@@ -9,6 +9,14 @@ export default {
     // from VtkView
     axisType: 'arrow',
     interactionStyle3D: '3D',
+    // Units are in KiB
+    maxTextureLODSize: 50000,
+  },
+
+  getters: {
+    GLOBAL_MAX_TEXTURE_LOD_SIZE(state) {
+      return state.maxTextureLODSize;
+    },
   },
 
   mutations: {
@@ -39,6 +47,9 @@ export default {
 
       // Now, modify the state
       state.interactionStyle3D = style;
+    },
+    GLOBAL_MAX_TEXTURE_LOD_SIZE(state, size) {
+      state.maxTextureLODSize = size;
     },
   },
 };

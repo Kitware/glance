@@ -171,4 +171,27 @@
       </v-layout>
     </v-container>
   </v-card>
+  <v-card flat :class="$style.card">
+    <div :class="$style.heading">
+      <span class="subtitle-2">LOD Settings</span>
+    </div>
+    <v-divider :class="$style.divider" />
+    <v-container grid-list-xs class="pa-0">
+      <v-layout row align-center class="pt-1">
+        <v-flex xs7>
+          <span class="body-2">Max Texture LOD Size</span>
+        </v-flex>
+        <v-flex xs5>
+          <v-text-field
+            :class="$style.slimInput"
+            hide-details
+            type="number"
+            v-model="maxTextureLODSize"
+            :min="100"
+            suffix='KiB'
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-card>
 </v-container>

@@ -192,6 +192,14 @@ export default {
         this.$store.commit(Mutations.GLOBAL_AXIS_TYPE, axisType);
       },
     },
+    maxTextureLODSize: {
+      get() {
+        return this.$store.state.global.maxTextureLODSize;
+      },
+      set(size) {
+        this.$store.commit(Mutations.GLOBAL_MAX_TEXTURE_LOD_SIZE, size);
+      },
+    },
   },
   watch: {
     orientationAxis: setOrientationAxesVisible,

@@ -43,6 +43,9 @@ export const Getters = objEnum([
   'FILE_RAW_FILES_LOADABLE',
   'FILE_INDETERMINATE_PROGRESS',
 
+  // globalSettings
+  'GLOBAL_MAX_TEXTURE_LOD_SIZE',
+
   // views
   'VIEWS',
 ]);
@@ -62,6 +65,7 @@ export const Mutations = objEnum([
   'GLOBAL_ORIENT_PRESET',
   'GLOBAL_AXIS_TYPE',
   'GLOBAL_INTERACTION_STYLE_3D',
+  'GLOBAL_MAX_TEXTURE_LOD_SIZE',
 
   // files
   'FILE_SET_URLS', // private

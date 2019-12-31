@@ -34,8 +34,14 @@ function getFirstPersonMovementSpeed(pxm) {
     const interactorStyle = views[i].getInteractorStyle3D();
     const manipulators = interactorStyle.getKeyboardManipulators();
     for (let j = 0; j < manipulators.length; ++j) {
-      if (manipulators[j].getMovementSpeed) {
-        return manipulators[j].getMovementSpeed();
+      const manip = manipulators[j];
+      if (manip.getMovementSpeed) {
+        if (manip.getMovementSpeed() === null) {
+          // Set the renderer and reset the movement speed
+          manip.setRenderer(views[i].getRenderer());
+          manip.resetMovementSpeed();
+        }
+        return manip.getMovementSpeed();
       }
     }
   }

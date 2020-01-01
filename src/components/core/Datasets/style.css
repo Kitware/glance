@@ -31,8 +31,13 @@
 
 /* vuetify override */
 /* This sets flex-grow to 0 for header contents */
-.panelHeader > :not(.v-expansion-panel-header__icon) {
+.panelHeader > :not(:global(.v-expansion-panel-header__icon)) {
   flex: unset;
+}
+
+.headerMenuButton {
+  /* maintain icon width */
+  flex: 0 0 auto !important;
 }
 
 .subpanelHeader {

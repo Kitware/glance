@@ -37,7 +37,6 @@ const FIELDS = [
   { name: 'xSliceVisibility', initialValue: false },
   { name: 'ySliceVisibility', initialValue: false },
   { name: 'zSliceVisibility', initialValue: false },
-  { name: 'zSliceVisibility', initialValue: false },
   { name: 'opacity', initialValue: 1.0 },
   // Fake props that don't exist on proxy
   {
@@ -57,7 +56,7 @@ const FIELDS = [
 // ----------------------------------------------------------------------------
 
 function isSliceAvailable(name) {
-  return !!this.proxyManager
+  return !!this.$proxyManager
     .getViews()
     .filter((v) => v.getContainer())
     .filter((v) => v.getName() === name).length;
@@ -67,10 +66,11 @@ function isSliceAvailable(name) {
 
 function updateOpacity() {
   // Look on the representations
-  const sliceReps = this.proxyManager
+  const sliceReps = this.$proxyManager
     .getRepresentations()
     .filter(
-      (r) => r.getInput() === this.source && r.isA('vtkSliceRepresentation')
+      (r) =>
+        r.getInput() === this.source && r.isA('vtkSliceRepresentationProxy')
     );
   for (let i = 0; i < sliceReps.length; i++) {
     sliceReps[i]

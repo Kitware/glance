@@ -1,0 +1,16 @@
+<v-menu
+  v-if="collapse"
+  bottom
+>
+  <template v-slot:activator="{ on }">
+    <v-btn icon v-on="on">
+      <v-icon>mdi-dots-vertical</v-icon>
+    </v-btn>
+  </template>
+  <v-list>
+    <slot :state="state" />
+  </v-list>
+</v-menu>
+<v-toolbar-items v-else>
+  <slot :state="state" />
+</v-toolbar-items>

@@ -5,13 +5,18 @@ import Vuex from 'vuex';
 import vtk from 'vtk.js/Sources/vtk';
 import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
 
+import { ProxyManagerVuexPlugin } from 'paraview-glance/src/plugins';
+
+import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import Config from 'paraview-glance/src/config';
-import global from 'paraview-glance/src/store/globalSettings';
 import files from 'paraview-glance/src/store/fileLoader';
-import screenshots from 'paraview-glance/src/store/screenshots';
 import views from 'paraview-glance/src/store/views';
-import { Actions, Mutations } from 'paraview-glance/src/store/types';
+import widgets from 'paraview-glance/src/store/widgets';
+
+import { wrapMutationAsAction } from 'paraview-glance/src/utils';
+
+const STATE_VERSION = 2;
 
 // http://jsperf.com/typeofvar
 function typeOf(o) {
@@ -37,24 +42,6 @@ function merge(dst, src) {
 }
 /* eslint-enable no-param-reassign */
 
-// Reduces app state to relevant persistent state
-function reduceState(state) {
-  return {
-    route: state.route,
-    global: state.global,
-    views: state.views,
-  };
-}
-
-function getModuleDefinitions() {
-  return {
-    global,
-    files,
-    screenshots,
-    views,
-  };
-}
-
 function changeActiveSliceDelta(proxyManager, delta) {
   const view = proxyManager.getActiveView();
   if (view.isA('vtkView2DProxy')) {
@@ -68,96 +55,100 @@ function changeActiveSliceDelta(proxyManager, delta) {
   }
 }
 
-export function registerProxyManagerHooks(pxm, store) {
-  // Allow the store to be accessed from the proxy manager
-  pxm.set({ $store: store }, true);
-
-  const subs = [];
-  const modules = getModuleDefinitions();
-  const hookNames = ['onProxyRegistrationChange'];
-
-  Object.keys(modules)
-    .filter((mod) => Boolean(modules[mod].proxyManagerHooks))
-    .forEach((mod) => {
-      const hooks = modules[mod].proxyManagerHooks;
-      hookNames
-        .filter((name) => Boolean(hooks[name]))
-        .forEach((hookName) =>
-          subs.push(pxm[hookName](hooks[hookName](store)))
-        );
-    });
-
-  return () => {
-    while (subs.length) {
-      subs.pop().unsubscribe();
-    }
-  };
-}
-
-function createStore(proxyManager = null) {
-  let pxm = proxyManager;
+function createStore(pxm = null) {
+  let proxyManager = pxm;
   if (!proxyManager) {
-    pxm = vtkProxyManager.newInstance({
+    proxyManager = vtkProxyManager.newInstance({
       proxyConfiguration: Config.Proxy,
     });
   }
 
-  return new Vuex.Store({
+  const $store = new Vuex.Store({
+    plugins: [ProxyManagerVuexPlugin(proxyManager)],
     state: {
-      proxyManager: pxm,
+      proxyManager, // TODO remove
       route: 'landing', // valid values: landing, app
       savingStateName: null,
       loadingState: false,
+      screenshotDialog: false,
+      pendingScreenshot: null,
       panels: {},
       cameraViewPoints: {},
       mostRecentViewPoint: null,
     },
     getters: {
-      CAMERA_VIEW_POINTS(state) {
-        return state.cameraViewPoints;
-      },
-      PROXY_MANAGER(state) {
+      proxyManager(state) {
         return state.proxyManager;
       },
-      MOST_RECENT_VIEW_POINT(state) {
+      cameraViewPoints(state) {
+        return state.cameraViewPoints;
+      },
+      mostRecentViewPoint(state) {
         return state.mostRecentViewPoint;
       },
     },
-    modules: getModuleDefinitions(),
+    modules: {
+      files: files(proxyManager),
+      views: views(proxyManager),
+      widgets: widgets(proxyManager),
+    },
     mutations: {
-      SHOW_LANDING(state) {
+      showLanding(state) {
         state.route = 'landing';
       },
-      SHOW_APP(state) {
+      showApp(state) {
         state.route = 'app';
       },
-      SAVING_STATE(state, name = null) {
+      savingState(state, name = null) {
         state.savingStateName = name;
       },
-      LOADING_STATE(state, flag) {
+      loadingState(state, flag) {
         state.loadingState = flag;
       },
-      ADD_PANEL: (state, { component, priority = 0 }) => {
+      addPanel: (state, { component, priority = 0 }) => {
         if (!(priority in state.panels)) {
           Vue.set(state.panels, priority, []);
         }
         state.panels[priority].push(component);
       },
-      MOST_RECENT_VIEW_POINT(state, viewPoint) {
+      openScreenshotDialog(state, screenshot) {
+        state.pendingScreenshot = screenshot;
+        state.screenshotDialog = true;
+      },
+      closeScreenshotDialog(state) {
+        state.pendingScreenshot = null;
+        state.screenshotDialog = false;
+      },
+      mostRecentViewPoint(state, viewPoint) {
         state.mostRecentViewPoint = viewPoint;
       },
     },
     actions: {
-      SAVE_STATE({ commit, state }, fileNameToUse) {
+      addPanel: wrapMutationAsAction('addPanel'),
+      closeScreenshotDialog: wrapMutationAsAction('closeScreenshotDialog'),
+      saveState({ commit, state }, fileNameToUse) {
         const t = new Date();
         const fileName =
           fileNameToUse ||
           `${t.getFullYear()}${t.getMonth() +
             1}${t.getDate()}_${t.getHours()}-${t.getMinutes()}-${t.getSeconds()}.glance`;
 
-        commit(Mutations.SAVING_STATE, fileName);
+        commit('savingState', fileName);
 
-        const userData = reduceState(state);
+        const activeSourceId = proxyManager.getActiveSource()
+          ? proxyManager.getActiveSource().getProxyId()
+          : -1;
+
+        const userData = {
+          version: STATE_VERSION,
+          activeSourceId,
+          store: {
+            route: state.route,
+            views: state.views,
+            widgets: state.widgets,
+          },
+        };
+
         const options = {
           recycleViews: true,
           datasetHandler(dataset, source) {
@@ -173,7 +164,7 @@ function createStore(proxyManager = null) {
         };
 
         const zip = new JSZip();
-        state.proxyManager.saveState(options, userData).then((stateObject) => {
+        proxyManager.saveState(options, userData).then((stateObject) => {
           zip.file('state.json', JSON.stringify(stateObject));
           zip
             .generateAsync({
@@ -195,15 +186,15 @@ function createStore(proxyManager = null) {
               document.body.removeChild(anchor);
 
               setTimeout(() => URL.revokeObjectURL(url), 60000);
-              commit(Mutations.SAVING_STATE, null);
-            });
+            })
+            .then(() => commit('savingState', null));
         });
       },
-      RESTORE_APP_STATE({ commit, dispatch, state }, appState) {
-        commit(Mutations.LOADING_STATE, true);
+      restoreAppState({ commit, dispatch, state }, appState) {
+        commit('loadingState', true);
 
-        dispatch(Actions.RESET_WORKSPACE);
-        return state.proxyManager
+        dispatch('resetWorkspace');
+        return proxyManager
           .loadState(appState, {
             datasetHandler(ds) {
               if (ds.vtkClass) {
@@ -223,7 +214,7 @@ function createStore(proxyManager = null) {
                     return dataset;
                   }
                   if (reader && reader.setProxyManager) {
-                    reader.setProxyManager(state.proxyManager);
+                    reader.setProxyManager(proxyManager);
                     return null;
                   }
                   throw new Error('Invalid dataset');
@@ -242,18 +233,21 @@ function createStore(proxyManager = null) {
             },
           })
           .then((userData) => {
-            this.replaceState(merge(state, userData));
+            const { version, store, $oldToNewIdMapping } = userData;
+            if (version >= 2) {
+              this.replaceState(merge(state, store));
+            } else {
+              this.replaceState(merge(state, userData));
+            }
 
-            // Wait for the layout to be done (nextTick is not enough)
-            setTimeout(() => {
-              // Advertise that state loading is done
-              commit(Mutations.LOADING_STATE, false);
-
+            // make sure store modules have a chance to rewrite their saved mappings
+            // before we re-populate proxy manager state
+            dispatch('rewriteProxyIds', $oldToNewIdMapping).then(() => {
               // Force update
-              state.proxyManager.modified();
+              proxyManager.modified();
 
               // Activate visible view with a preference for the 3D one
-              const visibleViews = state.proxyManager
+              const visibleViews = proxyManager
                 .getViews()
                 .filter((view) => view.getContainer());
               const view3D = visibleViews.find(
@@ -265,44 +259,79 @@ function createStore(proxyManager = null) {
               }
 
               // Make sure pre-existing view (not expected in state) have a representation
-              state.proxyManager
+              proxyManager
                 .getSources()
-                .forEach(state.proxyManager.createRepresentationInAllViews);
-            }, 100);
-          });
+                .forEach(proxyManager.createRepresentationInAllViews);
+
+              if (version >= 2) {
+                const { activeSourceId } = userData;
+                const source = proxyManager.getProxyById(activeSourceId);
+                if (source) {
+                  source.activate();
+                }
+              }
+            });
+          })
+          .then(() => commit('loadingState', false));
       },
-      RESET_WORKSPACE({ state }) {
+      resetWorkspace() {
         // use setTimeout to avoid some weird crashing with extractDomains
-        state.proxyManager
+        proxyManager
           .getSources()
           .forEach((source) =>
-            setTimeout(() => state.proxyManager.deleteProxy(source), 0)
+            setTimeout(() => proxyManager.deleteProxy(source), 0)
           );
         setTimeout(() => {
-          state.proxyManager.renderAllViews();
-          state.proxyManager.resetCameraInAllViews();
+          proxyManager.renderAllViews();
+          proxyManager.resetCameraInAllViews();
         }, 0);
       },
-      RESET_ACTIVE_CAMERA({ state }) {
-        state.proxyManager.resetCamera();
+      resetActiveCamera() {
+        proxyManager.resetCamera();
       },
-      SET_CAMERA_VIEW_POINTS({ commit, dispatch, state }, viewPoints) {
+      increaseSlice({ state }) {
+        if (state.route === 'app') {
+          changeActiveSliceDelta(proxyManager, 1);
+        }
+      },
+      decreaseSlice({ state }) {
+        if (state.route === 'app') {
+          changeActiveSliceDelta(proxyManager, -1);
+        }
+      },
+      takeScreenshot({ commit, state }, viewToUse = null) {
+        const view = viewToUse || proxyManager.getActiveView();
+        const viewType = viewHelper.getViewType(view);
+        if (view) {
+          return view.captureImage().then((imgSrc) => {
+            commit('openScreenshotDialog', {
+              imgSrc,
+              viewName: view.getName(),
+              viewData: {
+                background: state.views.backgroundColors[viewType],
+              },
+            });
+          });
+        }
+        return Promise.resolve();
+      },
+      setCameraViewPoints({ dispatch, state }, viewPoints) {
         state.cameraViewPoints = viewPoints;
         const keys = Object.keys(viewPoints);
         if (keys.length !== 0) {
           // Set the camera to the first view point
-          dispatch(Actions.CHANGE_CAMERA_VIEW_POINT, keys[0]);
+          dispatch('changeCameraViewPoint', keys[0]);
 
           // Begin first person interaction
           const interactionStyle = 'FirstPerson';
-          commit(Mutations.GLOBAL_INTERACTION_STYLE_3D, interactionStyle);
+          dispatch('views/setInteractionStyle3D', interactionStyle);
         }
       },
-      CHANGE_CAMERA_VIEW_POINT({ commit, getters, state }, viewPointKey) {
+      changeCameraViewPoint({ commit, getters, state }, viewPointKey) {
         const allViews = state.proxyManager.getViews();
-        const pxManager = getters.PROXY_MANAGER;
+        const pxManager = getters.proxyManager;
 
-        const viewPoints = getters.CAMERA_VIEW_POINTS[viewPointKey] || {};
+        const viewPoints = getters.cameraViewPoints[viewPointKey] || {};
         const camera = viewPoints.camera;
         const showSources = viewPoints.show;
         const hideSources = viewPoints.hide;
@@ -360,51 +389,48 @@ function createStore(proxyManager = null) {
           pxManager.renderAllViews();
         });
 
-        commit(Mutations.MOST_RECENT_VIEW_POINT, viewPointKey);
+        commit('mostRecentViewPoint', viewPointKey);
       },
-      PREVIOUS_VIEW_POINT({ dispatch, getters }) {
-        const lastViewPoint = getters.MOST_RECENT_VIEW_POINT;
+      previousViewPoint({ dispatch, getters }) {
+        const lastViewPoint = getters.mostRecentViewPoint;
         if (!lastViewPoint) {
           // Nothing to do
           return;
         }
 
-        const keys = Object.keys(getters.CAMERA_VIEW_POINTS);
+        const keys = Object.keys(getters.cameraViewPoints);
         if (!keys.includes(lastViewPoint)) {
           return;
         }
 
         const length = keys.length;
         const ind = (keys.indexOf(lastViewPoint) + length - 1) % length;
-        dispatch(Actions.CHANGE_CAMERA_VIEW_POINT, keys[ind]);
+        dispatch('changeCameraViewPoint', keys[ind]);
       },
-      NEXT_VIEW_POINT({ dispatch, getters }) {
-        const lastViewPoint = getters.MOST_RECENT_VIEW_POINT;
+      nextViewPoint({ dispatch, getters }) {
+        const lastViewPoint = getters.mostRecentViewPoint;
         if (!lastViewPoint) {
           // Nothing to do
           return;
         }
 
-        const keys = Object.keys(getters.CAMERA_VIEW_POINTS);
+        const keys = Object.keys(getters.cameraViewPoints);
         if (!keys.includes(lastViewPoint)) {
           return;
         }
 
         const ind = (keys.indexOf(lastViewPoint) + 1) % keys.length;
-        dispatch(Actions.CHANGE_CAMERA_VIEW_POINT, keys[ind]);
-      },
-      INCREASE_SLICE({ state }) {
-        if (state.route === 'app') {
-          changeActiveSliceDelta(proxyManager, 1);
-        }
-      },
-      DECREASE_SLICE({ state }) {
-        if (state.route === 'app') {
-          changeActiveSliceDelta(proxyManager, -1);
-        }
+        dispatch('changeCameraViewPoint', keys[ind]);
       },
     },
   });
+
+  // We currently need access to the store in a couple of places where
+  // only the proxy manager is available.
+  // TODO: remove this access requirement and the next line when possible.
+  proxyManager.set({ $store }, true);
+
+  return $store;
 }
 
 export default createStore;

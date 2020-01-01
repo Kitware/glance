@@ -1,5 +1,3 @@
-import ProxyManagerMixin from 'paraview-glance/src/mixins/ProxyManagerMixin';
-
 // ----------------------------------------------------------------------------
 
 function sourceToItem(s) {
@@ -13,7 +11,6 @@ function sourceToItem(s) {
 
 export default {
   name: 'SourceSelect',
-  mixins: [ProxyManagerMixin],
   props: {
     filterFunc: {
       type: Function,
@@ -43,7 +40,7 @@ export default {
   },
   computed: {
     selection() {
-      const source = this.proxyManager.getProxyById(this.internalValue);
+      const source = this.$proxyManager.getProxyById(this.internalValue);
       if (source && source.getProxyGroup() === 'Sources') {
         return sourceToItem(source);
       }
@@ -56,13 +53,13 @@ export default {
     },
   },
   mounted() {
-    const source = this.proxyManager.getActiveSource();
+    const source = this.$proxyManager.getActiveSource();
     if (source) {
       this.internalValue = source.getProxyId();
       this.$nextTick(() => this.$emit('input', this.internalValue));
     }
   },
-  proxyManager: {
+  proxyManagerHooks: {
     onActiveSourceChange(source) {
       // HACK: when active source changes, the dataset might not yet be registered
       // to the source, so this setTimeout gets around that issue.
@@ -90,18 +87,20 @@ export default {
       return this.hideIfOneDataset && this.getSources().length <= 1;
     },
     getSources() {
-      const sources = this.proxyManager
+      const sources = this.$proxyManager
         .getSources()
-        .filter((s) => this.filterFunc(s));
+        .filter(
+          (s) => s.getProxyName() === 'TrivialProducer' && this.filterFunc(s)
+        );
 
       return sources.map((s) => sourceToItem(s));
     },
     makeSelection(sourceId) {
       if (sourceId !== this.internalValue) {
         if (this.bindToActiveSource) {
-          const s = this.proxyManager.getProxyById(sourceId);
+          const s = this.$proxyManager.getProxyById(sourceId);
           if (s) {
-            this.proxyManager.setActiveSource(s);
+            this.$proxyManager.setActiveSource(s);
           }
         }
         this.$emit('input', sourceId);

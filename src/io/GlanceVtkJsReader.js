@@ -3,8 +3,6 @@ import macro from 'vtk.js/Sources/macro';
 import vtkHttpSceneLoader from 'vtk.js/Sources/IO/Core/HttpSceneLoader';
 import vtkMapper from 'vtk.js/Sources/Rendering/Core/Mapper';
 
-import { Getters } from 'paraview-glance/src/store/types';
-
 // ----------------------------------------------------------------------------
 // vtkGlanceVtkJsReader methods
 // ----------------------------------------------------------------------------
@@ -167,7 +165,7 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
         );
 
         const maxTextureLODSize = proxyManager.getReferenceByName('$store')
-          .getters[Getters.GLOBAL_MAX_TEXTURE_LOD_SIZE];
+          .state.views.maxTextureLODSize;
         textureLODsDownloader.setMaxTextureLODSize(maxTextureLODSize);
 
         // Start the downloads

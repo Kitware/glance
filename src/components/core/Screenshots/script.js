@@ -1,7 +1,6 @@
-import { mapState } from 'vuex';
+import { mapActions } from 'vuex';
 
 import ScreenshotDialog from 'paraview-glance/src/components/core/Screenshots/ScreenshotDialog';
-import { Actions } from 'paraview-glance/src/store/types';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -52,12 +51,6 @@ function getTotalCount() {
 
 // ----------------------------------------------------------------------------
 
-function takeScreenshot() {
-  this.$store.dispatch(Actions.TAKE_SCREENSHOT, this.activeView);
-}
-
-// ----------------------------------------------------------------------------
-
 export default {
   name: 'Screenshots',
   components: {
@@ -67,10 +60,10 @@ export default {
     return {
       // viewName::String -> [Screenshot]
       screenshots: {},
-      activeView: null,
+      activeViewId: -1,
     };
   },
-  computed: Object.assign(mapState(['proxyManager']), {
+  computed: {
     atLeastOneScreenshot() {
       const names = Object.keys(this.screenshots);
       for (let i = 0; i < names.length; ++i) {
@@ -85,20 +78,30 @@ export default {
       // vuetify xs is 600px, but our buttons collide at around 700.
       return this.$vuetify.breakpoint.smAndDown;
     },
-  }),
+    activeView() {
+      return this.$proxyManager.getProxyById(this.activeViewId);
+    },
+  },
+  proxyManagerHooks: {
+    onActiveViewChange(view) {
+      this.activeViewId = view.getProxyId();
+    },
+  },
+  mounted() {
+    const activeView = this.$proxyManager.getActiveView();
+    if (activeView) {
+      this.activeViewId = activeView.getProxyId();
+    }
+  },
   methods: {
     addScreenshot,
     deleteScreenshot,
     viewScreenshot,
     getTotalCount,
-    takeScreenshot,
-  },
-  mounted() {
-    this.subscription = this.proxyManager.onActiveViewChange((view) => {
-      this.activeView = view;
-    });
-  },
-  beforeDestroy() {
-    this.subscription.unsubscribe();
+    ...mapActions({
+      takeScreenshot(dispatch) {
+        return dispatch('takeScreenshot', this.activeView);
+      },
+    }),
   },
 };

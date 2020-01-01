@@ -1,6 +1,7 @@
 import { mapState, mapActions, mapMutations } from 'vuex';
 import Mousetrap from 'mousetrap';
 import { VBottomSheet, VDialog } from 'vuetify/lib';
+import macro from 'vtk.js/Sources/macro';
 
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';
@@ -13,8 +14,9 @@ import LayoutView from 'paraview-glance/src/components/core/LayoutView';
 import Screenshots from 'paraview-glance/src/components/core/Screenshots';
 import StateFileGenerator from 'paraview-glance/src/components/core/StateFileGenerator';
 import SvgIcon from 'paraview-glance/src/components/widgets/SvgIcon';
-import vtkListenerHelper from 'paraview-glance/src/ListenerHelper';
-import { Actions, Mutations } from 'paraview-glance/src/store/types';
+import CollapsibleToolbar from 'paraview-glance/src/components/widgets/CollapsibleToolbar';
+import CollapsibleToolbarItem from 'paraview-glance/src/components/widgets/CollapsibleToolbar/Item';
+
 import shortcuts from 'paraview-glance/src/shortcuts';
 
 // ----------------------------------------------------------------------------
@@ -26,6 +28,8 @@ export default {
   components: {
     AboutBox,
     BrowserIssues,
+    CollapsibleToolbar,
+    CollapsibleToolbarItem,
     ControlsDrawer,
     DragAndDrop,
     ErrorBox,
@@ -42,59 +46,51 @@ export default {
     return {
       aboutDialog: false,
       errorDialog: false,
-      controlsDrawer: false,
+      internalControlsDrawer: true,
       screenshotsDrawer: false,
       screenshotCount: 0,
       errors: [],
     };
   },
-  computed: mapState({
-    proxyManager: 'proxyManager',
-    loadingState: 'loadingState',
-    landingVisible: (state) => state.route === 'landing',
-    screenshotsDrawerStateless(state) {
-      // Keep screenshot drawer open if screenshot was taken from
-      // the "Capture Active View" button.
-      return this.screenshotsDrawer && !!state.screenshots.showDialog;
+  computed: {
+    controlsDrawer: {
+      get() {
+        return this.landingVisible ? false : this.internalControlsDrawer;
+      },
+      set(visible) {
+        if (!this.landingVisible) {
+          this.internalControlsDrawer = visible;
+        }
+      },
     },
-    smallScreen() {
-      return this.$vuetify.breakpoint.smAndDown;
-    },
-    dialogType() {
-      return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
-    },
-    iconLogo() {
-      return this.smallScreen ? 'paraview-glance-small' : 'paraview-glance';
-    },
-  }),
-  watch: {
-    landingVisible(value) {
-      // matches the mobile breakpoint for navigation-drawer
-      if (!value && this.$vuetify.breakpoint.mdAndUp) {
-        this.controlsDrawer = true;
-      } else if (value) {
-        this.controlsDrawer = false;
+    ...mapState({
+      loadingState: 'loadingState',
+      landingVisible: (state) => state.route === 'landing',
+      screenshotsDrawerStateless(state) {
+        // Keep screenshot drawer open if screenshot was taken from
+        // the "Capture Active View" button.
+        return this.screenshotsDrawer && !!state.screenshotDialog;
+      },
+      smallScreen() {
+        return this.$vuetify.breakpoint.smAndDown;
+      },
+      dialogType() {
+        return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
+      },
+    }),
+  },
+  proxyManagerHooks: {
+    onProxyModified() {
+      if (!this.loadingState) {
+        this.$proxyManager.autoAnimateViews();
       }
     },
   },
+  created() {
+    this.internalControlsDrawer = !this.smallScreen;
+  },
   mounted() {
-    // listen for proxyManager changes
-    this.renderListener = vtkListenerHelper.newInstance(
-      () => {
-        if (!this.loadingState) {
-          this.proxyManager.autoAnimateViews();
-        }
-      },
-      () =>
-        [].concat(
-          this.proxyManager.getSources(),
-          this.proxyManager.getRepresentations(),
-          this.proxyManager.getViews()
-        )
-    );
-    this.pxmSub = this.proxyManager.onProxyRegistrationChange(
-      this.renderListener.resetListeners
-    );
+    this.initViews();
 
     // attach keyboard shortcuts
     shortcuts.forEach(({ key, action }) =>
@@ -107,35 +103,20 @@ export default {
     // listen for errors
     window.addEventListener('error', this.recordError);
 
-    // listen for errors via console.error
-    if (window.console) {
-      this.origConsoleError = window.console.error;
-      window.console.error = (...args) => {
-        this.recordError(args.join(' '));
-        return this.origConsoleError(...args);
-      };
-    }
+    // listen for vtkErrorMacro
+    macro.setLoggerFunction('error', (...args) => {
+      this.recordError(args.join(' '));
+      window.console.error(...args);
+    });
   },
   beforeDestroy() {
     window.removeEventListener('error', this.recordError);
-
-    if (this.origConsoleError) {
-      window.console.error = this.origConsoleError;
-    }
-
-    shortcuts.forEach(({ key, action }) => {
-      if (Actions[action]) {
-        Mousetrap.unbind(key);
-      }
-    });
-
-    this.pxmSub.unsubscribe();
-    this.renderListener.removeListeners();
+    shortcuts.forEach(({ key }) => Mousetrap.unbind(key));
   },
-  methods: Object.assign(
-    mapMutations({
-      showApp: Mutations.SHOW_APP,
-      showLanding: Mutations.SHOW_LANDING,
+  methods: {
+    ...mapMutations({
+      showApp: 'showApp',
+      showLanding: 'showLanding',
       toggleLanding() {
         if (this.landingVisible) {
           this.showApp();
@@ -144,26 +125,22 @@ export default {
         }
       },
     }),
-    mapActions({
-      promptUserFiles: Actions.PROMPT_FOR_FILES,
-
+    ...mapActions({
       openSample: (dispatch, urls, names) => {
         // dispatch: delete all loaded files since this is only called
         // by clicking on sample data
-        dispatch(Actions.OPEN_REMOTE_FILES, { urls, names }).then(() =>
-          dispatch(Actions.RESET_WORKSPACE)
+        dispatch('files/openRemoteFiles', { urls, names }).then(() =>
+          dispatch('resetWorkspace')
         );
       },
-
+      promptUserFiles: 'files/promptForFiles',
       openFiles: (dispatch, files) =>
-        dispatch(Actions.OPEN_FILES, Array.from(files)),
-
-      saveState: Actions.SAVE_STATE,
+        dispatch('files/openFiles', Array.from(files)),
+      saveState: 'saveState',
+      initViews: 'views/initViews',
     }),
-    {
-      recordError(error) {
-        this.errors.push(error);
-      },
-    }
-  ),
+    recordError(error) {
+      this.errors.push(error);
+    },
+  },
 };

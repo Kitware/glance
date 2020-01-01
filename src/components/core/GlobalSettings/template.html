@@ -41,7 +41,7 @@
             :class="$style.slimInput"
             hide-details
             type="number"
-            v-model="firstPersonMovementSpeed"
+            v-model="firstPersonMovementSpeedModel"
             v-if="firstPersonInteraction"
             :min="0"
             :step="0.1"
@@ -65,7 +65,7 @@
             :class="$style.slimInput"
             hide-details
 
-            v-model="annotationOpacity"
+            v-model="annotationOpacityModel"
             :min="0"
             :max="1"
             :step="0.01"
@@ -132,7 +132,7 @@
   </v-card>
   <gpu-information
     :width="250"
-    :proxyManager="proxyManager"
+    :proxyManager="$proxyManager"
   />
   <v-card flat :class="$style.card" v-if="hasVR()">
     <div :class="$style.heading">
@@ -144,6 +144,7 @@
           <v-flex xs2>
             <v-switch
               v-model="vrEnabled"
+              :class="$style.slimInput"
               hide-details
               v-on:change="toggleVR"
             />

@@ -1,35 +1,33 @@
-<div
-  v-if="available === 'geometry' || available === 'volume'"
->
+<div v-if="available">
   <v-card flat :class="$style.block">
     <v-container fluid grid-list-xs class="pa-0">
       <v-layout row wrap align-center>
-        <v-flex xs3 v-show="available === 'geometry'">
-          <span class="body-2">Color By:</span>
-        </v-flex>
-        <v-flex xs9 v-show="available === 'geometry'">
-          <v-select
-            class="pv-no-select"
-            :class="$style.slimInput"
-            dense
-            flat
-            hide-details
-            v-model="colorBy"
-            :items="arrays"
-          />
-        </v-flex>
-        <v-flex xs12 v-show="colorBy.length === 0 && available === 'geometry'">
-          <palette-picker
-            :palette="palette"
-            :value="solidColor"
-            :size="24"
-            class="pt-1 pb-1"
-            v-on:input="setSolidColor"
-          />
-        </v-flex>
-        <template v-if="colorBy.length">
+        <template v-if="available === 'geometry'">
+          <v-flex xs3>
+            <span class="body-2">Color By:</span>
+          </v-flex>
+          <v-flex xs9>
+            <v-select
+              class="pv-no-select"
+              :class="$style.slimInput"
+              dense
+              flat
+              hide-details
+              v-model="colorBy"
+              :items="arrays"
+            />
+          </v-flex>
+          <v-flex xs12 v-if="colorBy === 'solid'">
+            <palette-picker
+              v-model="solidColor"
+              :palette="palette"
+              :size="24"
+              class="pt-1 pb-1"
+            />
+          </v-flex>
+        </template>
+        <template v-if="colorBy !== 'solid'">
           <v-flex
-            v-if="colorBy.length"
             xs12
             class="pt-2"
           >
@@ -61,7 +59,7 @@
           >
             <v-text-field
               v-model="dataRange[0]"
-              @change="proxyManager.renderAllViews()"
+              @change="$proxyManager.renderAllViews()"
               label="Min"
               step="any"
               :disabled="available !== 'geometry'"
@@ -100,7 +98,7 @@
           >
             <v-text-field
               v-model="dataRange[1]"
-              @change="proxyManager.renderAllViews()"
+              @change="$proxyManager.renderAllViews()"
               label="Max"
               step="any"
               :disabled="available !== 'geometry'"
@@ -110,46 +108,48 @@
             />
           </v-flex>
         </template>
-        <v-flex
-          xs12
-          v-if="available === 'volume' && piecewiseFunction && !usePresetOpacity"
-          v-on:touchstart.stop
-        >
-          <piecewise-function-editor
-            :piecewiseFunction="piecewiseFunction"
-            :source="source"
-            :proxyManager="proxyManager"
-          />
-        </v-flex>
-        <v-flex xs12 v-if="available === 'volume' && usePresetOpacity">
-          <v-layout row align-center>
-            <v-flex xs3>
-              <span :class="$style.smallLabel">Shift</span>
-            </v-flex>
-            <v-flex xs6>
-              <v-slider
-                v-model="shift"
-                :min="shiftRange[0]"
-                :max="shiftRange[1]"
-                step="0"
-                hide-details
-                :class="$style.slimInput"
-              />
-            </v-flex>
-            <v-flex xs3>
-              <v-text-field
-                v-model="shift"
-                type="number"
-                :min="shiftRange[0]"
-                :max="shiftRange[1]"
-                step="1"
-                hide-details
-                :class="$style.slimInput"
-              />
-            </v-flex>
-          </v-layout>
-        </v-flex>
-        <v-flex xs12 v-if="available === 'geometry' && colorBy.length">
+        <template v-if="available === 'volume'">
+          <v-flex
+            xs12
+            v-if="piecewiseFunction && !hasPresetOpacity"
+            v-on:touchstart.stop
+          >
+            <piecewise-function-editor
+              :piecewiseFunction="piecewiseFunction"
+              :source="source"
+              :proxyManager="$proxyManager"
+            />
+          </v-flex>
+          <v-flex xs12 v-if="hasPresetOpacity">
+            <v-layout row align-center>
+              <v-flex xs3>
+                <span :class="$style.smallLabel">Shift</span>
+              </v-flex>
+              <v-flex xs6>
+                <v-slider
+                  v-model="shift"
+                  :min="shiftRange[0]"
+                  :max="shiftRange[1]"
+                  step="0"
+                  hide-details
+                  :class="$style.slimInput"
+                />
+              </v-flex>
+              <v-flex xs3>
+                <v-text-field
+                  v-model="shift"
+                  type="number"
+                  :min="shiftRange[0]"
+                  :max="shiftRange[1]"
+                  step="1"
+                  hide-details
+                  :class="$style.slimInput"
+                />
+              </v-flex>
+            </v-layout>
+          </v-flex>
+        </template>
+        <v-flex xs12 v-if="available === 'geometry' && colorByName">
           <v-layout row align-center>
             <v-flex xs2>
               <v-icon

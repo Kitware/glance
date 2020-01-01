@@ -1,0 +1,14 @@
+<v-list-item
+  v-if="state === 'collapse'"
+  v-on="$listeners"
+  link
+>
+  <slot />
+</v-list-item>
+<v-btn
+  v-else
+  v-on="$listeners"
+  text
+>
+  <slot />
+</v-btn>

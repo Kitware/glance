@@ -3,12 +3,13 @@ const Volume = [
     name: 'colorBy',
     domain: {},
   },
-  {
-    name: 'volumeVisibility',
-  },
-  {
-    name: 'useShadow',
-  },
+  { name: 'xSliceVisibility' },
+  { name: 'ySliceVisibility' },
+  { name: 'zSliceVisibility' },
+  { name: 'volumeVisibility' },
+  { name: 'useShadow' },
+  // cannot save due to bug in  vtkCropFilter
+  // { name: 'croppingPlanes' },
   {
     name: 'sampleDistance',
     domain: { min: 0, max: 1, step: 0.01 },
@@ -24,9 +25,6 @@ const Volume = [
   {
     name: 'windowLevel',
     domain: { min: 0, max: 255, step: 0.01 },
-  },
-  {
-    name: 'sliceVisibility',
   },
   {
     name: 'xSlice',

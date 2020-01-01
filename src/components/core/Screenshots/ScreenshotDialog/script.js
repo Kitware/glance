@@ -1,7 +1,5 @@
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { VBottomSheet, VDialog } from 'vuetify/lib';
-
-import { Mutations } from 'paraview-glance/src/store/types';
 
 const FILE_TYPES = ['.png', '.jpeg'];
 
@@ -94,8 +92,8 @@ export default {
       return { [size]: true };
     },
     ...mapState({
-      screenshot: (state) => state.screenshots.currentScreenshot,
-      showDialog: (state) => state.screenshots.showDialog,
+      screenshot: (state) => state.pendingScreenshot,
+      showDialog: (state) => state.screenshotDialog,
     }),
   },
   watch: {
@@ -113,8 +111,8 @@ export default {
     generateImage,
     backgroundToFillStyle,
     save,
-    ...mapMutations({
-      close: Mutations.CLOSE_SCREENSHOT_DIALOG,
+    ...mapActions({
+      close: 'closeScreenshotDialog',
     }),
   },
   created() {

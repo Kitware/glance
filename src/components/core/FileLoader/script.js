@@ -1,7 +1,6 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 
 import RawFileReader from 'paraview-glance/src/components/core/RawFileReader';
-import { Actions, Getters, Mutations } from 'paraview-glance/src/store/types';
 
 // ----------------------------------------------------------------------------
 
@@ -11,13 +10,13 @@ export default {
     RawFileReader,
   },
   computed: Object.assign(
-    mapState({
-      stage: (state) => state.files.stage,
-      files: (state) => state.files.files,
+    mapState('files', {
+      stage: (state) => state.stage,
+      files: (state) => state.files,
       loadingNames: (state) =>
-        [].concat(state.files.urls, state.files.files).map((o) => o.name),
+        [].concat(state.urls, state.files).map((o) => o.name),
       preloadCanContinue(state) {
-        const { files, rawInfos } = state.files;
+        const { files, rawInfos } = state;
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           if (
@@ -30,18 +29,18 @@ export default {
         return true;
       },
     }),
-    mapGetters({
-      totalProgress: Getters.FILE_TOTAL_PROGRESS,
-      preloadCanLoad: Getters.FILE_RAW_FILES_LOADABLE,
-      indeterminateProgress: Getters.FILE_INDETERMINATE_PROGRESS,
+    mapGetters('files', {
+      totalProgress: 'fileTotalProgress',
+      preloadCanLoad: 'fileRawFilesLoadable',
+      indeterminateProgress: 'fileIndeterminateProgress',
     })
   ),
-  methods: Object.assign(
-    mapMutations({
+  methods: {
+    ...mapMutations({
       setFileRawInfo: (commit, fileIndex, rawInfo) =>
-        commit(Mutations.FILE_SET_RAW_INFO, { fileIndex, rawInfo }),
+        commit('fileSetRawInfo', { fileIndex, rawInfo }),
 
-      cancel: Mutations.FILE_IDLE,
+      cancel: 'fileIdle',
 
       closeAndTryToLoad(commit) {
         const allFilesErrored = this.files.reduce(
@@ -49,16 +48,12 @@ export default {
           true
         );
         if (!allFilesErrored) {
-          commit(Mutations.SHOW_APP);
+          commit('showApp', null, { root: true });
         }
-        commit(Mutations.FILE_IDLE);
+        commit('fileIdle');
       },
     }),
-    mapActions({
-      openFiles: Actions.OPEN_FILES,
-    }),
-    {
-      isRawFile: (f) => f.name.toLowerCase().endsWith('.raw'),
-    }
-  ),
+    ...mapActions('files', ['openFiles']),
+    isRawFile: (f) => f.name.toLowerCase().endsWith('.raw'),
+  },
 };

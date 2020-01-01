@@ -1,9 +1,8 @@
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import GpuInformation from 'paraview-glance/src/components/widgets/GPUInformation';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
-import { Getters, Mutations } from 'paraview-glance/src/store/types';
 
 const INTERACTION_STYLES_3D = [
   { text: 'Default', value: '3D' },
@@ -24,93 +23,8 @@ const AXIS_TYPES = [
 // Component API
 // ----------------------------------------------------------------------------
 
-function getDefaultViews(pxm) {
-  return pxm.getViews().filter((v) => v.getName() === 'default');
-}
-
-// ----------------------------------------------------------------------------
-
-function getFirstPersonMovementSpeed(pxm) {
-  const views = getDefaultViews(pxm);
-  for (let i = 0; i < views.length; ++i) {
-    const interactorStyle = views[i].getInteractorStyle3D();
-    const manipulators = interactorStyle.getKeyboardManipulators();
-    for (let j = 0; j < manipulators.length; ++j) {
-      const manip = manipulators[j];
-      if (manip.getMovementSpeed) {
-        if (manip.getMovementSpeed() === null) {
-          // Set the renderer and reset the movement speed
-          manip.setRenderer(views[i].getRenderer());
-          manip.resetMovementSpeed();
-        }
-        return manip.getMovementSpeed();
-      }
-    }
-  }
-  return undefined;
-}
-
-// ----------------------------------------------------------------------------
-
-function setFirstPersonMovementSpeed(pxm, speed) {
-  getDefaultViews(pxm).forEach((view) => {
-    const interactorStyle = view.getInteractorStyle3D();
-    const manipulators = interactorStyle.getKeyboardManipulators();
-    manipulators.forEach((manipulator) => {
-      if (manipulator.setMovementSpeed) {
-        manipulator.setMovementSpeed(speed);
-      }
-    });
-  });
-}
-
-// ----------------------------------------------------------------------------
-
-function setOrientationAxesVisible(visible) {
-  this.proxyManager.getViews().forEach((view) => {
-    view.setOrientationAxesVisibility(visible);
-    view.renderLater();
-  });
-}
-
-// ----------------------------------------------------------------------------
-
-function setAxisType(type) {
-  this.proxyManager.getViews().forEach((view) => {
-    view.setOrientationAxesType(type);
-  });
-  // will call view.renderLater()
-  this.setPresetToOrientationAxes(this.orientationPreset);
-}
-
-// ----------------------------------------------------------------------------
-
-function setPresetToOrientationAxes(presetName) {
-  this.proxyManager.getViews().forEach((view) => {
-    view.setPresetToOrientationAxes(presetName);
-    view.renderLater();
-  });
-}
-
-// ----------------------------------------------------------------------------
-
-function setAnnotationOpacity(opacity) {
-  this.proxyManager
-    .getViews()
-    .forEach((view) => view.setAnnotationOpacity(opacity));
-}
-
-// ----------------------------------------------------------------------------
-
-function pushGlobalSettings() {
-  this.setOrientationAxesVisible(this.orientationAxis);
-  this.setAnnotationOpacity(this.annotationOpacity);
-}
-
-// ----------------------------------------------------------------------------
-
 function getViewForVR() {
-  const views = this.proxyManager.getViews();
+  const views = this.$proxyManager.getViews();
   for (let i = 0; i < views.length; i++) {
     if (views[i].getProxyName() === 'View3D') {
       return views[i];
@@ -130,9 +44,8 @@ export default {
   data() {
     return {
       palette: BACKGROUND,
-      interactionStyles3D: INTERACTION_STYLES_3D,
-      annotationOpacity: 1,
       orientationPresets: ORIENTATION_PRESETS,
+      interactionStyles3D: INTERACTION_STYLES_3D,
       axisTypes: AXIS_TYPES,
       vrEnabled: false,
       physicalScale: 1,
@@ -146,25 +59,6 @@ export default {
       },
       set(color) {
         this.setBackgroundColor(color);
-      },
-    },
-    interactionStyle3DModel: {
-      get() {
-        return this.interactionStyle3D;
-      },
-      set(style) {
-        this.setInteractionStyle3D(style);
-      },
-    },
-    firstPersonInteraction() {
-      return this.interactionStyle3D === 'FirstPerson';
-    },
-    firstPersonMovementSpeed: {
-      get() {
-        return getFirstPersonMovementSpeed(this.proxyManager);
-      },
-      set(speed) {
-        setFirstPersonMovementSpeed(this.proxyManager, speed);
       },
     },
     orientationAxisModel: {
@@ -191,6 +85,39 @@ export default {
         this.setAxisType(axisType);
       },
     },
+    annotationOpacityModel: {
+      get() {
+        return this.annotationOpacity;
+      },
+      set(opacity) {
+        this.setAnnotationOpacity(opacity);
+      },
+    },
+    firstPersonMovementSpeedModel: {
+      get() {
+        let speed = this.firstPersonMovementSpeed;
+        if (speed === null) {
+          // Reset the speed if null
+          this.resetFirstPersonMovementSpeed();
+          speed = this.firstPersonMovementSpeed;
+        }
+        return speed;
+      },
+      set(speed) {
+        this.setFirstPersonMovementSpeed(speed);
+      },
+    },
+    interactionStyle3DModel: {
+      get() {
+        return this.interactionStyle3D;
+      },
+      set(style) {
+        this.setInteractionStyle3D(style);
+      },
+    },
+    firstPersonInteraction() {
+      return this.interactionStyle3D === 'FirstPerson';
+    },
     maxTextureLODSizeModel: {
       get() {
         return this.maxTextureLODSize;
@@ -199,21 +126,18 @@ export default {
         this.setMaxTextureLODSize(size);
       },
     },
-    ...mapGetters({
-      backgroundColor: Getters.GLOBAL_BG,
-      interactionStyle3D: Getters.GLOBAL_INTERACTION_STYLE_3D,
-      orientationAxis: Getters.GLOBAL_ORIENT_AXIS,
-      orientationPreset: Getters.GLOBAL_ORIENT_PRESET,
-      axisType: Getters.GLOBAL_AXIS_TYPE,
-      maxTextureLODSize: Getters.GLOBAL_MAX_TEXTURE_LOD_SIZE,
+    ...mapState('views', {
+      backgroundColor: (state) => state.globalBackgroundColor,
+      orientationAxis: (state) => state.axisVisible,
+      orientationPreset: (state) => state.axisPreset,
+      axisType: (state) => state.axisType,
+      annotationOpacity: (state) => state.annotationOpacity,
+      interactionStyle3D: (state) => state.interactionStyle3D,
+      firstPersonMovementSpeed: (state) => state.firstPersonMovementSpeed,
+      maxTextureLODSize: (state) => state.maxTextureLODSize,
     }),
-    ...mapState(['proxyManager']),
   },
   watch: {
-    orientationAxis: setOrientationAxesVisible,
-    orientationPreset: setPresetToOrientationAxes,
-    annotationOpacity: setAnnotationOpacity,
-    axisType: setAxisType,
     physicalScale() {
       const view = this.getViewForVR();
       if (view) {
@@ -230,11 +154,6 @@ export default {
       const view = this.getViewForVR();
       return view && !!view.getOpenglRenderWindow().getVrDisplay();
     },
-    setAxisType,
-    setOrientationAxesVisible,
-    setAnnotationOpacity,
-    setPresetToOrientationAxes,
-    pushGlobalSettings,
     getViewForVR,
     toggleVR(vr) {
       const view = this.getViewForVR();
@@ -273,26 +192,22 @@ export default {
         }
       }
     },
-    ...mapMutations({
-      setBackgroundColor: (commit, bg) => commit(Mutations.GLOBAL_BG, bg),
-      setInteractionStyle3D: (commit, style) =>
-        commit(Mutations.GLOBAL_INTERACTION_STYLE_3D, style),
-      setOrientationAxis: (commit, flag) =>
-        commit(Mutations.GLOBAL_ORIENT_AXIS, flag),
-      setOrientationPreset: (commit, preset) =>
-        commit(Mutations.GLOBAL_ORIENT_PRESET, preset),
-      setAxisType: (commit, axisType) =>
-        commit(Mutations.GLOBAL_AXIS_TYPE, axisType),
-      setMaxTextureLODSize: (commit, size) =>
-        commit(Mutations.GLOBAL_MAX_TEXTURE_LOD_SIZE, size),
+    ...mapActions('views', {
+      setBackgroundColor: (dispatch, bg) => dispatch('setGlobalBackground', bg),
+      setOrientationAxis: (dispatch, axis) => dispatch('setAxisVisible', axis),
+      setOrientationPreset: (dispatch, preset) =>
+        dispatch('setAxisPreset', preset),
+      setAxisType: (dispatch, type) => dispatch('setAxisType', type),
+      setAnnotationOpacity: (dispatch, opacity) =>
+        dispatch('setAnnotationOpacity', opacity),
+      setInteractionStyle3D: (dispatch, style) =>
+        dispatch('setInteractionStyle3D', style),
+      setFirstPersonMovementSpeed: (dispatch, speed) =>
+        dispatch('setFirstPersonMovementSpeed', speed),
+      resetFirstPersonMovementSpeed: (dispatch) =>
+        dispatch('resetFirstPersonMovementSpeed'),
+      setMaxTextureLODSize: (dispatch, size) =>
+        dispatch('setMaxTextureLODSize', size),
     }),
-  },
-  created() {
-    this.subscription = this.proxyManager.onProxyRegistrationChange(() => {
-      this.pushGlobalSettings();
-    });
-  },
-  beforeDestroy() {
-    this.subscription.unsubscribe();
   },
 };

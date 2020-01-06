@@ -92,12 +92,15 @@ export function createViewer(container, proxyConfig = null) {
 
   return {
     processURLArgs() {
-      const { name, url, type } = vtkURLExtract.extractURLParameters();
+      const { name, url } = vtkURLExtract.extractURLParameters();
       if (name && url) {
         const names = typeof name === 'string' ? [name] : name;
         const urls = typeof url === 'string' ? [url] : url;
-        const types = typeof type === 'string' ? [type] : type || [];
-        store.dispatch('files/openRemoteFiles', { urls, names, types });
+        const remotes = urls.map((u, index) => ({
+          url: u,
+          name: names[index],
+        }));
+        store.dispatch('files/openRemoteFiles', remotes);
       }
     },
     // All components must have a unique name

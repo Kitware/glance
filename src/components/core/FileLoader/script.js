@@ -21,7 +21,12 @@ export default {
       fileList: (state) => Array.from(state.fileList).reverse(),
       pendingFiles: (state) =>
         state.fileList.reduce(
-          (flag, file) => flag || Boolean(file.state === 'loading'),
+          (flag, file) => flag || file.state === 'loading',
+          false
+        ),
+      hasReadyFiles: (state) =>
+        state.fileList.reduce(
+          (flag, file) => flag || file.state === 'ready',
           false
         ),
       loading: (state) => state.loading,

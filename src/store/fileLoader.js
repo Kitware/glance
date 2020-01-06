@@ -89,7 +89,7 @@ export default (proxyManager) => ({
   getters: {
     anyErrors(state) {
       return state.fileList.reduce(
-        (flag, file) => flag || Boolean(file.state === 'error'),
+        (flag, file) => flag || file.state === 'error',
         false
       );
     },

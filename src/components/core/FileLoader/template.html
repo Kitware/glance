@@ -14,9 +14,14 @@
           <v-card flat>
             <v-card-text>
               <v-container>
-                <v-row @click="promptLocal" align="center" class="pa-2" style="border: 1px dashed gray; border-radius: 4px; cursor: pointer">
+                <v-row
+                  @click="promptLocal"
+                  align="center"
+                  class="pa-3"
+                  :class="$style.dragBox"
+                >
                   <v-btn>browse</v-btn>
-                  <span style="margin-left: 8px">
+                  <span class="ml-2">
                     or drop your files here
                   </span>
                 </v-row>

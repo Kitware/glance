@@ -137,9 +137,12 @@
         v-on:load="doneLoadingFiles"
       />
 
-      <v-dialog v-model="loadSampleDialog" persistent width="50%">
+      <v-dialog v-model="loadSampleDialog" persistent width="60%">
         <v-card class="pa-4">
-          <v-card-title class="justify-center title black--text">
+          <v-card-title
+            class="justify-center text-center title black--text"
+            style="word-break: break-word"
+          >
             Loading {{ loadSampleName }}...
           </v-card-title>
         </v-card>

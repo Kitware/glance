@@ -44,12 +44,16 @@ const DATA_TYPES = [
 // ----------------------------------------------------------------------------
 
 function onChange() {
-  this.$emit('change', {
-    dimensions: this.dimensions,
-    spacing: this.spacing,
-    dataType: this.dataType,
-    effectiveSize: this.effectiveSize,
-  });
+  if (this.effectiveSize === this.file.size) {
+    this.$emit('change', {
+      dimensions: this.dimensions,
+      spacing: this.spacing,
+      dataType: this.dataType,
+      effectiveSize: this.effectiveSize,
+    });
+  } else {
+    this.$emit('change', null);
+  }
 }
 
 // ----------------------------------------------------------------------------

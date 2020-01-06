@@ -96,14 +96,18 @@ function readRawData({ fileName, data }) {
       if (fileNameMethod) {
         reader[fileNameMethod](fileName);
       }
-      const ds = reader[parseMethod](data);
-      Promise.resolve(ds)
-        .then((dataset) =>
-          resolve({ dataset, reader, sourceType, name: fileName })
-        )
-        .catch(reject);
+      try {
+        const ds = reader[parseMethod](data);
+        Promise.resolve(ds)
+          .then((dataset) =>
+            resolve({ dataset, reader, sourceType, name: fileName })
+          )
+          .catch(reject);
+      } catch (e) {
+        reject(e);
+      }
     } else {
-      reject();
+      reject(new Error('No reader mapping'));
     }
   });
 }

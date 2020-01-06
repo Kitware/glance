@@ -1,5 +1,5 @@
 <drag-and-drop
-  :enabled="!landingVisible"
+  :enabled="!landingVisible && !fileUploadDialog"
   v-on:drop="openFileList"
 >
   <template v-slot:default="{ dragHover }">

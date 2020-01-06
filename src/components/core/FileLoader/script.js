@@ -1,6 +1,7 @@
 import { mapGetters, mapState, mapActions } from 'vuex';
 
 import RawFileReader from 'paraview-glance/src/components/core/RawFileReader';
+import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
 
 // ----------------------------------------------------------------------------
 
@@ -8,6 +9,7 @@ export default {
   name: 'FileLoader',
   components: {
     RawFileReader,
+    DragAndDrop,
   },
   props: {
     value: {

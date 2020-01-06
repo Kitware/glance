@@ -14,17 +14,27 @@
           <v-card flat>
             <v-card-text>
               <v-container>
-                <v-row
-                  @click="promptLocal"
-                  align="center"
-                  class="pa-3"
-                  :class="$style.dragBox"
+                <drag-and-drop
+                  enabled
+                  @drop="openFiles($event)"
                 >
-                  <v-btn>browse</v-btn>
-                  <span class="ml-2">
-                    or drop your files here
-                  </span>
-                </v-row>
+                  <template v-slot:default="{ dragHover }">
+                    <v-row
+                      @click="promptLocal"
+                      align="center"
+                      class="pa-3"
+                      :class="{
+                        [$style.dragBox]: true,
+                        [$style.dropTarget]: dragHover,
+                        }"
+                    >
+                      <v-btn>browse</v-btn>
+                      <span class="ml-2">
+                        or drop your files here
+                      </span>
+                    </v-row>
+                  </template>
+                </drag-and-drop>
                 <v-row class="mt-2">
                   <v-expansion-panels accordion>
                     <v-expansion-panel

@@ -15,6 +15,11 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      loading: false,
+    };
+  },
   computed: {
     ...mapState('files', {
       // show file list with recent on top
@@ -29,7 +34,6 @@ export default {
           (flag, file) => flag || file.state === 'ready',
           false
         ),
-      loading: (state) => state.loading,
     }),
     ...mapGetters('files', ['anyErrors']),
   },
@@ -46,9 +50,14 @@ export default {
         dispatch('setRawFileInfo', { index, info }),
     }),
     loadFiles() {
+      this.loading = true;
       this.load().finally(() => {
         this.close();
         this.$emit('load');
+        // hack to keep the load button disabled until window closes
+        setTimeout(() => {
+          this.loading = false;
+        }, 10);
       });
     },
     close() {

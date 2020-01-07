@@ -56,8 +56,7 @@ export function createViewer(container, proxyConfig = null) {
 
   const store = createStore(proxyManager);
 
-  /* eslint-disable no-new */
-  new Vue({
+  const app = new Vue({
     el: container,
     components: { App },
     store,
@@ -96,11 +95,7 @@ export function createViewer(container, proxyConfig = null) {
       if (name && url) {
         const names = typeof name === 'string' ? [name] : name;
         const urls = typeof url === 'string' ? [url] : url;
-        const remotes = urls.map((u, index) => ({
-          url: u,
-          name: names[index],
-        }));
-        store.dispatch('files/openRemoteFiles', remotes);
+        app.$children[0].autoLoadRemotes('resources from url', urls, names);
       }
     },
     // All components must have a unique name

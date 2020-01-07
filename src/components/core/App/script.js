@@ -47,8 +47,8 @@ export default {
       aboutDialog: false,
       errorDialog: false,
       fileUploadDialog: false,
-      loadSampleDialog: false,
-      loadSampleName: '',
+      autoloadDialog: false,
+      autoloadLabel: '',
       internalControlsDrawer: true,
       screenshotsDrawer: false,
       screenshotCount: 0,
@@ -148,16 +148,16 @@ export default {
       this.fileUploadDialog = true;
       this.$nextTick(() => this.openFiles(Array.from(fileList)));
     },
-    openSample(label, urls, names) {
-      const samples = urls.map((url, index) => ({
+    autoLoadRemotes(label, urls, names) {
+      const remotes = urls.map((url, index) => ({
         name: names[index],
         url,
       }));
-      this.loadSampleDialog = true;
-      this.loadSampleName = label;
+      this.autoloadDialog = true;
+      this.autoloadLabel = label;
       setTimeout(
         () =>
-          this.openRemoteFiles(samples)
+          this.openRemoteFiles(remotes)
             .then(() => this.load())
             .then(() => {
               if (this.anyFileLoadingErrors) {
@@ -170,7 +170,7 @@ export default {
             })
             .finally(() => {
               this.resetQueue();
-              this.loadSampleDialog = false;
+              this.autoloadDialog = false;
             }),
         // hack to allow loading sample dialog to show up
         10

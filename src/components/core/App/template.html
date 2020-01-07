@@ -110,7 +110,7 @@
           v-if="landingVisible"
           key="if-landing"
           v-on:open="showFileUpload"
-          v-on:open-urls="openSample"
+          v-on:open-urls="autoLoadRemotes"
           v-on:open-files="openFileList"
         />
         <layout-view v-else key="if-landing" />
@@ -137,12 +137,12 @@
         v-on:load="doneLoadingFiles"
       />
 
-      <v-dialog v-model="loadSampleDialog" persistent width="60%">
+      <v-dialog v-model="autoloadDialog" persistent width="60%">
         <v-card class="pa-4">
           <v-card-title
             class="justify-center text-center title black--text pv-break-word"
           >
-            Loading {{ loadSampleName }}...
+            Loading {{ autoloadLabel }}...
           </v-card-title>
         </v-card>
       </v-dialog>

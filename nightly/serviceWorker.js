@@ -4,19 +4,19 @@ const workboxSW = new self.WorkboxSW({ clientsClaim: true });
 workboxSW.precache([
   {
     "url": "glance-external-ITKReader.js",
-    "revision": "2cf566cd4826601d0fd751051c14d4a6"
+    "revision": "d285ba17ba851dd530f178c83eacb298"
   },
   {
     "url": "glance-external-Workbox.js",
-    "revision": "a991869474a36276b3a2c167fb026894"
+    "revision": "70dd030a445c68bb481a270e5350f657"
   },
   {
     "url": "glance.css",
-    "revision": "6b94d472f196b913b4e837c684380442"
+    "revision": "cdf084b4304f92d8bc4909c564cc4b07"
   },
   {
     "url": "glance.js",
-    "revision": "9fa7682179129d20898d837f1a15a4d7"
+    "revision": "616179b2df0db47e4fbb596cfbfe4f6b"
   },
   {
     "url": "global.css",
@@ -716,15 +716,15 @@ workboxSW.precache([
   },
   {
     "url": "vendors.css",
-    "revision": "4284c76b84835707a96adba4da84dee5"
+    "revision": "77382ca6aed3be9eb2f70169a6dcc2c2"
   },
   {
     "url": "vendors.js",
-    "revision": "f2c17630f4a2506e573013f034b29c43"
+    "revision": "fb15b7da8cf03de1cf6e2579398566ea"
   },
   {
     "url": "version.js",
-    "revision": "a8563658277bc1e777167bb80dee9590"
+    "revision": "7471edce2ee1ef9870600878afcb024e"
   },
   {
     "url": "workbox-sw.prod.v2.1.2.js",

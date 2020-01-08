@@ -477,45 +477,13 @@
   margin: auto;
 }
 
-.FileLoader-overlay-24pej {
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  user-select: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 100ms, visibility 0s 100ms;
+.FileLoader-dragBox-4kpzx {
+  border: 1px dashed gray;
+  border-radius: 6px;
+  cursor: pointer;
 }
-.FileLoader-dialog-2gtcp {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 11;
-}
-.FileLoader-card-47sw3 {
-  width: 75%;
-  max-height: 80vh;
-  overflow: auto;
-}
-
-/* should be after .overlay for precedence */
-.FileLoader-visible-4qxhz {
-  visibility: visible;
-  opacity: 1;
-  transition-delay: 0s;
-}
-.FileLoader-headerText-4d8qu {
-  /* override vuetify's "disabled" coloring. This is vuetify's default color. */
-  color: rgba(0, 0, 0, .87);
+.FileLoader-dragBox-4kpzx:hover, .FileLoader-dropTarget-3ns34 {
+  background: rgba(0, 0, 0, 0.09);
 }
 
 .Landing-root-2gyew {

@@ -1,5 +1,4 @@
 import JSZip from 'jszip';
-import Vue from 'vue';
 import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
@@ -47,33 +46,6 @@ function zipGetSupportedFiles(zip, path) {
 
 // ----------------------------------------------------------------------------
 
-function allWithErrors(promises) {
-  return new Promise((resolve, reject) => {
-    let okayCount = 0;
-    const errors = Array(promises.length);
-    Promise.all(
-      promises.map((promise, index) =>
-        promise
-          .then((result) => {
-            okayCount += 1;
-            return result;
-          })
-          .catch((error) => {
-            errors[index] = error;
-          })
-      )
-    ).then((results) => {
-      if (okayCount === promises.length) {
-        resolve(results);
-      } else {
-        reject(errors);
-      }
-    });
-  });
-}
-
-// ----------------------------------------------------------------------------
-
 function readRawFile(file, { dimensions, spacing, dataType }) {
   return new Promise((resolve, reject) => {
     const fio = new FileReader();
@@ -106,244 +78,327 @@ function readRawFile(file, { dimensions, spacing, dataType }) {
 
 // ----------------------------------------------------------------------------
 
-function onLoadOkay(commit) {
-  commit('fileIdle');
-  commit('showApp', null, { root: true });
-}
-
-// ----------------------------------------------------------------------------
-
-function onLoadErrored(commit, errors) {
-  for (let i = 0; i < errors.length; ++i) {
-    if (errors[i]) {
-      commit('fileSetError', {
-        fileIndex: i,
-        error: errors[i],
-      });
-    }
-  }
-  commit('fileError');
-}
-
-// ----------------------------------------------------------------------------
-
 export default (proxyManager) => ({
   namespaced: true,
   state: {
-    stage: 'idle',
-    files: [],
-    urls: [],
-    rawInfos: {},
-    progresses: [],
+    remoteFileList: [],
+    fileList: [],
+    loading: false,
   },
 
   getters: {
-    fileTotalProgress(state) {
-      return state.progresses.reduce((sum, v) => sum + (v || 0), 0);
-    },
-    fileRawFilesLoadable(state) {
-      return state.files
-        .filter((file) => file.isRaw)
-        .reduce(
-          (flag, { file, rawInfo }) =>
-            rawInfo && file.size === rawInfo.effectiveSize && flag,
-          true
-        );
-    },
-    fileIndeterminateProgress(state) {
-      return state.files.reduce(
-        (flag, { type }) => type === 'file' || flag,
+    anyErrors(state) {
+      return state.fileList.reduce(
+        (flag, file) => flag || file.state === 'error',
         false
       );
     },
   },
 
   mutations: {
-    fileSetUrls(state, urls) {
-      Vue.set(state, 'urls', urls);
+    startLoading(state) {
+      state.loading = true;
     },
-    fileSetFiles(state, files) {
-      Vue.set(state, 'files', files);
+
+    stopLoading(state) {
+      state.loading = false;
     },
-    filePreload(state) {
-      state.stage = 'preload';
+
+    resetQueue(state) {
+      state.fileList = [];
     },
-    fileLoad(state) {
-      state.stage = 'load';
-      state.progresses = Array(state.files.length).fill(0);
+
+    addToFileList(state, files) {
+      for (let i = 0; i < files.length; i++) {
+        const fileInfo = files[i];
+
+        const fileState = {
+          state: 'loading',
+          name: fileInfo.name,
+          ext: getExtension(fileInfo.name),
+          files: null,
+          reader: null,
+          extraInfo: null,
+          remoteURL: null,
+        };
+
+        if (fileInfo.type === 'dicom') {
+          fileState.files = fileInfo.list;
+        }
+        if (fileInfo.type === 'remote') {
+          Object.assign(fileState, {
+            state: 'needsDownload',
+            remoteURL: fileInfo.remoteURL,
+          });
+        }
+        if (fileInfo.type === 'regular') {
+          fileState.files = [fileInfo.file];
+        }
+
+        state.fileList.push(fileState);
+      }
     },
-    fileError(state) {
-      state.stage = 'error';
+
+    setFileNeedsInfo(state, index) {
+      if (index >= 0 && index < state.fileList.length) {
+        state.fileList[index].state = 'needsInfo';
+        state.fileList[index].extraInfo = null;
+      }
     },
-    fileIdle(state) {
-      state.stage = 'idle';
-      state.files = [];
+
+    setRemoteFile(state, { index, file }) {
+      if (index >= 0 && index < state.fileList.length) {
+        state.fileList[index].state = 'loading';
+        state.fileList[index].files = [file];
+      }
     },
-    fileSetRawInfo(state, { fileIndex, rawInfo }) {
-      Vue.set(state.rawInfos, fileIndex, rawInfo);
+
+    setFileReader(state, { index, reader }) {
+      if (reader && index >= 0 && index < state.fileList.length) {
+        state.fileList[index].reader = reader;
+        state.fileList[index].state = 'ready';
+      }
     },
-    fileClearRawInfo(state) {
-      Vue.set(state, 'rawInfos', {});
+
+    setRawFileInfo(state, { index, info }) {
+      if (info && index >= 0 && index < state.fileList.length) {
+        state.fileList[index].extraInfo = info;
+        state.fileList[index].state = 'loading';
+      }
     },
-    fileSetError(state, { fileIndex, error }) {
-      Vue.set(state.files[fileIndex], 'error', error);
+
+    setFileError(state, { index, error }) {
+      if (error && index >= 0 && index < state.fileList.length) {
+        state.fileList[index].error = error;
+        state.fileList[index].state = 'error';
+      }
     },
-    fileUpdateProgress(state, { index, progress }) {
-      Vue.set(state.progresses, index, progress);
+
+    deleteFile(state, index) {
+      if (index >= 0 && index < state.fileList.length) {
+        state.fileList.splice(index, 1);
+      }
     },
   },
 
   actions: {
-    promptForFiles({ dispatch }) {
+    promptLocal({ dispatch }) {
       const exts = getSupportedExtensions();
-      ReaderFactory.openFiles(exts, (files) =>
-        dispatch('openFiles', Array.from(files))
+      return new Promise((resolve, reject) =>
+        ReaderFactory.openFiles(exts, (files) => {
+          dispatch('openFiles', Array.from(files))
+            .then(resolve)
+            .catch(reject);
+        })
       );
     },
-    /**
-     *
-     * @param {Object[]} fileList list of files to open
-     * @param {file} fileList[].file File object
-     * @param {name?} fileList[].name full name of file
-     * @param {isRaw?} fileList[].extension extension of ifle
-     */
-    openFiles({ commit, state, dispatch }, fileList) {
-      commit('fileSetFiles', fileList);
 
-      const stateFile = fileList.find((f) => getExtension(f.name) === 'glance');
-      if (stateFile) {
-        commit('fileLoad');
-        // Don't load any other file except for the state file
-        return dispatch('loadState', stateFile)
-          .then(() => onLoadOkay(commit))
-          .catch((error) => onLoadErrored(commit, [error]));
-      }
+    resetQueue({ commit }) {
+      commit('resetQueue');
+    },
 
-      const zips = fileList.filter((f) => getExtension(f.name) === 'zip');
+    deleteFile({ commit }, index) {
+      commit('deleteFile', index);
+    },
+
+    openRemoteFiles({ commit, dispatch }, remoteFiles) {
+      commit(
+        'addToFileList',
+        remoteFiles.map((rfile) => ({
+          type: 'remote',
+          name: rfile.name,
+          remoteURL: rfile.url,
+        }))
+      );
+
+      return dispatch('readAllFiles');
+    },
+
+    openFiles({ commit, dispatch }, files) {
+      const zips = files.filter((f) => getExtension(f.name) === 'zip');
       if (zips.length) {
-        const newFileList = fileList.filter(
-          (f) => getExtension(f.name) !== 'zip'
-        );
+        const nonzips = files.filter((f) => getExtension(f.name) !== 'zip');
         const p = zips.map((file) =>
-          JSZip.loadAsync(file)
-            .then((zip) => Promise.all(zipGetSupportedFiles(zip)))
-            .then((files) => newFileList.push(...files))
+          JSZip.loadAsync(file).then((zip) =>
+            Promise.all(zipGetSupportedFiles(zip))
+          )
         );
-        return Promise.all(p).then(() => dispatch('openFiles', newFileList));
+        return Promise.all(p)
+          .then((results) => [].concat.apply(nonzips, results))
+          .then((newFileList) => dispatch('openFiles', newFileList));
       }
-
-      const needsPreload =
-        fileList.filter((f) => getExtension(f.name) === 'raw').length !==
-        Object.keys(state.rawInfos).length;
-
-      if (needsPreload) {
-        commit('filePreload');
-        return Promise.resolve();
-      }
-      commit('fileLoad');
 
       // split out dicom and single datasets
-      const singleFileList = [];
+      // all dicom files are assumed to be from a single series
+      const regularFileList = [];
       const dicomFileList = [];
-      fileList.forEach((f) => {
+      files.forEach((f) => {
         if (getExtension(f.name) === 'dcm') {
           dicomFileList.push(f);
         } else {
-          singleFileList.push(f);
+          regularFileList.push(f);
         }
       });
 
-      const readers = [];
-      const promises = [].concat(
-        singleFileList.map((file, i) => {
-          // Handle raw
-          if (getExtension(file.name) === 'raw') {
-            return readRawFile(file, state.rawInfos[i]).then((dataset) =>
-              readers.push({
-                name: file.name,
-                dataset,
-              })
-            );
-          }
+      if (dicomFileList.length) {
+        const dicomFile = {
+          type: 'dicom',
+          name: dicomFileList[0].name, // pick first file for name
+          list: dicomFileList,
+        };
+        commit('addToFileList', [dicomFile]);
+      }
 
-          return ReaderFactory.loadFiles([file]).then((rs) =>
-            readers.push(...rs)
-          );
-        }),
-        ReaderFactory.loadFileSeries(
-          dicomFileList,
-          'dcm',
-          // use first file as output image name
-          dicomFileList.length && dicomFileList[0].name
-        ).then((r) => {
-          if (r) {
-            readers.push(r);
-          }
-        })
+      commit(
+        'addToFileList',
+        regularFileList.map((f) => ({
+          type: 'regular',
+          name: f.name,
+          file: f,
+        }))
       );
 
-      return allWithErrors(promises)
-        .then(() => onLoadOkay(commit))
-        .catch((errors) => onLoadErrored(commit, errors))
-        .finally(() => {
-          // clear leftover raw info
-          commit('fileClearRawInfo');
-          // load all successful readers
-          if (readers.length) {
-            ReaderFactory.registerReadersToProxyManager(readers, proxyManager);
+      return dispatch('readAllFiles');
+    },
+
+    readAllFiles({ dispatch, state }) {
+      const readPromises = [];
+      for (let i = 0; i < state.fileList.length; i++) {
+        readPromises.push(dispatch('readFileIndex', i));
+      }
+
+      return Promise.all(readPromises);
+    },
+
+    readFileIndex({ commit, dispatch, state }, fileIndex) {
+      const file = state.fileList[fileIndex];
+      let ret = Promise.resolve();
+
+      if (file.state === 'ready' || file.state === 'error') {
+        return ret;
+      }
+
+      if (file.state === 'needsDownload' && file.remoteURL) {
+        ret = ReaderFactory.downloadDataset(file.name, file.remoteURL)
+          .then((datasetFile) => {
+            commit('setRemoteFile', {
+              index: fileIndex,
+              file: datasetFile,
+            });
+            // re-run ReadFileIndex on our newly downloaded file.
+            return dispatch('readFileIndex', fileIndex);
+          })
+          .catch(() => {
+            throw new Error('Failed to download file');
+          });
+      } else if (file.ext === 'raw') {
+        if (file.extraInfo) {
+          ret = readRawFile(file.files[0], file.extraInfo).then((ds) => {
+            commit('setFileReader', {
+              index: fileIndex,
+              reader: {
+                name: file.name,
+                dataset: ds,
+              },
+            });
+          });
+        }
+        commit('setFileNeedsInfo', fileIndex);
+      } else if (file.ext === 'dcm') {
+        ret = ReaderFactory.loadFileSeries(file.files, 'dcm', file.name).then(
+          (r) => {
+            if (r) {
+              commit('setFileReader', {
+                index: fileIndex,
+                reader: r,
+              });
+            }
+          }
+        );
+      } else {
+        if (file.ext === 'glance') {
+          // see if there is a state file before this one
+          for (let i = 0; i < fileIndex; i++) {
+            const f = state.fileList[i];
+            if (f.ext === 'glance') {
+              const error = new Error('Cannot load multiple state files');
+              commit('setFileError', {
+                index: fileIndex,
+                error,
+              });
+            }
+            return ret;
+          }
+        }
+
+        ret = ReaderFactory.loadFiles(file.files).then((r) => {
+          if (r && r.length === 1) {
+            commit('setFileReader', {
+              index: fileIndex,
+              reader: r[0],
+            });
           }
         });
-    },
-    openRemoteFiles({ commit, dispatch }, { urls, names, types = [] }) {
-      if (urls && urls.length && names && names.length) {
-        const urlsToProcess = urls.map((url, index) => ({
-          name: names[index],
-          type: types[index],
-          url,
-        }));
-
-        commit('fileSetFiles', urlsToProcess);
-
-        dispatch('fetchRemote', urlsToProcess)
-          .then((files) => {
-            commit('fileSetUrls', []);
-            return dispatch('openFiles', files);
-          })
-          .catch((errors) => onLoadErrored(commit, errors));
       }
+
+      return ret.catch((error) => {
+        if (error) {
+          commit('setFileError', {
+            index: fileIndex,
+            error: error.message || 'File load failure',
+          });
+        }
+      });
     },
-    fetchRemote({ commit }, remotes) {
-      commit('fileLoad');
 
-      const progressCb = (index) => (progress) =>
-        commit('fileUpdateProgress', {
-          index,
-          progress: (100 * progress.loaded) / progress.total / remotes.length,
-        });
+    setRawFileInfo({ commit, dispatch }, { index, info }) {
+      if (info) {
+        commit('setRawFileInfo', { index, info });
+      } else {
+        commit('setFileNeedsInfo', index);
+      }
+      return dispatch('readFileIndex', index);
+    },
 
-      const promises = [];
-      for (let i = 0; i < remotes.length; ++i) {
-        promises.push(
-          ReaderFactory.downloadDataset(
-            remotes[i].name,
-            remotes[i].url,
-            progressCb(i)
+    load({ state, commit, dispatch }) {
+      commit('startLoading');
+
+      const readyFiles = state.fileList.filter((f) => f.state === 'ready');
+      let promise = Promise.resolve();
+
+      // load state file first
+      const stateFile = readyFiles.find((f) => f.ext === 'glance');
+      if (stateFile) {
+        const reader = stateFile.reader.reader;
+        promise = promise.then(() =>
+          reader.parseAsArrayBuffer().then(() =>
+            dispatch('restoreAppState', reader.getAppState(), {
+              root: true,
+            })
           )
         );
       }
 
-      return allWithErrors(promises);
-    },
-    loadState({ dispatch }, stateFile) {
-      return ReaderFactory.loadFiles([stateFile])
-        .then((r) => r[0])
-        .then(({ reader }) =>
-          reader
-            .parseAsArrayBuffer()
-            .then(() =>
-              dispatch('restoreAppState', reader.getAppState(), { root: true })
-            )
+      promise = promise.then(() => {
+        const otherFiles = readyFiles.filter((f) => f.ext !== 'glance');
+        return Promise.all(
+          otherFiles.map(
+            (f) =>
+              new Promise((resolve) => {
+                // hack to allow browser paint to occur
+                setTimeout(() => {
+                  ReaderFactory.registerReadersToProxyManager(
+                    [f.reader],
+                    proxyManager
+                  );
+                  resolve();
+                }, 10);
+              })
+          )
         );
+      });
+
+      return promise.finally(() => commit('stopLoading'));
     },
   },
 });

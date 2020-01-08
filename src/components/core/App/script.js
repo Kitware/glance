@@ -1,4 +1,4 @@
-import { mapState, mapActions, mapMutations } from 'vuex';
+import { mapGetters, mapState, mapActions, mapMutations } from 'vuex';
 import Mousetrap from 'mousetrap';
 import { VBottomSheet, VDialog } from 'vuetify/lib';
 import macro from 'vtk.js/Sources/macro';
@@ -46,6 +46,9 @@ export default {
     return {
       aboutDialog: false,
       errorDialog: false,
+      fileUploadDialog: false,
+      autoloadDialog: false,
+      autoloadLabel: '',
       internalControlsDrawer: true,
       screenshotsDrawer: false,
       screenshotCount: 0,
@@ -77,6 +80,9 @@ export default {
       dialogType() {
         return this.smallScreen ? 'v-bottom-sheet' : 'v-dialog';
       },
+    }),
+    ...mapGetters('files', {
+      anyFileLoadingErrors: 'anyErrors',
     }),
   },
   proxyManagerHooks: {
@@ -126,19 +132,53 @@ export default {
       },
     }),
     ...mapActions({
-      openSample: (dispatch, urls, names) => {
-        // dispatch: delete all loaded files since this is only called
-        // by clicking on sample data
-        dispatch('files/openRemoteFiles', { urls, names }).then(() =>
-          dispatch('resetWorkspace')
-        );
-      },
-      promptUserFiles: 'files/promptForFiles',
-      openFiles: (dispatch, files) =>
-        dispatch('files/openFiles', Array.from(files)),
       saveState: 'saveState',
       initViews: 'views/initViews',
     }),
+    ...mapActions('files', [
+      'openFiles',
+      'openRemoteFiles',
+      'load',
+      'resetQueue',
+    ]),
+    showFileUpload() {
+      this.fileUploadDialog = true;
+    },
+    openFileList(fileList) {
+      this.fileUploadDialog = true;
+      this.$nextTick(() => this.openFiles(Array.from(fileList)));
+    },
+    autoLoadRemotes(label, urls, names) {
+      const remotes = urls.map((url, index) => ({
+        name: names[index],
+        url,
+      }));
+      this.autoloadDialog = true;
+      this.autoloadLabel = label;
+      setTimeout(
+        () =>
+          this.openRemoteFiles(remotes)
+            .then(() => this.load())
+            .then(() => {
+              if (this.anyFileLoadingErrors) {
+                this.$nextTick(() => {
+                  this.fileUploadDialog = true;
+                });
+              } else {
+                this.doneLoadingFiles();
+              }
+            })
+            .finally(() => {
+              this.resetQueue();
+              this.autoloadDialog = false;
+            }),
+        // hack to allow loading sample dialog to show up
+        10
+      );
+    },
+    doneLoadingFiles() {
+      this.showApp();
+    },
     recordError(error) {
       this.errors.push(error);
     },

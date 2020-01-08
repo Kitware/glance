@@ -1,6 +1,6 @@
 <drag-and-drop
-  :enabled="!landingVisible"
-  v-on:drop="openFiles"
+  :enabled="!landingVisible && !fileUploadDialog"
+  v-on:drop="openFileList"
 >
   <template v-slot:default="{ dragHover }">
     <v-app
@@ -9,7 +9,7 @@
       <v-navigation-drawer
         v-model="controlsDrawer"
         :clipped="$vuetify.breakpoint.mdAndUp"
-        :mobile-break-point="$vuetify.breakpoint.thresholds.md"
+        :mobile-break-point="$vuetify.breakpoint.thresholds.sm"
         app
         fixed
         disable-resize-watcher
@@ -65,7 +65,7 @@
         >
           <template v-slot:default="{ state }">
             <collapsible-toolbar-item
-              v-on:click="promptUserFiles"
+              v-on:click="showFileUpload"
               :state="state"
             >
               <v-icon left>mdi-folder</v-icon>
@@ -109,9 +109,9 @@
         <landing
           v-if="landingVisible"
           key="if-landing"
-          v-on:open="promptUserFiles"
-          v-on:open-urls="openSample"
-          v-on:open-files="openFiles"
+          v-on:open="showFileUpload"
+          v-on:open-urls="autoLoadRemotes"
+          v-on:open-files="openFileList"
         />
         <layout-view v-else key="if-landing" />
       </v-content>
@@ -132,7 +132,20 @@
       </v-navigation-drawer>
 
       <!-- file loader -->
-      <file-loader v-on:load="showApp" />
+      <file-loader
+        v-model="fileUploadDialog"
+        v-on:load="doneLoadingFiles"
+      />
+
+      <v-dialog v-model="autoloadDialog" persistent width="60%">
+        <v-card class="pa-4">
+          <v-card-title
+            class="justify-center text-center title black--text pv-break-word"
+          >
+            Loading {{ autoloadLabel }}...
+          </v-card-title>
+        </v-card>
+      </v-dialog>
 
       <!-- state generator -->
       <state-file-generator />

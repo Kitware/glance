@@ -20,7 +20,7 @@ export default {
         urls.push(sample.datasets[i].url);
         names.push(sample.datasets[i].name);
       }
-      this.$emit('open-urls', urls, names);
+      this.$emit('open-urls', sample.label, urls, names);
     },
   },
 };

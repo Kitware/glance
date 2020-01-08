@@ -46,7 +46,7 @@
     "typeface-roboto": "0.0.54",
     "vtk.js": "12.1.3",
     "vue": "2.6.10",
-    "vuetify": "2.1.7",
+    "vuetify": "2.2.0",
     "vuex": "^3.1.1",
     "webworker-promise": "0.4.1",
     "workbox-sw": "2.1.2"

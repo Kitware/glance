@@ -35,6 +35,7 @@ export default {
   },
   data() {
     return {
+      sourceList: [],
       internalValue: -1,
     };
   },
@@ -45,6 +46,9 @@ export default {
         return sourceToItem(source);
       }
       return null;
+    },
+    shouldHide() {
+      return this.hideIfOneDataset && this.sourceList.length <= 1;
     },
   },
   watch: {
@@ -58,8 +62,12 @@ export default {
       this.internalValue = source.getProxyId();
       this.$nextTick(() => this.$emit('input', this.internalValue));
     }
+    this.updateSourceList();
   },
   proxyManagerHooks: {
+    onProxyModified() {
+      this.updateSourceList();
+    },
     onActiveSourceChange(source) {
       // HACK: when active source changes, the dataset might not yet be registered
       // to the source, so this setTimeout gets around that issue.
@@ -77,23 +85,21 @@ export default {
     onProxyRegistrationChange(info) {
       const { proxyGroup } = info;
       if (proxyGroup === 'Sources') {
-        // re-render select list
-        this.$forceUpdate();
+        this.updateSourceList();
       }
     },
   },
   methods: {
-    shouldHide() {
-      return this.hideIfOneDataset && this.getSources().length <= 1;
-    },
-    getSources() {
+    updateSourceList() {
       const sources = this.$proxyManager
         .getSources()
         .filter(
-          (s) => s.getProxyName() === 'TrivialProducer' && this.filterFunc(s)
+          (s) =>
+            Boolean(s.getDataset()) &&
+            s.getProxyName() === 'TrivialProducer' &&
+            this.filterFunc(s)
         );
-
-      return sources.map((s) => sourceToItem(s));
+      this.sourceList = sources.map((s) => sourceToItem(s));
     },
     makeSelection(sourceId) {
       if (sourceId !== this.internalValue) {

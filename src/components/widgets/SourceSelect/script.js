@@ -32,6 +32,10 @@ export default {
       type: Number,
       default: () => -1,
     },
+    disabled: {
+      type: Boolean,
+      default: () => false,
+    },
   },
   data() {
     return {

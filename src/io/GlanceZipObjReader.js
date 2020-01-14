@@ -129,6 +129,7 @@ function vtkGlanceZipObjReader(publicAPI, model) {
         name: uid,
       });
       source.setInputData(dataset);
+      source.activate();
       for (let i = 0; i < allViews.length; i++) {
         const rep = proxyManager.getRepresentation(source, allViews[i]);
         const actor = rep.getActors()[0];

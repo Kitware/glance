@@ -121,6 +121,7 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
         source,
         source.getOutputData().getClassName()
       );
+      sourceProxy.activate();
 
       // Gather the range for each fields
       gatherRanges(allDataRanges, source.getOutputData());

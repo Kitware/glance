@@ -104,7 +104,7 @@ export default {
       }),
     },
     Sources: {
-      TrivialProducer: activateOnCreate(createProxyDefinition(vtkProxySource)),
+      TrivialProducer: createProxyDefinition(vtkProxySource),
       // differentiate LabelMaps
       LabelMap: createProxyDefinition(vtkProxySource),
     },

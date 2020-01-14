@@ -226,6 +226,7 @@ function registerReadersToProxyManager(readers, proxyManager) {
       }
 
       if (source) {
+        source.activate();
         proxyManager.createRepresentationInAllViews(source);
         proxyManager.renderAllViews();
       }

@@ -249,7 +249,15 @@ function createStore(pxm = null) {
 
               if (version >= 2) {
                 const { activeSourceId } = userData;
-                const source = proxyManager.getProxyById(activeSourceId);
+                const id = $oldToNewIdMapping[activeSourceId];
+                const source = proxyManager.getProxyById(id);
+                if (source) {
+                  source.activate();
+                }
+              } else {
+                // old pre-versioned glance state files
+                // activate first source, if any
+                const source = proxyManager.getSources()[0];
                 if (source) {
                   source.activate();
                 }

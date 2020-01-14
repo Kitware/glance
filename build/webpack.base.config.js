@@ -104,7 +104,7 @@ module.exports = {
     new CopyPlugin([
       {
         from: path.join(
-          'node_modules',
+          paths.node_modules,
           'workbox-sw',
           'build',
           'importScripts',
@@ -118,6 +118,11 @@ module.exports = {
       },
       {
         from: path.join(paths.root, 'static'),
+      },
+      {
+        from: path.join(paths.root, 'itk', 'web-build', 'itkfiltering*.js'),
+        to: path.join('itk', 'Pipelines'),
+        flatten: true,
       },
     ]),
     new WorkboxPlugin({

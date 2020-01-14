@@ -1,6 +1,7 @@
 import PaintTool from 'paraview-glance/src/components/tools/PaintTool';
 import MeasurementTools from 'paraview-glance/src/components/tools/MeasurementTools';
 import CropTool from 'paraview-glance/src/components/tools/CropTool';
+import MedianFilter from 'paraview-glance/src/components/tools/MedianFilter';
 
 // ----------------------------------------------------------------------------
 
@@ -10,6 +11,7 @@ export default {
     PaintTool,
     MeasurementTools,
     CropTool,
+    MedianFilter,
   },
   data() {
     return {

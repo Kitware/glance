@@ -1,0 +1,130 @@
+<div>
+  <v-container :class="$style.container">
+    <v-layout wrap align-center>
+      <v-flex xs12>
+        <source-select
+          label="Target volume"
+          :filterFunc="filterImages"
+          bindToActiveSource
+          :disabled="running"
+          @input="setTargetImage"
+        />
+      </v-flex>
+      <v-flex xs12>
+        <v-menu offset-x>
+          <template v-slot:activator="{ on }">
+            <v-select
+              label="Select/create an output image"
+              append-outer-icon="mdi-dots-vertical"
+              :items="imageList"
+              item-text="name"
+              item-value="proxyId"
+              :disabled="!targetImage || running"
+              :value="outputImageSelection"
+              style="overflow:hidden; text-overflow:ellipses;"
+              @input="setOutputImage"
+              @click:append-outer="on.click"
+            ></v-select>
+          </template>
+          <v-list>
+            <template v-if="outputImageSelection">
+              <v-list-item @click="editOutputImageName">
+                <v-list-item-title>Edit Name</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="deleteOutputImage">
+                <v-list-item-title>Delete</v-list-item-title>
+              </v-list-item>
+            </template>
+            <template v-else>
+              <v-list-item>
+                <v-list-item-title>(no image selected)</v-list-item-title>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
+      </v-flex>
+      <template v-if="editingOutputName">
+        <v-flex xs10>
+          <v-text-field
+            label="Renaming image"
+            v-model="editableOutputImageName"
+            @keydown.13="editingOutputName = false"
+          />
+        </v-flex>
+        <v-flex xs2 class="text-center">
+          <v-btn icon @click="editingOutputName = false">
+            <v-icon>mdi-content-save</v-icon>
+          </v-btn>
+        </v-flex>
+      </template>
+    </v-layout>
+  </v-container>
+  <v-container :class="$style.container">
+    <v-layout wrap align-center>
+      <v-flex xs10>
+        <v-slider
+          v-model="blurRadius"
+          label="Radius"
+          min="1"
+          max="20"
+          step="1"
+          :disabled="running"
+          hide-details
+        />
+      </v-flex>
+      <v-flex xs2>
+        <v-text-field
+          v-model="blurRadius"
+          type="number"
+          min="1"
+          max="20"
+          :disabled="running"
+          step="1"
+        />
+      </v-flex>
+      <v-flex xs12>
+        <v-btn
+          text
+          :loading="running"
+          :disabled="buttonDisabled"
+          @click="runBlur"
+        >
+          <v-icon left>mdi-blur</v-icon>
+          <template v-slot:loader>
+            <v-progress-circular
+              indeterminate
+              size="24"
+              width="3"
+            />
+            <span class="ml-2">Running...</span>
+          </template>
+          Blur Image
+        </v-btn>
+      </v-flex>
+    </v-layout>
+  </v-container>
+  <v-container :class="$style.container" v-if="error">
+    <v-layout wrap align-center>
+      <v-flex xs12>
+        <v-alert
+          type="error"
+          dismissible
+          @input="error = null"
+        >
+          Median filter error: {{ String(error) }}
+        </v-alert>
+      </v-flex>
+    </v-layout>
+  </v-container>
+  <portal v-if="snackbar.show" selector="#app-portal-mount">
+    <v-snackbar
+      v-model="snackbar.show"
+      top
+      :color="snackbar.type"
+      :timeout="6000"
+    >
+      {{ snackbar.msg }}
+      <v-btn dark text @click="snackbar.show = false">close</v-btn>
+    </v-snackbar>
+  </portal>
+</div>

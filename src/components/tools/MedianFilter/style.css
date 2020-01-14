@@ -1,0 +1,7 @@
+.container {
+  padding: 0 8px 8px 8px;
+}
+
+.container * {
+  user-select: none;
+}

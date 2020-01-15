@@ -53,6 +53,7 @@ export function registerToGlance(Glance) {
       vtkReader: vtkITKDicomImageReader,
       fileNameMethod: 'setFileName',
       fileSeriesMethod: 'readFileSeries',
+      binary: true,
     });
   }
 }

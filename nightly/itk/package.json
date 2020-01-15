@@ -1,6 +1,6 @@
 {
   "name": "itk",
-  "version": "10.1.0",
+  "version": "10.2.1",
   "description": "High performance spatial analysis in a JavaScript runtime environment.",
   "main": "./dist/itk.js",
   "directories": {
@@ -97,7 +97,7 @@
     ]
   }
 
-,"_resolved": "https://registry.npmjs.org/itk/-/itk-10.1.0.tgz"
-,"_integrity": "sha512-sR2ToHkC8A8CKt4uKQm9aNXno28LGMTTIZfXZ3khCOjGzEJeWhUst+E1F9Wtx38qb/ownU7sNNg9Mn2G2zFYag=="
-,"_from": "itk@10.1.0"
+,"_resolved": "https://registry.npmjs.org/itk/-/itk-10.2.1.tgz"
+,"_integrity": "sha512-rmEejdRPPpUu0gOuJ1zLL87/QLuKz4UBqFtHVx/xsKo7smDtphnWb8dVXTFyi3dOuBmFUDzlnpecoFixAWj/kg=="
+,"_from": "itk@10.2.1"
 }

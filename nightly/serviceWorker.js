@@ -4,19 +4,19 @@ const workboxSW = new self.WorkboxSW({ clientsClaim: true });
 workboxSW.precache([
   {
     "url": "glance-external-ITKReader.js",
-    "revision": "e9066555c9dcd2d54c8c99a5cc9d7d47"
+    "revision": "e580154af691e91cb5e5a033202a6adb"
   },
   {
     "url": "glance-external-Workbox.js",
-    "revision": "70dd030a445c68bb481a270e5350f657"
+    "revision": "98fded89aca7750d57eccc33c3dfb1e0"
   },
   {
     "url": "glance.css",
-    "revision": "cdf084b4304f92d8bc4909c564cc4b07"
+    "revision": "db05f81564de410f51ee0d6e8e21bae9"
   },
   {
     "url": "glance.js",
-    "revision": "f45730d03e1ee86a86c6da672dbfb656"
+    "revision": "177d5a078caa0d1ae5ea9ea64baf7159"
   },
   {
     "url": "global.css",
@@ -44,7 +44,7 @@ workboxSW.precache([
   },
   {
     "url": "itk/extensionToPolyDataIO.js",
-    "revision": "26106c73e7c9bac5f646d649f0ba3b73"
+    "revision": "805072ae47ac2e8307cf2b0f3a4610c1"
   },
   {
     "url": "itk/FloatTypes.js",
@@ -236,7 +236,7 @@ workboxSW.precache([
   },
   {
     "url": "itk/itk-js-cli.js",
-    "revision": "afd047fde2754275069d81ba137cf9c6"
+    "revision": "5726292c364b1b7748e19d62748ef89e"
   },
   {
     "url": "itk/itkConfig.js",
@@ -357,14 +357,6 @@ workboxSW.precache([
   {
     "url": "itk/node_modules/commander/index.js",
     "revision": "5d56ccd99113d3a04f449b728b07c4c4"
-  },
-  {
-    "url": "itk/node_modules/mime-db/index.js",
-    "revision": "a3e41e93954b3742ed84d3050d6038cf"
-  },
-  {
-    "url": "itk/node_modules/mime-types/index.js",
-    "revision": "bf015bb6811afc5c98e3e5f7072fdc79"
   },
   {
     "url": "itk/node_modules/webworker-promise/coverage/lcov-report/base.css",
@@ -511,12 +503,80 @@ workboxSW.precache([
     "revision": "f9eeedb3c62286b36caa9b17ffe902f0"
   },
   {
+    "url": "itk/Pipelines/InputOutputFilesTest.js",
+    "revision": "dce2afa2d68a74d87631178e04396227"
+  },
+  {
+    "url": "itk/Pipelines/InputOutputFilesTestWasm.js",
+    "revision": "3e723884b427c09972b646f74e249509"
+  },
+  {
+    "url": "itk/Pipelines/itkfiltering.js",
+    "revision": "11896aabfc8077cf2e283f7796b696f4"
+  },
+  {
+    "url": "itk/Pipelines/itkfilteringWasm.js",
+    "revision": "e79e4321ac90fe2a3f80b0e254745855"
+  },
+  {
+    "url": "itk/Pipelines/itkJSPipelinePreInputOutputFilesTest.js",
+    "revision": "d35d9824d3aeb0b65600992477a0cb87"
+  },
+  {
+    "url": "itk/Pipelines/itkJSPipelinePreitkTestDriver.js",
+    "revision": "97ad794cc81234a93207bd6fcc28c1af"
+  },
+  {
+    "url": "itk/Pipelines/itkJSPipelinePreMedianFilterTest.js",
+    "revision": "4c2ba0de21a7715cdd98601eeb1d4e12"
+  },
+  {
+    "url": "itk/Pipelines/itkJSPipelinePreMeshReadWriteTest.js",
+    "revision": "ee08debcbfae65ba718d6b18b58acc02"
+  },
+  {
+    "url": "itk/Pipelines/itkJSPipelinePreMeshToPolyData.js",
+    "revision": "95c6b476a4a69b082763fb0387c18316"
+  },
+  {
+    "url": "itk/Pipelines/itkJSPipelinePreStdoutStderrTest.js",
+    "revision": "44eb38006d03b8b9a6dc65dde10c5fb5"
+  },
+  {
+    "url": "itk/Pipelines/itkJSPipelinePreWriteVTKPolyDataTest.js",
+    "revision": "cb7406eb4b1443aa7c09fb2096527484"
+  },
+  {
+    "url": "itk/Pipelines/MedianFilterTest.js",
+    "revision": "6a8acdad0a7ee5a96c4a9f1be2709934"
+  },
+  {
+    "url": "itk/Pipelines/MedianFilterTestWasm.js",
+    "revision": "232b9593ce9e124c3e8401aaab6e6592"
+  },
+  {
+    "url": "itk/Pipelines/MeshReadWriteTest.js",
+    "revision": "ff36c95ab13f23f127099b6192370909"
+  },
+  {
+    "url": "itk/Pipelines/MeshReadWriteTestWasm.js",
+    "revision": "cebb815897d264bf1b11fcb68a6f7383"
+  },
+  {
+    "url": "itk/Pipelines/StdoutStderrTest.js",
+    "revision": "cf3a6829537adec37a94632f5a50a40f"
+  },
+  {
+    "url": "itk/Pipelines/StdoutStderrTestWasm.js",
+    "revision": "86322f6fb1a26bcd03915cf52a374650"
+  },
+  {
     "url": "itk/PixelTypes.js",
     "revision": "4fa031705ef3b81acc4a2717e0fd2049"
   },
   {
     "url": "itk/PolyDataIOIndex.js",
-    "revision": "0a5a4f503b04a856cbb08e7750e015d3"
+    "revision": "9c4ff3746125324d240de953be9d145d"
   },
   {
     "url": "itk/readArrayBuffer.js",
@@ -652,7 +712,7 @@ workboxSW.precache([
   },
   {
     "url": "itk/umd/itk.js",
-    "revision": "0199bf178a4e3d5a12f1f79ba8ab5233"
+    "revision": "bd2f43bfa7a96bc09fc2deecb6abf0d8"
   },
   {
     "url": "itk/WebWorkers/ImageIO.worker.js",
@@ -716,15 +776,15 @@ workboxSW.precache([
   },
   {
     "url": "vendors.css",
-    "revision": "77382ca6aed3be9eb2f70169a6dcc2c2"
+    "revision": "9f9aa69f1aa5f698003136811505391f"
   },
   {
     "url": "vendors.js",
-    "revision": "6f4fca7a03681328ecbe21015acb8d87"
+    "revision": "dc16cc41425bbc8865e82cd3db0d47a1"
   },
   {
     "url": "version.js",
-    "revision": "07a32cc267ded42dbf2e87efbb427f35"
+    "revision": "8f01a765c4d4b4d02e3c54966f7175ff"
   },
   {
     "url": "workbox-sw.prod.v2.1.2.js",

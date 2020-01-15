@@ -373,6 +373,13 @@
   user-select: none;
 }
 
+.MedianFilter-container-3jddk {
+  padding: 0 8px 8px 8px;
+}
+.MedianFilter-container-3jddk * {
+  user-select: none;
+}
+
 /* vuetify override */
 .EditTools-panelContent-2jdg5 > .v-expansion-panel-content__wrap {
   padding: 0;

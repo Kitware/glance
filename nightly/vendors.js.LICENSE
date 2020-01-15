@@ -156,10 +156,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */

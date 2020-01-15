@@ -80,11 +80,30 @@ var build = function build(sourceDir) {
     cmakeArgs = program.rawArgs.slice(hypenIndex + 1);
   }
 
-  var dockerBuild = spawnSync('bash', [dockcrossScript, 'web-build'].concat(cmakeArgs), {
-    env: process.env,
-    stdio: 'inherit'
-  });
-  process.exit(dockerBuild.status);
+  if (process.platform === "win32") {
+    var dockerBuild = spawnSync('"C:\\Program Files\\Git\\bin\\sh.exe"', ["--login", "-i", "-c", '"web-build/itk-js-build-env web-build ' + cmakeArgs + '"'], {
+      env: process.env,
+      stdio: 'inherit',
+      shell: true
+    });
+
+    if (dockerBuild.status !== 0) {
+      console.error(dockerBuild.error);
+    }
+
+    process.exit(dockerBuild.status);
+  } else {
+    var _dockerBuild = spawnSync('bash', [dockcrossScript, 'web-build'].concat(cmakeArgs), {
+      env: process.env,
+      stdio: 'inherit'
+    });
+
+    if (_dockerBuild.status !== 0) {
+      console.error(_dockerBuild.error);
+    }
+
+    process.exit(_dockerBuild.status);
+  }
 };
 
 var test = function test(sourceDir) {
@@ -119,11 +138,26 @@ var test = function test(sourceDir) {
     ctestArgs = program.rawArgs.slice(hypenIndex + 1).join(' ');
   }
 
-  var dockerBuild = spawnSync('bash', [dockcrossScript, 'bash', '-c', 'cd web-build && ctest ' + ctestArgs], {
-    env: process.env,
-    stdio: 'inherit'
-  });
-  process.exit(dockerBuild.status);
+  if (process.platform === "win32") {
+    var dockerBuild = spawnSync('"C:\\Program Files\\Git\\bin\\sh.exe"', ["--login", "-i", "-c", '"web-build/itk-js-build-env bash -c cd web-build && ctest ' + cmakeArgs + '"'], {
+      env: process.env,
+      stdio: 'inherit',
+      shell: true
+    });
+
+    if (dockerBuild.status !== 0) {
+      console.error(dockerBuild.error);
+    }
+
+    process.exit(dockerBuild.status);
+  } else {
+    var _dockerBuild2 = spawnSync('bash', [dockcrossScript, 'bash', '-c', 'cd web-build && ctest ' + ctestArgs], {
+      env: process.env,
+      stdio: 'inherit'
+    });
+
+    process.exit(_dockerBuild2.status);
+  }
 };
 
 program.command('build <sourceDir>').usage('[options] <sourceDir> [-- <cmake arguments>]').description('build the CMake project found in the given source directory').action(build).option('-i, --image <image>', 'build environment Docker image, defaults to insighttoolkit/itk-js'); // todo: needs a wrapper in web_add_test that 1) mount /work into the emscripten filesystem

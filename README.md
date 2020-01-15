@@ -68,8 +68,16 @@ $ npm run build:release
 
 This will output the final bundle and assets to `dist/`.
 
+If you make changes to any of the ITK filtering code under `itk/`, you should run the following
+command from the root folder. For more information, check out [itk.js].
+
+```
+$ npx itk-js build itk/
+```
+
 [git]: https://git-scm.com
 [node.js + npm]: https://nodejs.org/en
+[itk.js]: https://insightsoftwareconsortium.github.io/itk-js/examples/hello_world_node.html
 
 
 Reporting Bugs and Making Contributions

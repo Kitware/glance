@@ -1,9 +1,10 @@
 <v-select
-  v-show="!shouldHide()"
+  v-show="!shouldHide"
   :label="label"
-  :items="getSources()"
+  :items="sourceList"
   item-text="name"
   item-value="proxyId"
+  :disabled="disabled"
   :value="selection"
   @input="makeSelection"
 ></v-select>

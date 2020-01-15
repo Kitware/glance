@@ -51,23 +51,25 @@ export default {
   created() {
     Controls.forEach((control, i) => this.addPanel(control, i + 10));
   },
+  mounted() {
+    this.updateDatasetList();
+  },
   proxyManagerHooks: {
-    onProxyCreated({ proxyId, proxyGroup, proxyName, proxy }) {
+    onProxyModified() {
+      this.updateDatasetList();
+    },
+    onProxyCreated({ proxyGroup, proxyName }) {
       if (proxyGroup === 'Sources' && proxyName === 'TrivialProducer') {
-        this.datasets.push(proxyId);
-        this.internalPanelState[proxyId] = true;
-        this.subpanels[proxyId] = Controls.filter((c) => c.visible(proxy))
-          .map((c, i) => (c.defaultExpand ? i : -1))
-          .filter((v) => v > -1);
+        this.updateDatasetList();
       }
     },
     onProxyDeleted({ proxyId, proxyGroup, proxyName }) {
       if (proxyGroup === 'Sources' && proxyName === 'TrivialProducer') {
         const idx = this.datasets.indexOf(proxyId);
         if (idx > -1) {
-          this.datasets.splice(idx, 1);
           this.$delete(this.internalPanelState, proxyId);
           this.$delete(this.subpanels, proxyId);
+          this.updateDatasetList();
         }
       }
     },
@@ -80,6 +82,31 @@ export default {
     },
   },
   methods: {
+    updateDatasetList() {
+      const sources = this.$proxyManager
+        .getSources()
+        .filter(
+          (s) =>
+            s.getProxyGroup() === 'Sources' &&
+            s.getProxyName() === 'TrivialProducer'
+        )
+        .filter((s) => Boolean(s.getDataset()));
+
+      for (let i = 0; i < sources.length; i++) {
+        const proxy = sources[i];
+        const proxyId = proxy.getProxyId();
+        if (!(proxyId in this.internalPanelState)) {
+          this.internalPanelState[proxyId] = true;
+        }
+        if (!(proxyId in this.subpanels)) {
+          this.subpanels[proxyId] = Controls.filter((c) => c.visible(proxy))
+            .map((c, j) => (c.defaultExpand ? j : -1))
+            .filter((v) => v > -1);
+        }
+      }
+
+      this.datasets = sources.map((s) => s.getProxyId());
+    },
     getSourceName(sourceId) {
       const proxy = this.$proxyManager.getProxyById(sourceId);
       if (proxy) {

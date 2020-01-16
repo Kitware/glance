@@ -62,6 +62,13 @@ export default {
         }, 10);
       });
     },
+    onDialogChange(state) {
+      if (!state) {
+        this.close();
+      } else {
+        this.$emit('input', true);
+      }
+    },
     close() {
       this.$emit('input', false);
       // hack to reset queue only after the file dialog closes

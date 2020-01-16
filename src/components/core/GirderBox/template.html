@@ -1,0 +1,24 @@
+
+<v-container>
+    <v-row>
+      <v-col v-if="loggedOut">
+        <GirderAuthentication register :oauth=true :key="girderRest.token" />
+      </v-col>
+      <v-col>
+        <GirderFileManager
+          :root-location-disabled="false"
+          :selectable="true"
+          v-model="selected"
+          :location.sync="location"
+          />
+        <v-toolbar>
+          <v-spacer />
+
+          <v-btn class="mt-4" @click="load()" :disabled="!selected.length">
+             Select
+          </v-btn>
+          
+        </v-toolbar>
+      </v-col>
+    </v-row>
+ </v-container>

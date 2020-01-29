@@ -1,9 +1,10 @@
 <v-dialog
-  width="50%"
+  width="70%"
   :value="value"
   :persistent="loading"
   :fullscreen="$vuetify.breakpoint.smAndDown"
-  @input="$emit('input', $event)"
+  @input="onDialogChange"
+  @click:outside="close"
 >
   <v-card>
     <v-card-text class="pa-0">

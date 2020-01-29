@@ -230,6 +230,12 @@ function registerReadersToProxyManager(readers, proxyManager) {
         proxyManager.createRepresentationInAllViews(source);
         proxyManager.renderAllViews();
       }
+
+      if (reader.getCameraViewPoints) {
+        proxyManager
+          .getReferenceByName('$store')
+          .dispatch('setCameraViewPoints', reader.getCameraViewPoints());
+      }
     }
   }
 }

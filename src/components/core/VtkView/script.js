@@ -1,4 +1,4 @@
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 
 import { Breakpoints } from 'paraview-glance/src/constants';
 import {
@@ -49,6 +49,7 @@ export default {
       palette: BACKGROUND,
       backgroundSheet: false,
       inAnimation: false,
+      viewPointMenuVisible: false,
     };
   },
   computed: {
@@ -68,6 +69,7 @@ export default {
         return state.axisPreset;
       },
     }),
+    ...mapGetters(['cameraViewPoints']),
     type() {
       return this.viewType.split(':')[0];
     },
@@ -246,6 +248,6 @@ export default {
       'splitView',
       'quadView',
     ]),
-    ...mapActions(['takeScreenshot']),
+    ...mapActions(['takeScreenshot', 'changeCameraViewPoint']),
   },
 };

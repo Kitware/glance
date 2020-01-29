@@ -143,6 +143,37 @@
         <v-spacer />
         <v-tooltip
           top
+          v-if="view.getProxyName() === 'View3D'"
+          :disabled="smallScreen || viewPointMenuVisible"
+        >
+          <template v-slot:activator="{ on: tooltip }">
+            <v-menu offset-y top left v-model="viewPointMenuVisible">
+              <template v-slot:activator="{ on: menu }">
+                <v-btn
+                  :class="$style.button"
+                  icon
+                  v-on="{ ...tooltip, ...menu }"
+                  v-show="cameraViewPoints.length"
+                  :disabled="viewPointMenuVisible"
+                >
+                  <v-icon>mdi-camera-switch</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item
+                  v-for="(item, index) in cameraViewPoints"
+                  :key="index"
+                  @click="changeCameraViewPoint(item)"
+                >
+                  <v-list-item-title>{{ item }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </template>
+          <span class="pv-no-select">Change View Point</span>
+        </v-tooltip>
+        <v-tooltip
+          top
           :disabled="smallScreen"
         >
           <span class="pv-no-select">Background color</span>

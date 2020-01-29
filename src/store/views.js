@@ -22,6 +22,12 @@ export default (proxyManager) => ({
     axisPreset: 'default',
     axisVisible: true,
     annotationOpacity: 1,
+    interactionStyle3D: '3D',
+    // The firstPersonMovementSpeed is the magnitude of the translation
+    // in between animation frames while moving
+    // If null, it will be calculated and set on first use
+    firstPersonMovementSpeed: null,
+    maxTextureLODSize: 50000, // Units are in KiB
     viewOrder: VIEW_TYPES.map((v) => v.value),
     visibleCount: 1,
   },
@@ -45,6 +51,15 @@ export default (proxyManager) => ({
     },
     setAnnotationOpacity(state, opacity) {
       state.annotationOpacity = opacity;
+    },
+    setInteractionStyle3D(state, style) {
+      state.interactionStyle3D = style;
+    },
+    setFirstPersonMovementSpeed(state, speed) {
+      state.firstPersonMovementSpeed = speed;
+    },
+    setMaxTextureLODSize(state, size) {
+      state.maxTextureLODSize = size;
     },
     mapViewTypeToId(state, { viewType, viewId }) {
       Vue.set(state.viewTypeToId, viewType, viewId);
@@ -161,6 +176,61 @@ export default (proxyManager) => ({
         view.setAnnotationOpacity(opacity);
       });
       commit('setAnnotationOpacity', opacity);
+    },
+    setInteractionStyle3D({ commit }, style) {
+      proxyManager
+        .getViews()
+        .filter((v) => v.getName() === 'default')
+        .forEach((view) => {
+          view.setPresetToInteractor3D(style);
+        });
+      commit('setInteractionStyle3D', style);
+    },
+    setFirstPersonMovementSpeed({ commit }, speed) {
+      const views = proxyManager
+        .getViews()
+        .filter((v) => v.getName() === 'default');
+      views.forEach((view) => {
+        const interactorStyle = view.getInteractorStyle3D();
+        const manipulators = interactorStyle.getKeyboardManipulators();
+        manipulators.forEach((manipulator) => {
+          if (manipulator.setMovementSpeed) {
+            manipulator.setMovementSpeed(speed);
+          }
+        });
+      });
+
+      commit('setFirstPersonMovementSpeed', speed);
+    },
+    resetFirstPersonMovementSpeed({ dispatch }) {
+      let speed = 0;
+      const views = proxyManager
+        .getViews()
+        .filter((v) => v.getName() === 'default');
+      for (let i = 0; i < views.length; ++i) {
+        const view = views[i];
+        const interactorStyle = view.getInteractorStyle3D();
+        const manipulators = interactorStyle.getKeyboardManipulators();
+        for (let j = 0; j < manipulators.length; ++j) {
+          const manipulator = manipulators[j];
+          if (manipulator.resetMovementSpeed) {
+            manipulator.setRenderer(view.getRenderer());
+            manipulator.resetMovementSpeed();
+            speed = manipulator.getMovementSpeed();
+            break;
+          }
+        }
+      }
+
+      if (speed < 0) {
+        speed = 0;
+      }
+
+      // Make sure all manipulators get updated
+      dispatch('setFirstPersonMovementSpeed', speed);
+    },
+    setMaxTextureLODSize({ commit }, size) {
+      commit('setMaxTextureLODSize', size);
     },
   },
 });

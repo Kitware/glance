@@ -1,6 +1,13 @@
+import { mapState, mapActions } from 'vuex';
+
 import GpuInformation from 'paraview-glance/src/components/widgets/GPUInformation';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
+
+const INTERACTION_STYLES_3D = [
+  { text: 'Default', value: '3D' },
+  { text: 'First Person', value: 'FirstPerson' },
+];
 
 const ORIENTATION_PRESETS = [
   { text: 'XYZ', value: 'default' },
@@ -38,6 +45,7 @@ export default {
     return {
       palette: BACKGROUND,
       orientationPresets: ORIENTATION_PRESETS,
+      interactionStyles3D: INTERACTION_STYLES_3D,
       axisTypes: AXIS_TYPES,
       vrEnabled: false,
       physicalScale: 1,
@@ -45,46 +53,89 @@ export default {
     };
   },
   computed: {
-    backgroundColor: {
+    backgroundColorModel: {
       get() {
-        return this.$store.state.views.globalBackgroundColor;
+        return this.backgroundColor;
       },
       set(color) {
-        this.$store.dispatch('views/setGlobalBackground', color);
+        this.setBackgroundColor(color);
       },
     },
-    orientationAxis: {
+    orientationAxisModel: {
       get() {
-        return this.$store.state.views.axisVisible;
+        return this.orientationAxis;
       },
       set(flag) {
-        this.$store.dispatch('views/setAxisVisible', flag);
+        this.setOrientationAxis(flag);
       },
     },
-    orientationPreset: {
+    orientationPresetModel: {
       get() {
-        return this.$store.state.views.axisPreset;
+        return this.orientationPreset;
       },
       set(preset) {
-        this.$store.dispatch('views/setAxisPreset', preset);
+        this.setOrientationPreset(preset);
       },
     },
-    axisType: {
+    axisTypeModel: {
       get() {
-        return this.$store.state.views.axisType;
+        return this.axisType;
       },
       set(axisType) {
-        this.$store.dispatch('views/setAxisType', axisType);
+        this.setAxisType(axisType);
       },
     },
-    annotationOpacity: {
+    annotationOpacityModel: {
       get() {
-        return this.$store.state.views.annotationOpacity;
+        return this.annotationOpacity;
       },
       set(opacity) {
-        this.$store.dispatch('views/setAnnotationOpacity', opacity);
+        this.setAnnotationOpacity(opacity);
       },
     },
+    firstPersonMovementSpeedModel: {
+      get() {
+        let speed = this.firstPersonMovementSpeed;
+        if (speed === null) {
+          // Reset the speed if null
+          this.resetFirstPersonMovementSpeed();
+          speed = this.firstPersonMovementSpeed;
+        }
+        return speed;
+      },
+      set(speed) {
+        this.setFirstPersonMovementSpeed(speed);
+      },
+    },
+    interactionStyle3DModel: {
+      get() {
+        return this.interactionStyle3D;
+      },
+      set(style) {
+        this.setInteractionStyle3D(style);
+      },
+    },
+    firstPersonInteraction() {
+      return this.interactionStyle3D === 'FirstPerson';
+    },
+    maxTextureLODSizeModel: {
+      get() {
+        return this.maxTextureLODSize;
+      },
+      set(size) {
+        this.setMaxTextureLODSize(size);
+      },
+    },
+    ...mapState('views', {
+      backgroundColor: (state) => state.globalBackgroundColor,
+      orientationAxis: (state) => state.axisVisible,
+      orientationPreset: (state) => state.axisPreset,
+      axisType: (state) => state.axisType,
+      annotationOpacity: (state) => state.annotationOpacity,
+      interactionStyle3D: (state) => state.interactionStyle3D,
+      firstPersonMovementSpeed: (state) => state.firstPersonMovementSpeed,
+      maxTextureLODSize: (state) => state.maxTextureLODSize,
+    }),
   },
   watch: {
     physicalScale() {
@@ -141,5 +192,22 @@ export default {
         }
       }
     },
+    ...mapActions('views', {
+      setBackgroundColor: (dispatch, bg) => dispatch('setGlobalBackground', bg),
+      setOrientationAxis: (dispatch, axis) => dispatch('setAxisVisible', axis),
+      setOrientationPreset: (dispatch, preset) =>
+        dispatch('setAxisPreset', preset),
+      setAxisType: (dispatch, type) => dispatch('setAxisType', type),
+      setAnnotationOpacity: (dispatch, opacity) =>
+        dispatch('setAnnotationOpacity', opacity),
+      setInteractionStyle3D: (dispatch, style) =>
+        dispatch('setInteractionStyle3D', style),
+      setFirstPersonMovementSpeed: (dispatch, speed) =>
+        dispatch('setFirstPersonMovementSpeed', speed),
+      resetFirstPersonMovementSpeed: (dispatch) =>
+        dispatch('resetFirstPersonMovementSpeed'),
+      setMaxTextureLODSize: (dispatch, size) =>
+        dispatch('setMaxTextureLODSize', size),
+    }),
   },
 };

@@ -15,6 +15,7 @@ function loadZip(zipContent) {
       callback() {
         const sceneImporter = vtkHttpSceneLoader.newInstance({
           dataAccessHelper,
+          startLODLoaders: false,
         });
         sceneImporter.setUrl('index.json');
         sceneImporter.onReady(() => {
@@ -75,11 +76,12 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
     model.rawDataBuffer = arrayBuffer;
 
     return loadZip(arrayBuffer).then(
-      ({ scene, camera, background, lookupTables }) => {
+      ({ scene, camera, background, lookupTables, cameraViewPoints }) => {
         model.scene = scene;
         model.camera = camera;
         model.background = background;
         model.lookupTables = lookupTables;
+        model.cameraViewPoints = cameraViewPoints;
         publicAPI.modified();
         return model.scene;
       }
@@ -93,7 +95,8 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
   publicAPI.setProxyManager = (proxyManager) => {
     const allViews = proxyManager.getViews();
     const allDataRanges = {};
-    model.scene.forEach(({ source, mapper, actor, name }) => {
+    model.scene.forEach((sceneItem) => {
+      const { source, mapper, actor, name } = sceneItem;
       const actorState = actor.get('origin', 'scale', 'position');
       const propState = actor
         .getProperty()
@@ -154,6 +157,38 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
           view.getCamera().set(model.camera);
         }
       }
+
+      const { textureLODsDownloader } = sceneItem;
+      if (textureLODsDownloader) {
+        // Trigger re-renders when new textures are downloaded
+        textureLODsDownloader.setStepFinishedCallback(
+          proxyManager.renderAllViews
+        );
+
+        const maxTextureLODSize = proxyManager.getReferenceByName('$store')
+          .state.views.maxTextureLODSize;
+        textureLODsDownloader.setMaxTextureLODSize(maxTextureLODSize);
+
+        // Start the downloads
+        textureLODsDownloader.startDownloads();
+      }
+
+      const { dataSetLODsLoader } = sceneItem;
+      if (dataSetLODsLoader) {
+        const callback = () => {
+          // We must set the new source on the proxy to get paraview
+          // glance to update.
+          const newSource = dataSetLODsLoader.getCurrentSource();
+          sourceProxy.setInputAlgorithm(
+            newSource,
+            newSource.getOutputData().getClassName()
+          );
+        };
+        dataSetLODsLoader.setStepFinishedCallback(callback);
+
+        // Start the downloads
+        dataSetLODsLoader.startDownloads();
+      }
     });
 
     // Create LookupTable for each field with max range
@@ -200,7 +235,12 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   // Build VTK API
   macro.obj(publicAPI, model);
-  macro.get(publicAPI, model, ['scene', 'camera', 'background']);
+  macro.get(publicAPI, model, [
+    'scene',
+    'camera',
+    'background',
+    'cameraViewPoints',
+  ]);
 
   // vtkGlanceStateReader methods
   vtkGlanceVtkJsReader(publicAPI, model);

@@ -16,7 +16,7 @@
     }
     </style>
     <% for (key in htmlWebpackPlugin.files.css) { %>
-    <link type="text/css" rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[key] %>" />
+    <link inline type="text/css" rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[key] %>" />
     <% } %>
     <script inline type="text/javascript" src="version.js"></script>
     <% for (key in htmlWebpackPlugin.files.js) { %>

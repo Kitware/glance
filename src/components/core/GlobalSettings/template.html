@@ -7,8 +7,48 @@
     <palette-picker
       :palette="palette"
       :size="24"
-      v-model="backgroundColor"
+      v-model="backgroundColorModel"
     />
+  </v-card>
+  <v-card flat :class="$style.card">
+    <div :class="$style.heading">
+      <span class="subtitle-2">Interaction Style</span>
+    </div>
+    <v-divider :class="$style.divider" />
+    <v-container grid-list-xs class="pa-0">
+      <v-layout row align-center class="pt-1">
+        <v-flex xs6>
+          <span class="body-2">3D</span>
+        </v-flex>
+        <v-flex xs6>
+          <v-select
+            class="pv-no-select"
+            :class="$style.slimInput"
+            dense
+            flat
+            hide-details
+            v-model="interactionStyle3DModel"
+            :items="interactionStyles3D"
+          />
+        </v-flex>
+        <v-flex xs6>
+          <span class="body-2" v-if="firstPersonInteraction">
+            Movement Speed
+          </span>
+        </v-flex>
+        <v-flex xs6>
+          <v-text-field
+            :class="$style.slimInput"
+            hide-details
+            type="number"
+            v-model="firstPersonMovementSpeedModel"
+            v-if="firstPersonInteraction"
+            :min="0"
+            :step="0.1"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
   </v-card>
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
@@ -25,7 +65,7 @@
             :class="$style.slimInput"
             hide-details
 
-            v-model="annotationOpacity"
+            v-model="annotationOpacityModel"
             :min="0"
             :max="1"
             :step="0.01"
@@ -43,7 +83,7 @@
           </v-flex>
           <v-flex xs2>
             <v-switch
-              v-model="orientationAxis"
+              v-model="orientationAxisModel"
               :class="$style.slimInput"
               hide-details
             />
@@ -66,7 +106,7 @@
             hide-details
             :disabled="!orientationAxis"
 
-            v-model="axisType"
+            v-model="axisTypeModel"
             :items="axisTypes"
           />
         </v-flex>
@@ -83,7 +123,7 @@
             flat
             hide-details
 
-            v-model="orientationPreset"
+            v-model="orientationPresetModel"
             :items="orientationPresets"
           />
         </v-flex>
@@ -127,6 +167,29 @@
             min="0.1"
             max="10"
             step="any"
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-card>
+  <v-card flat :class="$style.card">
+    <div :class="$style.heading">
+      <span class="subtitle-2">LOD Settings</span>
+    </div>
+    <v-divider :class="$style.divider" />
+    <v-container grid-list-xs class="pa-0">
+      <v-layout row align-center class="pt-1">
+        <v-flex xs7>
+          <span class="body-2">Max Texture LOD Size</span>
+        </v-flex>
+        <v-flex xs5>
+          <v-text-field
+            :class="$style.slimInput"
+            hide-details
+            type="number"
+            v-model="maxTextureLODSizeModel"
+            :min="100"
+            suffix='KiB'
           />
         </v-flex>
       </v-layout>

@@ -46,7 +46,8 @@ module.exports = {
         test: /\.(png|jpe?g|svg|ttf|woff2?|eot|otf)$/,
         loader: 'url-loader',
         options: {
-          limit: 60000,
+          // Make sure this is just big enough to load one font file
+          limit: 300000,
         },
       },
       {

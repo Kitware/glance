@@ -4,4 +4,6 @@ export default [
   { key: 'r', action: 'resetActiveCamera' },
   { key: '.', action: 'increaseSlice' },
   { key: ',', action: 'decreaseSlice' },
+  { key: 'b', action: 'previousViewPoint' },
+  { key: 'n', action: 'nextViewPoint' },
 ];

@@ -231,7 +231,7 @@ function registerReadersToProxyManager(readers, proxyManager) {
         proxyManager.renderAllViews();
       }
 
-      if (reader.getCameraViewPoints) {
+      if (reader.getCameraViewPoints && reader.getCameraViewPoints()) {
         proxyManager
           .getReferenceByName('$store')
           .dispatch('setCameraViewPoints', reader.getCameraViewPoints());

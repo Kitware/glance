@@ -16,7 +16,7 @@ workboxSW.precache([
   },
   {
     "url": "glance.js",
-    "revision": "6e103e7f62a4a4407992e331daaeb690"
+    "revision": "9560183d2d42606a18fe024874bb1c1e"
   },
   {
     "url": "global.css",
@@ -784,7 +784,7 @@ workboxSW.precache([
   },
   {
     "url": "version.js",
-    "revision": "018757e95614be201a7a425d9e4647c5"
+    "revision": "940a3b21484a28075dd6e9b651f48b5b"
   },
   {
     "url": "workbox-sw.prod.v2.1.2.js",

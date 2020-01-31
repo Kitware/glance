@@ -189,6 +189,7 @@ export default {
   },
   mounted() {
     document.addEventListener('keyup', this.onEsc);
+    this.$nextTick(this.update);
   },
   beforeDestroy() {
     document.removeEventListener('keyup', this.onEsc);

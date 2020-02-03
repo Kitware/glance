@@ -1,3 +1,5 @@
+const NO_SOURCE = -1;
+
 // ----------------------------------------------------------------------------
 
 function sourceToItem(s) {
@@ -29,7 +31,6 @@ export default {
       default: () => false,
     },
     value: {
-      type: Number,
       default: () => -1,
     },
     disabled: {
@@ -63,28 +64,32 @@ export default {
   mounted() {
     const source = this.$proxyManager.getActiveSource();
     if (source) {
-      this.internalValue = source.getProxyId();
-      this.$nextTick(() => this.$emit('input', this.internalValue));
+      this.setInternalValue(source.getProxyId());
     }
     this.updateSourceList();
   },
   proxyManagerHooks: {
-    onProxyModified() {
+    onProxyModified(proxy) {
+      if (proxy.getProxyId() === this.waitForActiveDataset) {
+        this.waitForActiveDataset = null;
+        this.setInternalValue(proxy.getProxyId());
+      }
       this.updateSourceList();
     },
     onActiveSourceChange(source) {
-      // HACK: when active source changes, the dataset might not yet be registered
-      // to the source, so this setTimeout gets around that issue.
-      setTimeout(() => {
-        if (this.bindToActiveSource) {
-          if (!source || !this.filterFunc(source)) {
-            this.internalValue = -1;
-          } else if (source.getProxyId() !== this.internalValue) {
-            this.internalValue = source.getProxyId();
+      if (this.bindToActiveSource) {
+        if (!source) {
+          this.setInternalValue(NO_SOURCE);
+        } else if (source.getProxyId() !== this.internalValue) {
+          const proxyId = source.getProxyId();
+          if (source.getDataset()) {
+            this.setInternalValue(proxyId);
+          } else {
+            // defer until proxy gets a dataset
+            this.waitForActiveDataset = proxyId;
           }
-          this.$emit('input', this.internalValue);
         }
-      }, 0);
+      }
     },
     onProxyRegistrationChange(info) {
       const { proxyGroup } = info;
@@ -97,23 +102,13 @@ export default {
     updateSourceList() {
       const sources = this.$proxyManager
         .getSources()
-        .filter(
-          (s) =>
-            Boolean(s.getDataset()) &&
-            s.getProxyName() === 'TrivialProducer' &&
-            this.filterFunc(s)
-        );
+        .filter((s) => s && !!s.getDataset() && this.filterFunc(s));
       this.sourceList = sources.map((s) => sourceToItem(s));
     },
-    makeSelection(sourceId) {
-      if (sourceId !== this.internalValue) {
-        if (this.bindToActiveSource) {
-          const s = this.$proxyManager.getProxyById(sourceId);
-          if (s) {
-            this.$proxyManager.setActiveSource(s);
-          }
-        }
-        this.$emit('input', sourceId);
+    setInternalValue(v) {
+      if (v !== this.internalValue) {
+        this.internalValue = v;
+        this.$emit('input', v);
       }
     },
   },

@@ -99,7 +99,10 @@ export default {
   },
   methods: {
     filterImages(source) {
-      return source && source.getType() === 'vtkImageData';
+      return (
+        source.getProxyName() === 'TrivialProducer' &&
+        source.getType() === 'vtkImageData'
+      );
     },
     getCropFilter(volProxy) {
       // find 3d view

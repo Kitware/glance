@@ -100,6 +100,8 @@ export function createViewer(container, proxyConfig = null) {
   });
 
   return {
+    proxyManager,
+
     processURLArgs() {
       const { name, url } = vtkURLExtract.extractURLParameters();
       if (name && url) {
@@ -112,9 +114,14 @@ export function createViewer(container, proxyConfig = null) {
     addDatasetPanel(component) {
       store.commit('addPanel', { component });
     },
-    proxyManager,
     showApp() {
       store.commit('showApp');
+    },
+    getSetting(name) {
+      return settings.get(name);
+    },
+    setSetting(name, value) {
+      return settings.set(name, value);
     },
   };
 }

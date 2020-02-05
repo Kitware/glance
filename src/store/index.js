@@ -76,6 +76,7 @@ function createStore(pxm = null) {
       cameraViewPoints: {},
       mostRecentViewPoint: null,
       collapseDatasetPanels: false,
+      suppressBrowserWarning: false,
     },
     getters: {
       proxyManager(state) {
@@ -126,11 +127,15 @@ function createStore(pxm = null) {
       collapseDatasetPanels(state, value) {
         state.collapseDatasetPanels = value;
       },
+      suppressBrowserWarning(state) {
+        state.suppressBrowserWarning = true;
+      },
     },
     actions: {
       addPanel: wrapMutationAsAction('addPanel'),
       closeScreenshotDialog: wrapMutationAsAction('closeScreenshotDialog'),
       collapseDatasetPanels: wrapMutationAsAction('collapseDatasetPanels'),
+      suppressBrowserWarning: wrapMutationAsAction('suppressBrowserWarning'),
       saveState({ commit, state }, fileNameToUse) {
         const t = new Date();
         const fileName =

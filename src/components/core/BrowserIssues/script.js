@@ -1,4 +1,4 @@
-const WARNING_KEY = 'BrowserIssues.suppressWarning';
+import { mapState, mapActions } from 'vuex';
 
 // ----------------------------------------------------------------------------
 // Component API
@@ -24,18 +24,9 @@ function getBrowserIssues() {
     // }
   }
 
-  if (Object.keys(this.issues).length && !this.suppressWarning) {
+  if (Object.keys(this.issues).length && !this.suppressBrowserWarning) {
     this.dialog = true;
   }
-}
-
-// ----------------------------------------------------------------------------
-
-function closeDialog() {
-  if (this.suppressWarning && window.localStorage) {
-    window.localStorage.setItem(WARNING_KEY, true);
-  }
-  this.dialog = false;
 }
 
 // ----------------------------------------------------------------------------
@@ -46,20 +37,16 @@ export default {
     return {
       issues: {},
       dialog: false,
-      dontShow: false,
-      suppressWarning: false,
     };
   },
-  created() {
-    if (window.localStorage) {
-      this.suppressWarning = !!window.localStorage.getItem(WARNING_KEY);
-    }
-  },
+  computed: mapState(['suppressBrowserWarning']),
   mounted() {
     this.getBrowserIssues();
   },
   methods: {
-    closeDialog,
     getBrowserIssues,
+    ...mapActions({
+      setSuppressBrowserWarning: 'suppressBrowserWarning',
+    }),
   },
 };

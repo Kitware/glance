@@ -97,6 +97,10 @@ export function createViewer(container, proxyConfig = null) {
       set: curry(2, store.dispatch)('collapseDatasetPanels'),
       get: (state) => state.collapseDatasetPanels,
     },
+    suppressBrowserWarning: {
+      set: curry(2, store.dispatch)('suppressBrowserWarning'),
+      get: (state) => state.suppressBrowserWarning,
+    },
   });
 
   return {

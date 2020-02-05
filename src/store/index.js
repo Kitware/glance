@@ -127,8 +127,8 @@ function createStore(pxm = null) {
       collapseDatasetPanels(state, value) {
         state.collapseDatasetPanels = value;
       },
-      suppressBrowserWarning(state) {
-        state.suppressBrowserWarning = true;
+      suppressBrowserWarning(state, value) {
+        state.suppressBrowserWarning = value;
       },
     },
     actions: {

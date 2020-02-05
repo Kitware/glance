@@ -22,7 +22,6 @@ import Config from 'paraview-glance/src/config';
 import createStore from 'paraview-glance/src/store';
 import { ProxyManagerVuePlugin } from 'paraview-glance/src/plugins';
 import Settings from 'paraview-glance/src/settings';
-import { curry } from 'paraview-glance/src/utils';
 
 // Expose IO API to Glance global object
 export const {
@@ -94,11 +93,11 @@ export function createViewer(container, proxyConfig = null) {
   const settings = new Settings();
   settings.syncWithStore(store, {
     collapseDatasetPanels: {
-      set: curry(2, store.dispatch)('collapseDatasetPanels'),
+      set: (val) => store.dispatch('collapseDatasetPanels', val),
       get: (state) => state.collapseDatasetPanels,
     },
     suppressBrowserWarning: {
-      set: curry(2, store.dispatch)('suppressBrowserWarning'),
+      set: (val) => store.dispatch('suppressBrowserWarning', val),
       get: (state) => state.suppressBrowserWarning,
     },
   });

@@ -53,6 +53,14 @@ export default {
     };
   },
   computed: {
+    collapseDatasetPanelsModel: {
+      get() {
+        return this.collapseDatasetPanels;
+      },
+      set(v) {
+        this.setCollapseDatasetPanels(v);
+      },
+    },
     backgroundColorModel: {
       get() {
         return this.backgroundColor;
@@ -126,6 +134,7 @@ export default {
         this.setMaxTextureLODSize(size);
       },
     },
+    ...mapState(['collapseDatasetPanels']),
     ...mapState('views', {
       backgroundColor: (state) => state.globalBackgroundColor,
       orientationAxis: (state) => state.axisVisible,
@@ -192,6 +201,9 @@ export default {
         }
       }
     },
+    ...mapActions({
+      setCollapseDatasetPanels: 'collapseDatasetPanels',
+    }),
     ...mapActions('views', {
       setBackgroundColor: (dispatch, bg) => dispatch('setGlobalBackground', bg),
       setOrientationAxis: (dispatch, axis) => dispatch('setAxisVisible', axis),

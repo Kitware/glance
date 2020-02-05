@@ -56,10 +56,26 @@ export function remapIdList(list, mapping) {
   });
 }
 
+/**
+ * Curries a function.
+ */
+export function curry(arity, fn) {
+  const appliedArgs = [];
+  const curriedFn = (...args) => {
+    appliedArgs.push(...args);
+    if (appliedArgs.length >= arity) {
+      return fn(...appliedArgs.slice(0, arity));
+    }
+    return curriedFn;
+  };
+  return curriedFn;
+}
+
 export default {
   makeSubManager,
   wrapSub,
   wrapMutationAsAction,
   remapIdKeys,
   remapIdList,
+  curry,
 };

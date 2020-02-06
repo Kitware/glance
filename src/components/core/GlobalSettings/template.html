@@ -1,6 +1,26 @@
 <v-container :class="$style.container">
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
+      <span class="subtitle-2">General Settings</span>
+    </div>
+    <v-divider class="mb-4" />
+    <v-container grid-list-xs class="pa-0">
+      <v-layout row align-center class="pt-1">
+        <v-flex xs10>
+          <span class="body-2">Default collapse datasets</span>
+        </v-flex>
+        <v-flex xs2>
+          <v-switch
+            v-model="collapseDatasetPanelsModel"
+            :class="$style.slimInput"
+            hide-details
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-card>
+  <v-card flat :class="$style.card">
+    <div :class="$style.heading">
       <span class="subtitle-2">Background</span>
     </div>
     <v-divider class="mb-4" />

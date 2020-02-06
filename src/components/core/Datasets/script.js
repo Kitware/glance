@@ -20,6 +20,7 @@ export default {
   },
   computed: {
     ...mapState({
+      collapseDatasetPanels: 'collapseDatasetPanels',
       panels: (state) => {
         const priorities = Object.keys(state.panels).map((n) => Number(n));
         priorities.sort((a, b) => a - b);
@@ -96,12 +97,16 @@ export default {
         const proxy = sources[i];
         const proxyId = proxy.getProxyId();
         if (!(proxyId in this.internalPanelState)) {
-          this.internalPanelState[proxyId] = true;
+          this.internalPanelState[proxyId] = !this.collapseDatasetPanels;
         }
         if (!(proxyId in this.subpanels)) {
-          this.subpanels[proxyId] = Controls.filter((c) => c.visible(proxy))
-            .map((c, j) => (c.defaultExpand ? j : -1))
-            .filter((v) => v > -1);
+          if (this.collapseDatasetPanels) {
+            this.subpanels[proxyId] = [];
+          } else {
+            this.subpanels[proxyId] = Controls.filter((c) => c.visible(proxy))
+              .map((c, j) => (c.defaultExpand ? j : -1))
+              .filter((v) => v > -1);
+          }
         }
       }
 

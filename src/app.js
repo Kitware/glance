@@ -21,6 +21,7 @@ import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
 import createStore from 'paraview-glance/src/store';
 import { ProxyManagerVuePlugin } from 'paraview-glance/src/plugins';
+import Settings from 'paraview-glance/src/settings';
 
 // Expose IO API to Glance global object
 export const {
@@ -89,7 +90,21 @@ export function createViewer(container, proxyConfig = null) {
   window.history.replaceState({ app: false }, '');
   window.addEventListener('popstate', onRoute);
 
+  const settings = new Settings();
+  settings.syncWithStore(store, {
+    collapseDatasetPanels: {
+      set: (val) => store.dispatch('collapseDatasetPanels', val),
+      get: (state) => state.collapseDatasetPanels,
+    },
+    suppressBrowserWarning: {
+      set: (val) => store.dispatch('suppressBrowserWarning', val),
+      get: (state) => state.suppressBrowserWarning,
+    },
+  });
+
   return {
+    proxyManager,
+
     processURLArgs() {
       const { name, url } = vtkURLExtract.extractURLParameters();
       if (name && url) {
@@ -102,9 +117,14 @@ export function createViewer(container, proxyConfig = null) {
     addDatasetPanel(component) {
       store.commit('addPanel', { component });
     },
-    proxyManager,
     showApp() {
       store.commit('showApp');
+    },
+    getSetting(name) {
+      return settings.get(name);
+    },
+    setSetting(name, value) {
+      return settings.set(name, value);
     },
   };
 }

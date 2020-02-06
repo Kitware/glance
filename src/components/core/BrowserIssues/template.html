@@ -22,14 +22,15 @@
     </v-card-text>
     <v-card-actions class="d-flex justify-space-between align-center pa-5">
       <v-checkbox
-        v-model="suppressWarning"
         label="Don't show again"
         class="mt-0 pt-0"
         hide-details
+        :value="suppressBrowserWarning"
+        @input="setSuppressBrowserWarning"
       />
       <v-btn
         color="primary"
-        v-on:click="closeDialog"
+        v-on:click="dialog = false"
       >
         Okay
       </v-btn>

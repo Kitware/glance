@@ -10,14 +10,13 @@
           :selectable="true"
           v-model="selected"
           :location.sync="location"
+          ref="girderFileManager"
           />
         <v-toolbar>
           <v-spacer />
-
           <v-btn class="mt-4" @click="load()" :disabled="!selected.length">
              Select
           </v-btn>
-          
         </v-toolbar>
       </v-col>
     </v-row>

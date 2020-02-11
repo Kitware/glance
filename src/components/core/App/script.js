@@ -96,6 +96,9 @@ export default {
     this.internalControlsDrawer = !this.smallScreen;
   },
   mounted() {
+    this.$root.$on('open_girder_panel', () => {
+      this.fileUploadDialog = true;
+    });
     this.initViews();
 
     // attach keyboard shortcuts

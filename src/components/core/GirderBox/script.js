@@ -94,6 +94,12 @@ export default {
       proxyManager: 'proxyManager',
     }),
   },
+  mounted() {
+    this.$root.$on('girder_upload_proxy', (proxyId) => {
+      this.upload(proxyId);
+    });
+    console.log('mounted');
+  },
   methods: {
     load() {
       const rfiles = this.selected.map((elem) => {
@@ -105,16 +111,16 @@ export default {
       });
 
       this.$store.dispatch('files/openRemoteFiles', rfiles);
-      this.$emit('close');
+      // this.$emit('close');
     },
-    export2pc() {
-      const dataset = this.proxyManager.getActiveSource().get().dataset;
+    export2pc(proxyId) {
+      const dataset = this.proxyManager.getProxyById(proxyId).get().dataset;
 
       const image = convertVtkToItkImage(dataset);
 
       writeImageArrayBuffer(null, false, image, 'out.mha').then(
-        function recieve({ buffer }) {
-          const blob = new Blob([buffer]);
+        function recieve({ arrayBuffer }) {
+          const blob = new Blob([arrayBuffer]);
           const url = URL.createObjectURL(blob);
           const anchor = document.createElement('a');
           anchor.setAttribute('href', url);
@@ -126,30 +132,32 @@ export default {
         }
       );
     },
-    upload() {
-      const dataset = this.proxyManager.getActiveSource().get().dataset;
+    upload(proxyId) {
+      const dataset = this.proxyManager.getProxyById(proxyId).get().dataset;
 
       const image = convertVtkToItkImage(dataset);
       console.log(this.girderRest);
-
       writeImageArrayBuffer(
         null,
         false,
         image,
-        this.proxyManager.getActiveSource().get().name
-      ).then(({ buffer }) => {
-        debugger;
+        this.proxyManager.getProxyById(proxyId).get().name
+      ).then((valueReturned) => {
+        const buffer = valueReturned.arrayBuffer;
         console.log(this.girderRest);
         const blob = new Blob([buffer]);
         const file = new File(
           [blob],
-          this.proxyManager.getActiveSource().get().name
+          this.proxyManager.getProxyById(proxyId).get().name
         );
         const upload = new GirderUpload(file, {
           $rest: this.girderRest,
           parent: this.location,
         });
-        upload.start();
+        upload.start().then((params) => {
+          console.log(params);
+          this.$refs.girderFileManager.refresh();
+        });
       });
     },
   },

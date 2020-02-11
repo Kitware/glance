@@ -127,6 +127,15 @@ export default {
         this.$proxyManager.deleteProxy(proxy);
       }
     },
+    uploadDataset(sourceId) {
+      const proxy = this.$proxyManager.getProxyById(sourceId);
+      if (proxy) {
+        this.$root.$emit('open_girder_panel');
+        setTimeout(() => {
+          this.$root.$emit('girder_upload_proxy', sourceId);
+        }, 10);
+      }
+    },
     getDatasetVisibility(sourceId) {
       const rep = this.$proxyManager
         .getRepresentations()

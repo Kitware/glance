@@ -22,7 +22,13 @@ export default {
   data() {
     return {
       loading: false,
+      active_tab: 0,
     };
+  },
+  mounted() {
+    this.$root.$on('open_girder_panel', () => {
+      this.active_tab = 1;
+    });
   },
   computed: {
     ...mapState('files', {

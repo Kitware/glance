@@ -60,7 +60,9 @@ export default {
       const dataset = this.proxyManager.getProxyById(proxyId).get().dataset;
 
       const image = ITKHelper.convertVtkToItkImage(dataset);
-
+      // If we don't copy here, the renderer's copy of the ArrayBuffer
+      // becomes invalid because it's been transferred:
+      image.data = image.data.slice(0);
       writeImageArrayBuffer(null, false, image, 'out.mha').then(
         function recieve({ arrayBuffer }) {
           const blob = new Blob([arrayBuffer]);
@@ -79,7 +81,9 @@ export default {
       const dataset = this.proxyManager.getProxyById(proxyId).get().dataset;
 
       const image = ITKHelper.convertVtkToItkImage(dataset);
-      console.log(this.girderRest);
+      // If we don't copy here, the renderer's copy of the ArrayBuffer
+      // becomes invalid because it's been transferred:
+      image.data = image.data.slice(0);
       writeImageArrayBuffer(
         null,
         false,
@@ -87,7 +91,6 @@ export default {
         this.proxyManager.getProxyById(proxyId).get().name
       ).then((valueReturned) => {
         const buffer = valueReturned.arrayBuffer;
-        console.log(this.girderRest);
         const blob = new Blob([buffer]);
         const file = new File(
           [blob],

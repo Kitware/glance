@@ -63,6 +63,10 @@ module.exports = {
         use: ['css-loader'],
       },
       {
+        test: /\.pug$/,
+        loader: "pug-plain-loader",
+      },
+      {
         test: /\.s[ca]ss$/,
         // prod/dev fills in the last loader
         use: [

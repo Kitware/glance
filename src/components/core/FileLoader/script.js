@@ -2,6 +2,7 @@ import { mapGetters, mapState, mapActions } from 'vuex';
 
 import RawFileReader from 'paraview-glance/src/components/core/RawFileReader';
 import DragAndDrop from 'paraview-glance/src/components/widgets/DragAndDrop';
+import GirderBox from 'paraview-glance/src/components/core/GirderBox';
 
 // ----------------------------------------------------------------------------
 
@@ -10,6 +11,7 @@ export default {
   components: {
     RawFileReader,
     DragAndDrop,
+    GirderBox,
   },
   props: {
     value: {
@@ -20,7 +22,13 @@ export default {
   data() {
     return {
       loading: false,
+      active_tab: 0,
     };
+  },
+  mounted() {
+    this.$root.$on('open_girder_panel', () => {
+      this.active_tab = 1;
+    });
   },
   computed: {
     ...mapState('files', {

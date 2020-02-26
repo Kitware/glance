@@ -17,6 +17,14 @@
  * @license  MIT
  */
 
+/*!
+ * JavaScript Cookie v2.2.1
+ * https://github.com/js-cookie/js-cookie
+ *
+ * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
+ * Released under the MIT license
+ */
+
 /**
  * @license
  * webvr-polyfill
@@ -156,3 +164,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+/*! https://mths.be/punycode v1.4.1 by @mathias */

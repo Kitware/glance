@@ -484,6 +484,12 @@
   margin: auto;
 }
 
+.GirderBox-close-a434y {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+
 .FileLoader-dragBox-4kpzx {
   border: 1px dashed gray;
   border-radius: 6px;

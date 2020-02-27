@@ -120,6 +120,7 @@ export default (proxyManager) => ({
           reader: null,
           extraInfo: null,
           remoteURL: null,
+          proxyKeys: fileInfo.proxyKeys,
         };
 
         if (fileInfo.type === 'dicom') {
@@ -208,6 +209,8 @@ export default (proxyManager) => ({
           type: 'remote',
           name: rfile.name,
           remoteURL: rfile.url,
+          // Key value pairs to be eventually set on the proxy
+          proxyKeys: rfile.proxyKeys,
         }))
       );
 
@@ -387,12 +390,14 @@ export default (proxyManager) => ({
               new Promise((resolve) => {
                 // hack to allow browser paint to occur
                 setTimeout(() => {
+                  /* eslint-disable-next-line no-param-reassign */
+                  f.reader.proxyKeys = f.proxyKeys; // sin
                   ReaderFactory.registerReadersToProxyManager(
                     [f.reader],
                     proxyManager
                   );
                   resolve();
-                }, 10);
+                }, 11);
               })
           )
         );

@@ -204,7 +204,9 @@ function downloadDataset(fileName, url, progressCallback) {
 
 function registerReadersToProxyManager(readers, proxyManager) {
   for (let i = 0; i < readers.length; i += 1) {
-    const { reader, sourceType, name, dataset, metadata } = readers[i];
+    const { reader, sourceType, name, dataset, metadata, proxyKeys } = readers[
+      i
+    ];
     if (reader || dataset) {
       const needSource =
         (reader && reader.getOutputData) ||
@@ -227,8 +229,12 @@ function registerReadersToProxyManager(readers, proxyManager) {
 
       if (source) {
         source.activate();
+        if (proxyKeys) {
+          Object.keys(proxyKeys).forEach((key) => {
+            source.setKey(key, proxyKeys[key]);
+          });
+        }
         proxyManager.createRepresentationInAllViews(source);
-        proxyManager.renderAllViews();
       }
 
       if (reader.getCameraViewPoints && reader.getCameraViewPoints()) {
@@ -238,6 +244,7 @@ function registerReadersToProxyManager(readers, proxyManager) {
       }
     }
   }
+  proxyManager.renderAllViews();
 }
 
 // ----------------------------------------------------------------------------

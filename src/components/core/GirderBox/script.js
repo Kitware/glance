@@ -50,10 +50,13 @@ export default {
           /* eslint-disable-next-line no-underscore-dangle */
           url: `${this.girderRest.apiRoot}/item/${elem._id}/download`,
           name: elem.name,
+          proxyKeys: { girderProvenence: elem.location },
         };
       });
 
-      this.$store.dispatch('files/openRemoteFiles', rfiles);
+      this.$store.dispatch('files/openRemoteFiles', rfiles).then((anobject) => {
+        console.log(anobject);
+      });
       // this.$emit('close');
     },
     export2pc(proxyId) {

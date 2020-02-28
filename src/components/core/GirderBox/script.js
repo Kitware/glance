@@ -50,14 +50,11 @@ export default {
           /* eslint-disable-next-line no-underscore-dangle */
           url: `${this.girderRest.apiRoot}/item/${elem._id}/download`,
           name: elem.name,
-          proxyKeys: { girderProvenence: elem.location },
+          proxyKeys: { girderProvenence: this.location },
         };
       });
 
-      this.$store.dispatch('files/openRemoteFiles', rfiles).then((anobject) => {
-        console.log(anobject);
-      });
-      // this.$emit('close');
+      this.$store.dispatch('files/openRemoteFiles', rfiles);
     },
     export2pc(proxyId) {
       const dataset = this.proxyManager.getProxyById(proxyId).get().dataset;
@@ -101,10 +98,12 @@ export default {
         );
         const upload = new GirderUpload(file, {
           $rest: this.girderRest,
-          parent: this.location,
+          parent:
+            this.proxyManager
+              .getProxyById(proxyId)
+              .getKey('girderProvenence') || this.location,
         });
-        upload.start().then((params) => {
-          console.log(params);
+        upload.start().then(() => {
           this.$refs.girderFileManager.refresh();
         });
       });

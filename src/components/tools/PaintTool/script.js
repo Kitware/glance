@@ -299,7 +299,14 @@ export default {
         this.setLabelmapState(lmProxyId, lmState);
 
         const baseImageName = this.targetImageProxy.getName();
-        lmProxy.setName(`Labelmap ${labelmapNum} (${baseImageName})`);
+        lmProxy.setName(`Labelmap ${labelmapNum} ${baseImageName}`);
+
+        if (this.targetImageProxy.getKey('girderProvenence')) {
+          lmProxy.setKey(
+            'girderProvenence',
+            this.targetImageProxy.getKey('girderProvenence')
+          );
+        }
 
         const labelMap = createLabelMapFromImage(backgroundImage);
         labelMap.setLabelColor(lmState.selectedLabel, fromHex(this.palette[0]));
@@ -532,6 +539,15 @@ export default {
       this.paintProxy.removeFromViews();
       this.$proxyManager.deleteProxy(this.paintProxy);
       this.widgetId = -1;
+    },
+    upload() {
+      const proxy = this.activeLabelmapProxy;
+      if (proxy) {
+        this.$root.$emit('open_girder_panel');
+        setTimeout(() => {
+          this.$root.$emit('girder_upload_proxy', this.activeLabelmapId);
+        }, 10);
+      }
     },
   },
 };

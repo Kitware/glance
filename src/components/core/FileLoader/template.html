@@ -44,8 +44,8 @@
             <v-row class="mt-2">
               <v-expansion-panels accordion>
                 <v-expansion-panel
-                  v-for="(fileInfo, idx) in fileList"
-                  :key="idx"
+                  v-for="(fileInfo, revIdx) in fileList"
+                  :key="revIdx"
                   >
                   <v-expansion-panel-header disable-icon-rotate>
                     <template v-slot:actions>
@@ -63,7 +63,7 @@
                           <v-progress-circular indeterminate color="secondary" size="16" width="2" />
                         </template>
                         <v-btn icon class="ml-3">
-                          <v-icon @click="deleteFile(idx)">mdi-delete</v-icon>
+                          <v-icon @click.stop="deleteFileAtRevIndex(revIdx)">mdi-delete</v-icon>
                         </v-btn>
                       </div>
                     </template>
@@ -92,8 +92,8 @@
                     <template v-else-if="fileInfo.ext === 'raw'">
                       <raw-file-reader
                         :file="fileInfo.files[0]"
-                            v-on:change="setRawFileInfo(idx, $event)"
-                          />
+                        v-on:change="setRawFileInfoAtRevIndex(revIdx, $event)"
+                      />
                     </template>
                   </v-expansion-panel-content>
                 </v-expansion-panel>

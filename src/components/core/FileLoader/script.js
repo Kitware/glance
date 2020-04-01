@@ -52,13 +52,10 @@ export default {
       'openFiles',
       'promptLocal',
       'deleteFile',
+      'setRawFileInfo',
       'load',
       'resetQueue',
     ]),
-    ...mapActions('files', {
-      SetRawFileInfo: (dispatch, index, info) =>
-        dispatch('setRawFileInfo', { index, info }),
-    }),
     loadFiles() {
       this.loading = true;
       this.load().finally(() => {
@@ -68,6 +65,15 @@ export default {
         setTimeout(() => {
           this.loading = false;
         }, 10);
+      });
+    },
+    deleteFileAtRevIndex(revIdx) {
+      return this.deleteFile(this.fileList.length - 1 - revIdx);
+    },
+    setRawFileInfoAtRevIndex(revIdx, info) {
+      return this.setRawFileInfo({
+        index: this.fileList.length - 1 - revIdx,
+        info,
       });
     },
     onDialogChange(state) {

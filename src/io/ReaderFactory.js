@@ -229,12 +229,15 @@ function registerReadersToProxyManager(readers, proxyManager) {
 
       if (source) {
         source.activate();
+        proxyManager.createRepresentationInAllViews(source);
         if (proxyKeys) {
           Object.keys(proxyKeys).forEach((key) => {
             source.setKey(key, proxyKeys[key]);
+            if (key === 'onLoad') {
+              proxyKeys[key](source);
+            }
           });
         }
-        proxyManager.createRepresentationInAllViews(source);
       }
 
       if (reader.getCameraViewPoints && reader.getCameraViewPoints()) {

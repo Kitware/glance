@@ -103,7 +103,21 @@ export default {
               .getProxyById(proxyId)
               .getKey('girderProvenence') || this.location,
         });
-        upload.start().then(() => {
+        upload.start().then((response) => {
+          const { itemId } = response;
+          this.girderRest
+            .put(
+              `${this.girderRest.apiRoot}/item/${itemId}`,
+              `metadata=${JSON.stringify({
+                glanceDataType: dataset.getClassName(),
+              })}`
+            )
+            .then((response2) => {
+              debugger;
+              console.log(response2);
+            });
+          console.log();
+
           this.$refs.girderFileManager.refresh();
         });
       });

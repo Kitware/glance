@@ -51,7 +51,15 @@ export default {
           url: `${this.girderRest.apiRoot}/item/${elem._id}/download`,
           name: elem.name,
           proxyKeys: {
-            girderProvenence: this.location,
+            girderProvenence: {
+              ...this.location,
+              apiRoot: this.girderRest.apiRoot,
+            },
+            girderItem: {
+              /* eslint-disable-next-line no-underscore-dangle */
+              itemId: elem._id,
+              itemName: elem.name,
+            },
             onLoad: (source) => {
               console.log(source, elem);
               if (elem.meta.glanceDataType === 'vtkLabelMap') {

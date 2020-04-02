@@ -168,6 +168,13 @@ function createStore(pxm = null) {
             if (metadata.name && metadata.url) {
               return metadata;
             }
+            if (source.getKey('girderProvenence')) {
+              return {
+                serializedType: 'girder',
+                provenance: source.getKey('girderProvenence'),
+                item: source.getKey('girderItem'),
+              };
+            }
             // Not a remote dataset so use basic dataset serialization
             return dataset.getState();
           },
@@ -185,7 +192,6 @@ function createStore(pxm = null) {
               },
             })
             .then((blob) => {
-              console.log('file generated', this.fileName, blob.size);
               const url = URL.createObjectURL(blob);
               const anchor = document.createElement('a');
               anchor.setAttribute('href', url);
@@ -210,7 +216,18 @@ function createStore(pxm = null) {
               if (ds.vtkClass) {
                 return vtk(ds);
               }
-              return ReaderFactory.downloadDataset(ds.name, ds.url)
+
+              let name = ds.name;
+              let url = ds.url;
+
+              if (ds.serializedType === 'girder') {
+                const { itemId, itemName } = ds.item;
+                const { apiRoot } = ds.provenance;
+                name = itemName;
+                url = `${apiRoot}/item/${itemId}/download`;
+              }
+
+              return ReaderFactory.downloadDataset(name, url)
                 .then((file) => ReaderFactory.loadFiles([file]))
                 .then((readers) => readers[0])
                 .then(({ dataset, reader }) => {

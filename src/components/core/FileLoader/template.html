@@ -59,7 +59,8 @@
                         <template v-else-if="fileInfo.state === 'needsInfo'">
                           <v-icon color="blue">mdi-information</v-icon>
                         </template>
-                        <template v-else-if="fileInfo.state === 'loading'">
+                        <template v-else-if="fileInfo.state === 'loading' ||
+                                             fileInfo.state === 'needsDownload'">
                           <v-progress-circular indeterminate color="secondary" size="16" width="2" />
                         </template>
                         <v-btn icon class="ml-3">

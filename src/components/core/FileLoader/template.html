@@ -4,7 +4,7 @@
   :persistent="loading"
   :fullscreen="$vuetify.breakpoint.smAndDown"
   @input="onDialogChange"
-  @click:outside="close"
+  @click:outside="!loading && close()"
 >
   <v-card>
     <v-card-text class="pa-0">

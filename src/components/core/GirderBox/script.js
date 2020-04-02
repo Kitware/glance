@@ -50,7 +50,15 @@ export default {
           /* eslint-disable-next-line no-underscore-dangle */
           url: `${this.girderRest.apiRoot}/item/${elem._id}/download`,
           name: elem.name,
-          proxyKeys: { girderProvenence: this.location },
+          proxyKeys: {
+            girderProvenence: this.location,
+            onLoad: (source) => {
+              console.log(source, elem);
+              if (elem.meta.glanceDataType === 'vtkLabelMap') {
+                this.$root.$emit('add_labelmap', source.getProxyId());
+              }
+            },
+          },
         };
       });
 
@@ -105,18 +113,12 @@ export default {
         });
         upload.start().then((response) => {
           const { itemId } = response;
-          this.girderRest
-            .put(
-              `${this.girderRest.apiRoot}/item/${itemId}`,
-              `metadata=${JSON.stringify({
-                glanceDataType: dataset.getClassName(),
-              })}`
-            )
-            .then((response2) => {
-              debugger;
-              console.log(response2);
-            });
-          console.log();
+          this.girderRest.put(
+            `${this.girderRest.apiRoot}/item/${itemId}`,
+            `metadata=${JSON.stringify({
+              glanceDataType: dataset.getClassName(),
+            })}`
+          );
 
           this.$refs.girderFileManager.refresh();
         });

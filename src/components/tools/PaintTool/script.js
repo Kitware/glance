@@ -225,6 +225,26 @@ export default {
         sourceId: s.getProxyId(),
       }));
   },
+  mounted() {
+    this.$root.$on('add_labelmap', (proxyId) => {
+      this.setTargetVolume(proxyId);
+      this.setLabelMap(NEW_LABELMAP);
+      console.log(this.activeLabelmapProxy);
+      console.log(this.targetImageProxy);
+
+      this.activeLabelmapProxy
+        .getDataset()
+        .getPointData()
+        .setScalars(
+          this.targetImageProxy
+            .getDataset()
+            .getPointData()
+            .getScalars()
+        );
+
+      this.proxyManager.deleteProxy(this.targetImageProxy);
+    });
+  },
   beforeDestroy() {
     if (this.enabled) {
       this.disablePainting();

@@ -51,7 +51,7 @@ export default {
           url: `${this.girderRest.apiRoot}/item/${elem._id}/download`,
           name: elem.name,
           proxyKeys: {
-            girderProvenence: {
+            girderProvenance: {
               ...this.location,
               apiRoot: this.girderRest.apiRoot,
             },
@@ -117,7 +117,7 @@ export default {
           parent:
             this.proxyManager
               .getProxyById(proxyId)
-              .getKey('girderProvenence') || this.location,
+              .getKey('girderProvenance') || this.location,
         });
         upload.start().then((response) => {
           const { itemId } = response;

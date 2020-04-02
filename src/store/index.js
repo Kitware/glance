@@ -168,10 +168,10 @@ function createStore(pxm = null) {
             if (metadata.name && metadata.url) {
               return metadata;
             }
-            if (source.getKey('girderProvenence')) {
+            if (source.getKey('girderProvenance')) {
               return {
                 serializedType: 'girder',
-                provenance: source.getKey('girderProvenence'),
+                provenance: source.getKey('girderProvenance'),
                 item: source.getKey('girderItem'),
               };
             }

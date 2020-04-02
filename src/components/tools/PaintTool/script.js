@@ -321,10 +321,10 @@ export default {
         const baseImageName = this.targetImageProxy.getName();
         lmProxy.setName(`Labelmap ${labelmapNum} ${baseImageName}`);
 
-        if (this.targetImageProxy.getKey('girderProvenence')) {
+        if (this.targetImageProxy.getKey('girderProvenance')) {
           lmProxy.setKey(
-            'girderProvenence',
-            this.targetImageProxy.getKey('girderProvenence')
+            'girderProvenance',
+            this.targetImageProxy.getKey('girderProvenance')
           );
         }
 

@@ -170,10 +170,10 @@ export default {
           const vtkImage = ITKHelper.convertItkToVtkImage(itkOutImage);
 
           this.outputImage.setInputData(vtkImage);
-          if (this.targetImage.getKey('girderProvenence')) {
+          if (this.targetImage.getKey('girderProvenance')) {
             this.outputImage.setKey(
-              'girderProvenence',
-              this.targetImage.getKey('girderProvenence')
+              'girderProvenance',
+              this.targetImage.getKey('girderProvenance')
             );
           }
           this.$proxyManager.createRepresentationInAllViews(this.outputImage);

@@ -203,16 +203,22 @@ function downloadDataset(fileName, url, progressCallback) {
 // ----------------------------------------------------------------------------
 
 function registerReadersToProxyManager(readers, proxyManager) {
+  const retlist = [];
   for (let i = 0; i < readers.length; i += 1) {
     const { reader, sourceType, name, dataset, metadata, proxyKeys } = readers[
       i
     ];
+    let retsource = null;
     if (reader || dataset) {
       const needSource =
         (reader && reader.getOutputData) ||
         (dataset && dataset.isA && dataset.isA('vtkDataSet'));
+      let proxyName = 'TrivialProducer';
+      if (proxyKeys && proxyKeys.vtkDataType === 'vtkLabelMap') {
+        proxyName = 'LabelMap';
+      }
       const source = needSource
-        ? proxyManager.createProxy('Sources', 'TrivialProducer', {
+        ? proxyManager.createProxy('Sources', proxyName, {
             name,
             ...metadata,
           })
@@ -245,9 +251,13 @@ function registerReadersToProxyManager(readers, proxyManager) {
           .getReferenceByName('$store')
           .dispatch('setCameraViewPoints', reader.getCameraViewPoints());
       }
+
+      retsource = source;
     }
+    retlist.push(retsource);
   }
   proxyManager.renderAllViews();
+  return retlist;
 }
 
 // ----------------------------------------------------------------------------

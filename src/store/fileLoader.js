@@ -384,23 +384,81 @@ export default (proxyManager) => ({
 
       promise = promise.then(() => {
         const otherFiles = readyFiles.filter((f) => f.ext !== 'glance');
-        return Promise.all(
-          otherFiles.map(
-            (f) =>
-              new Promise((resolve) => {
-                // hack to allow browser paint to occur
-                setTimeout(() => {
-                  /* eslint-disable-next-line no-param-reassign */
-                  f.reader.proxyKeys = f.proxyKeys; // sin
-                  ReaderFactory.registerReadersToProxyManager(
-                    [f.reader],
-                    proxyManager
-                  );
-                  resolve();
-                }, 11);
-              })
-          )
-        );
+        const regularFiles = [];
+        const labelmapFiles = [];
+        for (let i = 0; i < otherFiles.length; i++) {
+          const file = otherFiles[i];
+          if (file.proxyKeys && file.proxyKeys.vtkDataType === 'vtkLabelMap') {
+            labelmapFiles.push(file);
+          } else {
+            regularFiles.push(file);
+          }
+        }
+
+        const loadFiles = (fileList) => {
+          let ret = [];
+          for (let i = 0; i < fileList.length; i++) {
+            const f = fileList[i];
+            /* eslint-disable-next-line no-param-reassign */
+            f.reader.proxyKeys = f.proxyKeys; // sin
+            const sources = ReaderFactory.registerReadersToProxyManager(
+              [f.reader],
+              proxyManager
+            );
+            ret = ret.concat(sources.filter(Boolean));
+          }
+          return ret;
+        };
+
+        loadFiles(regularFiles);
+        const loadedLabelmaps = loadFiles(labelmapFiles);
+
+        const sources = proxyManager
+          .getSources()
+          .filter((p) => p.getProxyName() === 'TrivialProducer');
+
+        const lastSourcePID = sources[sources.length - 1].getProxyId();
+        for (let i = 0; i < loadedLabelmaps.length; i++) {
+          const lmProxy = loadedLabelmaps[i];
+          dispatch(
+            'widgets/addLabelmapToImage',
+            {
+              imageId: lastSourcePID,
+              labelmapId: lmProxy.getProxyId(),
+            },
+            { root: true }
+          ).then(() =>
+            dispatch(
+              'widgets/setLabelmapState',
+              {
+                labelmapId: lmProxy.getProxyId(),
+                labelmapState: {
+                  selectedLabel: 1,
+                  lastColorIndex: 1,
+                },
+              },
+              { root: true }
+            )
+          );
+        }
+
+        // return Promise.all(
+        //   otherFiles.map(
+        //     (f) =>
+        //       new Promise((resolve) => {
+        //         // hack to allow browser paint to occur
+        //         setTimeout(() => {
+        //           /* eslint-disable-next-line no-param-reassign */
+        //           f.reader.proxyKeys = f.proxyKeys; // sin
+        //           ReaderFactory.registerReadersToProxyManager(
+        //             [f.reader],
+        //             proxyManager
+        //           );
+        //           resolve();
+        //         }, 12);
+        //       })
+        //   )
+        // );
       });
 
       return promise.finally(() => commit('stopLoading'));

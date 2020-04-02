@@ -60,12 +60,7 @@ export default {
               itemId: elem._id,
               itemName: elem.name,
             },
-            onLoad: (source) => {
-              console.log(source, elem);
-              if (elem.meta.glanceDataType === 'vtkLabelMap') {
-                this.$root.$emit('add_labelmap', source.getProxyId());
-              }
-            },
+            vtkDataType: elem.meta.glanceDataType,
           },
         };
       });

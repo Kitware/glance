@@ -136,9 +136,10 @@ export default (toolName, extraComponent = {}) => ({
       this.color = color;
       this.textSize = textSize;
 
-      const view = this.$proxyManager.getViews.find(
-        (v) => v.getAxis() === axis
-      );
+      const view = this.$proxyManager
+        .getViews()
+        .filter((v) => v.isA('vtkView2DProxy'))
+        .find((v) => v.getAxis() === axis);
       if (!view) {
         throw new Error('Cannot restore saved data: invalid axis');
       }
@@ -155,6 +156,11 @@ export default (toolName, extraComponent = {}) => ({
     }
 
     this.addWidgetToViews(proxy);
+
+    if (this.finalized) {
+      this.updateMeasurements();
+      this.updateWidgetVisibility();
+    }
   },
   beforeDestroy() {
     this.remove();
@@ -301,6 +307,9 @@ export default (toolName, extraComponent = {}) => ({
         name: this.name,
         lockToSlice: this.lockToSlice,
         points: state.getHandleList().map((handle) => handle.getOrigin()),
+        color: this.color,
+        textSize: this.textSize,
+        axis: this.targetView.getAxis(),
       };
       this.$emit('saveData', data);
     },

@@ -238,7 +238,6 @@ function registerReadersToProxyManager(readers, proxyManager) {
       }
 
       if (source) {
-        source.activate();
         proxyManager.createRepresentationInAllViews(source);
         if (proxyKeys) {
           Object.keys(proxyKeys).forEach((key) => {

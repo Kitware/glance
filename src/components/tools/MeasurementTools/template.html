@@ -4,6 +4,7 @@
       <v-flex xs12>
         <source-select
           label="Target Dataset"
+          :filterFunc="filterImageData"
           bindToActiveSource
           @input="setTargetDataset"
         />

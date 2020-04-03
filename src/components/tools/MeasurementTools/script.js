@@ -105,6 +105,12 @@ export default {
       'removeMeasurementTool',
       'updateMeasurementTool',
     ]),
+    filterImageData(source) {
+      return (
+        source.getProxyName() === 'TrivialProducer' &&
+        source.getType() === 'vtkImageData'
+      );
+    },
     setTargetDataset(sourceId) {
       this.targetPid = sourceId;
     },

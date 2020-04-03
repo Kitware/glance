@@ -34,9 +34,11 @@ export default {
     ...mapState('files', {
       // show file list with recent on top
       fileList: (state) => Array.from(state.fileList).reverse(),
+      // if there are files that are not ready nor error
       pendingFiles: (state) =>
         state.fileList.reduce(
-          (flag, file) => flag || file.state === 'loading',
+          (flag, file) =>
+            flag || (file.state !== 'ready' && file.state !== 'error'),
           false
         ),
       hasReadyFiles: (state) =>

@@ -127,6 +127,7 @@ export default (proxyManager) => ({
         const fileInfo = files[i];
 
         const fileState = {
+          // possible values: needsDownload, needsInfo, loading, ready, error
           state: 'loading',
           name: fileInfo.name,
           ext: getExtension(fileInfo.name),

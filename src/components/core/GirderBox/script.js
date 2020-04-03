@@ -34,13 +34,18 @@ export default {
     loggedOut() {
       return this.girderRest.user === null;
     },
-    ...mapState({
-      proxyManager: 'proxyManager',
+    ...mapState('widgets', {
+      dataMeasurements: 'measurements',
     }),
   },
   mounted() {
+    // TODO these can be moved to store when we add girder
+    // state to store
     this.$root.$on('girder_upload_proxy', (proxyId) => {
       this.upload(proxyId);
+    });
+    this.$root.$on('girder_upload_measurements', (proxyId) => {
+      this.uploadMeasurements(proxyId);
     });
   },
   methods: {
@@ -68,7 +73,7 @@ export default {
       this.$store.dispatch('files/openRemoteFiles', rfiles);
     },
     export2pc(proxyId) {
-      const dataset = this.proxyManager.getProxyById(proxyId).get().dataset;
+      const dataset = this.$proxyManager.getProxyById(proxyId).get().dataset;
 
       const image = ITKHelper.convertVtkToItkImage(dataset);
       // If we don't copy here, the renderer's copy of the ArrayBuffer
@@ -89,7 +94,7 @@ export default {
       );
     },
     upload(proxyId) {
-      const dataset = this.proxyManager.getProxyById(proxyId).get().dataset;
+      const dataset = this.$proxyManager.getProxyById(proxyId).get().dataset;
 
       const metadata = {
         glanceDataType: dataset.getClassName(),
@@ -109,18 +114,18 @@ export default {
         null,
         false,
         image,
-        this.proxyManager.getProxyById(proxyId).get().name
+        this.$proxyManager.getProxyById(proxyId).get().name
       ).then((valueReturned) => {
         const buffer = valueReturned.arrayBuffer;
         const blob = new Blob([buffer]);
         const file = new File(
           [blob],
-          this.proxyManager.getProxyById(proxyId).get().name
+          this.$proxyManager.getProxyById(proxyId).get().name
         );
         const upload = new GirderUpload(file, {
           $rest: this.girderRest,
           parent:
-            this.proxyManager
+            this.$proxyManager
               .getProxyById(proxyId)
               .getKey('girderProvenance') || this.location,
         });
@@ -134,6 +139,22 @@ export default {
           this.$refs.girderFileManager.refresh();
         });
       });
+    },
+    uploadMeasurements(proxyId) {
+      const measurements = this.dataMeasurements[proxyId];
+      if (measurements) {
+        const proxyName = this.$proxyManager.getProxyById(proxyId).getName();
+        const name = `${proxyName}.measurements.json`;
+        const file = new File([JSON.stringify(measurements)], name);
+        const upload = new GirderUpload(file, {
+          $rest: this.girderRest,
+          parent:
+            this.$proxyManager
+              .getProxyById(proxyId)
+              .getKey('girderProvenance') || this.location,
+        });
+        upload.start().then(() => this.$refs.girderFileManager.refresh());
+      }
     },
   },
 };

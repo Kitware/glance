@@ -153,6 +153,9 @@
         <template v-else>
           <div class="pt-2 body-1 teal--text text-center">No measurements yet</div>
         </template>
+        <v-btn :disabled="!targetProxy" @click="upload">
+          Upload
+        </v-btn>
       </div>
     </v-card>
   </v-container>

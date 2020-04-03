@@ -48,6 +48,7 @@ export default {
     SvgIcon,
     SourceSelect,
   },
+  inject: ['$notify'],
   data() {
     return {
       uiToolList: ToolList,
@@ -159,6 +160,12 @@ export default {
           index: toolIndex,
           data,
         });
+      }
+    },
+    upload() {
+      if (this.targetProxy) {
+        this.$root.$emit('girder_upload_measurements', this.targetPid);
+        this.$notify('Measurements uploaded');
       }
     },
   },

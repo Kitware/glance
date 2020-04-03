@@ -42,6 +42,11 @@ export default {
     VBottomSheet,
     VDialog,
   },
+  provide() {
+    return {
+      $notify: this.notify,
+    };
+  },
   data() {
     return {
       aboutDialog: false,
@@ -53,6 +58,7 @@ export default {
       screenshotsDrawer: false,
       screenshotCount: 0,
       errors: [],
+      globalSingleNotification: '',
     };
   },
   computed: {
@@ -184,6 +190,9 @@ export default {
     },
     recordError(error) {
       this.errors.push(error);
+    },
+    notify(msg) {
+      this.globalSingleNotification = msg;
     },
   },
 };

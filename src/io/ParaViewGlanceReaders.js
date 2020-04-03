@@ -90,3 +90,10 @@ ReaderFactory.registerReader({
   binary: true,
   sourceType: 'Skybox',
 });
+
+ReaderFactory.registerReader({
+  extension: 'json',
+  name: 'JSON Reader',
+  vtkReader: vtkJSONReader,
+  binary: false,
+});

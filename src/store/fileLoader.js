@@ -400,11 +400,14 @@ export default (proxyManager) => ({
         const otherFiles = readyFiles.filter((f) => f.ext !== 'glance');
         const regularFiles = [];
         const labelmapFiles = [];
+        const measurementFiles = [];
         for (let i = 0; i < otherFiles.length; i++) {
           const file = otherFiles[i];
           const meta = (file.proxyKeys && file.proxyKeys.meta) || {};
           if (meta.glanceDataType === 'vtkLabelMap') {
             labelmapFiles.push(file);
+          } else if (file.name.endsWith('.measurements.json')) {
+            measurementFiles.push(file);
           } else {
             regularFiles.push(file);
           }
@@ -472,23 +475,23 @@ export default (proxyManager) => ({
           );
         }
 
-        // return Promise.all(
-        //   otherFiles.map(
-        //     (f) =>
-        //       new Promise((resolve) => {
-        //         // hack to allow browser paint to occur
-        //         setTimeout(() => {
-        //           /* eslint-disable-next-line no-param-reassign */
-        //           f.reader.proxyKeys = f.proxyKeys; // sin
-        //           ReaderFactory.registerReadersToProxyManager(
-        //             [f.reader],
-        //             proxyManager
-        //           );
-        //           resolve();
-        //         }, 12);
-        //       })
-        //   )
-        // );
+        // attach measurements to most recently loaded image
+        for (let i = 0; i < measurementFiles.length; i++) {
+          const measurements = measurementFiles[
+            i
+          ].reader.reader.getOutputData();
+          for (let m = 0; m < measurements.length; m++) {
+            dispatch(
+              'widgets/addMeasurementTool',
+              {
+                datasetId: lastSourcePID,
+                componentName: measurements[m].componentName,
+                data: measurements[m].data,
+              },
+              { root: true }
+            );
+          }
+        }
       });
 
       return promise.finally(() => commit('stopLoading'));

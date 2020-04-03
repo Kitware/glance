@@ -9,6 +9,7 @@ import { ProxyManagerVuexPlugin } from 'paraview-glance/src/plugins';
 
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
+import postProcessDataset from 'paraview-glance/src/io/postProcessing';
 import Config from 'paraview-glance/src/config';
 import files from 'paraview-glance/src/store/fileLoader';
 import views from 'paraview-glance/src/store/views';
@@ -173,6 +174,7 @@ function createStore(pxm = null) {
                 serializedType: 'girder',
                 provenance: source.getKey('girderProvenance'),
                 item: source.getKey('girderItem'),
+                meta: source.getKey('meta'),
               };
             }
             // Not a remote dataset so use basic dataset serialization
@@ -231,18 +233,22 @@ function createStore(pxm = null) {
                 .then((file) => ReaderFactory.loadFiles([file]))
                 .then((readers) => readers[0])
                 .then(({ dataset, reader }) => {
+                  let outDS = null;
                   if (reader && reader.getOutputData) {
-                    const newDS = reader.getOutputData();
-                    newDS.set(ds, true); // Attach remote data origin
-                    return newDS;
-                  }
-                  if (dataset && dataset.isA) {
-                    dataset.set(ds, true); // Attach remote data origin
-                    return dataset;
-                  }
-                  if (reader && reader.setProxyManager) {
+                    outDS = reader.getOutputData();
+                  } else if (dataset && dataset.isA) {
+                    outDS = dataset;
+                  } else if (reader && reader.setProxyManager) {
                     reader.setProxyManager(proxyManager);
                     return null;
+                  }
+
+                  if (outDS) {
+                    if (ds.serializedType === 'girder') {
+                      outDS = postProcessDataset(outDS, ds.meta);
+                    }
+                    outDS.set(ds, true); // Attach remote data origin
+                    return outDS;
                   }
                   throw new Error('Invalid dataset');
                 })

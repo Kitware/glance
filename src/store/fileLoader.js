@@ -1,22 +1,10 @@
 import JSZip from 'jszip';
+
 import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
-import vtkLabelMap from 'paraview-glance/src/vtk/LabelMap';
-
-// ----------------------------------------------------------------------------
-
-function copyImageToLabelMap(vtkImage) {
-  /* eslint-disable-next-line import/no-named-as-default-member */
-  const lm = vtkLabelMap.newInstance(
-    vtkImage.get(['direction', 'origin', 'spacing'])
-  );
-  lm.setDimensions(vtkImage.getDimensions());
-  lm.computeTransforms();
-  lm.getPointData().setScalars(vtkImage.getPointData().getScalars());
-  return lm;
-}
+import postProcessDataset from 'paraview-glance/src/io/postProcessing';
 
 // ----------------------------------------------------------------------------
 
@@ -420,16 +408,12 @@ export default (proxyManager) => ({
             const f = fileList[i];
             const reader = { ...f.reader };
 
-            const meta = (f.proxyKeys && f.proxyKeys.meta) || {};
-            if (meta.glanceDataType === 'vtkLabelMap') {
+            const meta = f.proxyKeys && f.proxyKeys.meta;
+            if (meta) {
               const ds = reader.dataset || reader.reader.getOutputData();
-              const lm = copyImageToLabelMap(ds);
-              if (meta.colorMap) {
-                lm.setColorMap(meta.colorMap);
-              }
               Object.assign(reader, {
                 // use dataset instead of reader
-                dataset: lm,
+                dataset: postProcessDataset(ds, meta),
                 reader: null,
               });
             }

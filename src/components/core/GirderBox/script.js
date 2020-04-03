@@ -60,7 +60,7 @@ export default {
               itemId: elem._id,
               itemName: elem.name,
             },
-            vtkDataType: elem.meta.glanceDataType,
+            meta: elem.meta,
           },
         };
       });
@@ -91,6 +91,16 @@ export default {
     upload(proxyId) {
       const dataset = this.proxyManager.getProxyById(proxyId).get().dataset;
 
+      const metadata = {
+        glanceDataType: dataset.getClassName(),
+      };
+
+      if (dataset.getClassName() === 'vtkLabelMap') {
+        Object.assign(metadata, {
+          colorMap: dataset.getColorMap(),
+        });
+      }
+
       const image = ITKHelper.convertVtkToItkImage(dataset);
       // If we don't copy here, the renderer's copy of the ArrayBuffer
       // becomes invalid because it's been transferred:
@@ -118,9 +128,7 @@ export default {
           const { itemId } = response;
           this.girderRest.put(
             `${this.girderRest.apiRoot}/item/${itemId}`,
-            `metadata=${JSON.stringify({
-              glanceDataType: dataset.getClassName(),
-            })}`
+            `metadata=${JSON.stringify(metadata)}`
           );
 
           this.$refs.girderFileManager.refresh();

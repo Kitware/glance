@@ -214,7 +214,11 @@ function registerReadersToProxyManager(readers, proxyManager) {
         (reader && reader.getOutputData) ||
         (dataset && dataset.isA && dataset.isA('vtkDataSet'));
       let proxyName = 'TrivialProducer';
-      if (proxyKeys && proxyKeys.vtkDataType === 'vtkLabelMap') {
+      if (
+        proxyKeys &&
+        proxyKeys.meta &&
+        proxyKeys.meta.glanceDataType === 'vtkLabelMap'
+      ) {
         proxyName = 'LabelMap';
       }
       const source = needSource
@@ -246,7 +250,11 @@ function registerReadersToProxyManager(readers, proxyManager) {
         }
       }
 
-      if (reader.getCameraViewPoints && reader.getCameraViewPoints()) {
+      if (
+        reader &&
+        reader.getCameraViewPoints &&
+        reader.getCameraViewPoints()
+      ) {
         proxyManager
           .getReferenceByName('$store')
           .dispatch('setCameraViewPoints', reader.getCameraViewPoints());

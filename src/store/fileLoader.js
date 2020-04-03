@@ -3,6 +3,20 @@ import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
+import vtkLabelMap from 'paraview-glance/src/vtk/LabelMap';
+
+// ----------------------------------------------------------------------------
+
+function copyImageToLabelMap(vtkImage) {
+  /* eslint-disable-next-line import/no-named-as-default-member */
+  const lm = vtkLabelMap.newInstance(
+    vtkImage.get(['direction', 'origin', 'spacing'])
+  );
+  lm.setDimensions(vtkImage.getDimensions());
+  lm.computeTransforms();
+  lm.getPointData().setScalars(vtkImage.getPointData().getScalars());
+  return lm;
+}
 
 // ----------------------------------------------------------------------------
 
@@ -388,7 +402,8 @@ export default (proxyManager) => ({
         const labelmapFiles = [];
         for (let i = 0; i < otherFiles.length; i++) {
           const file = otherFiles[i];
-          if (file.proxyKeys && file.proxyKeys.vtkDataType === 'vtkLabelMap') {
+          const meta = (file.proxyKeys && file.proxyKeys.meta) || {};
+          if (meta.glanceDataType === 'vtkLabelMap') {
             labelmapFiles.push(file);
           } else {
             regularFiles.push(file);
@@ -399,10 +414,24 @@ export default (proxyManager) => ({
           let ret = [];
           for (let i = 0; i < fileList.length; i++) {
             const f = fileList[i];
-            /* eslint-disable-next-line no-param-reassign */
-            f.reader.proxyKeys = f.proxyKeys; // sin
+            const reader = { ...f.reader };
+
+            const meta = (f.proxyKeys && f.proxyKeys.meta) || {};
+            if (meta.glanceDataType === 'vtkLabelMap') {
+              const ds = reader.dataset || reader.reader.getOutputData();
+              const lm = copyImageToLabelMap(ds);
+              if (meta.colorMap) {
+                lm.setColorMap(meta.colorMap);
+              }
+              Object.assign(reader, {
+                // use dataset instead of reader
+                dataset: lm,
+                reader: null,
+              });
+            }
+
             const sources = ReaderFactory.registerReadersToProxyManager(
-              [f.reader],
+              [{ ...reader, proxyKeys: f.proxyKeys }],
               proxyManager
             );
             ret = ret.concat(sources.filter(Boolean));
@@ -417,6 +446,7 @@ export default (proxyManager) => ({
           .getSources()
           .filter((p) => p.getProxyName() === 'TrivialProducer');
 
+        // attach labelmaps to most recently loaded image
         const lastSourcePID = sources[sources.length - 1].getProxyId();
         for (let i = 0; i < loadedLabelmaps.length; i++) {
           const lmProxy = loadedLabelmaps[i];

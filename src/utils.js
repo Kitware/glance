@@ -56,10 +56,32 @@ export function remapIdList(list, mapping) {
   });
 }
 
+/**
+ * A wrapper function for pxm.createRepresentationInAllViews that
+ * correctly manages which representation is bound to 2D manipulators.
+ */
+export function createRepresentationInAllViews(pxm, source) {
+  const views2D = pxm.getViews().filter((v) => v.isA('vtkView2DProxy'));
+  // reach in to get sliceRepresentation, since it's not default exposed
+  const origReps = views2D.map((v) =>
+    v.getReferenceByName('sliceRepresentation')
+  );
+
+  pxm.createRepresentationInAllViews(source);
+
+  // do not focus labelmaps
+  if (source.getProxyName() === 'LabelMap') {
+    views2D.forEach((view, i) =>
+      view.bindRepresentationToManipulator(origReps[i])
+    );
+  }
+}
+
 export default {
   makeSubManager,
   wrapSub,
   wrapMutationAsAction,
   remapIdKeys,
   remapIdList,
+  createRepresentationInAllViews,
 };

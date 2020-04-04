@@ -6,6 +6,7 @@ import ITKHelper from 'vtk.js/Sources/Common/DataModel/ITKHelper';
 import { Portal } from '@linusborg/vue-simple-portal';
 
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
+import { createRepresentationInAllViews } from 'paraview-glance/src/utils';
 
 const { vtkErrorMacro } = macro;
 const NEW_IMAGE = -2;
@@ -176,7 +177,7 @@ export default {
               this.targetImage.getKey('girderProvenance')
             );
           }
-          this.$proxyManager.createRepresentationInAllViews(this.outputImage);
+          createRepresentationInAllViews(this.$proxyManager, this.outputImage);
           this.$proxyManager.renderAllViews();
 
           this.running = false;

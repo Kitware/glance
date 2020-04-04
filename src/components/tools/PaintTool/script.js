@@ -8,8 +8,11 @@ import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker'
 import PopUp from 'paraview-glance/src/components/widgets/PopUp';
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
 
+import {
+  createRepresentationInAllViews,
+  makeSubManager,
+} from 'paraview-glance/src/utils';
 import { SPECTRAL } from 'paraview-glance/src/palette';
-import { makeSubManager } from 'paraview-glance/src/utils';
 
 const SYNC = 'PaintToolSync';
 const NEW_LABELMAP = -2;
@@ -314,7 +317,7 @@ export default {
         lmProxy.setInputData(labelMap);
         this.filter.setLabelMap(labelMap);
 
-        this.$proxyManager.createRepresentationInAllViews(lmProxy);
+        createRepresentationInAllViews(this.$proxyManager, lmProxy);
         this.$proxyManager.renderAllViews();
       } else {
         const lmProxy = this.$proxyManager.getProxyById(selectionId);

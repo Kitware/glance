@@ -15,7 +15,10 @@ import files from 'paraview-glance/src/store/fileLoader';
 import views from 'paraview-glance/src/store/views';
 import widgets from 'paraview-glance/src/store/widgets';
 
-import { wrapMutationAsAction } from 'paraview-glance/src/utils';
+import {
+  wrapMutationAsAction,
+  createRepresentationInAllViews,
+} from 'paraview-glance/src/utils';
 
 const STATE_VERSION = 2;
 
@@ -294,7 +297,9 @@ function createStore(pxm = null) {
               // Make sure pre-existing view (not expected in state) have a representation
               proxyManager
                 .getSources()
-                .forEach(proxyManager.createRepresentationInAllViews);
+                .forEach((s) =>
+                  createRepresentationInAllViews(proxyManager, s)
+                );
 
               if (version >= 2) {
                 const { activeSourceId } = userData;

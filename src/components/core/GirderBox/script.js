@@ -19,11 +19,11 @@ export default {
     GirderFileManager,
     Datasets,
   },
-  inject: ['girderRest'],
+  inject: ['girderRest', '$notify'],
   data() {
     return {
       selected: [],
-      location: null,
+      internalLocation: null,
       changeServer: false,
     };
   },
@@ -33,6 +33,23 @@ export default {
     },
     loggedOut() {
       return this.girderRest.user === null;
+    },
+    location: {
+      get() {
+        return (
+          this.internalLocation ||
+          (this.loggedOut
+            ? {
+                // Stephen's COVID19 dataset
+                _id: '5e84eb3e2660cbefba7d71d9',
+                _modelType: 'folder',
+              }
+            : this.girderRest.user)
+        );
+      },
+      set(value) {
+        this.internalLocation = value;
+      },
     },
     ...mapState('widgets', {
       dataMeasurements: 'measurements',
@@ -93,7 +110,32 @@ export default {
         }
       );
     },
+    checkUploadPossible() {
+      if (this.loggedOut) {
+        this.$notify(
+          'Cannot upload to Girder unless logged in. Please log in then try again'
+        );
+        return false;
+      }
+      if (!this.location) {
+        this.$notify(
+          'Cannot upload to Girder root location. Please navigate to a folder you own then try again'
+        );
+        return false;
+      }
+      /* eslint-disable-next-line no-underscore-dangle */
+      if (this.location._modelType === 'user') {
+        this.$notify(
+          'Cannot upload here. Please select public or private and then try again'
+        );
+        return false;
+      }
+      return true;
+    },
     upload(proxyId) {
+      if (!this.checkUploadPossible()) {
+        return;
+      }
       const dataset = this.$proxyManager.getProxyById(proxyId).get().dataset;
 
       const metadata = {
@@ -135,12 +177,15 @@ export default {
             `${this.girderRest.apiRoot}/item/${itemId}`,
             `metadata=${JSON.stringify(metadata)}`
           );
-
+          this.$notify('Image uploaded');
           this.$refs.girderFileManager.refresh();
         });
       });
     },
     uploadMeasurements(proxyId) {
+      if (!this.checkUploadPossible()) {
+        return;
+      }
       const measurements = this.dataMeasurements[proxyId];
       if (measurements) {
         const proxyName = this.$proxyManager.getProxyById(proxyId).getName();
@@ -153,7 +198,10 @@ export default {
               .getProxyById(proxyId)
               .getKey('girderProvenance') || this.location,
         });
-        upload.start().then(() => this.$refs.girderFileManager.refresh());
+        upload.start().then((response) => {
+          this.$notify('Measurements uploaded');
+          this.$refs.girderFileManager.refresh();
+        });
       }
     },
   },

@@ -20,9 +20,7 @@ let apiRootChanged = false;
 function checkAPIValidity(root) {
   try {
     const req = new XMLHttpRequest();
-    console.log('preopen');
     req.open('GET', `${root}/system/check`, false);
-    console.log('presend');
     req.send();
     if (req.status !== 200) {
       return false;
@@ -35,10 +33,11 @@ function checkAPIValidity(root) {
 }
 if (!checkAPIValidity(apiRoot)) {
   alert(
-    `The server ${apiRoot} did not respond correctly. \
- This could be because the url is wrong, the server is down, or because its \
+    `The server ${apiRoot} did not respond correctly.\
+ This could be because the url is wrong, the server is down, or because its\
  CORS policy does not permit access from this website.\
- Paraview Glance is defaulting to data.kitware.com`
+ Paraview Glance is defaulting to https://data.kitware.com/api/v1.\
+ Hint: for localhost, try: https://localhost:9000/api/v1`
   );
   apiRootChanged = true;
   apiRoot = 'https://data.kitware.com/api/v1';

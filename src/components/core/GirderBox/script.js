@@ -198,7 +198,7 @@ export default {
               .getProxyById(proxyId)
               .getKey('girderProvenance') || this.location,
         });
-        upload.start().then((response) => {
+        upload.start().then(() => {
           this.$notify('Measurements uploaded');
           this.$refs.girderFileManager.refresh();
         });

@@ -141,10 +141,9 @@ export default {
       this.view.setContainer(this.$el.querySelector('.js-view'));
       const widgetManager = this.view.getReferenceByName('widgetManager');
       if (widgetManager) {
-        const enabled = widgetManager.getPickingEnabled();
-        widgetManager.setRenderer(this.view.getRenderer());
+        widgetManager.setUseSvgLayer(true);
         // workaround to disable picking if previously disabled
-        if (!enabled) {
+        if (!widgetManager.getPickingEnabled()) {
           widgetManager.disablePicking();
         }
       }
@@ -157,6 +156,11 @@ export default {
   },
   beforeDestroy() {
     if (this.view) {
+      const widgetManager = this.view.getReferenceByName('widgetManager');
+      if (widgetManager) {
+        // we can't use svg anyways if there is no container
+        widgetManager.setUseSvgLayer(false);
+      }
       this.view.setContainer(null);
     }
     window.removeEventListener('resize', this.resizeCurrentView);

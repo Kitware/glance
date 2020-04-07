@@ -185,6 +185,17 @@
         />
       </component>
 
+      <v-snackbar
+        :value="!!globalSingleNotification"
+        @input="globalSingleNotification = ''"
+        bottom
+        left
+        @click="globalSingleNotification = ''"
+      >
+        {{ globalSingleNotification }}
+        <v-btn text>close</v-btn>
+      </v-snackbar>
+
       <!-- portal mount point -->
       <div id="app-portal-mount" />
     </v-app>

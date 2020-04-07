@@ -11,9 +11,12 @@ import vtkITKDicomImageReader from './ITKDicomImageReader';
 vtkITKImageReader.setReadImageArrayBufferFromITK(readImageArrayBuffer);
 vtkITKPolyDataReader.setReadPolyDataArrayBufferFromITK(readPolyDataArrayBuffer);
 
-export const imageExtensions = Array.from(
-  new Set(Array.from(extensionToImageIO.keys()).map((ext) => ext.toLowerCase()))
+const imgExtSet = new Set(
+  Array.from(extensionToImageIO.keys()).map((ext) => ext.toLowerCase())
 );
+// blacklist json, since we load in measurements.json instead
+imgExtSet.delete('json');
+export const imageExtensions = Array.from(imgExtSet);
 
 export const polyDataExtensions = Array.from(
   new Set(

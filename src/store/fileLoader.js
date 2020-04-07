@@ -1,8 +1,10 @@
 import JSZip from 'jszip';
+
 import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
+import postProcessDataset from 'paraview-glance/src/io/postProcessing';
 
 // ----------------------------------------------------------------------------
 
@@ -113,6 +115,7 @@ export default (proxyManager) => ({
         const fileInfo = files[i];
 
         const fileState = {
+          // possible values: needsDownload, needsInfo, loading, ready, error
           state: 'loading',
           name: fileInfo.name,
           ext: getExtension(fileInfo.name),
@@ -120,6 +123,7 @@ export default (proxyManager) => ({
           reader: null,
           extraInfo: null,
           remoteURL: null,
+          proxyKeys: fileInfo.proxyKeys,
         };
 
         if (fileInfo.type === 'dicom') {
@@ -208,6 +212,8 @@ export default (proxyManager) => ({
           type: 'remote',
           name: rfile.name,
           remoteURL: rfile.url,
+          // Key value pairs to be eventually set on the proxy
+          proxyKeys: rfile.proxyKeys,
         }))
       );
 
@@ -381,21 +387,96 @@ export default (proxyManager) => ({
 
       promise = promise.then(() => {
         const otherFiles = readyFiles.filter((f) => f.ext !== 'glance');
-        return Promise.all(
-          otherFiles.map(
-            (f) =>
-              new Promise((resolve) => {
-                // hack to allow browser paint to occur
-                setTimeout(() => {
-                  ReaderFactory.registerReadersToProxyManager(
-                    [f.reader],
-                    proxyManager
-                  );
-                  resolve();
-                }, 10);
-              })
-          )
-        );
+        const regularFiles = [];
+        const labelmapFiles = [];
+        const measurementFiles = [];
+        for (let i = 0; i < otherFiles.length; i++) {
+          const file = otherFiles[i];
+          const meta = (file.proxyKeys && file.proxyKeys.meta) || {};
+          if (meta.glanceDataType === 'vtkLabelMap') {
+            labelmapFiles.push(file);
+          } else if (file.name.endsWith('.measurements.json')) {
+            measurementFiles.push(file);
+          } else {
+            regularFiles.push(file);
+          }
+        }
+
+        const loadFiles = (fileList) => {
+          let ret = [];
+          for (let i = 0; i < fileList.length; i++) {
+            const f = fileList[i];
+            const reader = { ...f.reader };
+
+            const meta = f.proxyKeys && f.proxyKeys.meta;
+            if (meta) {
+              const ds = reader.dataset || reader.reader.getOutputData();
+              Object.assign(reader, {
+                // use dataset instead of reader
+                dataset: postProcessDataset(ds, meta),
+                reader: null,
+              });
+            }
+
+            const sources = ReaderFactory.registerReadersToProxyManager(
+              [{ ...reader, proxyKeys: f.proxyKeys }],
+              proxyManager
+            );
+            ret = ret.concat(sources.filter(Boolean));
+          }
+          return ret;
+        };
+
+        loadFiles(regularFiles);
+        const loadedLabelmaps = loadFiles(labelmapFiles);
+
+        const sources = proxyManager
+          .getSources()
+          .filter((p) => p.getProxyName() === 'TrivialProducer');
+
+        // attach labelmaps to most recently loaded image
+        const lastSourcePID = sources[sources.length - 1].getProxyId();
+        for (let i = 0; i < loadedLabelmaps.length; i++) {
+          const lmProxy = loadedLabelmaps[i];
+          dispatch(
+            'widgets/addLabelmapToImage',
+            {
+              imageId: lastSourcePID,
+              labelmapId: lmProxy.getProxyId(),
+            },
+            { root: true }
+          ).then(() =>
+            dispatch(
+              'widgets/setLabelmapState',
+              {
+                labelmapId: lmProxy.getProxyId(),
+                labelmapState: {
+                  selectedLabel: 1,
+                  lastColorIndex: 1,
+                },
+              },
+              { root: true }
+            )
+          );
+        }
+
+        // attach measurements to most recently loaded image
+        for (let i = 0; i < measurementFiles.length; i++) {
+          const measurements = measurementFiles[
+            i
+          ].reader.reader.getOutputData();
+          for (let m = 0; m < measurements.length; m++) {
+            dispatch(
+              'widgets/addMeasurementTool',
+              {
+                datasetId: lastSourcePID,
+                componentName: measurements[m].componentName,
+                data: measurements[m].data,
+              },
+              { root: true }
+            );
+          }
+        }
       });
 
       return promise.finally(() => commit('stopLoading'));

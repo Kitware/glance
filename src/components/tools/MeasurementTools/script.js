@@ -48,6 +48,7 @@ export default {
     SvgIcon,
     SourceSelect,
   },
+  inject: ['$notify'],
   data() {
     return {
       uiToolList: ToolList,
@@ -104,6 +105,12 @@ export default {
       'removeMeasurementTool',
       'updateMeasurementTool',
     ]),
+    filterImageData(source) {
+      return (
+        source.getProxyName() === 'TrivialProducer' &&
+        source.getType() === 'vtkImageData'
+      );
+    },
     setTargetDataset(sourceId) {
       this.targetPid = sourceId;
     },
@@ -159,6 +166,14 @@ export default {
           index: toolIndex,
           data,
         });
+      }
+    },
+    upload() {
+      if (this.targetProxy) {
+        this.$root.$emit('open_girder_panel');
+        setTimeout(() => {
+          this.$root.$emit('girder_upload_measurements', this.targetPid);
+        }, 10);
       }
     },
   },

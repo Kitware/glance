@@ -203,14 +203,26 @@ function downloadDataset(fileName, url, progressCallback) {
 // ----------------------------------------------------------------------------
 
 function registerReadersToProxyManager(readers, proxyManager) {
+  const retlist = [];
   for (let i = 0; i < readers.length; i += 1) {
-    const { reader, sourceType, name, dataset, metadata } = readers[i];
+    const { reader, sourceType, name, dataset, metadata, proxyKeys } = readers[
+      i
+    ];
+    let retsource = null;
     if (reader || dataset) {
       const needSource =
         (reader && reader.getOutputData) ||
         (dataset && dataset.isA && dataset.isA('vtkDataSet'));
+      let proxyName = 'TrivialProducer';
+      if (
+        proxyKeys &&
+        proxyKeys.meta &&
+        proxyKeys.meta.glanceDataType === 'vtkLabelMap'
+      ) {
+        proxyName = 'LabelMap';
+      }
       const source = needSource
-        ? proxyManager.createProxy('Sources', 'TrivialProducer', {
+        ? proxyManager.createProxy('Sources', proxyName, {
             name,
             ...metadata,
           })
@@ -226,18 +238,33 @@ function registerReadersToProxyManager(readers, proxyManager) {
       }
 
       if (source) {
-        source.activate();
         proxyManager.createRepresentationInAllViews(source);
-        proxyManager.renderAllViews();
+        if (proxyKeys) {
+          Object.keys(proxyKeys).forEach((key) => {
+            source.setKey(key, proxyKeys[key]);
+            if (key === 'onLoad') {
+              proxyKeys[key](source);
+            }
+          });
+        }
       }
 
-      if (reader.getCameraViewPoints && reader.getCameraViewPoints()) {
+      if (
+        reader &&
+        reader.getCameraViewPoints &&
+        reader.getCameraViewPoints()
+      ) {
         proxyManager
           .getReferenceByName('$store')
           .dispatch('setCameraViewPoints', reader.getCameraViewPoints());
       }
+
+      retsource = source;
     }
+    retlist.push(retsource);
   }
+  proxyManager.renderAllViews();
+  return retlist;
 }
 
 // ----------------------------------------------------------------------------

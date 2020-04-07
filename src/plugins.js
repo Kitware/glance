@@ -1,3 +1,5 @@
+import macro from 'vtk.js/Sources/macro';
+
 function unsubscribeList(l = []) {
   while (l.length > 0) {
     l.pop().unsubscribe();
@@ -118,7 +120,9 @@ export const ProxyManagerVuePlugin = {
           if (hooks.onActiveSourceChange) {
             pxmSubs.push(
               this.$proxyManager.onActiveSourceChange((s) =>
-                hooks.onActiveSourceChange.call(this, s)
+                macro.setImmediate(() =>
+                  hooks.onActiveSourceChange.call(this, s)
+                )
               )
             );
           }
@@ -126,7 +130,7 @@ export const ProxyManagerVuePlugin = {
           if (hooks.onActiveViewChange) {
             pxmSubs.push(
               this.$proxyManager.onActiveViewChange((v) =>
-                hooks.onActiveViewChange.call(this, v)
+                macro.setImmediate(() => hooks.onActiveViewChange.call(this, v))
               )
             );
           }

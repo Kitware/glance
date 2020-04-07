@@ -34,9 +34,11 @@ export default {
     ...mapState('files', {
       // show file list with recent on top
       fileList: (state) => Array.from(state.fileList).reverse(),
+      // if there are files that are not ready nor error
       pendingFiles: (state) =>
         state.fileList.reduce(
-          (flag, file) => flag || file.state === 'loading',
+          (flag, file) =>
+            flag || (file.state !== 'ready' && file.state !== 'error'),
           false
         ),
       hasReadyFiles: (state) =>
@@ -52,13 +54,10 @@ export default {
       'openFiles',
       'promptLocal',
       'deleteFile',
+      'setRawFileInfo',
       'load',
       'resetQueue',
     ]),
-    ...mapActions('files', {
-      SetRawFileInfo: (dispatch, index, info) =>
-        dispatch('setRawFileInfo', { index, info }),
-    }),
     loadFiles() {
       this.loading = true;
       this.load().finally(() => {
@@ -68,6 +67,15 @@ export default {
         setTimeout(() => {
           this.loading = false;
         }, 10);
+      });
+    },
+    deleteFileAtRevIndex(revIdx) {
+      return this.deleteFile(this.fileList.length - 1 - revIdx);
+    },
+    setRawFileInfoAtRevIndex(revIdx, info) {
+      return this.setRawFileInfo({
+        index: this.fileList.length - 1 - revIdx,
+        info,
       });
     },
     onDialogChange(state) {

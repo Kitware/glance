@@ -9,6 +9,7 @@ import { ProxyManagerVuexPlugin } from 'paraview-glance/src/plugins';
 
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
+import postProcessDataset from 'paraview-glance/src/io/postProcessing';
 import Config from 'paraview-glance/src/config';
 import files from 'paraview-glance/src/store/fileLoader';
 import views from 'paraview-glance/src/store/views';
@@ -168,6 +169,14 @@ function createStore(pxm = null) {
             if (metadata.name && metadata.url) {
               return metadata;
             }
+            if (source.getKey('girderProvenance')) {
+              return {
+                serializedType: 'girder',
+                provenance: source.getKey('girderProvenance'),
+                item: source.getKey('girderItem'),
+                meta: source.getKey('meta'),
+              };
+            }
             // Not a remote dataset so use basic dataset serialization
             return dataset.getState();
           },
@@ -185,7 +194,6 @@ function createStore(pxm = null) {
               },
             })
             .then((blob) => {
-              console.log('file generated', this.fileName, blob.size);
               const url = URL.createObjectURL(blob);
               const anchor = document.createElement('a');
               anchor.setAttribute('href', url);
@@ -210,22 +218,37 @@ function createStore(pxm = null) {
               if (ds.vtkClass) {
                 return vtk(ds);
               }
-              return ReaderFactory.downloadDataset(ds.name, ds.url)
+
+              let name = ds.name;
+              let url = ds.url;
+
+              if (ds.serializedType === 'girder') {
+                const { itemId, itemName } = ds.item;
+                const { apiRoot } = ds.provenance;
+                name = itemName;
+                url = `${apiRoot}/item/${itemId}/download`;
+              }
+
+              return ReaderFactory.downloadDataset(name, url)
                 .then((file) => ReaderFactory.loadFiles([file]))
                 .then((readers) => readers[0])
                 .then(({ dataset, reader }) => {
+                  let outDS = null;
                   if (reader && reader.getOutputData) {
-                    const newDS = reader.getOutputData();
-                    newDS.set(ds, true); // Attach remote data origin
-                    return newDS;
-                  }
-                  if (dataset && dataset.isA) {
-                    dataset.set(ds, true); // Attach remote data origin
-                    return dataset;
-                  }
-                  if (reader && reader.setProxyManager) {
+                    outDS = reader.getOutputData();
+                  } else if (dataset && dataset.isA) {
+                    outDS = dataset;
+                  } else if (reader && reader.setProxyManager) {
                     reader.setProxyManager(proxyManager);
                     return null;
+                  }
+
+                  if (outDS) {
+                    if (ds.serializedType === 'girder') {
+                      outDS = postProcessDataset(outDS, ds.meta);
+                    }
+                    outDS.set(ds, true); // Attach remote data origin
+                    return outDS;
                   }
                   throw new Error('Invalid dataset');
                 })

@@ -1,3 +1,6 @@
+/* eslint-disable-next-line no-unused-vars */
+import regeneratorRuntime from 'regenerator-runtime';
+
 import macro from 'vtk.js/Sources/macro';
 import ITKHelper from 'vtk.js/Sources/Common/DataModel/ITKHelper';
 
@@ -27,9 +30,8 @@ function vtkITKDicomImageReader(publicAPI, model) {
 
     model.files = files;
 
-    return readImageDICOMFileSeries(null, files)
-      .then(({ webWorker, image }) => {
-        webWorker.terminate();
+    return readImageDICOMFileSeries(files)
+      .then(({ image }) => {
         return image;
       })
       .then((itkImage) => {

@@ -125,7 +125,7 @@ module.exports = {
         from: path.join(paths.root, 'static'),
       },
       {
-        from: path.join(paths.root, 'itk', 'web-build', 'itkfiltering*.js'),
+        from: path.join(paths.root, 'itk', 'web-build', 'itkfiltering*'),
         to: path.join('itk', 'Pipelines'),
         flatten: true,
       },

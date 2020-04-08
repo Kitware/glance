@@ -249,8 +249,12 @@ function createStore(pxm = null) {
                   if (outDS) {
                     if (ds.serializedType === 'girder') {
                       outDS = postProcessDataset(outDS, ds.meta);
+                      outDS.setKey('girderProvenance', ds.provenance);
+                      outDS.setKey('girderItem', ds.item);
+                      outDS.setKey('meta', ds.meta);
+                    } else {
+                      outDS.set(ds, true); // Attach remote data origin
                     }
-                    outDS.set(ds, true); // Attach remote data origin
                     return outDS;
                   }
                   throw new Error('Invalid dataset');

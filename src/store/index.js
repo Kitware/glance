@@ -214,6 +214,8 @@ function createStore(pxm = null) {
       restoreAppState({ commit, dispatch, state }, appState) {
         commit('loadingState', true);
 
+        const restoreProxyKeys = new WeakMap();
+
         dispatch('resetWorkspace');
         return proxyManager
           .loadState(appState, {
@@ -249,9 +251,11 @@ function createStore(pxm = null) {
                   if (outDS) {
                     if (ds.serializedType === 'girder') {
                       outDS = postProcessDataset(outDS, ds.meta);
-                      outDS.setKey('girderProvenance', ds.provenance);
-                      outDS.setKey('girderItem', ds.item);
-                      outDS.setKey('meta', ds.meta);
+                      restoreProxyKeys.set(outDS, {
+                        girderProvenance: ds.provenance,
+                        girderItem: ds.item,
+                        meta: ds.meta,
+                      });
                     } else {
                       outDS.set(ds, true); // Attach remote data origin
                     }
@@ -279,6 +283,15 @@ function createStore(pxm = null) {
             } else {
               this.replaceState(merge(state, userData));
             }
+
+            // restore proxy keys
+            proxyManager.getSources().forEach((source) => {
+              const ds = source.getDataset();
+              if (restoreProxyKeys.has(ds)) {
+                const kv = restoreProxyKeys.get(ds);
+                Object.keys(kv).forEach((key) => source.setKey(key, kv[key]));
+              }
+            });
 
             // make sure store modules have a chance to rewrite their saved mappings
             // before we re-populate proxy manager state

@@ -4,9 +4,10 @@ import {
   wrapMutationAsAction,
   remapIdKeys,
   remapIdList,
+  getCropFilter,
 } from 'paraview-glance/src/utils';
 
-export default () => ({
+export default (proxyManager) => ({
   namespaced: true,
   state: {
     measurements: {}, // dataset id -> [{component name, ...{measurement info}}]
@@ -14,6 +15,9 @@ export default () => ({
     // paint
     imageToLabelmaps: {}, // image id -> [labelmap ids]
     labelmapStates: {}, // labelmap id -> { selectedLabel, lastColorIndex }
+
+    // crop
+    croppingStates: {}, // dataset id -> cropping state
   },
   mutations: {
     addLabelmapToImage(state, { imageId, labelmapId }) {
@@ -44,6 +48,9 @@ export default () => ({
         state.measurements[datasetId].splice(index, 1);
       }
     },
+    setCroppingState(state, { datasetId, planes }) {
+      state.croppingStates[datasetId] = Array.from(planes);
+    },
     rewriteProxyIds(state, idMapping) {
       state.measurements = remapIdKeys(state.measurements, idMapping);
       state.imageToLabelmaps = remapIdKeys(state.imageToLabelmaps, idMapping);
@@ -63,9 +70,22 @@ export default () => ({
     addMeasurementTool: wrapMutationAsAction('addMeasurementTool'),
     removeMeasurementTool: wrapMutationAsAction('removeMeasurementTool'),
     updateMeasurementTool: wrapMutationAsAction('updateMeasurementTool'),
+    setCroppingState: wrapMutationAsAction('setCroppingState'),
     rewriteProxyIds: {
       root: true,
       handler: wrapMutationAsAction('rewriteProxyIds'),
+    },
+    pxmProxyCreated: {
+      root: true,
+      handler({ state }, { proxy, proxyId }) {
+        if (proxyId in state.croppingStates) {
+          const planes = state.croppingStates[proxyId];
+          const filter = getCropFilter(proxyManager, proxy);
+          if (filter) {
+            filter.setCroppingPlanes(planes);
+          }
+        }
+      },
     },
   },
 });

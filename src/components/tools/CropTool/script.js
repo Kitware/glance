@@ -1,5 +1,7 @@
+import { mapState, mapActions } from 'vuex';
+
 import SourceSelect from 'paraview-glance/src/components/widgets/SourceSelect';
-import { makeSubManager } from 'paraview-glance/src/utils';
+import { getCropFilter, makeSubManager } from 'paraview-glance/src/utils';
 
 // ----------------------------------------------------------------------------
 
@@ -26,6 +28,9 @@ export default {
     canCrop() {
       return this.targetVolumeId > -1;
     },
+    ...mapState('widgets', {
+      allCropStates: 'croppingStates',
+    }),
   },
   watch: {
     enabled(enabled) {
@@ -65,8 +70,10 @@ export default {
         const planesState = widgetState.getCroppingPlanes();
         this.stateSub.sub(
           planesState.onModified(() => {
-            cropFilter.setCroppingPlanes(planesState.getPlanes());
+            const planes = planesState.getPlanes();
+            cropFilter.setCroppingPlanes(planes);
             this.canReset = cropFilter.isResetAvailable();
+            this.storeCropState(this.targetVolumeId, planes);
           })
         );
 
@@ -81,13 +88,13 @@ export default {
     targetVolumeId(id) {
       if (this.enabled) {
         this.disable();
+      }
 
-        // handle canReset flag
-        this.canReset = false;
-        if (id !== -1) {
-          const cropFilter = this.getCropFilter(this.targetVolume);
-          this.canReset = cropFilter.isResetAvailable();
-        }
+      // handle canReset flag
+      this.canReset = false;
+      if (id !== -1) {
+        const cropFilter = this.getCropFilter(this.targetVolume);
+        this.canReset = cropFilter.isResetAvailable();
       }
     },
   },
@@ -105,23 +112,7 @@ export default {
       );
     },
     getCropFilter(volProxy) {
-      // find 3d view
-      const view3d = this.$proxyManager
-        .getViews()
-        .find((v) => v.getProxyName() === 'View3D');
-
-      if (!view3d) {
-        throw new Error('Cannot find 3D view!');
-      }
-
-      // find volume rep
-      const volRep = this.$proxyManager.getRepresentation(volProxy, view3d);
-
-      if (!volRep || !volRep.getCropFilter) {
-        throw new Error('Cannot find the volume rep with a crop filter!');
-      }
-
-      return volRep.getCropFilter();
+      return getCropFilter(this.$proxyManager, volProxy);
     },
     setTargetVolume(sourceId) {
       this.targetVolumeId = sourceId;
@@ -144,5 +135,10 @@ export default {
         }
       }
     },
+    storeCropState(datasetId, planes) {
+      this.setCroppingState({ datasetId, planes });
+    },
+
+    ...mapActions('widgets', ['setCroppingState']),
   },
 };

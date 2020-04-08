@@ -8,6 +8,19 @@ const version =
 // prettier-ignore
 export default [
   {
+    label: 'COVID-19',
+    image: Images.Covid19,
+    size: '8.4 MB',
+    description: 'Lung CT Scan of a COVID-19 patient exhibiting ground-glass opacities (GGO)',
+    acknowledgement: 'Joseph Paul Cohen and Paul Morrison and Lan Dao, "COVID-19 image data collection", arXiv:2003.11597, 2020',
+    datasets: [
+      {
+        name: 'covid19.glance',
+        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/covid19.glance`,
+      },
+    ],
+  },
+  {
     label: '202-t + Edges',
     image: Images.CAD,
     size: '112 KB',
@@ -92,17 +105,17 @@ export default [
       },
     ],
   },
-  {
-    label: 'Head.mha',
-    image: Images.Head,
-    size: '6.2 MB',
-    datasets: [
-      {
-        name: 'head.glance',
-        url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/head.glance`,
-      },
-    ],
-  },
+  // {
+  //   label: 'Head.mha',
+  //   image: Images.Head,
+  //   size: '6.2 MB',
+  //   datasets: [
+  //     {
+  //       name: 'head.glance',
+  //       url: `https://raw.githubusercontent.com/Kitware/paraview-glance/${version}/data/head.glance`,
+  //     },
+  //   ],
+  // },
   {
     label: 'Aneurysm.vti',
     image: Images.Aneurism,

@@ -56,10 +56,54 @@ export function remapIdList(list, mapping) {
   });
 }
 
+/**
+ * A wrapper function for pxm.createRepresentationInAllViews that
+ * correctly manages which representation is bound to 2D manipulators.
+ */
+export function createRepresentationInAllViews(pxm, source) {
+  const views2D = pxm.getViews().filter((v) => v.isA('vtkView2DProxy'));
+  // reach in to get sliceRepresentation, since it's not default exposed
+  const origReps = views2D.map((v) =>
+    v.getReferenceByName('sliceRepresentation')
+  );
+
+  pxm.createRepresentationInAllViews(source);
+
+  // do not focus labelmaps
+  if (source.getProxyName() === 'LabelMap') {
+    views2D.forEach((view, i) =>
+      view.bindRepresentationToManipulator(origReps[i])
+    );
+  }
+}
+
+/**
+ * Retrieves the volume cropping filter, if any, of a source proxy.
+ */
+export function getCropFilter(pxm, proxy) {
+  // find 3d view
+  const view3d = pxm.getViews().find((v) => v.getProxyName() === 'View3D');
+
+  if (!view3d) {
+    throw new Error('Cannot find 3D view!');
+  }
+
+  // find volume rep
+  const volRep = pxm.getRepresentation(proxy, view3d);
+
+  if (!volRep || !volRep.getCropFilter) {
+    throw new Error('Cannot find the volume rep with a crop filter!');
+  }
+
+  return volRep.getCropFilter();
+}
+
 export default {
   makeSubManager,
   wrapSub,
   wrapMutationAsAction,
   remapIdKeys,
   remapIdList,
+  createRepresentationInAllViews,
+  getCropFilter,
 };

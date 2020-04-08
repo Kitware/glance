@@ -1,4 +1,5 @@
 import vtkHttpDataAccessHelper from 'vtk.js/Sources/IO/Core/DataAccessHelper/HttpDataAccessHelper';
+import { createRepresentationInAllViews } from 'paraview-glance/src/utils';
 
 const READER_MAPPING = {};
 
@@ -238,7 +239,7 @@ function registerReadersToProxyManager(readers, proxyManager) {
       }
 
       if (source) {
-        proxyManager.createRepresentationInAllViews(source);
+        createRepresentationInAllViews(proxyManager, source);
         if (proxyKeys) {
           Object.keys(proxyKeys).forEach((key) => {
             source.setKey(key, proxyKeys[key]);

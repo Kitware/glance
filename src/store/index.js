@@ -15,7 +15,10 @@ import files from 'paraview-glance/src/store/fileLoader';
 import views from 'paraview-glance/src/store/views';
 import widgets from 'paraview-glance/src/store/widgets';
 
-import { wrapMutationAsAction } from 'paraview-glance/src/utils';
+import {
+  wrapMutationAsAction,
+  createRepresentationInAllViews,
+} from 'paraview-glance/src/utils';
 
 const STATE_VERSION = 2;
 
@@ -246,8 +249,12 @@ function createStore(pxm = null) {
                   if (outDS) {
                     if (ds.serializedType === 'girder') {
                       outDS = postProcessDataset(outDS, ds.meta);
+                      outDS.setKey('girderProvenance', ds.provenance);
+                      outDS.setKey('girderItem', ds.item);
+                      outDS.setKey('meta', ds.meta);
+                    } else {
+                      outDS.set(ds, true); // Attach remote data origin
                     }
-                    outDS.set(ds, true); // Attach remote data origin
                     return outDS;
                   }
                   throw new Error('Invalid dataset');
@@ -294,7 +301,9 @@ function createStore(pxm = null) {
               // Make sure pre-existing view (not expected in state) have a representation
               proxyManager
                 .getSources()
-                .forEach(proxyManager.createRepresentationInAllViews);
+                .forEach((s) =>
+                  createRepresentationInAllViews(proxyManager, s)
+                );
 
               if (version >= 2) {
                 const { activeSourceId } = userData;

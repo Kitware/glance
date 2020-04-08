@@ -41,7 +41,7 @@ var build = function build(sourceDir) {
     process.exit(dockerVersion.status);
   }
 
-  var dockerImage = 'insighttoolkit/itk-js:20191022-fabc80c';
+  var dockerImage = 'insighttoolkit/itk-js:20200325-598a625';
 
   if (program.commands[0].image) {
     dockerImage = program.commands[0].image;

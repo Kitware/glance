@@ -1,5 +1,7 @@
 var loadEmscriptenModuleNode = function loadEmscriptenModuleNode(modulePath) {
-  return require(modulePath);
+  var result = require(modulePath);
+
+  return result;
 };
 
 module.exports = loadEmscriptenModuleNode;

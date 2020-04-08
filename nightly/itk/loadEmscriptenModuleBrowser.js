@@ -17,7 +17,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 //
 // moduleBaseName is the file name of the emscripten module without the ".js"
 // extension
-var loadEmscriptenModule = function loadEmscriptenModule(itkModulesPath, modulesDirectory, moduleBaseName) {
+function loadEmscriptenModule(itkModulesPath, modulesDirectory, moduleBaseName) {
   var prefix = itkModulesPath;
 
   if (itkModulesPath[0] !== '/' && !itkModulesPath.startsWith('http')) {
@@ -28,10 +28,13 @@ var loadEmscriptenModule = function loadEmscriptenModule(itkModulesPath, modules
 
   if ((typeof WebAssembly === "undefined" ? "undefined" : _typeof(WebAssembly)) === 'object' && typeof WebAssembly.Memory === 'function') {
     modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + 'Wasm.js';
+    importScripts(modulePath);
+    var module = self[moduleBaseName]();
+    return module;
+  } else {
+    importScripts(modulePath);
+    return Module;
   }
-
-  importScripts(modulePath);
-  return Module;
-};
+}
 
 export default loadEmscriptenModule;

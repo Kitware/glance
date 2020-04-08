@@ -8,7 +8,7 @@ var readFile = function readFile(webWorker, file) {
   var isMesh = extensionToMeshIO.has(extension);
 
   if (isMesh) {
-    return readMeshFile(webWorker, file).catch(function () {
+    return readMeshFile(webWorker, file)["catch"](function () {
       webWorker.terminate();
       return readImageFile(null, file);
     });

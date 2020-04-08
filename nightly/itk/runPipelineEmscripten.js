@@ -16,19 +16,19 @@ var typedArrayForBuffer = function typedArrayForBuffer(typedArrayType, buffer) {
   return new TypedArrayFunction(buffer);
 };
 
-var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs, inputs) {
+var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args, outputs, inputs) {
   if (inputs) {
     inputs.forEach(function (input) {
       switch (input.type) {
         case IOTypes.Text:
           {
-            module.writeFile(input.path, input.data);
+            pipelineModule.writeFile(input.path, input.data);
             break;
           }
 
         case IOTypes.Binary:
           {
-            module.writeFile(input.path, input.data);
+            pipelineModule.writeFile(input.path, input.data);
             break;
           }
 
@@ -43,8 +43,8 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
             }
 
             imageJSON.data = input.path + '.data';
-            module.writeFile(input.path, JSON.stringify(imageJSON));
-            module.writeFile(imageJSON.data, new Uint8Array(input.data.data.buffer));
+            pipelineModule.writeFile(input.path, JSON.stringify(imageJSON));
+            pipelineModule.writeFile(imageJSON.data, new Uint8Array(input.data.data.buffer));
             break;
           }
 
@@ -62,22 +62,22 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
             meshJSON.pointData = input.path + '.pointData.data';
             meshJSON.cells = input.path + '.cells.data';
             meshJSON.cellData = input.path + '.cellData.data';
-            module.writeFile(input.path, JSON.stringify(meshJSON));
+            pipelineModule.writeFile(input.path, JSON.stringify(meshJSON));
 
             if (meshJSON.numberOfPoints) {
-              module.writeFile(meshJSON.points, new Uint8Array(input.data.points.buffer));
+              pipelineModule.writeFile(meshJSON.points, new Uint8Array(input.data.points.buffer));
             }
 
             if (meshJSON.numberOfPointPixels) {
-              module.writeFile(meshJSON.pointData, new Uint8Array(input.data.pointData.buffer));
+              pipelineModule.writeFile(meshJSON.pointData, new Uint8Array(input.data.pointData.buffer));
             }
 
             if (meshJSON.numberOfCells) {
-              module.writeFile(meshJSON.cells, new Uint8Array(input.data.cells.buffer));
+              pipelineModule.writeFile(meshJSON.cells, new Uint8Array(input.data.cells.buffer));
             }
 
             if (meshJSON.numberOfCellPixels) {
-              module.writeFile(meshJSON.cellData, new Uint8Array(input.data.cellData.buffer));
+              pipelineModule.writeFile(meshJSON.cellData, new Uint8Array(input.data.cellData.buffer));
             }
 
             break;
@@ -89,11 +89,11 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
     });
   }
 
-  module.resetModuleStdout();
-  module.resetModuleStderr();
-  module.callMain(args);
-  var stdout = module.getModuleStdout();
-  var stderr = module.getModuleStderr();
+  pipelineModule.resetModuleStdout();
+  pipelineModule.resetModuleStderr();
+  pipelineModule.callMain(args);
+  var stdout = pipelineModule.getModuleStdout();
+  var stderr = pipelineModule.getModuleStderr();
   var populatedOutputs = [];
 
   if (outputs) {
@@ -104,7 +104,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
       switch (output.type) {
         case IOTypes.Text:
           {
-            populatedOutput.data = module.readFile(output.path, {
+            populatedOutput.data = pipelineModule.readFile(output.path, {
               encoding: 'utf8'
             });
             break;
@@ -112,7 +112,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
 
         case IOTypes.Binary:
           {
-            populatedOutput.data = module.readFile(output.path, {
+            populatedOutput.data = pipelineModule.readFile(output.path, {
               encoding: 'binary'
             });
             break;
@@ -120,11 +120,11 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
 
         case IOTypes.Image:
           {
-            var imageJSON = module.readFile(output.path, {
+            var imageJSON = pipelineModule.readFile(output.path, {
               encoding: 'utf8'
             });
             var image = JSON.parse(imageJSON);
-            var dataUint8 = module.readFile(image.data, {
+            var dataUint8 = pipelineModule.readFile(image.data, {
               encoding: 'binary'
             });
             image.data = bufferToTypedArray(image.imageType.componentType, dataUint8.buffer);
@@ -134,13 +134,13 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
 
         case IOTypes.Mesh:
           {
-            var meshJSON = module.readFile(output.path, {
+            var meshJSON = pipelineModule.readFile(output.path, {
               encoding: 'utf8'
             });
             var mesh = JSON.parse(meshJSON);
 
             if (mesh.numberOfPoints) {
-              var dataUint8Points = module.readFile(mesh.points, {
+              var dataUint8Points = pipelineModule.readFile(mesh.points, {
                 encoding: 'binary'
               });
               mesh.points = bufferToTypedArray(mesh.meshType.pointComponentType, dataUint8Points.buffer);
@@ -149,7 +149,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
             }
 
             if (mesh.numberOfPointPixels) {
-              var dataUint8PointData = module.readFile(mesh.pointData, {
+              var dataUint8PointData = pipelineModule.readFile(mesh.pointData, {
                 encoding: 'binary'
               });
               mesh.pointData = bufferToTypedArray(mesh.meshType.pointPixelComponentType, dataUint8PointData.buffer);
@@ -158,7 +158,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
             }
 
             if (mesh.numberOfCells) {
-              var dataUint8Cells = module.readFile(mesh.cells, {
+              var dataUint8Cells = pipelineModule.readFile(mesh.cells, {
                 encoding: 'binary'
               });
               mesh.cells = bufferToTypedArray(mesh.meshType.cellComponentType, dataUint8Cells.buffer);
@@ -167,7 +167,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
             }
 
             if (mesh.numberOfCellPixels) {
-              var dataUint8CellData = module.readFile(mesh.cellData, {
+              var dataUint8CellData = pipelineModule.readFile(mesh.cellData, {
                 encoding: 'binary'
               });
               mesh.cellData = bufferToTypedArray(mesh.meshType.cellPixelComponentType, dataUint8CellData.buffer);
@@ -181,7 +181,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
 
         case IOTypes.vtkPolyData:
           {
-            var polyDataJSON = module.readFile("".concat(output.path, "/index.json"), {
+            var polyDataJSON = pipelineModule.readFile("".concat(output.path, "/index.json"), {
               encoding: 'utf8'
             });
             var polyData = JSON.parse(polyDataJSON);
@@ -191,7 +191,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
                 var cell = polyData[cellName];
 
                 if (cell.ref) {
-                  var _dataUint = module.readFile("".concat(output.path, "/").concat(cell.ref.basepath, "/").concat(cell.ref.id), {
+                  var _dataUint = pipelineModule.readFile("".concat(output.path, "/").concat(cell.ref.basepath, "/").concat(cell.ref.id), {
                     encoding: 'binary'
                   });
 
@@ -207,7 +207,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(module, args, outputs
                 var data = polyData[dataName];
                 data.arrays.forEach(function (array) {
                   if (array.data.ref) {
-                    var _dataUint2 = module.readFile("".concat(output.path, "/").concat(array.data.ref.basepath, "/").concat(array.data.ref.id), {
+                    var _dataUint2 = pipelineModule.readFile("".concat(output.path, "/").concat(array.data.ref.basepath, "/").concat(array.data.ref.id), {
                       encoding: 'binary'
                     });
 

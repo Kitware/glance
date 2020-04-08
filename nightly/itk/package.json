@@ -1,6 +1,6 @@
 {
   "name": "itk",
-  "version": "10.2.1",
+  "version": "12.0.1",
   "description": "High performance spatial analysis in a JavaScript runtime environment.",
   "main": "./dist/itk.js",
   "directories": {
@@ -44,26 +44,28 @@
   },
   "homepage": "https://insightsoftwareconsortium.github.io/itk-js/",
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.2.0",
+    "@babel/core": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@babel/runtime": "^7.8.3",
     "async": "^2.6.1",
-    "ava": "^2.4.0",
-    "babel-loader": "^8.0.5",
+    "ava": "^3.5.1",
+    "babel-loader": "^8.0.6",
     "babelify": "^10.0.0",
-    "browserify": "^16.2.3",
+    "browserify": "^16.5.0",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "2.1.0",
     "file-api": "^0.10.4",
     "fs-extra": "^7.0.1",
-    "glob": "^7.1.3",
+    "glob": "^7.1.6",
     "json-loader": "^0.5.7",
-    "karma": "^4.1.0",
+    "karma": "^4.4.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-tap": "^4.1.4",
     "karma-tap-pretty-reporter": "^4.1.0",
     "karma-webpack": "3.0.5",
     "kw-doc": "^1.3.0",
+    "puppeteer": "^2.1.1",
     "ramda": "^0.26.1",
     "standard": "^14.3.1",
     "tap-spec": "^5.0.0",
@@ -97,7 +99,7 @@
     ]
   }
 
-,"_resolved": "https://registry.npmjs.org/itk/-/itk-10.2.1.tgz"
-,"_integrity": "sha512-rmEejdRPPpUu0gOuJ1zLL87/QLuKz4UBqFtHVx/xsKo7smDtphnWb8dVXTFyi3dOuBmFUDzlnpecoFixAWj/kg=="
-,"_from": "itk@10.2.1"
+,"_resolved": "https://registry.npmjs.org/itk/-/itk-12.0.1.tgz"
+,"_integrity": "sha512-KyEmYdaAR69s5qTjlRhgaJ2FekcQ+e8fmM/u7803tYSsRPBDJ5qdj6WZLZs/m5X/kzb7cRL1UH9PnW/PH45kTw=="
+,"_from": "itk@12.0.1"
 }

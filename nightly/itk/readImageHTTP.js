@@ -41,7 +41,7 @@ function _readImageHTTP() {
             return _context.stop();
         }
       }
-    }, _callee, this);
+    }, _callee);
   }));
   return _readImageHTTP.apply(this, arguments);
 }

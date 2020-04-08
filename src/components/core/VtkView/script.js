@@ -110,7 +110,7 @@ export default {
     },
     onActiveSourceChange(source) {
       if (
-        source.getProxyName() === 'TrivialProducer' ||
+        source.getProxyName() === 'TrivialProducer' &&
         this.view.bindRepresentationToManipulator
       ) {
         const representation = this.$proxyManager.getRepresentation(

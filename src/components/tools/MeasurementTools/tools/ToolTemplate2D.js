@@ -99,7 +99,7 @@ export default (toolName, extraComponent = {}) => ({
           this.constrainPickableViews(this.targetViewId);
         }
 
-        if (this.donePlacing()) {
+        if (!this.finalized && this.donePlacing()) {
           this.lockToSlice = this.initialSlicePlacement;
           this.axis = this.targetView.getAxis();
           // widget is finalized

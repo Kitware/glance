@@ -27,6 +27,7 @@ export default {
       imageList: [],
       blurRadius: 1,
       running: false,
+      webWorker: null,
       error: null,
       editingOutputName: false,
       editableOutputImageName: '',
@@ -153,13 +154,14 @@ export default {
 
       const radius = String(this.blurRadius);
       runPipelineBrowser(
-        null,
+        this.webWorker,
         'itkfiltering', // executable
         ['medianfilter', 'input.json', 'output.json', radius], // args
         [{ path: 'output.json', type: IOTypes.Image }], // output
         [{ path: 'input.json', type: IOTypes.Image, data: itkImage }] // input
       )
         .then((result) => {
+          this.webWorker = result.webWorker;
           if (!this.outputImage) {
             const proxy = this.createOutputImageProxy();
             this.outputImageId = proxy.getProxyId();

@@ -68,7 +68,7 @@ export default (toolName, extraComponent = {}) => ({
   watch: extraComponent.watch || {},
   proxyManagerHooks: {
     onProxyModified(proxy) {
-      if (proxy && proxy === this.targetRepresentation) {
+      if (proxy && proxy === this.targetRepresentation && this.widgetProxy) {
         if (this.finalized) {
           this.updateWidgetVisibility();
         } else if (

@@ -68,9 +68,8 @@
   padding: 0 4px;
 }
 
-.rowAction {
-  flex: 0;
-  margin: 8px 6px;
+.action {
+  margin: 0 2px;
 }
 
 .toolIconOverlay {

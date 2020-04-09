@@ -149,6 +149,21 @@ export default {
         });
       }
     },
+    jumpTo(axis, slice) {
+      if (slice !== null) {
+        const view = this.$proxyManager
+          .getViews()
+          .find((v) => v.getAxis && v.getAxis() === axis);
+        if (view) {
+          const rep = view
+            .getRepresentations()
+            .find((r) => r.getInput() === this.targetProxy);
+          if (rep) {
+            rep.setSlice(slice);
+          }
+        }
+      }
+    },
     saveToolData(toolIndex, data) {
       // If pendingTool's data is saved, that means we need to commit
       // pendingTool to the store.

@@ -168,7 +168,7 @@ export default {
           }
 
           const itkOutImage = result.outputs[0].data;
-          itkOutImage.data = new Uint8Array(itkOutImage.data);
+          itkOutImage.data = new Float32Array(itkOutImage.data);
 
           const vtkImage = ITKHelper.convertItkToVtkImage(itkOutImage);
 
@@ -189,7 +189,7 @@ export default {
           });
         })
         .catch((error) => {
-          vtkErrorMacro(`Median filter error: ${error}`);
+          vtkErrorMacro(`Median filter error: ${error.message}`);
           this.error = error;
           this.showSnack({
             type: 'error',

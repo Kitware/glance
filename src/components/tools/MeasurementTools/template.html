@@ -76,6 +76,21 @@
                 </span>
               </div>
               <div :class="$style.action">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      small
+                      icon
+                      v-on="on"
+                      @click="jumpTo(tool.data.axis, tool.data.lockToSlice)"
+                    >
+                      <v-icon>mdi-crosshairs-gps</v-icon>
+                    </v-btn>
+                  </template>
+                  Jump to slice
+                </v-tooltip>
+              </div>
+              <div :class="$style.action">
                 <pop-up>
                   <template v-slot:trigger>
                     <v-btn small icon>

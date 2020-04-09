@@ -1,5 +1,24 @@
 
 <v-container>
+    <v-row no-gutters align="center">
+      <v-col>
+        <v-text-field
+          v-model="newGirderURL"
+          label="Girder URL"
+          single-line
+          outlined
+          hide-details
+        />
+      </v-col>
+      <v-btn
+        :disabled="noURLChange"
+        text
+        class="ml-2"
+        @click="changeURLPrompt = true"
+      >
+        Update
+      </v-btn>
+    </v-row>
     <v-row>
       <v-col v-if="loggedOut">
         <GirderAuthentication register :oauth=true :key="girderRest.token" />
@@ -20,4 +39,21 @@
         </v-toolbar>
       </v-col>
     </v-row>
+    <v-dialog
+      v-model="changeURLPrompt"
+      width="30%"
+    >
+      <v-card>
+        <v-card-title>Change Girder URL</v-card-title>
+        <v-card-text>
+          Changing the girder URL to <pre>{{ newGirderURL }}</pre> will require a refresh.
+          Do you want to continue?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text @click="changeURLPrompt = false">Cancel</v-btn>
+          <v-btn color="primary" @click="refreshPage">Refresh</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
  </v-container>

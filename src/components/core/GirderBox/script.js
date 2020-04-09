@@ -25,6 +25,8 @@ export default {
       selected: [],
       internalLocation: null,
       changeServer: false,
+      newGirderURL: this.girderRest.apiRoot,
+      changeURLPrompt: false,
     };
   },
   computed: {
@@ -50,6 +52,9 @@ export default {
       set(value) {
         this.internalLocation = value;
       },
+    },
+    noURLChange() {
+      return this.newGirderURL === this.girderRest.apiRoot;
     },
     ...mapState('widgets', {
       dataMeasurements: 'measurements',
@@ -203,6 +208,13 @@ export default {
           this.$refs.girderFileManager.refresh();
         });
       }
+    },
+    refreshPage() {
+      const url = new URL(window.location.href);
+      const params = new URLSearchParams(url.search);
+      params.set('girderRoute', this.newGirderURL);
+      url.search = params.toString();
+      window.location.href = url.toString();
     },
   },
 };

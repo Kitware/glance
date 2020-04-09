@@ -35,7 +35,7 @@ int median_filter( int argc, char * argv[] )
   const char * outputImageFile = argv[3];
   unsigned int radius = atoi( argv[4] );
 
-  using PixelType = unsigned char;
+  using PixelType = float;
   constexpr unsigned int Dimension = 3;
   using ImageType = itk::Image< PixelType, Dimension >;
 
@@ -47,12 +47,6 @@ int median_filter( int argc, char * argv[] )
   auto smoother = SmoothingFilterType::New();
   smoother->SetInput( reader->GetOutput() );
   smoother->SetRadius( radius );
-
-  using CastType = itk::CastImageFilter< ImageType, itk::Image<float, 3> >;
-
-  //auto caster = CastType::New();
-  //caster->SetInput(smoother->GetOutput());
-
 
   using WriterType = itk::ImageFileWriter< ImageType>;
   auto writer = WriterType::New();

@@ -42,7 +42,7 @@
   "dependencies": {
     "@girder/components": "^2.0.3",
     "@linusborg/vue-simple-portal": "^0.1.3",
-    "itk": "12.0.1",
+    "itk": "12.2.0",
     "mousetrap": "^1.6.3",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",

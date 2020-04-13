@@ -185,7 +185,6 @@ export default {
     },
     upload() {
       if (this.targetProxy) {
-        this.$root.$emit('open_girder_panel');
         setTimeout(() => {
           this.$root.$emit('girder_upload_measurements', this.targetPid);
         }, 10);

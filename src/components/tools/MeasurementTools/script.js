@@ -48,7 +48,7 @@ export default {
     SvgIcon,
     SourceSelect,
   },
-  inject: ['$notify'],
+  inject: ['$notify', 'girderRest'],
   data() {
     return {
       uiToolList: ToolList,

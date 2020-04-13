@@ -53,6 +53,7 @@ function createLabelMapFromImage(imageData) {
 
 export default {
   name: 'PaintTool',
+  inject: ['girderRest'],
   components: {
     PalettePicker,
     PopUp,

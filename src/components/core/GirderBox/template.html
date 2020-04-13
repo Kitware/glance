@@ -22,6 +22,10 @@
     <v-row>
       <v-col v-if="loggedOut">
         <GirderAuthentication register :oauth=true :key="girderRest.token" />
+        <div class="mt-2">
+          <v-icon>mdi-information</v-icon>
+          <span>Logging in will refresh and lose any unsaved data.</span>
+        </div>
       </v-col>
       <v-col>
         <GirderFileManager

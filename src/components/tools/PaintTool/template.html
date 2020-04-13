@@ -213,13 +213,13 @@
           </v-radio-group>
         </v-list>
       </v-flex>
-      <v-flex xs2>
-        <v-btn
-          @click="upload()"
-        >
-          Upload
-        </v-btn>
-      </v-flex>
+      <v-btn
+        :disabled="!girderRest.user"
+        @click="upload()"
+      >
+        Upload
+      </v-btn>
+      <span v-show="!girderRest.user" class="body-2">Log in to upload</span>
     </v-layout>
   </v-container>
 </div>

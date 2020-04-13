@@ -169,9 +169,10 @@
         <template v-else>
           <div class="pt-2 body-1 teal--text text-center">No measurements yet</div>
         </template>
-        <v-btn :disabled="!targetProxy" @click="upload">
+        <v-btn :disabled="!targetProxy || !girderRest.user" @click="upload">
           Upload
         </v-btn>
+        <span v-show="!girderRest.user" class="body-2">Log in to upload</span>
       </div>
     </v-card>
   </v-container>

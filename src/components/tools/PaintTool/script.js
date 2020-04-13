@@ -53,6 +53,7 @@ function createLabelMapFromImage(imageData) {
 
 export default {
   name: 'PaintTool',
+  inject: ['girderRest'],
   components: {
     PalettePicker,
     PopUp,
@@ -546,7 +547,6 @@ export default {
     upload() {
       const proxy = this.activeLabelmapProxy;
       if (proxy) {
-        this.$root.$emit('open_girder_panel');
         setTimeout(() => {
           this.$root.$emit('girder_upload_proxy', this.activeLabelmapId);
         }, 10);

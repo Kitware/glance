@@ -27,6 +27,7 @@ export default {
         return [].concat(...priorities.map((prio) => state.panels[prio]));
       },
     }),
+    ...mapState('widgets', ['imageToLabelmaps']),
     panelState: {
       get() {
         const ret = [];
@@ -149,9 +150,13 @@ export default {
     },
     toggleDatasetVisibility(sourceId) {
       const visible = !this.getDatasetVisibility(sourceId);
+      const labelmaps = this.imageToLabelmaps[sourceId] || [];
       this.$proxyManager
         .getRepresentations()
-        .filter((r) => r.getInput().getProxyId() === sourceId)
+        .filter((r) => {
+          const id = r.getInput().getProxyId();
+          return id === sourceId || labelmaps.indexOf(id) > -1;
+        })
         .forEach((r) => r.setVisibility(visible));
       // TODO use onProxyModified?
       this.$forceUpdate();

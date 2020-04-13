@@ -55,6 +55,7 @@ export default (proxyManager) => ({
       state.measurements = remapIdKeys(state.measurements, idMapping);
       state.imageToLabelmaps = remapIdKeys(state.imageToLabelmaps, idMapping);
       state.labelmapStates = remapIdKeys(state.labelmapStates, idMapping);
+      state.croppingStates = remapIdKeys(state.croppingStates, idMapping);
 
       Object.keys(state.imageToLabelmaps).forEach((id) => {
         state.imageToLabelmaps[id] = remapIdList(

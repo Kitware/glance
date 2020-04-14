@@ -46,6 +46,8 @@ function _interopRequireDefault(obj) {
 module.exports = _interopRequireDefault;
 },{}],3:[function(require,module,exports){
 function _typeof(obj) {
+  "@babel/helpers - typeof";
+
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     module.exports = _typeof = function _typeof(obj) {
       return typeof obj;
@@ -193,7 +195,7 @@ var runtime = (function (exports) {
     return { __await: arg };
   };
 
-  function AsyncIterator(generator) {
+  function AsyncIterator(generator, PromiseImpl) {
     function invoke(method, arg, resolve, reject) {
       var record = tryCatch(generator[method], generator, arg);
       if (record.type === "throw") {
@@ -204,14 +206,14 @@ var runtime = (function (exports) {
         if (value &&
             typeof value === "object" &&
             hasOwn.call(value, "__await")) {
-          return Promise.resolve(value.__await).then(function(value) {
+          return PromiseImpl.resolve(value.__await).then(function(value) {
             invoke("next", value, resolve, reject);
           }, function(err) {
             invoke("throw", err, resolve, reject);
           });
         }
 
-        return Promise.resolve(value).then(function(unwrapped) {
+        return PromiseImpl.resolve(value).then(function(unwrapped) {
           // When a yielded Promise is resolved, its final value becomes
           // the .value of the Promise<{value,done}> result for the
           // current iteration.
@@ -229,7 +231,7 @@ var runtime = (function (exports) {
 
     function enqueue(method, arg) {
       function callInvokeWithMethodAndArg() {
-        return new Promise(function(resolve, reject) {
+        return new PromiseImpl(function(resolve, reject) {
           invoke(method, arg, resolve, reject);
         });
       }
@@ -269,9 +271,12 @@ var runtime = (function (exports) {
   // Note that simple async functions are implemented on top of
   // AsyncIterator objects; they just return a Promise for the value of
   // the final result produced by the iterator.
-  exports.async = function(innerFn, outerFn, self, tryLocsList) {
+  exports.async = function(innerFn, outerFn, self, tryLocsList, PromiseImpl) {
+    if (PromiseImpl === void 0) PromiseImpl = Promise;
+
     var iter = new AsyncIterator(
-      wrap(innerFn, outerFn, self, tryLocsList)
+      wrap(innerFn, outerFn, self, tryLocsList),
+      PromiseImpl
     );
 
     return exports.isGeneratorFunction(outerFn)
@@ -1213,7 +1218,7 @@ function _readMesh() {
   _readMesh = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee2(input) {
-    var extension, mountpoint, io, idx, _ioModule, trialIO, meshIO, _blob, _blobs, _filePath, ioModule, blob, blobs, filePath, mesh, transferables;
+    var extension, mountpoint, io, idx, _ioModule, trialIO, meshIO, _filePath, ioModule, filePath, mesh, transferables;
 
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -1229,7 +1234,7 @@ function _readMesh() {
             }
 
             io = _MimeToMeshIO["default"].get(input.type);
-            _context2.next = 30;
+            _context2.next = 29;
             break;
 
           case 7:
@@ -1239,7 +1244,7 @@ function _readMesh() {
             }
 
             io = _extensionToMeshIO["default"].get(extension);
-            _context2.next = 30;
+            _context2.next = 29;
             break;
 
           case 11:
@@ -1247,7 +1252,7 @@ function _readMesh() {
 
           case 12:
             if (!(idx < _MeshIOIndex["default"].length)) {
-              _context2.next = 30;
+              _context2.next = 29;
               break;
             }
 
@@ -1262,46 +1267,44 @@ function _readMesh() {
             }
 
             meshIO = new _ioModule.ITKMeshIO();
-            _blob = new Blob([input.data]);
-            _blobs = [{
-              name: input.name,
-              data: _blob
-            }];
 
-            _ioModule.mountBlobs(mountpoint, _blobs);
+            _ioModule.mkdirs(mountpoint);
 
-            _filePath = mountpoint + '/' + input.name;
+            _filePath = "".concat(mountpoint, "/").concat(input.name);
+
+            _ioModule.writeFile(_filePath, new Uint8Array(input.data));
+
             meshIO.SetFileName(_filePath);
 
             if (!meshIO.CanReadFile(_filePath)) {
-              _context2.next = 26;
+              _context2.next = 25;
               break;
             }
 
             io = trialIO;
 
-            _ioModule.unmountBlobs(mountpoint);
+            _ioModule.unlink(_filePath);
 
-            return _context2.abrupt("break", 30);
+            return _context2.abrupt("break", 29);
+
+          case 25:
+            _ioModule.unlink(_filePath);
 
           case 26:
-            _ioModule.unmountBlobs(mountpoint);
-
-          case 27:
             ++idx;
             _context2.next = 12;
             break;
 
-          case 30:
+          case 29:
             if (!(io === null)) {
-              _context2.next = 33;
+              _context2.next = 32;
               break;
             }
 
             ioToModule = {};
             throw new Error('Could not find IO for: ' + input.name);
 
-          case 33:
+          case 32:
             ioModule = null;
 
             if (io in ioToModule) {
@@ -1311,15 +1314,11 @@ function _readMesh() {
               ioModule = ioToModule[io];
             }
 
-            blob = new Blob([input.data]);
-            blobs = [{
-              name: input.name,
-              data: blob
-            }];
-            ioModule.mountBlobs(mountpoint, blobs);
-            filePath = mountpoint + '/' + input.name;
+            ioModule.mkdirs(mountpoint);
+            filePath = "".concat(mountpoint, "/").concat(input.name);
+            ioModule.writeFile(filePath, new Uint8Array(input.data));
             mesh = (0, _readMeshEmscriptenFSFile["default"])(ioModule, filePath);
-            ioModule.unmountBlobs(mountpoint);
+            ioModule.unlink(filePath);
             transferables = [];
 
             if (mesh.points) {
@@ -1340,7 +1339,7 @@ function _readMesh() {
 
             return _context2.abrupt("return", new _register["default"].TransferableResponse(mesh, transferables));
 
-          case 47:
+          case 45:
           case "end":
             return _context2.stop();
         }
@@ -1442,7 +1441,7 @@ function _writeMesh() {
               ioModule = ioToModule[io];
             }
 
-            filePath = mountpoint + '/' + input.name;
+            filePath = "".concat(mountpoint, "/").concat(input.name);
             ioModule.mkdirs(mountpoint);
             (0, _writeMeshEmscriptenFSFile["default"])(ioModule, {
               useCompression: input.useCompression,
@@ -1451,9 +1450,10 @@ function _writeMesh() {
             writtenFile = ioModule.readFile(filePath, {
               encoding: 'binary'
             });
+            ioModule.unlink(filePath);
             return _context3.abrupt("return", new _register["default"].TransferableResponse(writtenFile.buffer, [writtenFile.buffer]));
 
-          case 35:
+          case 36:
           case "end":
             return _context3.stop();
         }
@@ -1562,15 +1562,15 @@ function loadEmscriptenModule(itkModulesPath, modulesDirectory, moduleBaseName) 
     prefix = '..';
   }
 
-  var modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + '.js';
-
   if ((typeof WebAssembly === "undefined" ? "undefined" : (0, _typeof2["default"])(WebAssembly)) === 'object' && typeof WebAssembly.Memory === 'function') {
-    modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + 'Wasm.js';
+    var modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + 'Wasm.js';
     importScripts(modulePath);
     var module = self[moduleBaseName]();
     return module;
   } else {
-    importScripts(modulePath);
+    var _modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + '.js';
+
+    importScripts(_modulePath);
     return Module;
   }
 }

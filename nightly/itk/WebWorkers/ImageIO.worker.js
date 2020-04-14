@@ -46,6 +46,8 @@ function _interopRequireDefault(obj) {
 module.exports = _interopRequireDefault;
 },{}],3:[function(require,module,exports){
 function _typeof(obj) {
+  "@babel/helpers - typeof";
+
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     module.exports = _typeof = function _typeof(obj) {
       return typeof obj;
@@ -193,7 +195,7 @@ var runtime = (function (exports) {
     return { __await: arg };
   };
 
-  function AsyncIterator(generator) {
+  function AsyncIterator(generator, PromiseImpl) {
     function invoke(method, arg, resolve, reject) {
       var record = tryCatch(generator[method], generator, arg);
       if (record.type === "throw") {
@@ -204,14 +206,14 @@ var runtime = (function (exports) {
         if (value &&
             typeof value === "object" &&
             hasOwn.call(value, "__await")) {
-          return Promise.resolve(value.__await).then(function(value) {
+          return PromiseImpl.resolve(value.__await).then(function(value) {
             invoke("next", value, resolve, reject);
           }, function(err) {
             invoke("throw", err, resolve, reject);
           });
         }
 
-        return Promise.resolve(value).then(function(unwrapped) {
+        return PromiseImpl.resolve(value).then(function(unwrapped) {
           // When a yielded Promise is resolved, its final value becomes
           // the .value of the Promise<{value,done}> result for the
           // current iteration.
@@ -229,7 +231,7 @@ var runtime = (function (exports) {
 
     function enqueue(method, arg) {
       function callInvokeWithMethodAndArg() {
-        return new Promise(function(resolve, reject) {
+        return new PromiseImpl(function(resolve, reject) {
           invoke(method, arg, resolve, reject);
         });
       }
@@ -269,9 +271,12 @@ var runtime = (function (exports) {
   // Note that simple async functions are implemented on top of
   // AsyncIterator objects; they just return a Promise for the value of
   // the final result produced by the iterator.
-  exports.async = function(innerFn, outerFn, self, tryLocsList) {
+  exports.async = function(innerFn, outerFn, self, tryLocsList, PromiseImpl) {
+    if (PromiseImpl === void 0) PromiseImpl = Promise;
+
     var iter = new AsyncIterator(
-      wrap(innerFn, outerFn, self, tryLocsList)
+      wrap(innerFn, outerFn, self, tryLocsList),
+      PromiseImpl
     );
 
     return exports.isGeneratorFunction(outerFn)
@@ -1166,7 +1171,7 @@ module.exports = Matrix;
 },{}],14:[function(require,module,exports){
 "use strict";
 
-var mimeToIO = new Map([['image/jpeg', 'itkJPEGImageIOJSBinding'], ['image/png', 'itkPNGImageIOJSBinding'], ['image/tiff', 'itkTIFFImageIOJSBinding'], ['image/x-ms-bmp', 'itkBMPImageIOJSBinding'], ['image/x-bmp', 'itkBMPImageIOJSBinding'], ['image/bmp', 'itkBMPImageIOJSBinding'], ['application/dicom', 'itkDCMTKImageIOJSBinding']]);
+var mimeToIO = new Map([['image/jpeg', 'itkJPEGImageIOJSBinding'], ['image/png', 'itkPNGImageIOJSBinding'], ['image/tiff', 'itkTIFFImageIOJSBinding'], ['image/x-ms-bmp', 'itkBMPImageIOJSBinding'], ['image/x-bmp', 'itkBMPImageIOJSBinding'], ['image/bmp', 'itkBMPImageIOJSBinding'], ['application/dicom', 'itkGDCMImageIOJSBinding']]);
 module.exports = mimeToIO;
 
 },{}],15:[function(require,module,exports){
@@ -1283,22 +1288,18 @@ function _readImage() {
   _readImage = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee2(input) {
-    var extension, mountpoint, io, idx, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, mod, _trialIO2, imageIO, blob, blobs, filePath, inputToResponse, ioModule, _ioModule;
+    var extension, mountpoint, io, idx, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, mod, _trialIO2, imageIO, filePath, inputToResponse, ioModule, _ioModule;
 
     return _regenerator["default"].wrap(function _callee2$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
             inputToResponse = function _ref2(ioModule) {
-              var blob = new Blob([input.data]);
-              var blobs = [{
-                name: input.name,
-                data: blob
-              }];
-              ioModule.mountBlobs(mountpoint, blobs);
-              var filePath = mountpoint + '/' + input.name;
+              ioModule.mkdirs(mountpoint);
+              var filePath = "".concat(mountpoint, "/").concat(input.name);
+              ioModule.writeFile(filePath, new Uint8Array(input.data));
               var image = (0, _readImageEmscriptenFSFile["default"])(ioModule, filePath);
-              ioModule.unmountBlobs(mountpoint);
+              ioModule.unlink(filePath);
               return new _register["default"].TransferableResponse(image, [image.data.buffer]);
             };
 
@@ -1312,7 +1313,7 @@ function _readImage() {
             }
 
             io = _MimeToImageIO["default"].get(input.type);
-            _context3.next = 53;
+            _context3.next = 52;
             break;
 
           case 8:
@@ -1322,7 +1323,7 @@ function _readImage() {
             }
 
             io = _extensionToImageIO["default"].get(extension);
-            _context3.next = 53;
+            _context3.next = 52;
             break;
 
           case 12:
@@ -1335,103 +1336,99 @@ function _readImage() {
 
           case 18:
             if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              _context3.next = 37;
+              _context3.next = 36;
               break;
             }
 
             mod = _step.value;
             _trialIO2 = _ImageIOIndex["default"][idx];
             imageIO = new mod.ITKImageIO();
-            blob = new Blob([input.data]);
-            blobs = [{
-              name: input.name,
-              data: blob
-            }];
-            mod.mountBlobs(mountpoint, blobs);
-            filePath = mountpoint + '/' + input.name;
+            mod.mkdirs(mountpoint);
+            filePath = "".concat(mountpoint, "/").concat(input.name);
+            mod.writeFile(filePath, new Uint8Array(input.data));
             imageIO.SetFileName(filePath);
 
             if (!imageIO.CanReadFile(filePath)) {
-              _context3.next = 32;
+              _context3.next = 31;
               break;
             }
 
             io = _trialIO2;
-            mod.unmountBlobs(mountpoint);
+            mod.unlink(filePath);
             ioToModule[io] = mod;
-            return _context3.abrupt("break", 37);
+            return _context3.abrupt("break", 36);
 
-          case 32:
-            mod.unmountBlobs(mountpoint);
+          case 31:
+            mod.unlink(filePath);
             idx++;
 
-          case 34:
+          case 33:
             _iteratorNormalCompletion = true;
             _context3.next = 18;
             break;
 
-          case 37:
-            _context3.next = 43;
+          case 36:
+            _context3.next = 42;
             break;
 
-          case 39:
-            _context3.prev = 39;
+          case 38:
+            _context3.prev = 38;
             _context3.t0 = _context3["catch"](16);
             _didIteratorError = true;
             _iteratorError = _context3.t0;
 
-          case 43:
+          case 42:
+            _context3.prev = 42;
             _context3.prev = 43;
-            _context3.prev = 44;
 
             if (!_iteratorNormalCompletion && _iterator["return"] != null) {
               _iterator["return"]();
             }
 
-          case 46:
-            _context3.prev = 46;
+          case 45:
+            _context3.prev = 45;
 
             if (!_didIteratorError) {
-              _context3.next = 49;
+              _context3.next = 48;
               break;
             }
 
             throw _iteratorError;
 
+          case 48:
+            return _context3.finish(45);
+
           case 49:
-            return _context3.finish(46);
+            return _context3.finish(42);
 
           case 50:
-            return _context3.finish(43);
-
-          case 51:
             if (!(io === null)) {
-              _context3.next = 53;
+              _context3.next = 52;
               break;
             }
 
             throw new Error('Could not find IO for: ' + input.name);
 
-          case 53:
+          case 52:
             if (!(io in ioToModule)) {
-              _context3.next = 58;
+              _context3.next = 57;
               break;
             }
 
             ioModule = ioToModule[io];
             return _context3.abrupt("return", inputToResponse(ioModule));
 
-          case 58:
+          case 57:
             _ioModule = (0, _loadEmscriptenModuleBrowser["default"])(input.config.itkModulesPath, 'ImageIOs', io);
             ioToModule[io] = _ioModule;
             return _context3.abrupt("return", inputToResponse(_ioModule));
 
-          case 61:
+          case 60:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee2, null, [[16, 39, 43, 51], [44,, 46, 50]]);
+    }, _callee2, null, [[16, 38, 42, 50], [43,, 45, 49]]);
   }));
   return _readImage.apply(this, arguments);
 }
@@ -1563,9 +1560,10 @@ function _writeImage() {
             writtenFile = ioModule.readFile(filePath, {
               encoding: 'binary'
             });
+            ioModule.unlink(filePath);
             return _context4.abrupt("return", new _register["default"].TransferableResponse(writtenFile.buffer, [writtenFile.buffer]));
 
-          case 51:
+          case 52:
           case "end":
             return _context4.stop();
         }
@@ -1583,7 +1581,8 @@ function _readDICOMImageSeries() {
   _readDICOMImageSeries = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
   _regenerator["default"].mark(function _callee4(input) {
-    var seriesReader, blobs, mountpoint, filePaths, image;
+    var seriesReader, mountpoint, filePaths, ii, filePath, image, _ii;
+
     return _regenerator["default"].wrap(function _callee4$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
@@ -1594,20 +1593,22 @@ function _readDICOMImageSeries() {
               seriesReaderModule = (0, _loadEmscriptenModuleBrowser["default"])(input.config.itkModulesPath, 'ImageIOs', seriesReader);
             }
 
-            blobs = input.fileDescriptions.map(function (fileDescription) {
-              var blob = new Blob([fileDescription.data]);
-              return {
-                name: fileDescription.name,
-                data: blob
-              };
-            });
             mountpoint = '/work';
-            seriesReaderModule.mountBlobs(mountpoint, blobs);
-            filePaths = input.fileDescriptions.map(function (fileDescription) {
-              return "".concat(mountpoint, "/").concat(fileDescription.name);
-            });
+            seriesReaderModule.mkdirs(mountpoint);
+            filePaths = [];
+
+            for (ii = 0; ii < input.fileDescriptions.length; ii++) {
+              filePath = "".concat(mountpoint, "/").concat(input.fileDescriptions[ii].name);
+              seriesReaderModule.writeFile(filePath, new Uint8Array(input.fileDescriptions[ii].data));
+              filePaths.push(filePath);
+            }
+
             image = (0, _readImageEmscriptenFSDICOMFileSeries["default"])(seriesReaderModule, filePaths, input.singleSortedSeries);
-            seriesReaderModule.unmountBlobs(mountpoint);
+
+            for (_ii = 0; _ii < filePaths.length; _ii++) {
+              seriesReaderModule.unlink(filePaths[_ii]);
+            }
+
             return _context5.abrupt("return", new _register["default"].TransferableResponse(image, [image.data.buffer]));
 
           case 9:
@@ -1672,7 +1673,7 @@ function () {
 },{"../ImageIOIndex":10,"../MimeToImageIO":14,"../extensionToImageIO":17,"../getFileExtension":18,"../loadEmscriptenModuleBrowser":24,"../readImageEmscriptenFSDICOMFileSeries":25,"../readImageEmscriptenFSFile":26,"../writeImageEmscriptenFSFile":27,"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/regenerator":5,"webworker-promise/lib/register":6}],17:[function(require,module,exports){
 "use strict";
 
-var extensionToIO = new Map([['bmp', 'itkBMPImageIOJSBinding'], ['BMP', 'itkBMPImageIOJSBinding'], ['dcm', 'itkDCMTKImageIOJSBinding'], ['DCM', 'itkDCMTKImageIOJSBinding'], ['gipl', 'itkGiplImageIOJSBinding'], ['gipl.gz', 'itkGiplImageIOJSBinding'], ['hdf5', 'itkHDF5ImageIOJSBinding'], ['jpg', 'itkJPEGImageIOJSBinding'], ['JPG', 'itkJPEGImageIOJSBinding'], ['jpeg', 'itkJPEGImageIOJSBinding'], ['JPEG', 'itkJPEGImageIOJSBinding'], ['json', 'itkJSONImageIOJSBinding'], ['lsm', 'itkLSMImageIOJSBinding'], ['mnc', 'itkMINCImageIOJSBinding'], ['MNC', 'itkMINCImageIOJSBinding'], ['mnc.gz', 'itkMINCImageIOJSBinding'], ['MNC.GZ', 'itkMINCImageIOJSBinding'], ['mnc2', 'itkMINCImageIOJSBinding'], ['MNC2', 'itkMINCImageIOJSBinding'], ['mgh', 'itkMGHImageIOJSBinding'], ['mgz', 'itkMGHImageIOJSBinding'], ['mgh.gz', 'itkMGHImageIOJSBinding'], ['mha', 'itkMetaImageIOJSBinding'], ['mhd', 'itkMetaImageIOJSBinding'], ['mrc', 'itkMRCImageIOJSBinding'], ['nia', 'itkNiftiImageIOJSBinding'], ['nii', 'itkNiftiImageIOJSBinding'], ['nii.gz', 'itkNiftiImageIOJSBinding'], ['hdr', 'itkNiftiImageIOJSBinding'], ['nrrd', 'itkNrrdImageIOJSBinding'], ['NRRD', 'itkNrrdImageIOJSBinding'], ['nhdr', 'itkNrrdImageIOJSBinding'], ['NHDR', 'itkNrrdImageIOJSBinding'], ['png', 'itkPNGImageIOJSBinding'], ['PNG', 'itkPNGImageIOJSBinding'], ['pic', 'itkBioRadImageIOJSBinding'], ['PIC', 'itkBioRadImageIOJSBinding'], ['tif', 'itkTIFFImageIOJSBinding'], ['TIF', 'itkTIFFImageIOJSBinding'], ['tiff', 'itkTIFFImageIOJSBinding'], ['TIFF', 'itkTIFFImageIOJSBinding'], ['vtk', 'itkVTKImageIOJSBinding'], ['VTK', 'itkVTKImageIOJSBinding']]);
+var extensionToIO = new Map([['bmp', 'itkBMPImageIOJSBinding'], ['BMP', 'itkBMPImageIOJSBinding'], ['dcm', 'itkGDCMImageIOJSBinding'], ['DCM', 'itkGDCMImageIOJSBinding'], ['gipl', 'itkGiplImageIOJSBinding'], ['gipl.gz', 'itkGiplImageIOJSBinding'], ['hdf5', 'itkHDF5ImageIOJSBinding'], ['jpg', 'itkJPEGImageIOJSBinding'], ['JPG', 'itkJPEGImageIOJSBinding'], ['jpeg', 'itkJPEGImageIOJSBinding'], ['JPEG', 'itkJPEGImageIOJSBinding'], ['json', 'itkJSONImageIOJSBinding'], ['lsm', 'itkLSMImageIOJSBinding'], ['mnc', 'itkMINCImageIOJSBinding'], ['MNC', 'itkMINCImageIOJSBinding'], ['mnc.gz', 'itkMINCImageIOJSBinding'], ['MNC.GZ', 'itkMINCImageIOJSBinding'], ['mnc2', 'itkMINCImageIOJSBinding'], ['MNC2', 'itkMINCImageIOJSBinding'], ['mgh', 'itkMGHImageIOJSBinding'], ['mgz', 'itkMGHImageIOJSBinding'], ['mgh.gz', 'itkMGHImageIOJSBinding'], ['mha', 'itkMetaImageIOJSBinding'], ['mhd', 'itkMetaImageIOJSBinding'], ['mrc', 'itkMRCImageIOJSBinding'], ['nia', 'itkNiftiImageIOJSBinding'], ['nii', 'itkNiftiImageIOJSBinding'], ['nii.gz', 'itkNiftiImageIOJSBinding'], ['hdr', 'itkNiftiImageIOJSBinding'], ['nrrd', 'itkNrrdImageIOJSBinding'], ['NRRD', 'itkNrrdImageIOJSBinding'], ['nhdr', 'itkNrrdImageIOJSBinding'], ['NHDR', 'itkNrrdImageIOJSBinding'], ['png', 'itkPNGImageIOJSBinding'], ['PNG', 'itkPNGImageIOJSBinding'], ['pic', 'itkBioRadImageIOJSBinding'], ['PIC', 'itkBioRadImageIOJSBinding'], ['tif', 'itkTIFFImageIOJSBinding'], ['TIF', 'itkTIFFImageIOJSBinding'], ['tiff', 'itkTIFFImageIOJSBinding'], ['TIFF', 'itkTIFFImageIOJSBinding'], ['vtk', 'itkVTKImageIOJSBinding'], ['VTK', 'itkVTKImageIOJSBinding']]);
 module.exports = extensionToIO;
 
 },{}],18:[function(require,module,exports){
@@ -2100,15 +2101,15 @@ function loadEmscriptenModule(itkModulesPath, modulesDirectory, moduleBaseName) 
     prefix = '..';
   }
 
-  var modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + '.js';
-
   if ((typeof WebAssembly === "undefined" ? "undefined" : (0, _typeof2["default"])(WebAssembly)) === 'object' && typeof WebAssembly.Memory === 'function') {
-    modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + 'Wasm.js';
+    var modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + 'Wasm.js';
     importScripts(modulePath);
     var module = self[moduleBaseName]();
     return module;
   } else {
-    importScripts(modulePath);
+    var _modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + '.js';
+
+    importScripts(_modulePath);
     return Module;
   }
 }

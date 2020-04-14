@@ -1,4 +1,4 @@
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+import _typeof from "@babel/runtime/helpers/typeof";
 
 // Load the Emscripten module in the browser.
 //
@@ -24,15 +24,15 @@ function loadEmscriptenModule(itkModulesPath, modulesDirectory, moduleBaseName) 
     prefix = '..';
   }
 
-  var modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + '.js';
-
   if ((typeof WebAssembly === "undefined" ? "undefined" : _typeof(WebAssembly)) === 'object' && typeof WebAssembly.Memory === 'function') {
-    modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + 'Wasm.js';
+    var modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + 'Wasm.js';
     importScripts(modulePath);
     var module = self[moduleBaseName]();
     return module;
   } else {
-    importScripts(modulePath);
+    var _modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + '.js';
+
+    importScripts(_modulePath);
     return Module;
   }
 }

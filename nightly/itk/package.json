@@ -1,6 +1,6 @@
 {
   "name": "itk",
-  "version": "12.0.1",
+  "version": "12.2.0",
   "description": "High performance spatial analysis in a JavaScript runtime environment.",
   "main": "./dist/itk.js",
   "directories": {
@@ -47,13 +47,12 @@
     "@babel/core": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
-    "@babel/runtime": "^7.8.3",
     "async": "^2.6.1",
     "ava": "^3.5.1",
     "babel-loader": "^8.0.6",
     "babelify": "^10.0.0",
     "browserify": "^16.5.0",
-    "commitizen": "^4.0.3",
+    "commitizen": "^4.0.4",
     "cz-conventional-changelog": "2.1.0",
     "file-api": "^0.10.4",
     "fs-extra": "^7.0.1",
@@ -75,6 +74,7 @@
     "webpack-cli": "^3.2.3"
   },
   "dependencies": {
+    "@babel/runtime": "^7.9.2",
     "axios": "^0.19.0",
     "commander": "^2.19.0",
     "mime-types": "^2.1.21",
@@ -99,7 +99,7 @@
     ]
   }
 
-,"_resolved": "https://registry.npmjs.org/itk/-/itk-12.0.1.tgz"
-,"_integrity": "sha512-KyEmYdaAR69s5qTjlRhgaJ2FekcQ+e8fmM/u7803tYSsRPBDJ5qdj6WZLZs/m5X/kzb7cRL1UH9PnW/PH45kTw=="
-,"_from": "itk@12.0.1"
+,"_resolved": "https://registry.npmjs.org/itk/-/itk-12.2.0.tgz"
+,"_integrity": "sha512-9x5pFU22jvPx76Nq5vZRKQCQDCUjQBx7SBH1KVWw+fg0CkP76gyKgC2MNhlfn9Yyll6V1rbnByG01H6Bo6/WxA=="
+,"_from": "itk@12.2.0"
 }

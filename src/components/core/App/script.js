@@ -195,6 +195,7 @@ export default {
     notify(msg, permanent = false) {
       if (this.globalSingleNotification) {
         this.globalSingleNotification = '';
+        this.permanent = false;
       }
       this.$nextTick(() => {
         this.globalSingleNotification = msg;

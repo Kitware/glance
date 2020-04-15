@@ -153,6 +153,8 @@ export default {
         });
       }
 
+      this.$notify('Uploading...', true);
+
       const image = ITKHelper.convertVtkToItkImage(dataset);
       // If we don't copy here, the renderer's copy of the ArrayBuffer
       // becomes invalid because it's been transferred:
@@ -176,15 +178,20 @@ export default {
               .getProxyById(proxyId)
               .getKey('girderProvenance') || this.location,
         });
-        upload.start().then((response) => {
-          const { itemId } = response;
-          this.girderRest.put(
-            `${this.girderRest.apiRoot}/item/${itemId}`,
-            `metadata=${JSON.stringify(metadata)}`
-          );
-          this.$notify('Image uploaded');
-          this.$refs.girderFileManager.refresh();
-        });
+        upload
+          .start()
+          .then((response) => {
+            const { itemId } = response;
+            this.girderRest.put(
+              `${this.girderRest.apiRoot}/item/${itemId}`,
+              `metadata=${JSON.stringify(metadata)}`
+            );
+            this.$notify('Image uploaded');
+            this.$refs.girderFileManager.refresh();
+          })
+          .catch(() => {
+            this.$notify('Upload error');
+          });
       });
     },
     uploadMeasurements(proxyId) {
@@ -196,6 +203,7 @@ export default {
         const proxyName = this.$proxyManager.getProxyById(proxyId).getName();
         const name = `${proxyName}.measurements.json`;
         const file = new File([JSON.stringify(measurements)], name);
+        this.$notify('Uploading...', true);
         const upload = new GirderUpload(file, {
           $rest: this.girderRest,
           parent:
@@ -203,10 +211,15 @@ export default {
               .getProxyById(proxyId)
               .getKey('girderProvenance') || this.location,
         });
-        upload.start().then(() => {
-          this.$notify('Measurements uploaded');
-          this.$refs.girderFileManager.refresh();
-        });
+        upload
+          .start()
+          .then(() => {
+            this.$notify('Measurements uploaded');
+            this.$refs.girderFileManager.refresh();
+          })
+          .catch(() => {
+            this.$notify('Upload error');
+          });
       }
     },
     refreshPage() {

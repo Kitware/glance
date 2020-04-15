@@ -3,7 +3,7 @@ import vtkLabelMap from 'paraview-glance/src/vtk/LabelMap';
 export function copyImageToLabelMap(vtkImage) {
   /* eslint-disable-next-line import/no-named-as-default-member */
   const lm = vtkLabelMap.newInstance(
-    vtkImage.get(['direction', 'origin', 'spacing'])
+    vtkImage.get('direction', 'origin', 'spacing')
   );
   lm.setDimensions(vtkImage.getDimensions());
   lm.computeTransforms();

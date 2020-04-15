@@ -190,6 +190,7 @@
         @input="globalSingleNotification = ''"
         bottom
         left
+        :timeout="notifyPermanent ? 0 : 6000"
         @click="globalSingleNotification = ''"
       >
         {{ globalSingleNotification }}

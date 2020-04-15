@@ -59,6 +59,7 @@ export default {
       screenshotCount: 0,
       errors: [],
       globalSingleNotification: '',
+      notifyPermanent: false,
     };
   },
   computed: {
@@ -191,8 +192,14 @@ export default {
     recordError(error) {
       this.errors.push(error);
     },
-    notify(msg) {
-      this.globalSingleNotification = msg;
+    notify(msg, permanent = false) {
+      if (this.globalSingleNotification) {
+        this.globalSingleNotification = '';
+      }
+      this.$nextTick(() => {
+        this.globalSingleNotification = msg;
+        this.notifyPermanent = permanent;
+      });
     },
   },
 };

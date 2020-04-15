@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { GenerateSW } = require('workbox-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
@@ -24,7 +25,7 @@ module.exports = {
   }, externals.getExternalEntries(paths.externals)),
   output: {
     path: paths.output,
-    filename: '[name].js',
+    filename: '[name].[contenthash].js',
     libraryTarget: 'umd',
   },
   module: {
@@ -103,6 +104,9 @@ module.exports = {
     ].concat(vtkRules.core.rules),
   },
   plugins: [
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: ['**/*', '!version.js'],
+    }),
     new VueLoaderPlugin(),
     new VuetifyLoaderPlugin(),
     new WriteFilePlugin(),
@@ -130,10 +134,19 @@ module.exports = {
         flatten: true,
       },
     ]),
-    new WorkboxPlugin({
-      globIgnores: ['serviceWorker.js'],
-      swSrc: path.join(paths.externals, 'Workbox', 'serviceWorker.js'),
+    new GenerateSW({
+      cacheId: 'paraview-glance-',
+      cleanupOutdatedCaches: true,
+      include: [/\.js$/],
+      exclude: ['serviceWorker.js'],
       swDest: path.join(paths.output, 'serviceWorker.js'),
+      skipWaiting: true,
+      runtimeCaching: [
+        {
+          handler: 'CacheFirst',
+          urlPattern: /(\.css|\.ttf|\.eot|\.woff|\.js|\.png|\.svg|\.wasm)$/,
+        },
+      ],
     }),
   ],
   resolve: {

@@ -60,7 +60,7 @@ module.exports = merge.smart(baseConfig, {
       inject: false,
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].css',
+      filename: '[name].[contenthash].css',
       ignoreOrder: false,
     }),
   ],

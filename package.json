@@ -59,6 +59,7 @@
     "@babel/plugin-syntax-dynamic-import": "7.0.0",
     "@babel/plugin-transform-runtime": "^7.9.0",
     "@mdi/font": "4.4.95",
+    "clean-webpack-plugin": "^3.0.0",
     "deep-merge": "^1.0.0",
     "eslint-plugin-vue": "5.2.3",
     "fibers": "^4.0.1",
@@ -73,7 +74,7 @@
     "vue-template-compiler": "2.6.10",
     "vuetify-loader": "github:vuetifyjs/vuetify-loader#3a6a2ffcfc4233dbfdd88d549d55e6cea79ef4fb",
     "webpack-merge": "4.1.2",
-    "workbox-webpack-plugin": "2.1.2",
+    "workbox-webpack-plugin": "5.1.2",
     "write-file-webpack-plugin": "^4.3.2"
   },
   "config": {

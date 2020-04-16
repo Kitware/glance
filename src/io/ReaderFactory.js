@@ -278,7 +278,6 @@ function importBase64Dataset(
 ) {
   const chunks = [];
   const bytes = atob(base64String);
-  let totalCount = 0;
   for (let offset = 0; offset < bytes.length; offset += chunkSize) {
     const slice = bytes.slice(offset, offset + chunkSize);
     const array = new Uint8Array(slice.length);
@@ -286,7 +285,6 @@ function importBase64Dataset(
       array[i] = slice.charCodeAt(i);
     }
     chunks.push(array);
-    totalCount += array.length;
   }
   const blob = new Blob(chunks, { type: 'application/octet-stream' });
   const file = new File([blob], fileName);

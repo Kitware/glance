@@ -276,10 +276,8 @@ function importBase64Dataset(
   proxyManager,
   chunkSize = 512
 ) {
-  console.log('loadBase64', fileName, base64String.length);
   const chunks = [];
   const bytes = atob(base64String);
-  console.log('bytes', bytes.length);
   let totalCount = 0;
   for (let offset = 0; offset < bytes.length; offset += chunkSize) {
     const slice = bytes.slice(offset, offset + chunkSize);
@@ -290,7 +288,6 @@ function importBase64Dataset(
     chunks.push(array);
     totalCount += array.length;
   }
-  console.log('totalCount', totalCount);
   const blob = new Blob(chunks, { type: 'application/octet-stream' });
   const file = new File([blob], fileName);
 

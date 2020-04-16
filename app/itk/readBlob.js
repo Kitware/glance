@@ -9,7 +9,7 @@ var readBlob = function readBlob(webWorker, blob, fileName, mimeType) {
   var isMesh = !!extensionToMeshIO.has(extension) || !!mimeToMeshIO.has(mimeType);
 
   if (isMesh) {
-    return readMeshBlob(webWorker, blob, fileName, mimeType).catch(function () {
+    return readMeshBlob(webWorker, blob, fileName, mimeType)["catch"](function () {
       webWorker.terminate();
       return readImageBlob(null, blob, fileName, mimeType);
     });

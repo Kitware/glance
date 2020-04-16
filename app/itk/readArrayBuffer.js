@@ -9,7 +9,7 @@ var readArrayBuffer = function readArrayBuffer(webWorker, arrayBuffer, fileName,
   var isMesh = !!extensionToMeshIO.has(extension) || !!mimeToMeshIO.has(mimeType);
 
   if (isMesh) {
-    return readMeshArrayBuffer(webWorker, arrayBuffer, fileName, mimeType).catch(function () {
+    return readMeshArrayBuffer(webWorker, arrayBuffer, fileName, mimeType)["catch"](function () {
       webWorker.terminate();
       return readImageArrayBuffer(null, arrayBuffer, fileName, mimeType);
     });

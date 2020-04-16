@@ -8,8 +8,8 @@ var imageIOComponentToJSComponent = require('./imageIOComponentToJSComponent.js'
 
 var imageIOPixelTypeToJSPixelType = require('./imageIOPixelTypeToJSPixelType.js');
 
-var readImageEmscriptenFSFile = function readImageEmscriptenFSFile(module, filePath) {
-  var imageIO = new module.ITKImageIO();
+var readImageEmscriptenFSFile = function readImageEmscriptenFSFile(imageModule, filePath) {
+  var imageIO = new imageModule.ITKImageIO();
   imageIO.SetFileName(filePath);
 
   if (!imageIO.CanReadFile(filePath)) {
@@ -20,9 +20,9 @@ var readImageEmscriptenFSFile = function readImageEmscriptenFSFile(module, fileP
   var ioDimensions = imageIO.GetNumberOfDimensions();
   var imageType = new ImageType(ioDimensions);
   var ioComponentType = imageIO.GetComponentType();
-  imageType.componentType = imageIOComponentToJSComponent(module, ioComponentType);
+  imageType.componentType = imageIOComponentToJSComponent(imageModule, ioComponentType);
   var ioPixelType = imageIO.GetPixelType();
-  imageType.pixelType = imageIOPixelTypeToJSPixelType(module, ioPixelType);
+  imageType.pixelType = imageIOPixelTypeToJSPixelType(imageModule, ioPixelType);
   imageType.components = imageIO.GetNumberOfComponents();
   var image = new Image(imageType);
   var ioDirection = new Matrix(ioDimensions, ioDimensions);

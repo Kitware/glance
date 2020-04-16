@@ -60,7 +60,6 @@ var readPolyDataFile = function readPolyDataFile(webWorker, file) {
         var stdout = _ref2.stdout,
             stderr = _ref2.stderr,
             outputs = _ref2.outputs;
-        console.log(outputs);
         return Promise.resolve({
           polyData: outputs[0].data,
           webWorker: worker

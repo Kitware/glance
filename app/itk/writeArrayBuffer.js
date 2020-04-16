@@ -9,7 +9,7 @@ var writeArrayBuffer = function writeArrayBuffer(webWorker, useCompression, imag
   var isMesh = !!extensionToMeshIO.has(extension) || !!mimeToMeshIO.has(mimeType);
 
   if (isMesh) {
-    return writeMeshArrayBuffer(webWorker, useCompression, imageOrMesh, fileName, mimeType).catch(function () {
+    return writeMeshArrayBuffer(webWorker, useCompression, imageOrMesh, fileName, mimeType)["catch"](function () {
       webWorker.terminate();
       return writeImageArrayBuffer(null, useCompression, imageOrMesh, fileName, mimeType);
     });

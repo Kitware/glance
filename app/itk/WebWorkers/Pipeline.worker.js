@@ -1,30 +1,1683 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-"use strict";var _createClass=function(){function e(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,r,n){return r&&e(t.prototype,r),n&&e(t,n),t}}(),_get=function e(t,r,n){null===t&&(t=Function.prototype);var o=Object.getOwnPropertyDescriptor(t,r);if(void 0===o){var i=Object.getPrototypeOf(t);return null===i?void 0:e(i,r,n)}if("value"in o)return o.value;var a=o.get;return void 0!==a?a.call(n):void 0},_typeof="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};function _toConsumableArray(e){if(Array.isArray(e)){for(var t=0,r=Array(e.length);t<e.length;t++)r[t]=e[t];return r}return Array.from(e)}function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function _possibleConstructorReturn(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function _inherits(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}function _defineProperty(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}var TinyEmitter=require("./tiny-emitter"),MESSAGE_RESULT=0,MESSAGE_EVENT=1,RESULT_ERROR=0,RESULT_SUCCESS=1,DEFAULT_HANDLER="main",isPromise=function(e){return"object"===(void 0===e?"undefined":_typeof(e))&&"function"==typeof e.then&&"function"==typeof e.catch};function RegisterPromise(e){var t=_defineProperty({},DEFAULT_HANDLER,e),r=self.postMessage.bind(self),n=new(function(e){function n(){return _classCallCheck(this,n),_possibleConstructorReturn(this,(n.__proto__||Object.getPrototypeOf(n)).apply(this,arguments))}return _inherits(n,TinyEmitter),_createClass(n,[{key:"emit",value:function(e){for(var t=arguments.length,n=Array(t>1?t-1:0),o=1;o<t;o++)n[o-1]=arguments[o];return r({eventName:e,args:n}),this}},{key:"emitLocally",value:function(e){for(var t,r=arguments.length,o=Array(r>1?r-1:0),i=1;i<r;i++)o[i-1]=arguments[i];(t=_get(n.prototype.__proto__||Object.getPrototypeOf(n.prototype),"emit",this)).call.apply(t,[this,e].concat(o))}},{key:"operation",value:function(e,r){return t[e]=r,this}}]),n}()),o=function(e,r,n){var o=t[n||DEFAULT_HANDLER];if(!o)throw new Error("Not found handler for this request");return o(r,a.bind(null,e))},i=function(e,t,n){var o=arguments.length>3&&void 0!==arguments[3]?arguments[3]:[];r([MESSAGE_RESULT,e,t,n],o)},a=function(e,t,n){if(!t)throw new Error("eventName is required");if("string"!=typeof t)throw new Error("eventName should be string");r([MESSAGE_EVENT,e,t,n])};return self.addEventListener("message",function(e){var t=e.data;Array.isArray(t)?function(e,t,r){var n=function(t){t&&t instanceof TransferableResponse?i(e,RESULT_SUCCESS,t.payload,t.transferable):i(e,RESULT_SUCCESS,t)},a=function(t){i(e,RESULT_ERROR,{message:t.message,stack:t.stack})};try{var s=o(e,t,r);isPromise(s)?s.then(n).catch(a):n(s)}catch(e){a(e)}}.apply(void 0,_toConsumableArray(t)):t&&t.eventName&&n.emitLocally.apply(n,[t.eventName].concat(_toConsumableArray(t.args)))}),n}var TransferableResponse=function e(t,r){_classCallCheck(this,e),this.payload=t,this.transferable=r};module.exports=RegisterPromise,module.exports.TransferableResponse=TransferableResponse;
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
 
-},{"./tiny-emitter":2}],2:[function(require,module,exports){
-"use strict";var _createClass=function(){function e(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,r,n){return r&&e(t.prototype,r),n&&e(t,n),t}}();function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var TinyEmitter=function(){function e(){_classCallCheck(this,e),Object.defineProperty(this,"__listeners",{value:{},enumerable:!1,writable:!1})}return _createClass(e,[{key:"emit",value:function(e){if(!this.__listeners[e])return this;for(var t=arguments.length,r=Array(t>1?t-1:0),n=1;n<t;n++)r[n-1]=arguments[n];var i=!0,s=!1,a=void 0;try{for(var l,o=this.__listeners[e][Symbol.iterator]();!(i=(l=o.next()).done);i=!0){l.value.apply(void 0,r)}}catch(e){s=!0,a=e}finally{try{!i&&o.return&&o.return()}finally{if(s)throw a}}return this}},{key:"once",value:function(e,t){var r=this,n=function n(){r.off(e,n),t.apply(void 0,arguments)};return this.on(e,n)}},{key:"on",value:function(e,t){return this.__listeners[e]||(this.__listeners[e]=[]),this.__listeners[e].push(t),this}},{key:"off",value:function(e,t){return this.__listeners[e]=t?this.__listeners[e].filter(function(e){return e!==t}):[],this}}]),e}();module.exports=TinyEmitter;
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
 
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+        args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+
+      _next(undefined);
+    });
+  };
+}
+
+module.exports = _asyncToGenerator;
+},{}],2:[function(require,module,exports){
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : {
+    "default": obj
+  };
+}
+
+module.exports = _interopRequireDefault;
 },{}],3:[function(require,module,exports){
-"use strict";var Float32="float",Float64="double",SpacePrecisionType="double";module.exports={Float32:Float32,Float64:Float64,SpacePrecisionType:SpacePrecisionType};
+function _typeof(obj) {
+  "@babel/helpers - typeof";
 
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
 },{}],4:[function(require,module,exports){
-"use strict";var Text="Text",Binary="Binary",Image="Image",Mesh="Mesh",vtkPolyData="vtkPolyData";module.exports={Text:Text,Binary:Binary,Image:Image,Mesh:Mesh,vtkPolyData:vtkPolyData};
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+var runtime = (function (exports) {
+  "use strict";
+
+  var Op = Object.prototype;
+  var hasOwn = Op.hasOwnProperty;
+  var undefined; // More compressible than void 0.
+  var $Symbol = typeof Symbol === "function" ? Symbol : {};
+  var iteratorSymbol = $Symbol.iterator || "@@iterator";
+  var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
+  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
+    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
+    var generator = Object.create(protoGenerator.prototype);
+    var context = new Context(tryLocsList || []);
+
+    // The ._invoke method unifies the implementations of the .next,
+    // .throw, and .return methods.
+    generator._invoke = makeInvokeMethod(innerFn, self, context);
+
+    return generator;
+  }
+  exports.wrap = wrap;
+
+  // Try/catch helper to minimize deoptimizations. Returns a completion
+  // record like context.tryEntries[i].completion. This interface could
+  // have been (and was previously) designed to take a closure to be
+  // invoked without arguments, but in all the cases we care about we
+  // already have an existing method we want to call, so there's no need
+  // to create a new function object. We can even get away with assuming
+  // the method takes exactly one argument, since that happens to be true
+  // in every case, so we don't have to touch the arguments object. The
+  // only additional allocation required is the completion record, which
+  // has a stable shape and so hopefully should be cheap to allocate.
+  function tryCatch(fn, obj, arg) {
+    try {
+      return { type: "normal", arg: fn.call(obj, arg) };
+    } catch (err) {
+      return { type: "throw", arg: err };
+    }
+  }
+
+  var GenStateSuspendedStart = "suspendedStart";
+  var GenStateSuspendedYield = "suspendedYield";
+  var GenStateExecuting = "executing";
+  var GenStateCompleted = "completed";
+
+  // Returning this object from the innerFn has the same effect as
+  // breaking out of the dispatch switch statement.
+  var ContinueSentinel = {};
+
+  // Dummy constructor functions that we use as the .constructor and
+  // .constructor.prototype properties for functions that return Generator
+  // objects. For full spec compliance, you may wish to configure your
+  // minifier not to mangle the names of these two functions.
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+
+  // This is a polyfill for %IteratorPrototype% for environments that
+  // don't natively support it.
+  var IteratorPrototype = {};
+  IteratorPrototype[iteratorSymbol] = function () {
+    return this;
+  };
+
+  var getProto = Object.getPrototypeOf;
+  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+  if (NativeIteratorPrototype &&
+      NativeIteratorPrototype !== Op &&
+      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
+    // This environment has a native %IteratorPrototype%; use it instead
+    // of the polyfill.
+    IteratorPrototype = NativeIteratorPrototype;
+  }
+
+  var Gp = GeneratorFunctionPrototype.prototype =
+    Generator.prototype = Object.create(IteratorPrototype);
+  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
+  GeneratorFunctionPrototype.constructor = GeneratorFunction;
+  GeneratorFunctionPrototype[toStringTagSymbol] =
+    GeneratorFunction.displayName = "GeneratorFunction";
+
+  // Helper for defining the .next, .throw, and .return methods of the
+  // Iterator interface in terms of a single ._invoke method.
+  function defineIteratorMethods(prototype) {
+    ["next", "throw", "return"].forEach(function(method) {
+      prototype[method] = function(arg) {
+        return this._invoke(method, arg);
+      };
+    });
+  }
+
+  exports.isGeneratorFunction = function(genFun) {
+    var ctor = typeof genFun === "function" && genFun.constructor;
+    return ctor
+      ? ctor === GeneratorFunction ||
+        // For the native GeneratorFunction constructor, the best we can
+        // do is to check its .name property.
+        (ctor.displayName || ctor.name) === "GeneratorFunction"
+      : false;
+  };
+
+  exports.mark = function(genFun) {
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
+    } else {
+      genFun.__proto__ = GeneratorFunctionPrototype;
+      if (!(toStringTagSymbol in genFun)) {
+        genFun[toStringTagSymbol] = "GeneratorFunction";
+      }
+    }
+    genFun.prototype = Object.create(Gp);
+    return genFun;
+  };
+
+  // Within the body of any async function, `await x` is transformed to
+  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
+  // `hasOwn.call(value, "__await")` to determine if the yielded value is
+  // meant to be awaited.
+  exports.awrap = function(arg) {
+    return { __await: arg };
+  };
+
+  function AsyncIterator(generator, PromiseImpl) {
+    function invoke(method, arg, resolve, reject) {
+      var record = tryCatch(generator[method], generator, arg);
+      if (record.type === "throw") {
+        reject(record.arg);
+      } else {
+        var result = record.arg;
+        var value = result.value;
+        if (value &&
+            typeof value === "object" &&
+            hasOwn.call(value, "__await")) {
+          return PromiseImpl.resolve(value.__await).then(function(value) {
+            invoke("next", value, resolve, reject);
+          }, function(err) {
+            invoke("throw", err, resolve, reject);
+          });
+        }
+
+        return PromiseImpl.resolve(value).then(function(unwrapped) {
+          // When a yielded Promise is resolved, its final value becomes
+          // the .value of the Promise<{value,done}> result for the
+          // current iteration.
+          result.value = unwrapped;
+          resolve(result);
+        }, function(error) {
+          // If a rejected Promise was yielded, throw the rejection back
+          // into the async generator function so it can be handled there.
+          return invoke("throw", error, resolve, reject);
+        });
+      }
+    }
+
+    var previousPromise;
+
+    function enqueue(method, arg) {
+      function callInvokeWithMethodAndArg() {
+        return new PromiseImpl(function(resolve, reject) {
+          invoke(method, arg, resolve, reject);
+        });
+      }
+
+      return previousPromise =
+        // If enqueue has been called before, then we want to wait until
+        // all previous Promises have been resolved before calling invoke,
+        // so that results are always delivered in the correct order. If
+        // enqueue has not been called before, then it is important to
+        // call invoke immediately, without waiting on a callback to fire,
+        // so that the async generator function has the opportunity to do
+        // any necessary setup in a predictable way. This predictability
+        // is why the Promise constructor synchronously invokes its
+        // executor callback, and why async functions synchronously
+        // execute code before the first await. Since we implement simple
+        // async functions in terms of async generators, it is especially
+        // important to get this right, even though it requires care.
+        previousPromise ? previousPromise.then(
+          callInvokeWithMethodAndArg,
+          // Avoid propagating failures to Promises returned by later
+          // invocations of the iterator.
+          callInvokeWithMethodAndArg
+        ) : callInvokeWithMethodAndArg();
+    }
+
+    // Define the unified helper method that is used to implement .next,
+    // .throw, and .return (see defineIteratorMethods).
+    this._invoke = enqueue;
+  }
+
+  defineIteratorMethods(AsyncIterator.prototype);
+  AsyncIterator.prototype[asyncIteratorSymbol] = function () {
+    return this;
+  };
+  exports.AsyncIterator = AsyncIterator;
+
+  // Note that simple async functions are implemented on top of
+  // AsyncIterator objects; they just return a Promise for the value of
+  // the final result produced by the iterator.
+  exports.async = function(innerFn, outerFn, self, tryLocsList, PromiseImpl) {
+    if (PromiseImpl === void 0) PromiseImpl = Promise;
+
+    var iter = new AsyncIterator(
+      wrap(innerFn, outerFn, self, tryLocsList),
+      PromiseImpl
+    );
+
+    return exports.isGeneratorFunction(outerFn)
+      ? iter // If outerFn is a generator, return the full iterator.
+      : iter.next().then(function(result) {
+          return result.done ? result.value : iter.next();
+        });
+  };
+
+  function makeInvokeMethod(innerFn, self, context) {
+    var state = GenStateSuspendedStart;
+
+    return function invoke(method, arg) {
+      if (state === GenStateExecuting) {
+        throw new Error("Generator is already running");
+      }
+
+      if (state === GenStateCompleted) {
+        if (method === "throw") {
+          throw arg;
+        }
+
+        // Be forgiving, per 25.3.3.3.3 of the spec:
+        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+        return doneResult();
+      }
+
+      context.method = method;
+      context.arg = arg;
+
+      while (true) {
+        var delegate = context.delegate;
+        if (delegate) {
+          var delegateResult = maybeInvokeDelegate(delegate, context);
+          if (delegateResult) {
+            if (delegateResult === ContinueSentinel) continue;
+            return delegateResult;
+          }
+        }
+
+        if (context.method === "next") {
+          // Setting context._sent for legacy support of Babel's
+          // function.sent implementation.
+          context.sent = context._sent = context.arg;
+
+        } else if (context.method === "throw") {
+          if (state === GenStateSuspendedStart) {
+            state = GenStateCompleted;
+            throw context.arg;
+          }
+
+          context.dispatchException(context.arg);
+
+        } else if (context.method === "return") {
+          context.abrupt("return", context.arg);
+        }
+
+        state = GenStateExecuting;
+
+        var record = tryCatch(innerFn, self, context);
+        if (record.type === "normal") {
+          // If an exception is thrown from innerFn, we leave state ===
+          // GenStateExecuting and loop back for another invocation.
+          state = context.done
+            ? GenStateCompleted
+            : GenStateSuspendedYield;
+
+          if (record.arg === ContinueSentinel) {
+            continue;
+          }
+
+          return {
+            value: record.arg,
+            done: context.done
+          };
+
+        } else if (record.type === "throw") {
+          state = GenStateCompleted;
+          // Dispatch the exception by looping back around to the
+          // context.dispatchException(context.arg) call above.
+          context.method = "throw";
+          context.arg = record.arg;
+        }
+      }
+    };
+  }
+
+  // Call delegate.iterator[context.method](context.arg) and handle the
+  // result, either by returning a { value, done } result from the
+  // delegate iterator, or by modifying context.method and context.arg,
+  // setting context.delegate to null, and returning the ContinueSentinel.
+  function maybeInvokeDelegate(delegate, context) {
+    var method = delegate.iterator[context.method];
+    if (method === undefined) {
+      // A .throw or .return when the delegate iterator has no .throw
+      // method always terminates the yield* loop.
+      context.delegate = null;
+
+      if (context.method === "throw") {
+        // Note: ["return"] must be used for ES3 parsing compatibility.
+        if (delegate.iterator["return"]) {
+          // If the delegate iterator has a return method, give it a
+          // chance to clean up.
+          context.method = "return";
+          context.arg = undefined;
+          maybeInvokeDelegate(delegate, context);
+
+          if (context.method === "throw") {
+            // If maybeInvokeDelegate(context) changed context.method from
+            // "return" to "throw", let that override the TypeError below.
+            return ContinueSentinel;
+          }
+        }
+
+        context.method = "throw";
+        context.arg = new TypeError(
+          "The iterator does not provide a 'throw' method");
+      }
+
+      return ContinueSentinel;
+    }
+
+    var record = tryCatch(method, delegate.iterator, context.arg);
+
+    if (record.type === "throw") {
+      context.method = "throw";
+      context.arg = record.arg;
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    var info = record.arg;
+
+    if (! info) {
+      context.method = "throw";
+      context.arg = new TypeError("iterator result is not an object");
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    if (info.done) {
+      // Assign the result of the finished delegate to the temporary
+      // variable specified by delegate.resultName (see delegateYield).
+      context[delegate.resultName] = info.value;
+
+      // Resume execution at the desired location (see delegateYield).
+      context.next = delegate.nextLoc;
+
+      // If context.method was "throw" but the delegate handled the
+      // exception, let the outer generator proceed normally. If
+      // context.method was "next", forget context.arg since it has been
+      // "consumed" by the delegate iterator. If context.method was
+      // "return", allow the original .return call to continue in the
+      // outer generator.
+      if (context.method !== "return") {
+        context.method = "next";
+        context.arg = undefined;
+      }
+
+    } else {
+      // Re-yield the result returned by the delegate method.
+      return info;
+    }
+
+    // The delegate iterator is finished, so forget it and continue with
+    // the outer generator.
+    context.delegate = null;
+    return ContinueSentinel;
+  }
+
+  // Define Generator.prototype.{next,throw,return} in terms of the
+  // unified ._invoke helper method.
+  defineIteratorMethods(Gp);
+
+  Gp[toStringTagSymbol] = "Generator";
+
+  // A Generator should always return itself as the iterator object when the
+  // @@iterator function is called on it. Some browsers' implementations of the
+  // iterator prototype chain incorrectly implement this, causing the Generator
+  // object to not be returned from this call. This ensures that doesn't happen.
+  // See https://github.com/facebook/regenerator/issues/274 for more details.
+  Gp[iteratorSymbol] = function() {
+    return this;
+  };
+
+  Gp.toString = function() {
+    return "[object Generator]";
+  };
+
+  function pushTryEntry(locs) {
+    var entry = { tryLoc: locs[0] };
+
+    if (1 in locs) {
+      entry.catchLoc = locs[1];
+    }
+
+    if (2 in locs) {
+      entry.finallyLoc = locs[2];
+      entry.afterLoc = locs[3];
+    }
+
+    this.tryEntries.push(entry);
+  }
+
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal";
+    delete record.arg;
+    entry.completion = record;
+  }
+
+  function Context(tryLocsList) {
+    // The root entry object (effectively a try statement without a catch
+    // or a finally block) gives us a place to store values thrown from
+    // locations where there is no enclosing try statement.
+    this.tryEntries = [{ tryLoc: "root" }];
+    tryLocsList.forEach(pushTryEntry, this);
+    this.reset(true);
+  }
+
+  exports.keys = function(object) {
+    var keys = [];
+    for (var key in object) {
+      keys.push(key);
+    }
+    keys.reverse();
+
+    // Rather than returning an object with a next method, we keep
+    // things simple and return the next function itself.
+    return function next() {
+      while (keys.length) {
+        var key = keys.pop();
+        if (key in object) {
+          next.value = key;
+          next.done = false;
+          return next;
+        }
+      }
+
+      // To avoid creating an additional object, we just hang the .value
+      // and .done properties off the next function object itself. This
+      // also ensures that the minifier will not anonymize the function.
+      next.done = true;
+      return next;
+    };
+  };
+
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) {
+        return iteratorMethod.call(iterable);
+      }
+
+      if (typeof iterable.next === "function") {
+        return iterable;
+      }
+
+      if (!isNaN(iterable.length)) {
+        var i = -1, next = function next() {
+          while (++i < iterable.length) {
+            if (hasOwn.call(iterable, i)) {
+              next.value = iterable[i];
+              next.done = false;
+              return next;
+            }
+          }
+
+          next.value = undefined;
+          next.done = true;
+
+          return next;
+        };
+
+        return next.next = next;
+      }
+    }
+
+    // Return an iterator with no values.
+    return { next: doneResult };
+  }
+  exports.values = values;
+
+  function doneResult() {
+    return { value: undefined, done: true };
+  }
+
+  Context.prototype = {
+    constructor: Context,
+
+    reset: function(skipTempReset) {
+      this.prev = 0;
+      this.next = 0;
+      // Resetting context._sent for legacy support of Babel's
+      // function.sent implementation.
+      this.sent = this._sent = undefined;
+      this.done = false;
+      this.delegate = null;
+
+      this.method = "next";
+      this.arg = undefined;
+
+      this.tryEntries.forEach(resetTryEntry);
+
+      if (!skipTempReset) {
+        for (var name in this) {
+          // Not sure about the optimal order of these conditions:
+          if (name.charAt(0) === "t" &&
+              hasOwn.call(this, name) &&
+              !isNaN(+name.slice(1))) {
+            this[name] = undefined;
+          }
+        }
+      }
+    },
+
+    stop: function() {
+      this.done = true;
+
+      var rootEntry = this.tryEntries[0];
+      var rootRecord = rootEntry.completion;
+      if (rootRecord.type === "throw") {
+        throw rootRecord.arg;
+      }
+
+      return this.rval;
+    },
+
+    dispatchException: function(exception) {
+      if (this.done) {
+        throw exception;
+      }
+
+      var context = this;
+      function handle(loc, caught) {
+        record.type = "throw";
+        record.arg = exception;
+        context.next = loc;
+
+        if (caught) {
+          // If the dispatched exception was caught by a catch block,
+          // then let that catch block handle the exception normally.
+          context.method = "next";
+          context.arg = undefined;
+        }
+
+        return !! caught;
+      }
+
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        var record = entry.completion;
+
+        if (entry.tryLoc === "root") {
+          // Exception thrown outside of any try block that could handle
+          // it, so set the completion value of the entire function to
+          // throw the exception.
+          return handle("end");
+        }
+
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc");
+          var hasFinally = hasOwn.call(entry, "finallyLoc");
+
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            } else if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            }
+
+          } else if (hasFinally) {
+            if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else {
+            throw new Error("try statement without catch or finally");
+          }
+        }
+      }
+    },
+
+    abrupt: function(type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev &&
+            hasOwn.call(entry, "finallyLoc") &&
+            this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+
+      if (finallyEntry &&
+          (type === "break" ||
+           type === "continue") &&
+          finallyEntry.tryLoc <= arg &&
+          arg <= finallyEntry.finallyLoc) {
+        // Ignore the finally entry if control is not jumping to a
+        // location outside the try/catch block.
+        finallyEntry = null;
+      }
+
+      var record = finallyEntry ? finallyEntry.completion : {};
+      record.type = type;
+      record.arg = arg;
+
+      if (finallyEntry) {
+        this.method = "next";
+        this.next = finallyEntry.finallyLoc;
+        return ContinueSentinel;
+      }
+
+      return this.complete(record);
+    },
+
+    complete: function(record, afterLoc) {
+      if (record.type === "throw") {
+        throw record.arg;
+      }
+
+      if (record.type === "break" ||
+          record.type === "continue") {
+        this.next = record.arg;
+      } else if (record.type === "return") {
+        this.rval = this.arg = record.arg;
+        this.method = "return";
+        this.next = "end";
+      } else if (record.type === "normal" && afterLoc) {
+        this.next = afterLoc;
+      }
+
+      return ContinueSentinel;
+    },
+
+    finish: function(finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) {
+          this.complete(entry.completion, entry.afterLoc);
+          resetTryEntry(entry);
+          return ContinueSentinel;
+        }
+      }
+    },
+
+    "catch": function(tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if (record.type === "throw") {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+
+      // The context.catch method must only be called with a location
+      // argument that corresponds to a known catch block.
+      throw new Error("illegal catch attempt");
+    },
+
+    delegateYield: function(iterable, resultName, nextLoc) {
+      this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      };
+
+      if (this.method === "next") {
+        // Deliberately forget the last sent value so that we don't
+        // accidentally pass it on to the delegate.
+        this.arg = undefined;
+      }
+
+      return ContinueSentinel;
+    }
+  };
+
+  // Regardless of whether this script is executing as a CommonJS module
+  // or not, return the runtime object so that we can declare the variable
+  // regeneratorRuntime in the outer scope, which allows this module to be
+  // injected easily by `bin/regenerator --include-runtime script.js`.
+  return exports;
+
+}(
+  // If this script is executing as a CommonJS module, use module.exports
+  // as the regeneratorRuntime namespace. Otherwise create a new empty
+  // object. Either way, the resulting object will be used to initialize
+  // the regeneratorRuntime variable at the top of this file.
+  typeof module === "object" ? module.exports : {}
+));
+
+try {
+  regeneratorRuntime = runtime;
+} catch (accidentalStrictMode) {
+  // This module should not be running in strict mode, so the above
+  // assignment should always work unless something is misconfigured. Just
+  // in case runtime.js accidentally runs in strict mode, we can escape
+  // strict mode using a global Function call. This could conceivably fail
+  // if a Content Security Policy forbids using Function, but in that case
+  // the proper solution is to fix the accidental strict mode problem. If
+  // you've misconfigured your bundler to force strict mode and applied a
+  // CSP to forbid Function, and you're not willing to fix either of those
+  // problems, please detail your unique predicament in a GitHub issue.
+  Function("r", "regeneratorRuntime = r")(runtime);
+}
 
 },{}],5:[function(require,module,exports){
-"use strict";var Int8="int8_t",UInt8="uint8_t",Int16="int16_t",UInt16="uint16_t",Int32="int32_t",UInt32="uint32_t",Int64="int64_t",UInt64="uint64_t",SizeValueType=UInt64,IdentifierType=SizeValueType,IndexValueType=Int64,OffsetValueType=Int64;module.exports={Int8:Int8,UInt8:UInt8,Int16:Int16,UInt16:UInt16,Int32:Int32,UInt32:UInt32,Int64:Int64,UInt64:UInt64,SizeValueType:SizeValueType,IdentifierType:IdentifierType,IndexValueType:IndexValueType,OffsetValueType:OffsetValueType};
+module.exports = require("regenerator-runtime");
 
-},{}],6:[function(require,module,exports){
-"use strict";var _register=_interopRequireDefault(require("webworker-promise/lib/register")),_loadEmscriptenModuleBrowser=_interopRequireDefault(require("../loadEmscriptenModuleBrowser")),_runPipelineEmscripten=_interopRequireDefault(require("../runPipelineEmscripten")),_IOTypes=_interopRequireDefault(require("../IOTypes"));function _interopRequireDefault(e){return e&&e.__esModule?e:{default:e}}var pipelinePathToModule={};function loadPipelineModule(e,a,t){var r=null;return a in pipelinePathToModule?r=pipelinePathToModule[a]:(pipelinePathToModule[a]=(0,_loadEmscriptenModuleBrowser.default)(t.itkModulesPath,e,a),r=pipelinePathToModule[a]),r}var runPipeline=function(e,a,t,r){var i=(0,_runPipelineEmscripten.default)(e,a,t,r),u=[];return i.outputs&&i.outputs.forEach(function(e){switch(e.type){case _IOTypes.default.Binary:e.data.buffer?u.push(e.data.buffer):e.data.byteLength&&u.push(e.data);break;case _IOTypes.default.Image:e.data.data.buffer?u.push(e.data.data.buffer):e.data.data.byteLength&&u.push(e.data.data);break;case _IOTypes.default.Mesh:e.data.points&&(e.data.points.buffer?u.push(e.data.points.buffer):e.data.points.byteLength&&u.push(e.data.points)),e.data.pointData&&(e.data.pointData.buffer?u.push(e.data.pointData.buffer):e.data.pointData.byteLength&&u.push(e.data.pointData)),e.data.cells&&(e.data.cells.buffer?u.push(e.data.cells.buffer):e.data.cells.byteLength&&u.push(e.data.cells)),e.data.cellData&&(e.data.cellData.buffer?u.push(e.data.cellData.buffer):e.data.cellData.byteLength&&u.push(e.data.cellData));break;case _IOTypes.default.vtkPolyData:var a=e.data;["points","verts","lines","polys","strips"].forEach(function(e){a[e]&&a[e].buffer&&u.push(a[e].buffer)});["pointData","cellData","fieldData"].forEach(function(e){a[e]&&a[e].arrays.forEach(function(e){e.data.buffer&&u.push(e.data.buffer)})})}}),new _register.default.TransferableResponse(i,u)};(0,_register.default)(function(e){var a=null;if("runPipeline"===e.operation)a=loadPipelineModule("Pipelines",e.pipelinePath,e.config);else{if("runPolyDataIOPipeline"!==e.operation)return Promise.resolve(new Error("Unknown worker operation"));a=loadPipelineModule("PolyDataIOs",e.pipelinePath,e.config)}return Promise.resolve(runPipeline(a,e.args,e.outputs,e.inputs))});
+},{"regenerator-runtime":4}],6:[function(require,module,exports){
+'use strict';
 
-},{"../IOTypes":4,"../loadEmscriptenModuleBrowser":8,"../runPipelineEmscripten":9,"webworker-promise/lib/register":1}],7:[function(require,module,exports){
-"use strict";var IntTypes=require("./IntTypes.js"),FloatTypes=require("./FloatTypes.js"),bufferToTypedArray=function(e,r){var a=null;switch(e){case IntTypes.UInt8:a=new Uint8Array(r);break;case IntTypes.Int8:a=new Int8Array(r);break;case IntTypes.UInt16:a=new Uint16Array(r);break;case IntTypes.Int16:a=new Int16Array(r);break;case IntTypes.UInt32:a=new Uint32Array(r);break;case IntTypes.Int32:a=new Int32Array(r);break;case IntTypes.UInt64:case IntTypes.Int64:throw new Error("Type is not supported as a TypedArray");case FloatTypes.Float32:a=new Float32Array(r);break;case FloatTypes.Float64:a=new Float64Array(r);break;case"null":case null:a=null;break;default:throw new Error("Type is not supported as a TypedArray")}return a};module.exports=bufferToTypedArray;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-},{"./FloatTypes.js":3,"./IntTypes.js":5}],8:[function(require,module,exports){
-"use strict";function _typeof(e){return(_typeof="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=void 0;var loadEmscriptenModule=function(e,t,o){var r=e;"/"===e[0]||e.startsWith("http")||(r="..");var n=r+"/"+t+"/"+o+".js";return"object"===("undefined"==typeof WebAssembly?"undefined":_typeof(WebAssembly))&&"function"==typeof WebAssembly.Memory&&(n=r+"/"+t+"/"+o+"Wasm.js"),importScripts(n),Module},_default=loadEmscriptenModule;exports.default=_default;
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var TinyEmitter = require('./tiny-emitter');
+
+var MESSAGE_RESULT = 0;
+var MESSAGE_EVENT = 1;
+
+var RESULT_ERROR = 0;
+var RESULT_SUCCESS = 1;
+
+var DEFAULT_HANDLER = 'main';
+
+var isPromise = function isPromise(o) {
+  return (typeof o === 'undefined' ? 'undefined' : _typeof(o)) === 'object' && typeof o.then === 'function' && typeof o.catch === 'function';
+};
+
+function RegisterPromise(fn) {
+  var handlers = _defineProperty({}, DEFAULT_HANDLER, fn);
+  var sendPostMessage = self.postMessage.bind(self);
+
+  var server = new (function (_TinyEmitter) {
+    _inherits(WorkerRegister, _TinyEmitter);
+
+    function WorkerRegister() {
+      _classCallCheck(this, WorkerRegister);
+
+      return _possibleConstructorReturn(this, (WorkerRegister.__proto__ || Object.getPrototypeOf(WorkerRegister)).apply(this, arguments));
+    }
+
+    _createClass(WorkerRegister, [{
+      key: 'emit',
+      value: function emit(eventName) {
+        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+
+        sendPostMessage({ eventName: eventName, args: args });
+        return this;
+      }
+    }, {
+      key: 'emitLocally',
+      value: function emitLocally(eventName) {
+        var _get2;
+
+        for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+          args[_key2 - 1] = arguments[_key2];
+        }
+
+        (_get2 = _get(WorkerRegister.prototype.__proto__ || Object.getPrototypeOf(WorkerRegister.prototype), 'emit', this)).call.apply(_get2, [this, eventName].concat(args));
+      }
+    }, {
+      key: 'operation',
+      value: function operation(name, handler) {
+        handlers[name] = handler;
+        return this;
+      }
+    }]);
+
+    return WorkerRegister;
+  }(TinyEmitter))();
+
+  var run = function run(messageId, payload, handlerName) {
+
+    var onSuccess = function onSuccess(result) {
+      if (result && result instanceof TransferableResponse) {
+        sendResult(messageId, RESULT_SUCCESS, result.payload, result.transferable);
+      } else {
+        sendResult(messageId, RESULT_SUCCESS, result);
+      }
+    };
+
+    var onError = function onError(e) {
+      sendResult(messageId, RESULT_ERROR, {
+        message: e.message,
+        stack: e.stack
+      });
+    };
+
+    try {
+      var result = runFn(messageId, payload, handlerName);
+      if (isPromise(result)) {
+        result.then(onSuccess).catch(onError);
+      } else {
+        onSuccess(result);
+      }
+    } catch (e) {
+      onError(e);
+    }
+  };
+
+  var runFn = function runFn(messageId, payload, handlerName) {
+    var handler = handlers[handlerName || DEFAULT_HANDLER];
+    if (!handler) throw new Error('Not found handler for this request');
+
+    return handler(payload, sendEvent.bind(null, messageId));
+  };
+
+  var sendResult = function sendResult(messageId, success, payload) {
+    var transferable = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+
+    sendPostMessage([MESSAGE_RESULT, messageId, success, payload], transferable);
+  };
+
+  var sendEvent = function sendEvent(messageId, eventName, payload) {
+    if (!eventName) throw new Error('eventName is required');
+
+    if (typeof eventName !== 'string') throw new Error('eventName should be string');
+
+    sendPostMessage([MESSAGE_EVENT, messageId, eventName, payload]);
+  };
+
+  self.addEventListener('message', function (_ref) {
+    var data = _ref.data;
+
+    if (Array.isArray(data)) {
+      run.apply(undefined, _toConsumableArray(data));
+    } else if (data && data.eventName) {
+      server.emitLocally.apply(server, [data.eventName].concat(_toConsumableArray(data.args)));
+    }
+  });
+
+  return server;
+}
+
+var TransferableResponse = function TransferableResponse(payload, transferable) {
+  _classCallCheck(this, TransferableResponse);
+
+  this.payload = payload;
+  this.transferable = transferable;
+};
+
+module.exports = RegisterPromise;
+module.exports.TransferableResponse = TransferableResponse;
+},{"./tiny-emitter":7}],7:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var TinyEmitter = function () {
+  function TinyEmitter() {
+    _classCallCheck(this, TinyEmitter);
+
+    Object.defineProperty(this, '__listeners', {
+      value: {},
+      enumerable: false,
+      writable: false
+    });
+  }
+
+  _createClass(TinyEmitter, [{
+    key: 'emit',
+    value: function emit(eventName) {
+      if (!this.__listeners[eventName]) return this;
+
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.__listeners[eventName][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var handler = _step.value;
+
+          handler.apply(undefined, args);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return this;
+    }
+  }, {
+    key: 'once',
+    value: function once(eventName, handler) {
+      var _this = this;
+
+      var once = function once() {
+        _this.off(eventName, once);
+        handler.apply(undefined, arguments);
+      };
+
+      return this.on(eventName, once);
+    }
+  }, {
+    key: 'on',
+    value: function on(eventName, handler) {
+      if (!this.__listeners[eventName]) this.__listeners[eventName] = [];
+
+      this.__listeners[eventName].push(handler);
+
+      return this;
+    }
+  }, {
+    key: 'off',
+    value: function off(eventName, handler) {
+      if (handler) this.__listeners[eventName] = this.__listeners[eventName].filter(function (h) {
+        return h !== handler;
+      });else this.__listeners[eventName] = [];
+
+      return this;
+    }
+  }]);
+
+  return TinyEmitter;
+}();
+
+module.exports = TinyEmitter;
+},{}],8:[function(require,module,exports){
+"use strict";
+
+var Float32 = 'float';
+var Float64 = 'double';
+var SpacePrecisionType = 'double';
+module.exports = {
+  Float32: Float32,
+  Float64: Float64,
+  SpacePrecisionType: SpacePrecisionType
+};
 
 },{}],9:[function(require,module,exports){
+"use strict";
+
+var Text = 'Text';
+var Binary = 'Binary';
+var Image = 'Image';
+var Mesh = 'Mesh';
+var vtkPolyData = 'vtkPolyData';
+module.exports = {
+  Text: Text,
+  Binary: Binary,
+  Image: Image,
+  Mesh: Mesh,
+  vtkPolyData: vtkPolyData
+};
+
+},{}],10:[function(require,module,exports){
+"use strict";
+
+var Int8 = 'int8_t';
+var UInt8 = 'uint8_t';
+var Int16 = 'int16_t';
+var UInt16 = 'uint16_t';
+var Int32 = 'int32_t';
+var UInt32 = 'uint32_t';
+var Int64 = 'int64_t';
+var UInt64 = 'uint64_t';
+var SizeValueType = UInt64;
+var IdentifierType = SizeValueType;
+var IndexValueType = Int64;
+var OffsetValueType = Int64;
+module.exports = {
+  Int8: Int8,
+  UInt8: UInt8,
+  Int16: Int16,
+  UInt16: UInt16,
+  Int32: Int32,
+  UInt32: UInt32,
+  Int64: Int64,
+  UInt64: UInt64,
+  SizeValueType: SizeValueType,
+  IdentifierType: IdentifierType,
+  IndexValueType: IndexValueType,
+  OffsetValueType: OffsetValueType
+};
+
+},{}],11:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _register = _interopRequireDefault(require("webworker-promise/lib/register"));
+
+var _loadEmscriptenModuleBrowser = _interopRequireDefault(require("../loadEmscriptenModuleBrowser"));
+
+var _runPipelineEmscripten = _interopRequireDefault(require("../runPipelineEmscripten"));
+
+var _IOTypes = _interopRequireDefault(require("../IOTypes"));
+
+// To cache loaded pipeline modules
+var pipelinePathToModule = {};
+
+function loadPipelineModule(moduleDirectory, pipelinePath, config) {
+  var pipelineModule = null;
+
+  if (pipelinePath in pipelinePathToModule) {
+    pipelineModule = pipelinePathToModule[pipelinePath];
+  } else {
+    pipelinePathToModule[pipelinePath] = (0, _loadEmscriptenModuleBrowser["default"])(config.itkModulesPath, moduleDirectory, pipelinePath);
+    pipelineModule = pipelinePathToModule[pipelinePath];
+  }
+
+  return pipelineModule;
+}
+
+function runPipeline(_x, _x2, _x3, _x4) {
+  return _runPipeline.apply(this, arguments);
+}
+
+function _runPipeline() {
+  _runPipeline = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee2(pipelineModule, args, outputs, inputs) {
+    var result, transferables;
+    return _regenerator["default"].wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            result = (0, _runPipelineEmscripten["default"])(pipelineModule, args, outputs, inputs);
+            transferables = [];
+
+            if (result.outputs) {
+              result.outputs.forEach(function (output) {
+                switch (output.type) {
+                  // Binary data
+                  case _IOTypes["default"].Binary:
+                    if (output.data.buffer) {
+                      transferables.push(output.data.buffer);
+                    } else if (output.data.byteLength) {
+                      transferables.push(output.data);
+                    }
+
+                    break;
+                  // Image data
+
+                  case _IOTypes["default"].Image:
+                    if (output.data.data.buffer) {
+                      transferables.push(output.data.data.buffer);
+                    } else if (output.data.data.byteLength) {
+                      transferables.push(output.data.data);
+                    }
+
+                    break;
+                  // Mesh data
+
+                  case _IOTypes["default"].Mesh:
+                    if (output.data.points) {
+                      if (output.data.points.buffer) {
+                        transferables.push(output.data.points.buffer);
+                      } else if (output.data.points.byteLength) {
+                        transferables.push(output.data.points);
+                      }
+                    }
+
+                    if (output.data.pointData) {
+                      if (output.data.pointData.buffer) {
+                        transferables.push(output.data.pointData.buffer);
+                      } else if (output.data.pointData.byteLength) {
+                        transferables.push(output.data.pointData);
+                      }
+                    }
+
+                    if (output.data.cells) {
+                      if (output.data.cells.buffer) {
+                        transferables.push(output.data.cells.buffer);
+                      } else if (output.data.cells.byteLength) {
+                        transferables.push(output.data.cells);
+                      }
+                    }
+
+                    if (output.data.cellData) {
+                      if (output.data.cellData.buffer) {
+                        transferables.push(output.data.cellData.buffer);
+                      } else if (output.data.cellData.byteLength) {
+                        transferables.push(output.data.cellData);
+                      }
+                    }
+
+                    break;
+                  // vtkPolyData data
+
+                  case _IOTypes["default"].vtkPolyData:
+                    var polyData = output.data;
+                    var cellTypes = ['points', 'verts', 'lines', 'polys', 'strips'];
+                    cellTypes.forEach(function (cellName) {
+                      if (polyData[cellName]) {
+                        if (polyData[cellName].buffer) {
+                          transferables.push(polyData[cellName].buffer);
+                        }
+                      }
+                    });
+                    var dataSetType = ['pointData', 'cellData', 'fieldData'];
+                    dataSetType.forEach(function (dataName) {
+                      if (polyData[dataName]) {
+                        var data = polyData[dataName];
+                        data.arrays.forEach(function (array) {
+                          if (array.data.buffer) {
+                            transferables.push(array.data.buffer);
+                          }
+                        });
+                      }
+                    });
+                    break;
+                }
+              });
+            }
+
+            return _context2.abrupt("return", new _register["default"].TransferableResponse(result, transferables));
+
+          case 4:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _runPipeline.apply(this, arguments);
+}
+
+(0, _register["default"])(
+/*#__PURE__*/
+function () {
+  var _ref = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee(input) {
+    var pipelineModule;
+    return _regenerator["default"].wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            pipelineModule = null;
+
+            if (!(input.operation === 'runPipeline')) {
+              _context.next = 5;
+              break;
+            }
+
+            pipelineModule = loadPipelineModule('Pipelines', input.pipelinePath, input.config);
+            _context.next = 10;
+            break;
+
+          case 5:
+            if (!(input.operation === 'runPolyDataIOPipeline')) {
+              _context.next = 9;
+              break;
+            }
+
+            pipelineModule = loadPipelineModule('PolyDataIOs', input.pipelinePath, input.config);
+            _context.next = 10;
+            break;
+
+          case 9:
+            throw new Error('Unknown worker operation');
+
+          case 10:
+            return _context.abrupt("return", runPipeline(pipelineModule, input.args, input.outputs, input.inputs));
+
+          case 11:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function (_x5) {
+    return _ref.apply(this, arguments);
+  };
+}());
+
+},{"../IOTypes":9,"../loadEmscriptenModuleBrowser":13,"../runPipelineEmscripten":14,"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/regenerator":5,"webworker-promise/lib/register":6}],12:[function(require,module,exports){
+"use strict";
+
+var IntTypes = require('./IntTypes.js');
+
+var FloatTypes = require('./FloatTypes.js');
+
+var bufferToTypedArray = function bufferToTypedArray(jsType, buffer) {
+  var typedArray = null;
+
+  switch (jsType) {
+    case IntTypes.UInt8:
+      {
+        typedArray = new Uint8Array(buffer);
+        break;
+      }
+
+    case IntTypes.Int8:
+      {
+        typedArray = new Int8Array(buffer);
+        break;
+      }
+
+    case IntTypes.UInt16:
+      {
+        typedArray = new Uint16Array(buffer);
+        break;
+      }
+
+    case IntTypes.Int16:
+      {
+        typedArray = new Int16Array(buffer);
+        break;
+      }
+
+    case IntTypes.UInt32:
+      {
+        typedArray = new Uint32Array(buffer);
+        break;
+      }
+
+    case IntTypes.Int32:
+      {
+        typedArray = new Int32Array(buffer);
+        break;
+      }
+
+    case IntTypes.UInt64:
+      {
+        throw new Error('Type is not supported as a TypedArray');
+      }
+
+    case IntTypes.Int64:
+      {
+        throw new Error('Type is not supported as a TypedArray');
+      }
+
+    case FloatTypes.Float32:
+      {
+        typedArray = new Float32Array(buffer);
+        break;
+      }
+
+    case FloatTypes.Float64:
+      {
+        typedArray = new Float64Array(buffer);
+        break;
+      }
+
+    case 'null':
+      {
+        typedArray = null;
+        break;
+      }
+
+    case null:
+      {
+        typedArray = null;
+        break;
+      }
+
+    default:
+      throw new Error('Type is not supported as a TypedArray');
+  }
+
+  return typedArray;
+};
+
+module.exports = bufferToTypedArray;
+
+},{"./FloatTypes.js":8,"./IntTypes.js":10}],13:[function(require,module,exports){
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
+// Load the Emscripten module in the browser.
+//
+// If the browser supports WebAssembly, then use the path the the WebAssembly
+// wrapper module instead.
+//
+// If itkModulesPath is a relative Path, then resolve assuming we were called
+// from <itkModulesPath>/WebWorkers/, since modules are loaded by the web
+// workers.
+//
+//
+// itkModulesPath is usually taken from './itkConfig', but a different value
+// could be passed.
+//
+// modulesDirectory is one of "ImageIOs", "MeshIOs", or "Pipelines"
+//
+// moduleBaseName is the file name of the emscripten module without the ".js"
+// extension
+function loadEmscriptenModule(itkModulesPath, modulesDirectory, moduleBaseName) {
+  var prefix = itkModulesPath;
+
+  if (itkModulesPath[0] !== '/' && !itkModulesPath.startsWith('http')) {
+    prefix = '..';
+  }
+
+  if ((typeof WebAssembly === "undefined" ? "undefined" : (0, _typeof2["default"])(WebAssembly)) === 'object' && typeof WebAssembly.Memory === 'function') {
+    var modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + 'Wasm.js';
+    importScripts(modulePath);
+    var module = self[moduleBaseName]();
+    return module;
+  } else {
+    var _modulePath = prefix + '/' + modulesDirectory + '/' + moduleBaseName + '.js';
+
+    importScripts(_modulePath);
+    return Module;
+  }
+}
+
+var _default = loadEmscriptenModule;
+exports["default"] = _default;
+
+},{"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/helpers/typeof":3}],14:[function(require,module,exports){
 (function (global){
-"use strict";var IOTypes=require("./IOTypes.js"),bufferToTypedArray=require("./bufferToTypedArray.js"),typedArrayForBuffer=function(e,a){return new("undefined"!=typeof window?window[e]:global[e])(a)},runPipelineEmscripten=function(e,a,r,t){t&&t.forEach(function(a){switch(a.type){case IOTypes.Text:case IOTypes.Binary:e.writeFile(a.path,a.data);break;case IOTypes.Image:var r={};for(var t in a.data)Object.prototype.hasOwnProperty.call(a.data,t)&&"data"!==t&&(r[t]=a.data[t]);r.data=a.path+".data",e.writeFile(a.path,JSON.stringify(r)),e.writeFile(r.data,new Uint8Array(a.data.data.buffer));break;case IOTypes.Mesh:var n={};for(var i in a.data)Object.prototype.hasOwnProperty.call(a.data,i)&&"points"!==i&&"pointData"!==i&&"cells"!==i&&"cellData"!==i&&(n[i]=a.data[i]);n.points=a.path+".points.data",n.pointData=a.path+".pointData.data",n.cells=a.path+".cells.data",n.cellData=a.path+".cellData.data",e.writeFile(a.path,JSON.stringify(n)),n.numberOfPoints&&e.writeFile(n.points,new Uint8Array(a.data.points.buffer)),n.numberOfPointPixels&&e.writeFile(n.pointData,new Uint8Array(a.data.pointData.buffer)),n.numberOfCells&&e.writeFile(n.cells,new Uint8Array(a.data.cells.buffer)),n.numberOfCellPixels&&e.writeFile(n.cellData,new Uint8Array(a.data.cellData.buffer));break;default:throw Error("Unsupported input IOType")}}),e.resetModuleStdout(),e.resetModuleStderr(),e.callMain(a);var n=e.getModuleStdout(),i=e.getModuleStderr(),p=[];return r&&r.forEach(function(a){var r={};switch(Object.assign(r,a),a.type){case IOTypes.Text:r.data=e.readFile(a.path,{encoding:"utf8"});break;case IOTypes.Binary:r.data=e.readFile(a.path,{encoding:"binary"});break;case IOTypes.Image:var t=e.readFile(a.path,{encoding:"utf8"}),n=JSON.parse(t),i=e.readFile(n.data,{encoding:"binary"});n.data=bufferToTypedArray(n.imageType.componentType,i.buffer),r.data=n;break;case IOTypes.Mesh:var o=e.readFile(a.path,{encoding:"utf8"}),f=JSON.parse(o);if(f.numberOfPoints){var l=e.readFile(f.points,{encoding:"binary"});f.points=bufferToTypedArray(f.meshType.pointComponentType,l.buffer)}else f.points=bufferToTypedArray(f.meshType.pointComponentType,new ArrayBuffer(0));if(f.numberOfPointPixels){var d=e.readFile(f.pointData,{encoding:"binary"});f.pointData=bufferToTypedArray(f.meshType.pointPixelComponentType,d.buffer)}else f.pointData=bufferToTypedArray(f.meshType.pointPixelComponentType,new ArrayBuffer(0));if(f.numberOfCells){var s=e.readFile(f.cells,{encoding:"binary"});f.cells=bufferToTypedArray(f.meshType.cellComponentType,s.buffer)}else f.cells=bufferToTypedArray(f.meshType.cellComponentType,new ArrayBuffer(0));if(f.numberOfCellPixels){var y=e.readFile(f.cellData,{encoding:"binary"});f.cellData=bufferToTypedArray(f.meshType.cellPixelComponentType,y.buffer)}else f.cellData=bufferToTypedArray(f.meshType.cellPixelComponentType,new ArrayBuffer(0));r.data=f;break;case IOTypes.vtkPolyData:var u=e.readFile("".concat(a.path,"/index.json"),{encoding:"utf8"}),c=JSON.parse(u);["points","verts","lines","polys","strips"].forEach(function(r){if(c[r]){var t=c[r];if(t.ref){var n=e.readFile("".concat(a.path,"/").concat(t.ref.basepath,"/").concat(t.ref.id),{encoding:"binary"});c[r].buffer=n.buffer,c[r].values=typedArrayForBuffer(c[r].dataType,n.buffer),delete t.ref}}});["pointData","cellData","fieldData"].forEach(function(r){c[r]&&c[r].arrays.forEach(function(r){if(r.data.ref){var t=e.readFile("".concat(a.path,"/").concat(r.data.ref.basepath,"/").concat(r.data.ref.id),{encoding:"binary"});r.data.buffer=t.buffer,r.data.values=typedArrayForBuffer(r.data.dataType,t.buffer),delete r.data.ref}})}),r.data=c;break;default:throw Error("Unsupported output IOType")}p.push(r)}),{stdout:n,stderr:i,outputs:p}};module.exports=runPipelineEmscripten;
+"use strict";
+
+var IOTypes = require('./IOTypes.js');
+
+var bufferToTypedArray = require('./bufferToTypedArray.js');
+
+var typedArrayForBuffer = function typedArrayForBuffer(typedArrayType, buffer) {
+  var TypedArrayFunction = null;
+
+  if (typeof window !== 'undefined') {
+    // browser
+    TypedArrayFunction = window[typedArrayType];
+  } else {
+    // Node.js
+    TypedArrayFunction = global[typedArrayType];
+  }
+
+  return new TypedArrayFunction(buffer);
+};
+
+var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args, outputs, inputs) {
+  if (inputs) {
+    inputs.forEach(function (input) {
+      switch (input.type) {
+        case IOTypes.Text:
+          {
+            pipelineModule.writeFile(input.path, input.data);
+            break;
+          }
+
+        case IOTypes.Binary:
+          {
+            pipelineModule.writeFile(input.path, input.data);
+            break;
+          }
+
+        case IOTypes.Image:
+          {
+            var imageJSON = {};
+
+            for (var key in input.data) {
+              if (Object.prototype.hasOwnProperty.call(input.data, key) && key !== 'data') {
+                imageJSON[key] = input.data[key];
+              }
+            }
+
+            imageJSON.data = input.path + '.data';
+            pipelineModule.writeFile(input.path, JSON.stringify(imageJSON));
+            pipelineModule.writeFile(imageJSON.data, new Uint8Array(input.data.data.buffer));
+            break;
+          }
+
+        case IOTypes.Mesh:
+          {
+            var meshJSON = {};
+
+            for (var _key in input.data) {
+              if (Object.prototype.hasOwnProperty.call(input.data, _key) && _key !== 'points' && _key !== 'pointData' && _key !== 'cells' && _key !== 'cellData') {
+                meshJSON[_key] = input.data[_key];
+              }
+            }
+
+            meshJSON.points = input.path + '.points.data';
+            meshJSON.pointData = input.path + '.pointData.data';
+            meshJSON.cells = input.path + '.cells.data';
+            meshJSON.cellData = input.path + '.cellData.data';
+            pipelineModule.writeFile(input.path, JSON.stringify(meshJSON));
+
+            if (meshJSON.numberOfPoints) {
+              pipelineModule.writeFile(meshJSON.points, new Uint8Array(input.data.points.buffer));
+            }
+
+            if (meshJSON.numberOfPointPixels) {
+              pipelineModule.writeFile(meshJSON.pointData, new Uint8Array(input.data.pointData.buffer));
+            }
+
+            if (meshJSON.numberOfCells) {
+              pipelineModule.writeFile(meshJSON.cells, new Uint8Array(input.data.cells.buffer));
+            }
+
+            if (meshJSON.numberOfCellPixels) {
+              pipelineModule.writeFile(meshJSON.cellData, new Uint8Array(input.data.cellData.buffer));
+            }
+
+            break;
+          }
+
+        default:
+          throw Error('Unsupported input IOType');
+      }
+    });
+  }
+
+  pipelineModule.resetModuleStdout();
+  pipelineModule.resetModuleStderr();
+  pipelineModule.callMain(args);
+  var stdout = pipelineModule.getModuleStdout();
+  var stderr = pipelineModule.getModuleStderr();
+  var populatedOutputs = [];
+
+  if (outputs) {
+    outputs.forEach(function (output) {
+      var populatedOutput = {};
+      Object.assign(populatedOutput, output);
+
+      switch (output.type) {
+        case IOTypes.Text:
+          {
+            populatedOutput.data = pipelineModule.readFile(output.path, {
+              encoding: 'utf8'
+            });
+            break;
+          }
+
+        case IOTypes.Binary:
+          {
+            populatedOutput.data = pipelineModule.readFile(output.path, {
+              encoding: 'binary'
+            });
+            break;
+          }
+
+        case IOTypes.Image:
+          {
+            var imageJSON = pipelineModule.readFile(output.path, {
+              encoding: 'utf8'
+            });
+            var image = JSON.parse(imageJSON);
+            var dataUint8 = pipelineModule.readFile(image.data, {
+              encoding: 'binary'
+            });
+            image.data = bufferToTypedArray(image.imageType.componentType, dataUint8.buffer);
+            populatedOutput.data = image;
+            break;
+          }
+
+        case IOTypes.Mesh:
+          {
+            var meshJSON = pipelineModule.readFile(output.path, {
+              encoding: 'utf8'
+            });
+            var mesh = JSON.parse(meshJSON);
+
+            if (mesh.numberOfPoints) {
+              var dataUint8Points = pipelineModule.readFile(mesh.points, {
+                encoding: 'binary'
+              });
+              mesh.points = bufferToTypedArray(mesh.meshType.pointComponentType, dataUint8Points.buffer);
+            } else {
+              mesh.points = bufferToTypedArray(mesh.meshType.pointComponentType, new ArrayBuffer(0));
+            }
+
+            if (mesh.numberOfPointPixels) {
+              var dataUint8PointData = pipelineModule.readFile(mesh.pointData, {
+                encoding: 'binary'
+              });
+              mesh.pointData = bufferToTypedArray(mesh.meshType.pointPixelComponentType, dataUint8PointData.buffer);
+            } else {
+              mesh.pointData = bufferToTypedArray(mesh.meshType.pointPixelComponentType, new ArrayBuffer(0));
+            }
+
+            if (mesh.numberOfCells) {
+              var dataUint8Cells = pipelineModule.readFile(mesh.cells, {
+                encoding: 'binary'
+              });
+              mesh.cells = bufferToTypedArray(mesh.meshType.cellComponentType, dataUint8Cells.buffer);
+            } else {
+              mesh.cells = bufferToTypedArray(mesh.meshType.cellComponentType, new ArrayBuffer(0));
+            }
+
+            if (mesh.numberOfCellPixels) {
+              var dataUint8CellData = pipelineModule.readFile(mesh.cellData, {
+                encoding: 'binary'
+              });
+              mesh.cellData = bufferToTypedArray(mesh.meshType.cellPixelComponentType, dataUint8CellData.buffer);
+            } else {
+              mesh.cellData = bufferToTypedArray(mesh.meshType.cellPixelComponentType, new ArrayBuffer(0));
+            }
+
+            populatedOutput.data = mesh;
+            break;
+          }
+
+        case IOTypes.vtkPolyData:
+          {
+            var polyDataJSON = pipelineModule.readFile("".concat(output.path, "/index.json"), {
+              encoding: 'utf8'
+            });
+            var polyData = JSON.parse(polyDataJSON);
+            var cellTypes = ['points', 'verts', 'lines', 'polys', 'strips'];
+            cellTypes.forEach(function (cellName) {
+              if (polyData[cellName]) {
+                var cell = polyData[cellName];
+
+                if (cell.ref) {
+                  var _dataUint = pipelineModule.readFile("".concat(output.path, "/").concat(cell.ref.basepath, "/").concat(cell.ref.id), {
+                    encoding: 'binary'
+                  });
+
+                  polyData[cellName].buffer = _dataUint.buffer;
+                  polyData[cellName].values = typedArrayForBuffer(polyData[cellName].dataType, _dataUint.buffer);
+                  delete cell.ref;
+                }
+              }
+            });
+            var dataSetType = ['pointData', 'cellData', 'fieldData'];
+            dataSetType.forEach(function (dataName) {
+              if (polyData[dataName]) {
+                var data = polyData[dataName];
+                data.arrays.forEach(function (array) {
+                  if (array.data.ref) {
+                    var _dataUint2 = pipelineModule.readFile("".concat(output.path, "/").concat(array.data.ref.basepath, "/").concat(array.data.ref.id), {
+                      encoding: 'binary'
+                    });
+
+                    array.data.buffer = _dataUint2.buffer;
+                    array.data.values = typedArrayForBuffer(array.data.dataType, _dataUint2.buffer);
+                    delete array.data.ref;
+                  }
+                });
+              }
+            });
+            populatedOutput.data = polyData;
+            break;
+          }
+
+        default:
+          throw Error('Unsupported output IOType');
+      }
+
+      populatedOutputs.push(populatedOutput);
+    });
+  }
+
+  return {
+    stdout: stdout,
+    stderr: stderr,
+    outputs: populatedOutputs
+  };
+};
+
+module.exports = runPipelineEmscripten;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./IOTypes.js":4,"./bufferToTypedArray.js":7}]},{},[6]);
+},{"./IOTypes.js":9,"./bufferToTypedArray.js":12}]},{},[11]);

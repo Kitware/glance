@@ -18,6 +18,15 @@
       >
         Update
       </v-btn>
+      <v-btn
+        v-if="!loggedOut"
+        class="ml-2"
+        tile
+        color="secondary"
+        @click="logout"
+      >
+        Log out
+      </v-btn>
     </v-row>
     <v-row>
       <v-col v-if="loggedOut">

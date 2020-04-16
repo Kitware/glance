@@ -229,5 +229,8 @@ export default {
       url.search = params.toString();
       window.location.href = url.toString();
     },
+    logout() {
+      this.girderRest.logout();
+    },
   },
 };

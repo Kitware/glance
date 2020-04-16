@@ -406,12 +406,16 @@ export default (proxyManager) => ({
           let ret = [];
           for (let i = 0; i < fileList.length; i++) {
             const f = fileList[i];
-            const reader = { ...f.reader };
+            const readerBundle = { ...f.reader };
 
             const meta = f.proxyKeys && f.proxyKeys.meta;
             if (meta) {
-              const ds = reader.dataset || reader.reader.getOutputData();
-              Object.assign(reader, {
+              const { reader, dataset } = readerBundle;
+              const ds =
+                reader && reader.getOutputData
+                  ? reader.getOutputData()
+                  : dataset;
+              Object.assign(readerBundle, {
                 // use dataset instead of reader
                 dataset: postProcessDataset(ds, meta),
                 reader: null,
@@ -419,7 +423,7 @@ export default (proxyManager) => ({
             }
 
             const sources = ReaderFactory.registerReadersToProxyManager(
-              [{ ...reader, proxyKeys: f.proxyKeys }],
+              [{ ...readerBundle, proxyKeys: f.proxyKeys }],
               proxyManager
             );
             ret = ret.concat(sources.filter(Boolean));
@@ -435,46 +439,48 @@ export default (proxyManager) => ({
           .filter((p) => p.getProxyName() === 'TrivialProducer');
 
         // attach labelmaps to most recently loaded image
-        const lastSourcePID = sources[sources.length - 1].getProxyId();
-        for (let i = 0; i < loadedLabelmaps.length; i++) {
-          const lmProxy = loadedLabelmaps[i];
-          dispatch(
-            'widgets/addLabelmapToImage',
-            {
-              imageId: lastSourcePID,
-              labelmapId: lmProxy.getProxyId(),
-            },
-            { root: true }
-          ).then(() =>
+        if (sources[sources.length - 1]) {
+          const lastSourcePID = sources[sources.length - 1].getProxyId();
+          for (let i = 0; i < loadedLabelmaps.length; i++) {
+            const lmProxy = loadedLabelmaps[i];
             dispatch(
-              'widgets/setLabelmapState',
+              'widgets/addLabelmapToImage',
               {
+                imageId: lastSourcePID,
                 labelmapId: lmProxy.getProxyId(),
-                labelmapState: {
-                  selectedLabel: 1,
-                  lastColorIndex: 1,
+              },
+              { root: true }
+            ).then(() =>
+              dispatch(
+                'widgets/setLabelmapState',
+                {
+                  labelmapId: lmProxy.getProxyId(),
+                  labelmapState: {
+                    selectedLabel: 1,
+                    lastColorIndex: 1,
+                  },
                 },
-              },
-              { root: true }
-            )
-          );
-        }
-
-        // attach measurements to most recently loaded image
-        for (let i = 0; i < measurementFiles.length; i++) {
-          const measurements = measurementFiles[
-            i
-          ].reader.reader.getOutputData();
-          for (let m = 0; m < measurements.length; m++) {
-            dispatch(
-              'widgets/addMeasurementTool',
-              {
-                datasetId: lastSourcePID,
-                componentName: measurements[m].componentName,
-                data: measurements[m].data,
-              },
-              { root: true }
+                { root: true }
+              )
             );
+          }
+
+          // attach measurements to most recently loaded image
+          for (let i = 0; i < measurementFiles.length; i++) {
+            const measurements = measurementFiles[
+              i
+            ].reader.reader.getOutputData();
+            for (let m = 0; m < measurements.length; m++) {
+              dispatch(
+                'widgets/addMeasurementTool',
+                {
+                  datasetId: lastSourcePID,
+                  componentName: measurements[m].componentName,
+                  data: measurements[m].data,
+                },
+                { root: true }
+              );
+            }
           }
         }
       });

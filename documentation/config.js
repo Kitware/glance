@@ -21,13 +21,14 @@ module.exports = {
       src: '../node_modules/paraview-glance/dist/*',
       dest: './build-tmp/public/app',
     },
+    // use analytics-enabled index.html
     {
-      src: 'app-override/*',
-      dest: './build-tmp/public/app/',
+      src: '../dist/index-ga.html',
+      dest: './build-tmp/public/app/index.html',
     },
     {
-      src: 'app-override/*',
-      dest: './build-tmp/public/nightly/',
+      src: '../dist/index-ga.html',
+      dest: './build-tmp/public/nightly/index.html',
     },
   ],
 };

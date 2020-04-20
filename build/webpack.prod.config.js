@@ -8,6 +8,19 @@ const baseConfig = require('./webpack.base.config');
 const HOST = process.env.HOST;
 const PORT = process.env.PORT && Number(process.env.PORT);
 
+function htmlTemplateParameters({ useGA = false } = { useGA: false }) {
+  return (compilation, assets, assetTags, options) => ({
+    compilation,
+    webpackConfig: compilation.options,
+    htmlWebpackPlugin: {
+      tags: assetTags,
+      files: assets,
+      options,
+    },
+    googleAnalytics: useGA,
+  });
+}
+
 module.exports = merge.smart(baseConfig, {
   mode: 'production',
   module: {
@@ -58,6 +71,13 @@ module.exports = merge.smart(baseConfig, {
       filename: 'index.html',
       template: 'static/index.html',
       inject: false,
+      templateParameters: htmlTemplateParameters({ useGA: false }),
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'index-ga.html',
+      template: 'static/index.html',
+      inject: false,
+      templateParameters: htmlTemplateParameters({ useGA: true }),
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',

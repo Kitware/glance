@@ -110,6 +110,7 @@ export function createViewer(container, proxyConfig = null) {
 
   return {
     proxyManager,
+    store,
 
     processURLArgs() {
       const { name, url } = vtkURLExtract.extractURLParameters();

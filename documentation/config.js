@@ -21,11 +21,11 @@ module.exports = {
       src: '../node_modules/paraview-glance/dist/*',
       dest: './build-tmp/public/app',
     },
-    // use analytics-enabled index.html
     {
-      src: '../dist/index-ga.html',
+      src: '../node_modules/paraview-glance/dist/index.html',
       dest: './build-tmp/public/app/index.html',
     },
+    // use analytics-enabled index.html
     {
       src: '../dist/index-ga.html',
       dest: './build-tmp/public/nightly/index.html',

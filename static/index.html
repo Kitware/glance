@@ -18,7 +18,7 @@
     <% for (key in htmlWebpackPlugin.files.css) { %>
     <link inline type="text/css" rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[key] %>" />
     <% } %>
-    <% if (googleAnalytics) { %>
+    <% if (webpackConfig.mode === 'production' && googleAnalytics) { %>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-90338862-10"></script>
     <script>

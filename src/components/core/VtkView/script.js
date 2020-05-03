@@ -45,6 +45,7 @@ export default {
   },
   data() {
     return {
+      internalViewId: -1,
       internalIsActive: false,
       palette: BACKGROUND,
       backgroundSheet: false,
@@ -104,6 +105,11 @@ export default {
       );
     },
   },
+  watch: {
+    view(view) {
+      this.tryMountView(view);
+    },
+  },
   proxyManagerHooks: {
     onActiveViewChange(view) {
       this.internalIsActive = view === this.view;
@@ -141,17 +147,8 @@ export default {
   },
   mounted() {
     if (this.view) {
-      this.view.setContainer(this.$el.querySelector('.js-view'));
-      const widgetManager = this.view.getReferenceByName('widgetManager');
-      if (widgetManager) {
-        widgetManager.setUseSvgLayer(true);
-        // workaround to disable picking if previously disabled
-        if (!widgetManager.getPickingEnabled()) {
-          widgetManager.disablePicking();
-        }
-      }
+      this.tryMountView(this.view);
     }
-
     window.addEventListener('resize', this.resizeCurrentView);
 
     // Initial setup
@@ -159,12 +156,7 @@ export default {
   },
   beforeDestroy() {
     if (this.view) {
-      const widgetManager = this.view.getReferenceByName('widgetManager');
-      if (widgetManager) {
-        // we can't use svg anyways if there is no container
-        widgetManager.setUseSvgLayer(false);
-      }
-      this.view.setContainer(null);
+      this.unmountView(this.view);
     }
     window.removeEventListener('resize', this.resizeCurrentView);
   },
@@ -174,6 +166,34 @@ export default {
     }
   },
   methods: {
+    tryMountView(view) {
+      if (this.internalViewId > -1) {
+        const oldView = this.$proxyManager.getProxyById(this.internalViewId);
+        this.unmountView(oldView);
+        this.internalViewId = -1;
+      }
+
+      if (view) {
+        this.internalViewId = view.getProxyId();
+        view.setContainer(this.$el.querySelector('.js-view'));
+        const widgetManager = view.getReferenceByName('widgetManager');
+        if (widgetManager) {
+          widgetManager.setUseSvgLayer(true);
+          // workaround to disable picking if previously disabled
+          if (!widgetManager.getPickingEnabled()) {
+            widgetManager.disablePicking();
+          }
+        }
+      }
+    },
+    unmountView(view) {
+      const widgetManager = view.getReferenceByName('widgetManager');
+      if (widgetManager) {
+        // we can't use svg anyways if there is no container
+        widgetManager.setUseSvgLayer(false);
+      }
+      view.setContainer(null);
+    },
     changeViewType(viewType) {
       this.swapViews({
         index: this.layoutIndex,

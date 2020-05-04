@@ -406,7 +406,14 @@ export default (proxyManager) => ({
           let ret = [];
           for (let i = 0; i < fileList.length; i++) {
             const f = fileList[i];
-            const readerBundle = { ...f.reader };
+            const readerBundle = {
+              ...f.reader,
+              metadata: f.reader.metadata || {},
+            };
+
+            if (f.remoteURL) {
+              Object.assign(readerBundle.metadata, { url: f.remoteURL });
+            }
 
             const meta = f.proxyKeys && f.proxyKeys.meta;
             if (meta) {

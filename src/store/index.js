@@ -46,16 +46,18 @@ function merge(dst, src) {
 }
 /* eslint-enable no-param-reassign */
 
-function changeActiveSliceDelta(proxyManager, delta) {
+function stepActiveSlice(proxyManager, inc) {
   const view = proxyManager.getActiveView();
-  if (view.isA('vtkView2DProxy')) {
-    const sliceReps = view
-      .getRepresentations()
-      .filter((r) => r.isA('vtkSliceRepresentationProxy'));
-    if (sliceReps.length) {
-      const rep = sliceReps[0];
-      rep.setSlice(rep.getSlice() + delta);
-    }
+  const source = proxyManager.getActiveSource();
+  const r = proxyManager.getRepresentation(source, view);
+  const domain = r.getPropertyDomainByName('slice');
+  if (r.isA('vtkSliceRepresentationProxy') && domain) {
+    const step = inc ? domain.step : -domain.step;
+    const slice = Math.min(
+      domain.max,
+      Math.max(domain.min, r.getSlice() + step)
+    );
+    r.setSlice(slice);
   }
 }
 
@@ -354,12 +356,12 @@ function createStore(pxm = null) {
       },
       increaseSlice({ state }) {
         if (state.route === 'app') {
-          changeActiveSliceDelta(proxyManager, 1);
+          stepActiveSlice(proxyManager, true);
         }
       },
       decreaseSlice({ state }) {
         if (state.route === 'app') {
-          changeActiveSliceDelta(proxyManager, -1);
+          stepActiveSlice(proxyManager, false);
         }
       },
       takeScreenshot({ commit, state }, viewToUse = null) {

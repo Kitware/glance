@@ -9,7 +9,7 @@ import postProcessDataset from 'paraview-glance/src/io/postProcessing';
 // ----------------------------------------------------------------------------
 
 function getSupportedExtensions() {
-  return ['zip', 'raw', 'glance'].concat(
+  return ['zip', 'raw', 'glance', 'gz'].concat(
     ReaderFactory.listSupportedExtensions()
   );
 }

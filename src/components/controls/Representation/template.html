@@ -67,10 +67,11 @@
               :class="$style.slimInput"
               hide-details
               type="number"
-              v-model="opacity"
               :min="domains.opacity.min"
               :max="domains.opacity.max"
               :step="domains.opacity.step"
+              :value="opacity"
+              @input="opacity = Number($event)"
             />
           </v-flex>
         </v-layout>

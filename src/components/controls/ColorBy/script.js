@@ -360,6 +360,16 @@ export default {
         this.dataRange = lutProxy.getDataRange();
       }
     },
+    setRange(index, value) {
+      const v = Number.parseFloat(value);
+      if (!Number.isNaN(v)) {
+        const newRange = [...this.dataRange];
+        newRange[index] = value;
+        if (newRange[0] < newRange[1]) {
+          this.dataRange = newRange;
+        }
+      }
+    },
     resetDataRange() {
       this.dataRange = this.origDataRange.slice();
       this.$proxyManager.renderAllViews();

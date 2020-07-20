@@ -58,13 +58,14 @@
             :class="$style.negativeTopSpacing"
           >
             <v-text-field
-              v-model="dataRange[0]"
               @change="$proxyManager.renderAllViews()"
               label="Min"
               step="any"
               :disabled="available !== 'geometry'"
               :class="$style.negativeTopSpacing"
               hide-details
+              :value="dataRange[0]"
+              @input="setRange(0, $event)"
             />
           </v-flex>
           <v-flex
@@ -97,7 +98,6 @@
             :class="$style.negativeTopSpacing"
           >
             <v-text-field
-              v-model="dataRange[1]"
               @change="$proxyManager.renderAllViews()"
               label="Max"
               step="any"
@@ -105,6 +105,8 @@
               :class="$style.negativeTopSpacing"
               reverse
               hide-details
+              :value="dataRange[1]"
+              @input="setRange(1, $event)"
             />
           </v-flex>
         </template>

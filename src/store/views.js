@@ -108,11 +108,10 @@ export default (proxyManager) => ({
 
           if (!view.getReferenceByName('widgetManager')) {
             const widgetManager = vtkWidgetManager.newInstance();
-            widgetManager.setCaptureOn(CaptureOn.MOUSE_MOVE);
-            // disable svg layer before setting renderer,
-            // since we haven't mounted our view yet.
-            widgetManager.setUseSvgLayer(false);
+            // workaround for view not yet being mounted
+            widgetManager.set({ useSvgLayer: false }, false, true);
             widgetManager.setRenderer(view.getRenderer());
+            widgetManager.setCaptureOn(CaptureOn.MOUSE_MOVE);
             view.set({ widgetManager }, true);
           }
 

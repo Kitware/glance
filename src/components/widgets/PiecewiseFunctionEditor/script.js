@@ -14,7 +14,7 @@ function onOpacityChange() {
   activeWidget = this.piecewiseWidget;
   const pwfproxy = this.piecewiseFunction;
   if (pwfproxy) {
-    pwfproxy.setGaussians(this.piecewiseWidget.getReferenceByName('gaussians'));
+    pwfproxy.setGaussians(this.piecewiseWidget.getGaussians());
 
     // Use the opacity range as color range too
     const newColorRange = this.piecewiseWidget.getOpacityRange();
@@ -29,7 +29,6 @@ function updateWidget() {
   const pwfProxy = this.piecewiseFunction;
   if (pwfProxy) {
     const lut = pwfProxy.getLookupTableProxy().getLookupTable();
-    const pwf = pwfProxy.getPiecewiseFunction();
     this.piecewiseWidget.setGaussians(pwfProxy.getGaussians());
 
     if (this.source) {
@@ -47,12 +46,6 @@ function updateWidget() {
     }
 
     this.piecewiseWidget.setColorTransferFunction(lut);
-    this.subscriptions.push(
-      pwf.onModified(() => {
-        this.piecewiseWidget.setGaussians(pwfProxy.getGaussians());
-        this.piecewiseWidget.render();
-      })
-    );
     this.subscriptions.push(
       lut.onModified(() => {
         if (activeWidget) {

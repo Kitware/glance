@@ -22,7 +22,7 @@ module.exports = {
       dest: './build-tmp/public/app',
     },
     {
-      src: '../node_modules/paraview-glance/dist/index.html',
+      src: '../node_modules/paraview-glance/dist/index-ga.html',
       dest: './build-tmp/public/app/index.html',
     },
     // use analytics-enabled index.html

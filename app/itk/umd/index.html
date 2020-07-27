@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>itk.js</title>
+  </head>
+  <body>
+    <div>
+      <label>Select image:</label>
+      <input name="inputFile" type="file">
+    </div>
+
+    <div>
+      <textarea name="fileInformation" rows="200" cols="80">File information...</textarea>
+    </div>
+
+    <script src="itk.js"></script>
+    <script>
+      function outputFileInformation (event) {
+        var dataTransfer = event.dataTransfer
+        var files = event.target.files || dataTransfer.files
+        return itk.readImageFile(null, files[0])
+          .then(function ({ image, webWorker }) {
+            webWorker.terminate()
+            function replacer (key, value) {
+              if (!!value && value.byteLength !== undefined) {
+                return String(value.slice(0, 6)) + '...'
+              }
+              return value
+            }
+            var outputTextArea = document.querySelector('textarea')
+            outputTextArea.textContent = JSON.stringify(image, replacer, 4)
+          })
+      }
+
+      var fileInput = document.querySelector('input')
+      fileInput.addEventListener('change', outputFileInformation);
+    </script>
+  </body>
+</html>

@@ -42,20 +42,6 @@ export default {
     },
     ...mapActions('views', ['updateLayout']),
   },
-  proxyManagerHooks: {
-    onProxyCreated({ proxyGroup, proxyName }) {
-      // reset cameras when first trivial producer source is added
-      if (
-        proxyGroup === 'Sources' &&
-        proxyName === 'TrivialProducer' &&
-        this.$proxyManager
-          .getSources()
-          .filter((s) => s.getProxyName() === 'TrivialProducer').length === 1
-      ) {
-        this.$proxyManager.resetCameraInAllViews();
-      }
-    },
-  },
   updated() {
     this.$proxyManager.resizeAllViews();
   },

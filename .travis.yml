@@ -21,7 +21,6 @@ notifications:
 cache:
   directories:
     - "$HOME/.npm"
-    - documentation/build-tmp
 
 before_install:
   - sudo apt-get -qq update

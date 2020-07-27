@@ -16,4 +16,5 @@ npm run semantic-release
 npm run bundle
 
 # Generate website
+rm -rf documentation/build-tmp
 npm run doc:publish

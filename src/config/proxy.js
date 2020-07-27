@@ -6,7 +6,6 @@ import vtkLookupTableProxy from 'vtk.js/Sources/Proxy/Core/LookupTableProxy';
 import vtkMoleculeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/MoleculeRepresentationProxy';
 import vtkPiecewiseFunctionProxy from 'vtk.js/Sources/Proxy/Core/PiecewiseFunctionProxy';
 import vtkProxySource from 'vtk.js/Sources/Proxy/Core/SourceProxy';
-import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/SliceRepresentationProxy';
 import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
 import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
 
@@ -16,6 +15,7 @@ import vtkDistance2DWidget from 'paraview-glance/src/vtk/Distance2DWidget';
 import vtkTextWidget from 'paraview-glance/src/vtk/TextWidget';
 import vtkPaintWidget from 'vtk.js/Sources/Widgets/Widgets3D/PaintWidget';
 
+import vtkCustomSliceRepresentationProxy from 'paraview-glance/src/vtk/CustomSliceRepresentationProxy';
 import vtkLabelMapVolumeRepProxy from 'paraview-glance/src/vtk/LabelMapVolumeRepProxy';
 import vtkLabelMapSliceRepProxy from 'paraview-glance/src/vtk/LabelMapSliceRepProxy';
 import vtkWidgetProxy from 'paraview-glance/src/vtk/WidgetProxy';
@@ -120,12 +120,12 @@ export default {
         proxyLinks.Skybox
       ),
       Slice: createProxyDefinition(
-        vtkSliceRepresentationProxy,
+        vtkCustomSliceRepresentationProxy,
         proxyUI.Slice,
         proxyLinks.Slice
       ),
       SliceX: createProxyDefinition(
-        vtkSliceRepresentationProxy,
+        vtkCustomSliceRepresentationProxy,
         proxyUI.Slice,
         [
           {
@@ -137,7 +137,7 @@ export default {
         ].concat(proxyLinks.Slice)
       ),
       SliceY: createProxyDefinition(
-        vtkSliceRepresentationProxy,
+        vtkCustomSliceRepresentationProxy,
         proxyUI.Slice,
         [
           {
@@ -149,7 +149,7 @@ export default {
         ].concat(proxyLinks.Slice)
       ),
       SliceZ: createProxyDefinition(
-        vtkSliceRepresentationProxy,
+        vtkCustomSliceRepresentationProxy,
         proxyUI.Slice,
         [
           {

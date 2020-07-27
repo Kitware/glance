@@ -116,6 +116,7 @@ export default {
     },
     onActiveSourceChange(source) {
       if (
+        source &&
         source.getProxyName() === 'TrivialProducer' &&
         this.view.bindRepresentationToManipulator
       ) {

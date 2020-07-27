@@ -64,31 +64,7 @@ function isSliceAvailable(name) {
 
 // ----------------------------------------------------------------------------
 
-function updateOpacity() {
-  // Look on the representations
-  const sliceReps = this.$proxyManager
-    .getRepresentations()
-    .filter(
-      (r) =>
-        r.getInput() === this.source && r.isA('vtkSliceRepresentationProxy')
-    );
-  for (let i = 0; i < sliceReps.length; i++) {
-    sliceReps[i]
-      .getActors()
-      .map((actor) => actor.getProperty())
-      .filter((property) => property.isA('vtkImageProperty'))
-      .forEach((property) => property.setOpacity(this.opacity));
-  }
-}
-
-// ----------------------------------------------------------------------------
-
-const OPTS = {
-  onUpdate: ['updateOpacity'],
-  onChange: {
-    opacity: 'updateOpacity',
-  },
-};
+const OPTS = {};
 
 // ----------------------------------------------------------------------------
 // Add custom method
@@ -97,7 +73,6 @@ const OPTS = {
 const component = helper.generateComponent('SliceControl', FIELDS, true, OPTS);
 Object.assign(component.methods, {
   isSliceAvailable,
-  updateOpacity,
 });
 
 export default component;

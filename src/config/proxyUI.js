@@ -91,6 +91,10 @@ const Slice = [
     name: 'slice',
     domain: { min: 0, max: 255, step: 1 },
   },
+  {
+    name: 'opacity',
+    domain: { min: 0, max: 1, step: 0.01 },
+  },
 ];
 
 const Molecule = [

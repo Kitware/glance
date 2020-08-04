@@ -4,11 +4,11 @@ import { createRepresentationInAllViews } from 'paraview-glance/src/utils';
 const READER_MAPPING = {};
 
 const FETCH_DATA = {
-  readAsArrayBuffer(url, progressCallback) {
-    return vtkHttpDataAccessHelper.fetchBinary(url, { progressCallback });
+  readAsArrayBuffer(url, options) {
+    return vtkHttpDataAccessHelper.fetchBinary(url, options);
   },
-  readAsText(url, progressCallback) {
-    return vtkHttpDataAccessHelper.fetchText({}, url, { progressCallback });
+  readAsText(url, options) {
+    return vtkHttpDataAccessHelper.fetchText({}, url, options);
   },
 };
 
@@ -181,12 +181,12 @@ function loadFileSeries(files, extension, outFileName = '') {
 
 // ----------------------------------------------------------------------------
 
-function downloadDataset(fileName, url, progressCallback) {
+function downloadDataset(fileName, url, options = {}) {
   return new Promise((resolve, reject) => {
     const readerMapping = getReader({ name: fileName });
     if (readerMapping) {
       const { readMethod } = readerMapping;
-      FETCH_DATA[readMethod](url, progressCallback)
+      FETCH_DATA[readMethod](url, options)
         .then((rawData) => {
           if (rawData) {
             resolve(new File([rawData], fileName));

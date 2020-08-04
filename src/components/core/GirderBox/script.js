@@ -77,6 +77,7 @@ export default {
           /* eslint-disable-next-line no-underscore-dangle */
           url: `${this.girderRest.apiRoot}/item/${elem._id}/download`,
           name: elem.name,
+          withGirderToken: true,
           proxyKeys: {
             girderProvenance: {
               ...this.location,

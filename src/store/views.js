@@ -11,7 +11,7 @@ import { DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/
 
 const { CaptureOn } = WidgetManagerConstants;
 
-export default (proxyManager) => ({
+export default ({ proxyManager }) => ({
   namespaced: true,
   state: {
     viewsInitialized: false,

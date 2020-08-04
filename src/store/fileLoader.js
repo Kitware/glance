@@ -80,7 +80,7 @@ function readRawFile(file, { dimensions, spacing, dataType }) {
 
 // ----------------------------------------------------------------------------
 
-export default (proxyManager) => ({
+export default ({ proxyManager, girder }) => ({
   namespaced: true,
   state: {
     remoteFileList: [],
@@ -123,6 +123,7 @@ export default (proxyManager) => ({
           reader: null,
           extraInfo: null,
           remoteURL: null,
+          withGirderToken: false,
           proxyKeys: fileInfo.proxyKeys,
         };
 
@@ -133,6 +134,7 @@ export default (proxyManager) => ({
           Object.assign(fileState, {
             state: 'needsDownload',
             remoteURL: fileInfo.remoteURL,
+            withGirderToken: !!fileInfo.withGirderToken,
           });
         }
         if (fileInfo.type === 'regular') {
@@ -212,6 +214,7 @@ export default (proxyManager) => ({
           type: 'remote',
           name: rfile.name,
           remoteURL: rfile.url,
+          withGirderToken: !!rfile.withGirderToken,
           // Key value pairs to be eventually set on the proxy
           proxyKeys: rfile.proxyKeys,
         }))
@@ -285,7 +288,13 @@ export default (proxyManager) => ({
       }
 
       if (file.state === 'needsDownload' && file.remoteURL) {
-        ret = ReaderFactory.downloadDataset(file.name, file.remoteURL)
+        const opts = {};
+        if (file.withGirderToken) {
+          opts.headers = {
+            'Girder-Token': girder.girderRest.token,
+          };
+        }
+        ret = ReaderFactory.downloadDataset(file.name, file.remoteURL, opts)
           .then((datasetFile) => {
             commit('setRemoteFile', {
               index: fileIndex,

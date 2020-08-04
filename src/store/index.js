@@ -61,8 +61,10 @@ function stepActiveSlice(proxyManager, inc) {
   }
 }
 
-function createStore(pxm = null) {
-  let proxyManager = pxm;
+function createStore(injected) {
+  const { girder } = injected;
+
+  let { proxyManager } = injected;
   if (!proxyManager) {
     proxyManager = vtkProxyManager.newInstance({
       proxyConfiguration: Config.Proxy,
@@ -96,9 +98,9 @@ function createStore(pxm = null) {
       },
     },
     modules: {
-      files: files(proxyManager),
-      views: views(proxyManager),
-      widgets: widgets(proxyManager),
+      files: files({ proxyManager, girder }),
+      views: views({ proxyManager, girder }),
+      widgets: widgets({ proxyManager, girder }),
     },
     mutations: {
       showLanding(state) {
@@ -171,9 +173,6 @@ function createStore(pxm = null) {
             const sourceMeta = source.get('name', 'url', 'remoteMetaData');
             const datasetMeta = dataset.get('name', 'url', 'remoteMetaData');
             const metadata = sourceMeta.url ? sourceMeta : datasetMeta;
-            if (metadata.name && metadata.url) {
-              return metadata;
-            }
             if (source.getKey('girderProvenance')) {
               return {
                 serializedType: 'girder',
@@ -181,6 +180,9 @@ function createStore(pxm = null) {
                 item: source.getKey('girderItem'),
                 meta: source.getKey('meta'),
               };
+            }
+            if (metadata.name && metadata.url) {
+              return metadata;
             }
             // Not a remote dataset so use basic dataset serialization
             return dataset.getState();
@@ -228,15 +230,20 @@ function createStore(pxm = null) {
 
               let name = ds.name;
               let url = ds.url;
+              const options = {};
 
               if (ds.serializedType === 'girder') {
                 const { itemId, itemName } = ds.item;
                 const { apiRoot } = ds.provenance;
                 name = itemName;
                 url = `${apiRoot}/item/${itemId}/download`;
+                options.headers = {
+                  ...(options.headers || {}),
+                  'Girder-Token': girder.girderRest.token,
+                };
               }
 
-              return ReaderFactory.downloadDataset(name, url)
+              return ReaderFactory.downloadDataset(name, url, options)
                 .then((file) => ReaderFactory.loadFiles([file]))
                 .then((readers) => readers[0])
                 .then(({ dataset, reader }) => {

@@ -438,19 +438,6 @@ export default {
         backgroundColor: `rgba(${rgba.join(',')})`,
       };
     },
-    updateHandleOrientation(view) {
-      const normal = view.getCamera().getDirectionOfProjection();
-      const handle = this.paintProxy.getWidgetState().getHandle();
-      const manipulator = this.paintProxy.getWidget().getManipulator();
-      // since normal points away from camera, have handle normal point
-      // towards camera so the paint widget can render the handle on top
-      // of the image.
-      handle.rotateFromDirections(
-        handle.getDirection(),
-        normal.map((n) => n * -1)
-      );
-      manipulator.setNormal(normal);
-    },
     updateHandleSlice(view) {
       const position = [0, 0, 0];
       const manipulator = this.paintProxy.getWidget().getManipulator();
@@ -494,7 +481,6 @@ export default {
           }
           this.mousedViewId = view.getProxyId();
 
-          this.updateHandleOrientation(view);
           this.updateHandleSlice(view);
         }, priority);
 

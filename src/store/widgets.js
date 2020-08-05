@@ -7,7 +7,7 @@ import {
   getCropFilter,
 } from 'paraview-glance/src/utils';
 
-export default (proxyManager) => ({
+export default ({ proxyManager }) => ({
   namespaced: true,
   state: {
     measurements: {}, // dataset id -> [{component name, ...{measurement info}}]

@@ -79,6 +79,8 @@ export default {
       dataRange: [0, 0],
       origDataRange: [0, 0],
       interpolateScalarsBeforeMapping: true,
+      colorToSlices: false,
+      opacityToSlices: false,
     };
   },
   computed: {
@@ -310,6 +312,9 @@ export default {
         const repVolume = myRepresentations.find(
           (r) => r.getProxyName() === 'Volume'
         );
+        const repSliceX = myRepresentations.find(
+          (r) => r.getProxyName() === 'SliceX'
+        );
 
         if (repGeometry) {
           this.available = 'geometry';
@@ -350,6 +355,15 @@ export default {
         if (this.available === 'geometry') {
           this.solidColor = vtkMath.floatRGB2HexCode(repGeometry.getColor());
         }
+
+        if (repSliceX) {
+          this.colorToSlices = repSliceX.getUseColorByForColor();
+          this.opacityToSlices = repSliceX.getUseColorByForOpacity();
+          this.applyFuncsToSlices({
+            color: this.colorToSlices,
+            opacity: this.opacityToSlices,
+          });
+        }
       }
 
       this.setPreset();
@@ -372,6 +386,28 @@ export default {
     },
     resetDataRange() {
       this.dataRange = this.origDataRange.slice();
+      this.$proxyManager.renderAllViews();
+    },
+    applyColorToSlices(color) {
+      this.applyFuncsToSlices({ color: !!color });
+    },
+    applyOpacityToSlices(opacity) {
+      this.applyFuncsToSlices({ opacity: !!opacity });
+    },
+    applyFuncsToSlices({ color, opacity }) {
+      this.colorToSlices = color ?? this.colorToSlices;
+      this.opacityToSlices = opacity ?? this.opacityToSlices;
+
+      const rep = this.$proxyManager
+        .getRepresentations()
+        .filter((r) => r.getInput() === this.source)
+        .filter((r) => r.isA('vtkSliceRepresentationProxy'))[0];
+
+      // proxy links will handle syncing slices
+      rep.setUseColorByForColor(this.colorToSlices);
+      rep.setUseColorByForOpacity(this.opacityToSlices);
+      rep.setColorBy(this.colorByName, this.colorByLocation);
+
       this.$proxyManager.renderAllViews();
     },
   },

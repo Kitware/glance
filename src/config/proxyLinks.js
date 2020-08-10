@@ -43,6 +43,21 @@ const Slice = [
   { link: 'Visibility', property: 'visibility', updateOnBind: true },
   { link: 'WW', property: 'windowWidth', updateOnBind: true },
   { link: 'WL', property: 'windowLevel', updateOnBind: true },
+  {
+    link: 'SliceColorBy',
+    property: 'colorBy',
+    updateOnBind: true,
+  },
+  {
+    link: 'UseSliceColor',
+    property: 'useColorByForColor',
+    updateOnBind: true,
+  },
+  {
+    link: 'UseSliceOpacity',
+    property: 'useColorByForOpacity',
+    updateOnBind: true,
+  },
 ];
 
 const Molecule = [

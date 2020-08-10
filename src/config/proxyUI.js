@@ -77,6 +77,16 @@ const Geometry = [
 
 const Slice = [
   {
+    name: 'colorBy',
+    domain: {},
+  },
+  {
+    name: 'useColorByForColor',
+  },
+  {
+    name: 'useColorByForOpacity',
+  },
+  {
     name: 'visibility',
   },
   {

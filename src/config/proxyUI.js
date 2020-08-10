@@ -7,6 +7,9 @@ const Volume = [
   { name: 'ySliceVisibility' },
   { name: 'zSliceVisibility' },
   { name: 'volumeVisibility' },
+  { name: 'sliceOpacity' },
+  { name: 'sliceUseColorByForColor' },
+  { name: 'sliceUseColorByForOpacity' },
   { name: 'useShadow' },
   // cannot save due to bug in  vtkCropFilter
   // { name: 'croppingPlanes' },

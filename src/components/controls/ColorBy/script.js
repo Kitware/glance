@@ -398,15 +398,18 @@ export default {
       this.colorToSlices = color ?? this.colorToSlices;
       this.opacityToSlices = opacity ?? this.opacityToSlices;
 
-      const rep = this.$proxyManager
+      const reps = this.$proxyManager
         .getRepresentations()
-        .filter((r) => r.getInput() === this.source)
-        .filter((r) => r.isA('vtkSliceRepresentationProxy'))[0];
+        .filter((r) => r.getInput() === this.source);
 
-      // proxy links will handle syncing slices
-      rep.setUseColorByForColor(this.colorToSlices);
-      rep.setUseColorByForOpacity(this.opacityToSlices);
-      rep.setColorBy(this.colorByName, this.colorByLocation);
+      const sliceRep = reps.find((r) =>
+        r.isA('vtkCustomSliceRepresentationProxy')
+      );
+      if (sliceRep) {
+        // proxy links will handle syncing slices
+        sliceRep.setUseColorByForColor(this.colorToSlices);
+        sliceRep.setUseColorByForOpacity(this.opacityToSlices);
+      }
 
       this.$proxyManager.renderAllViews();
     },

@@ -150,6 +150,24 @@
               </v-flex>
             </v-layout>
           </v-flex>
+          <v-flex xs12>
+            <v-checkbox
+              v-model="colorToSlices"
+              hide-details
+              label="Apply color to slices"
+              :class="$style.slimInput"
+              @change="applyColorToSlices"
+            />
+          </v-flex>
+          <v-flex xs12>
+            <v-checkbox
+              v-model="opacityToSlices"
+              hide-details
+              label="Apply opacity to slices"
+              :class="$style.slimInput"
+              @change="applyOpacityToSlices"
+            />
+          </v-flex>
         </template>
         <v-flex xs12 v-if="available === 'geometry' && colorByName">
           <v-layout row align-center>

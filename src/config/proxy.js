@@ -7,7 +7,6 @@ import vtkMoleculeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations
 import vtkPiecewiseFunctionProxy from 'vtk.js/Sources/Proxy/Core/PiecewiseFunctionProxy';
 import vtkProxySource from 'vtk.js/Sources/Proxy/Core/SourceProxy';
 import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
-import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
 
 import vtkCropWidget from 'paraview-glance/src/vtk/CropWidget';
 import vtkAngleWidget from 'paraview-glance/src/vtk/AngleWidget';
@@ -16,6 +15,7 @@ import vtkTextWidget from 'paraview-glance/src/vtk/TextWidget';
 import vtkPaintWidget from 'vtk.js/Sources/Widgets/Widgets3D/PaintWidget';
 
 import vtkCustomSliceRepresentationProxy from 'paraview-glance/src/vtk/CustomSliceRepresentationProxy';
+import vtkCustomVolumeRepresentationProxy from 'paraview-glance/src/vtk/CustomVolumeRepresentationProxy';
 import vtkLabelMapVolumeRepProxy from 'paraview-glance/src/vtk/LabelMapVolumeRepProxy';
 import vtkLabelMapSliceRepProxy from 'paraview-glance/src/vtk/LabelMapSliceRepProxy';
 import vtkWidgetProxy from 'paraview-glance/src/vtk/WidgetProxy';
@@ -161,7 +161,7 @@ export default {
         ].concat(proxyLinks.Slice)
       ),
       Volume: createProxyDefinition(
-        vtkVolumeRepresentationProxy,
+        vtkCustomVolumeRepresentationProxy,
         proxyUI.Volume,
         proxyLinks.Volume
       ),

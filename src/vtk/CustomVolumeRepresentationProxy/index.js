@@ -1,53 +1,59 @@
 import macro from 'vtk.js/Sources/macro';
-import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/SliceRepresentationProxy';
+import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
 
 // ----------------------------------------------------------------------------
-// vtkCustomSliceRepresentationProxy methods
+// vtkCustomVolumeRepresentationProxy methods
 // ----------------------------------------------------------------------------
 
-function vtkCustomSliceRepresentationProxy(publicAPI, model) {
+function vtkCustomVolumeRepresentationProxy(publicAPI, model) {
   // Set our className
-  model.classHierarchy.push('vtkCustomSliceRepresentationProxy');
+  model.classHierarchy.push('vtkCustomVolumeRepresentationProxy');
 
   const superClass = { ...publicAPI };
-
-  publicAPI.setOpacity = (opacity) => {
-    if (opacity >= 0 && opacity <= 1 && superClass.setOpacity(opacity)) {
-      model.property.setOpacity(opacity);
-    }
-  };
 
   publicAPI.setColorBy = (arrayName, arrayLocation, componentIndex = -1) => {
     superClass.setColorBy(arrayName, arrayLocation, componentIndex);
 
-    if (arrayName === null || !model.useColorByForColor) {
-      model.property.setRGBTransferFunction(0, null);
+    if (arrayName === null || !model.sliceUseColorByForColor) {
+      model.propertySlices.setRGBTransferFunction(0, null);
     }
-    if (arrayName === null || !model.useColorByForOpacity) {
-      model.property.setPiecewiseFunction(0, null);
+    if (arrayName === null || !model.sliceUseColorByForOpacity) {
+      model.propertySlices.setPiecewiseFunction(0, null);
     }
 
     if (arrayName && arrayLocation) {
-      if (model.useColorByForColor) {
+      if (model.sliceUseColorByForColor) {
         const lutProxy = publicAPI.getLookupTableProxy(arrayName);
-        model.property.setRGBTransferFunction(0, lutProxy.getLookupTable());
+        model.propertySlices.setRGBTransferFunction(
+          0,
+          lutProxy.getLookupTable()
+        );
       }
-      if (model.useColorByForOpacity) {
+      if (model.sliceUseColorByForOpacity) {
         const pwfProxy = publicAPI.getPiecewiseFunctionProxy(arrayName);
-        model.property.setPiecewiseFunction(0, pwfProxy.getPiecewiseFunction());
+        model.propertySlices.setPiecewiseFunction(
+          0,
+          pwfProxy.getPiecewiseFunction()
+        );
       }
     }
   };
 
-  publicAPI.setUseColorByForColor = (flag) => {
-    if (superClass.setUseColorByForColor(flag)) {
+  publicAPI.setSliceOpacity = (opacity) => {
+    if (opacity >= 0 && opacity <= 1 && superClass.setSliceOpacity(opacity)) {
+      model.propertySlices.setOpacity(opacity);
+    }
+  };
+
+  publicAPI.setSliceUseColorByForColor = (flag) => {
+    if (superClass.setSliceUseColorByForColor(flag)) {
       const colorBy = publicAPI.getColorBy();
       publicAPI.setColorBy(...colorBy);
     }
   };
 
-  publicAPI.setUseColorByForOpacity = (flag) => {
-    if (superClass.setUseColorByForOpacity(flag)) {
+  publicAPI.setSliceUseColorByForOpacity = (flag) => {
+    if (superClass.setSliceUseColorByForOpacity(flag)) {
       const colorBy = publicAPI.getColorBy();
       publicAPI.setColorBy(...colorBy);
     }
@@ -59,9 +65,9 @@ function vtkCustomSliceRepresentationProxy(publicAPI, model) {
 // ----------------------------------------------------------------------------
 
 const DEFAULT_VALUES = {
-  opacity: 1,
-  useColorByForColor: false,
-  useColorByForOpacity: false,
+  sliceOpacity: 1,
+  sliceUseColorByForColor: false,
+  sliceUseColorByForOpacity: false,
 };
 
 // ----------------------------------------------------------------------------
@@ -70,23 +76,23 @@ export function extend(publicAPI, model, initialValues = {}) {
   Object.assign(model, DEFAULT_VALUES, initialValues);
 
   // Object methods
-  vtkSliceRepresentationProxy.extend(publicAPI, model);
+  vtkVolumeRepresentationProxy.extend(publicAPI, model);
 
   macro.setGet(publicAPI, model, [
-    'opacity',
-    'useColorByForColor',
-    'useColorByForOpacity',
+    'sliceOpacity',
+    'sliceUseColorByForColor',
+    'sliceUseColorByForOpacity',
   ]);
 
   // Object specific methods
-  vtkCustomSliceRepresentationProxy(publicAPI, model);
+  vtkCustomVolumeRepresentationProxy(publicAPI, model);
 }
 
 // ----------------------------------------------------------------------------
 
 export const newInstance = macro.newInstance(
   extend,
-  'vtkCustomSliceRepresentationProxy'
+  'vtkCustomVolumeRepresentationProxy'
 );
 
 // ----------------------------------------------------------------------------

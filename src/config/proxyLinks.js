@@ -24,6 +24,21 @@ const Volume = [
     updateOnBind: true,
     type: 'application',
   },
+  {
+    link: 'SliceOpacity',
+    property: 'sliceOpacity',
+    updateOnBind: true,
+  },
+  {
+    link: 'UseSliceColor',
+    property: 'sliceUseColorByForColor',
+    updateOnBind: true,
+  },
+  {
+    link: 'UseSliceOpacity',
+    property: 'sliceUseColorByForOpacity',
+    updateOnBind: true,
+  },
 ];
 
 const Geometry = [
@@ -43,6 +58,17 @@ const Slice = [
   { link: 'Visibility', property: 'visibility', updateOnBind: true },
   { link: 'WW', property: 'windowWidth', updateOnBind: true },
   { link: 'WL', property: 'windowLevel', updateOnBind: true },
+  { link: 'SliceOpacity', property: 'opacity', updateOnBind: true },
+  {
+    link: 'UseSliceColor',
+    property: 'useColorByForColor',
+    updateOnBind: true,
+  },
+  {
+    link: 'UseSliceOpacity',
+    property: 'useColorByForOpacity',
+    updateOnBind: true,
+  },
 ];
 
 const Molecule = [

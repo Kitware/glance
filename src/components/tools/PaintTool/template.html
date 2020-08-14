@@ -96,11 +96,20 @@
       wrap
       align-center
     >
-      <v-flex xs2>
-        <span class="body-2">Radius</span>
+      <v-flex xs10 class="mt-1">
+        <label class="v-label theme--light" for="paint-2D-brush-toggle">2D Brush</label>
       </v-flex>
-      <v-flex xs8>
+      <v-flex xs2 class="mt-1">
+        <v-switch
+          v-model="brush2D"
+          id="paint-2D-brush-toggle"
+          class="mt-n1 pt-0"
+          hide-details
+        />
+      </v-flex>
+      <v-flex xs12>
         <v-slider
+          label="Radius"
           min="1"
           :max="brushSizeMax"
           step="1"
@@ -108,17 +117,21 @@
           hide-details
           :value="radius"
           @input="setRadius"
-        />
-      </v-flex>
-      <v-flex xs2>
-        <v-text-field
-          type="number"
-          min="1"
-          :max="brushSizeMax"
-          step="1"
-          :value="radius"
-          @input="setRadius"
-        />
+        >
+          <template v-slot:append>
+            <v-text-field
+              type="number"
+              min="1"
+              :max="brushSizeMax"
+              step="1"
+              hide-details
+              single-line
+              class="mt-n1 pt-0"
+              :value="radius"
+              @input="setRadius"
+            />
+          </template>
+        </v-slider>
       </v-flex>
       <v-flex xs12>
         <v-list :class="$style.fullWidth">

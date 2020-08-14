@@ -2,6 +2,7 @@ import { mapState, mapActions } from 'vuex';
 
 import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
 import vtkPaintFilter from 'vtk.js/Sources/Filters/General/PaintFilter';
+import { SlicingMode } from 'vtk.js/Sources/Rendering/Core/ImageMapper/Constants';
 
 import vtkLabelMap from 'paraview-glance/src/vtk/LabelMap';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
@@ -70,6 +71,7 @@ export default {
       editableLabelmapName: '',
       brushSizeMax: 100,
       radius: 5,
+      brush2D: false,
       // for view purpose only
       // [ { label, color, opacity }, ... ], sorted by label asc
       colormapArray: [],
@@ -485,6 +487,11 @@ export default {
         }, priority);
 
         const s1 = viewWidget.onStartInteractionEvent(() => {
+          if (this.brush2D) {
+            this.filter.setSlicingMode(SlicingMode['XYZ'[view.getAxis()]]);
+          } else {
+            this.filter.setSlicingMode(SlicingMode.NONE);
+          }
           this.filter.startStroke();
           this.filter.addPoint(
             this.paintProxy.getWidgetState().getTrueOrigin()

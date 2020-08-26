@@ -139,7 +139,7 @@ export default {
           // solid coloring doesn't have a valid data array
           if (dataArray) {
             const dataRange = dataArray.getRange();
-            // this.dataRange = dataRange; // We want to keep the current range
+            this.dataRange = dataRange; // We want to keep the current range
             this.origDataRange = [...dataRange]; // copy
           }
           // Update interpolateScalarsBeforeMapping

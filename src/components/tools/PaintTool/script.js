@@ -454,6 +454,9 @@ export default {
     enablePainting() {
       const paintProxy = this.$proxyManager.createProxy('Widgets', 'Paint');
       paintProxy.getWidget().setRadius(this.radius);
+      paintProxy
+        .getWidget()
+        .placeWidget(this.activeLabelmapProxy.getDataset().getBounds());
 
       this.widgetId = paintProxy.getProxyId();
       this.mousedViewId = -1;

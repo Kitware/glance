@@ -59,6 +59,9 @@ export default {
         const imageData = this.targetVolume.getDataset();
         widget.copyImageDataDescription(imageData);
 
+        // set widget bounds
+        widget.placeWidget(imageData.getBounds());
+
         // if the crop filter is resettable, that means we have
         // cropping planes to use.
         if (cropFilter.isResetAvailable()) {

@@ -167,6 +167,12 @@ export default (toolName, extraComponent = {}) => ({
   },
   methods: {
     addWidgetToViews(proxy) {
+      if (this.targetProxy) {
+        proxy
+          .getWidget()
+          .placeWidget(this.targetProxy.getDataset().getBounds());
+      }
+
       const view3dHandler = (view, widgetManager, viewWidget) => {
         widgetManager.removeWidget(viewWidget);
       };

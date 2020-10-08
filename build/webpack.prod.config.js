@@ -8,6 +8,15 @@ const baseConfig = require('./webpack.base.config');
 const HOST = process.env.HOST;
 const PORT = process.env.PORT && Number(process.env.PORT);
 
+const htmlMinifyOptions = {
+  collapseWhitespace: false,
+  removeComments: true,
+  removeRedundantAttributes: true,
+  removeScriptTypeAttributes: true,
+  removeStyleLinkTypeAttributes: true,
+  useShortDoctype: true
+};
+
 function htmlTemplateParameters({ useGA = false } = { useGA: false }) {
   return (compilation, assets, assetTags, options) => ({
     compilation,
@@ -72,12 +81,14 @@ module.exports = merge.smart(baseConfig, {
       template: 'static/index.html',
       inject: false,
       templateParameters: htmlTemplateParameters({ useGA: false }),
+      minify: htmlMinifyOptions,
     }),
     new HtmlWebpackPlugin({
       filename: 'index-ga.html',
       template: 'static/index.html',
       inject: false,
       templateParameters: htmlTemplateParameters({ useGA: true }),
+      minify: htmlMinifyOptions,
     }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',

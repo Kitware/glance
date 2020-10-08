@@ -2193,6 +2193,7 @@ var readImageEmscriptenFSDICOMFileSeries = function readImageEmscriptenFSDICOMFi
   }
 
   image.data = seriesReader.GetPixelBufferData();
+  seriesReader.DeleteImage();
   return image;
 };
 

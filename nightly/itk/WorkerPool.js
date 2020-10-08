@@ -122,7 +122,9 @@ function () {
           // Try again later.
           info.postponed = true;
           setTimeout(function () {
-            return _this2.addTask(info.index, resultIndex, taskArgs);
+            info.postponed = false;
+
+            _this2.addTask(info.index, resultIndex, taskArgs);
           }, 50);
         }
       }

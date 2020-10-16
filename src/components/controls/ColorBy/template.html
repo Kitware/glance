@@ -65,7 +65,7 @@
               :class="$style.negativeTopSpacing"
               hide-details
               :value="dataRange[0]"
-              @input="setRange(0, $event)"
+              @input="setDataRangeIndex(0, $event)"
             />
           </v-flex>
           <v-flex
@@ -106,7 +106,7 @@
               reverse
               hide-details
               :value="dataRange[1]"
-              @input="setRange(1, $event)"
+              @input="setDataRangeIndex(1, $event)"
             />
           </v-flex>
         </template>

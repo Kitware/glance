@@ -13,8 +13,9 @@
               dense
               flat
               hide-details
-              v-model="colorBy"
               :items="arrays"
+              :value="arraySelectValue"
+              @change="setColorBy"
             />
           </v-flex>
           <v-flex xs12 v-if="colorBy === 'solid'">
@@ -27,10 +28,7 @@
           </v-flex>
         </template>
         <template v-if="colorBy !== 'solid'">
-          <v-flex
-            xs12
-            class="pt-2"
-          >
+          <v-flex xs12 class="pt-2">
             <v-menu
               :close-on-content-click="false"
               offset-y
@@ -52,11 +50,7 @@
               />
             </v-menu>
           </v-flex>
-          <v-flex
-            xs5
-            class="pb-4"
-            :class="$style.negativeTopSpacing"
-          >
+          <v-flex xs5 class="pb-4" :class="$style.negativeTopSpacing">
             <v-text-field
               @change="$proxyManager.renderAllViews()"
               label="Min"
@@ -65,7 +59,7 @@
               :class="$style.negativeTopSpacing"
               hide-details
               :value="dataRange[0]"
-              @input="setRange(0, $event)"
+              @input="setDataRangeIndex(0, $event)"
             />
           </v-flex>
           <v-flex
@@ -73,10 +67,7 @@
             class="text-center pb-4"
             :class="$style.negativeTopSpacing"
           >
-            <v-tooltip
-              v-if="available === 'geometry'"
-              bottom
-            >
+            <v-tooltip v-if="available === 'geometry'" bottom>
               <template v-slot:activator="{ on }">
                 <v-btn
                   icon
@@ -92,11 +83,7 @@
             </v-tooltip>
             <v-spacer v-else />
           </v-flex>
-          <v-flex
-            xs5
-            class="pb-4"
-            :class="$style.negativeTopSpacing"
-          >
+          <v-flex xs5 class="pb-4" :class="$style.negativeTopSpacing">
             <v-text-field
               @change="$proxyManager.renderAllViews()"
               label="Max"
@@ -106,7 +93,7 @@
               reverse
               hide-details
               :value="dataRange[1]"
-              @input="setRange(1, $event)"
+              @input="setDataRangeIndex(1, $event)"
             />
           </v-flex>
         </template>
@@ -176,7 +163,8 @@
                 :class="$style.click"
                 v-on:click.stop="interpolateScalarsBeforeMapping = !interpolateScalarsBeforeMapping"
               >
-                {{ interpolateScalarsBeforeMapping ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline' }}
+                {{ interpolateScalarsBeforeMapping ? 'mdi-checkbox-marked' :
+                'mdi-checkbox-blank-outline' }}
               </v-icon>
             </v-flex>
             <v-flex xs10>

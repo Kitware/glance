@@ -44,7 +44,7 @@ function convertArrays(arrays, addSolidColor = false) {
     const item = arrays[i];
     options.push({
       text: item.name,
-      value: `${item.name}--:|:--${item.location}`,
+      value: [item.name, item.location],
     });
   }
   return options;
@@ -66,9 +66,8 @@ export default {
     return {
       palette: SPECTRAL.concat('#ffffff', '#000000'),
       available: '',
-      colorBy: 'solid',
+      colorBy: 'solid', // Either 'solid' or [arrayName, arrayLocation]
       arrays: [SOLID_COLOR],
-      arrayName: '',
       piecewiseFunction: null,
       solidColor: '#ffffff',
       lutImage: '',
@@ -77,10 +76,10 @@ export default {
       presetMenu: false,
       shift: 0, // simple transfer function shift
       dataRange: [0, 0],
-      origDataRange: [0, 0],
       interpolateScalarsBeforeMapping: true,
       colorToSlices: false,
       opacityToSlices: false,
+      originalLUTRanges: {}, // arrayname -> dataRange
     };
   },
   computed: {
@@ -88,18 +87,16 @@ export default {
       return this.$proxyManager.getProxyById(this.sourceId);
     },
     colorByName() {
-      if (this.colorBy.indexOf('--:|:--') === -1) {
-        return null;
+      if (Array.isArray(this.colorBy)) {
+        return this.colorBy[0];
       }
-      const cb = this.colorBy.split('--:|:--');
-      return cb[0];
+      return null;
     },
     colorByLocation() {
-      if (this.colorBy.indexOf('--:|:--') === -1) {
-        return null;
+      if (Array.isArray(this.colorBy)) {
+        return this.colorBy[1];
       }
-      const cb = this.colorBy.split('--:|:--');
-      return cb[1];
+      return null;
     },
     hasPresetOpacity() {
       const preset = vtkColorMaps.getPresetByName(this.presetName);
@@ -121,6 +118,17 @@ export default {
       }
       return [0, 0];
     },
+    origDataRange() {
+      return this.originalLUTRanges[this.colorByName] ?? [];
+    },
+    arraySelectValue() {
+      return this.arrays.find((arr) =>
+        Array.isArray(arr.value)
+          ? arr.value[0] === this.colorByName &&
+            arr.value[1] === this.colorByLocation
+          : arr.value === this.colorBy
+      );
+    },
   },
   watch: {
     interpolateScalarsBeforeMapping(value) {
@@ -131,22 +139,20 @@ export default {
         const myReps = this.$proxyManager
           .getRepresentations()
           .filter((r) => r.getInput() === this.source);
-        for (let i = 0; i < myReps.length; i++) {
-          myReps[i].setColorBy(this.colorByName, this.colorByLocation);
+        myReps.forEach((rep) =>
+          rep.setColorBy(this.colorByName, this.colorByLocation)
+        );
 
-          // why are we updating dataRange and interpolateScalarsBeforeMapping here?
-          const dataArray = myReps[i].getDataArray();
-          // solid coloring doesn't have a valid data array
-          if (dataArray) {
-            const dataRange = dataArray.getRange();
-            this.dataRange = dataRange; // We want to keep the current range
-            this.origDataRange = [...dataRange]; // copy
-          }
-          // Update interpolateScalarsBeforeMapping
-          this.interpolateScalarsBeforeMapping = myReps[
-            i
-          ].getInterpolateScalarsBeforeMapping();
+        if (this.colorByName) {
+          const lutProxy = this.$proxyManager.getLookupTable(this.colorByName);
+          this.setDataRange(lutProxy.getDataRange());
         }
+
+        this.interpolateScalarsBeforeMapping = myReps.reduce(
+          (flag, rep) => flag || rep.getInterpolateScalarsBeforeMapping(),
+          false
+        );
+
         this.$proxyManager.renderAllViews();
         this.setPreset();
       }
@@ -176,9 +182,6 @@ export default {
       }
     },
     dataRange() {
-      for (let i = 0; i < 2; i++) {
-        this.dataRange[i] = Number(this.dataRange[i] || 0);
-      }
       this.applyColorMap();
     },
   },
@@ -195,9 +198,6 @@ export default {
   },
   beforeDestroy() {
     document.removeEventListener('keyup', this.onEsc);
-    // while (this.subscriptions.length) {
-    //   this.subscriptions.pop().unsubscribe();
-    // }
   },
   methods: {
     updateRepProperty(fieldName, ...args) {
@@ -287,13 +287,13 @@ export default {
       );
     },
     setPreset() {
-      if (this.arrayName) {
-        const lutProxy = this.$proxyManager.getLookupTable(this.arrayName);
+      if (this.colorByName) {
+        const lutProxy = this.$proxyManager.getLookupTable(this.colorByName);
         this.presetName = lutProxy.getPresetName();
         // hasPresetOpacity is derived from presetName
         if (this.hasPresetOpacity) {
           const pwfProxy = this.$proxyManager.getPiecewiseFunction(
-            this.arrayName
+            this.colorByName
           );
           // compute shift based on saved pwfProxy data range
           const pwfRange = pwfProxy.getDataRange();
@@ -328,11 +328,9 @@ export default {
         const rep = repGeometry || repVolume;
         const colorByValue = rep.getColorBy();
 
-        this.arrayName = colorByValue[0];
-
         // only get name and location of colorBy array
         if (colorByValue.length) {
-          this.colorBy = colorByValue.slice(0, 2).join('--:|:--');
+          this.colorBy = colorByValue.slice(0, 2);
         } else {
           // should only happen with geometry
           this.colorBy = 'solid';
@@ -346,10 +344,6 @@ export default {
             propUI.domain.arrays,
             this.available === 'geometry'
           );
-        }
-
-        if (rep.getDataArray()) {
-          this.origDataRange = rep.getDataArray().getRange();
         }
 
         if (this.available === 'geometry') {
@@ -369,23 +363,27 @@ export default {
       this.setPreset();
 
       // set data range
-      if (this.arrayName) {
-        const lutProxy = this.$proxyManager.getLookupTable(this.arrayName);
-        this.dataRange = lutProxy.getDataRange();
+      if (this.colorByName) {
+        const lutProxy = this.$proxyManager.getLookupTable(this.colorByName);
+        this.saveOriginalRange({
+          arrayName: this.colorByName,
+          dataRange: lutProxy.getDataRange(),
+        });
+        this.setDataRange(lutProxy.getDataRange());
       }
     },
-    setRange(index, value) {
+    setDataRangeIndex(index, value) {
       const v = Number.parseFloat(value);
       if (!Number.isNaN(v)) {
         const newRange = [...this.dataRange];
         newRange[index] = value;
         if (newRange[0] < newRange[1]) {
-          this.dataRange = newRange;
+          this.setDataRange(newRange);
         }
       }
     },
     resetDataRange() {
-      this.dataRange = this.origDataRange.slice();
+      this.setDataRange(this.origDataRange);
       this.$proxyManager.renderAllViews();
     },
     applyColorToSlices(color) {
@@ -412,6 +410,12 @@ export default {
       }
 
       this.$proxyManager.renderAllViews();
+    },
+    setDataRange(dataRange) {
+      this.dataRange = [Number(dataRange[0]) || 0, Number(dataRange[1]) || 0];
+    },
+    setColorBy(colorBy) {
+      this.colorBy = colorBy;
     },
   },
 };

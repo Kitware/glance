@@ -44,7 +44,7 @@ function convertArrays(arrays, addSolidColor = false) {
     const item = arrays[i];
     options.push({
       text: item.name,
-      value: `${item.name}--:|:--${item.location}`,
+      value: [item.name, item.location],
     });
   }
   return options;
@@ -66,7 +66,7 @@ export default {
     return {
       palette: SPECTRAL.concat('#ffffff', '#000000'),
       available: '',
-      colorBy: 'solid',
+      colorBy: 'solid', // Either 'solid' or [arrayName, arrayLocation]
       arrays: [SOLID_COLOR],
       piecewiseFunction: null,
       solidColor: '#ffffff',
@@ -87,18 +87,16 @@ export default {
       return this.$proxyManager.getProxyById(this.sourceId);
     },
     colorByName() {
-      if (this.colorBy.indexOf('--:|:--') === -1) {
-        return null;
+      if (Array.isArray(this.colorBy)) {
+        return this.colorBy[0];
       }
-      const cb = this.colorBy.split('--:|:--');
-      return cb[0];
+      return null;
     },
     colorByLocation() {
-      if (this.colorBy.indexOf('--:|:--') === -1) {
-        return null;
+      if (Array.isArray(this.colorBy)) {
+        return this.colorBy[1];
       }
-      const cb = this.colorBy.split('--:|:--');
-      return cb[1];
+      return null;
     },
     hasPresetOpacity() {
       const preset = vtkColorMaps.getPresetByName(this.presetName);
@@ -122,6 +120,14 @@ export default {
     },
     origDataRange() {
       return this.originalLUTRanges[this.colorByName] ?? [];
+    },
+    arraySelectValue() {
+      return this.arrays.find((arr) =>
+        Array.isArray(arr.value)
+          ? arr.value[0] === this.colorByName &&
+            arr.value[1] === this.colorByLocation
+          : arr.value === this.colorBy
+      );
     },
   },
   watch: {
@@ -324,7 +330,7 @@ export default {
 
         // only get name and location of colorBy array
         if (colorByValue.length) {
-          this.colorBy = colorByValue.slice(0, 2).join('--:|:--');
+          this.colorBy = colorByValue.slice(0, 2);
         } else {
           // should only happen with geometry
           this.colorBy = 'solid';
@@ -407,6 +413,9 @@ export default {
     },
     setDataRange(dataRange) {
       this.dataRange = [Number(dataRange[0]) || 0, Number(dataRange[1]) || 0];
+    },
+    setColorBy(colorBy) {
+      this.colorBy = colorBy;
     },
   },
 };

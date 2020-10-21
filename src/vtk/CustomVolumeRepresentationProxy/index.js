@@ -58,6 +58,14 @@ function vtkCustomVolumeRepresentationProxy(publicAPI, model) {
       publicAPI.setColorBy(...colorBy);
     }
   };
+
+  publicAPI.setIs2DVolume = (is2D) => {
+    superClass.setIs2DVolume(is2D);
+    if (is2D) {
+      publicAPI.setSliceUseColorByForColor(true);
+      publicAPI.setSliceUseColorByForOpacity(true);
+    }
+  };
 }
 
 // ----------------------------------------------------------------------------

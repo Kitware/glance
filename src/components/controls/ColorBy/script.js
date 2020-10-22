@@ -417,5 +417,8 @@ export default {
     setColorBy(colorBy) {
       this.colorBy = colorBy;
     },
+    saveOriginalRange({ arrayName, dataRange }) {
+      this.$set(this.originalLUTRanges, arrayName, dataRange);
+    },
   },
 };

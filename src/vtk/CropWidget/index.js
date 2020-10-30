@@ -1,9 +1,8 @@
 import macro from 'vtk.js/Sources/macro';
 
+import vtkSphereHandleRepresentation from 'vtk.js/Sources/Widgets/Representations/SphereHandleRepresentation';
 import vtkOutlineContextRepresentation from 'vtk.js/Sources/Widgets/Representations/OutlineContextRepresentation';
 import vtkImageCroppingWidget from 'vtk.js/Sources/Widgets/Widgets3D/ImageCroppingWidget';
-
-import vtkScaledSphereHandleRepresentation from 'paraview-glance/src/vtk/ScaledSphereHandleRepresentation';
 
 import behavior from 'paraview-glance/src/vtk/CropWidget/behavior';
 
@@ -31,7 +30,13 @@ function vtkCropWidget(publicAPI, model) {
       case ViewTypes.VOLUME:
       default:
         return [
-          { builder: vtkScaledSphereHandleRepresentation, labels: ['handles'] },
+          {
+            builder: vtkSphereHandleRepresentation,
+            labels: ['handles'],
+            initialValues: {
+              scaleInPixels: true,
+            },
+          },
           { builder: vtkOutlineContextRepresentation, labels: ['corners'] },
         ];
     }

@@ -5,7 +5,6 @@ const MAX_POINTS = 1;
 export default function widgetBehavior(publicAPI, model) {
   model.classHierarchy.push('vtkDistanceWidgetProp');
   let isDragging = null;
-  let cameraSub = null;
 
   // --------------------------------------------------------------------------
   // Display 2D
@@ -150,36 +149,4 @@ export default function widgetBehavior(publicAPI, model) {
     model.widgetManager.enablePicking();
     model.interactor.render();
   };
-
-  // --------------------------------------------------------------------------
-
-  publicAPI.delete = macro.chain(publicAPI.delete, () => {
-    if (cameraSub) {
-      cameraSub.unsubscribe();
-    }
-  });
-
-  // --------------------------------------------------------------------------
-  // init
-  // --------------------------------------------------------------------------
-
-  const setHandleScaleFromCamera = () => {
-    if (model.camera) {
-      let scale;
-      if (model.camera.getParallelProjection()) {
-        scale = model.camera.getParallelScale() / 1.25;
-      } else {
-        scale = model.camera.getDistance() / 6;
-      }
-
-      publicAPI.setHandleScale(scale);
-    }
-  };
-
-  // listen to camera so we can scale the handles to the screen
-  cameraSub = model.camera.onModified(setHandleScaleFromCamera);
-  // since forwarded/linked set/get methods aren't created until
-  // after this behavior function finishes, this is a hack to invoke
-  // initial handle scale.
-  setTimeout(setHandleScaleFromCamera, 0);
 }

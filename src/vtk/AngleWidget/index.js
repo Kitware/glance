@@ -1,12 +1,10 @@
 import macro from 'vtk.js/Sources/macro';
-import vtkAbstractWidgetFactory from 'vtk.js/Sources/Widgets/Core/AbstractWidgetFactory';
-import vtkPlanePointManipulator from 'vtk.js/Sources/Widgets/Manipulators/PlaneManipulator';
-import * as vtkMath from 'vtk.js/Sources/Common/Core/Math';
+import vtkSphereHandleRepresentation from 'vtk.js/Sources/Widgets/Representations/SphereHandleRepresentation';
+import vtkAngleWidget from 'vtk.js/Sources/Widgets/Widgets3D/AngleWidget';
 
 import widgetBehavior from 'paraview-glance/src/vtk/AngleWidget/behavior';
 import stateGenerator from 'paraview-glance/src/vtk/AngleWidget/state';
 
-import vtkScaledSphereHandleRepresentation from 'paraview-glance/src/vtk/ScaledSphereHandleRepresentation';
 import vtkSVGCircleHandleRepresentation from 'paraview-glance/src/vtk/SVGCircleHandleRepresentation';
 import vtkSVGLineRepresentation from 'paraview-glance/src/vtk/SVGLineRepresentation';
 import vtkSVGLabelRepresentation from 'paraview-glance/src/vtk/SVGLabelRepresentation';
@@ -17,24 +15,20 @@ import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 // Factory
 // ----------------------------------------------------------------------------
 
-function vtkAngleWidget(publicAPI, model) {
-  model.classHierarchy.push('vtkAngleWidget');
+function vtkAngle2DWidget(publicAPI, model) {
+  model.classHierarchy.push('vtkAngle2DWidget');
 
   // --- Widget Requirement ---------------------------------------------------
 
   model.methodsToLink = [
-    'activeScaleFactor',
-    'activeColor',
-    'useActiveColor',
-    'glyphResolution',
-    'defaultScale',
+    ...(model.methodsToLink ?? []),
     'circleProps',
     'lineProps',
     'textProps',
     'text',
     'textStateIndex',
-    'handleScale',
   ];
+
   model.behavior = widgetBehavior;
   model.widgetState = stateGenerator();
 
@@ -46,10 +40,19 @@ function vtkAngleWidget(publicAPI, model) {
       case ViewTypes.VOLUME:
       default:
         return [
-          { builder: vtkScaledSphereHandleRepresentation, labels: ['handles'] },
           {
-            builder: vtkScaledSphereHandleRepresentation,
+            builder: vtkSphereHandleRepresentation,
+            labels: ['handles'],
+            initialValues: {
+              scaleInPixels: true,
+            },
+          },
+          {
+            builder: vtkSphereHandleRepresentation,
             labels: ['moveHandle'],
+            initialValues: {
+              scaleInPixels: true,
+            },
           },
           {
             builder: vtkSVGCircleHandleRepresentation,
@@ -66,60 +69,26 @@ function vtkAngleWidget(publicAPI, model) {
         ];
     }
   };
-
-  // --- Public methods -------------------------------------------------------
-
-  // Returns angle in radians
-  publicAPI.getAngle = () => {
-    const handles = model.widgetState.getHandleList();
-    if (handles.length !== 3) {
-      return 0;
-    }
-
-    const vec1 = [0, 0, 0];
-    const vec2 = [0, 0, 0];
-    vtkMath.subtract(handles[0].getOrigin(), handles[1].getOrigin(), vec1);
-    vtkMath.subtract(handles[2].getOrigin(), handles[1].getOrigin(), vec2);
-    return vtkMath.angleBetweenVectors(vec1, vec2);
-  };
-
-  // --------------------------------------------------------------------------
-  // initialization
-  // --------------------------------------------------------------------------
-
-  model.widgetState.onBoundsChange((bounds) => {
-    const center = [
-      (bounds[0] + bounds[1]) * 0.5,
-      (bounds[2] + bounds[3]) * 0.5,
-      (bounds[4] + bounds[5]) * 0.5,
-    ];
-    model.widgetState.getMoveHandle().setOrigin(center);
-  });
-
-  // Default manipulator
-  model.manipulator = vtkPlanePointManipulator.newInstance();
 }
 
 // ----------------------------------------------------------------------------
 
-const DEFAULT_VALUES = {
-  // manipulator: null,
-};
+const DEFAULT_VALUES = {};
 
 // ----------------------------------------------------------------------------
 
 export function extend(publicAPI, model, initialValues = {}) {
   Object.assign(model, DEFAULT_VALUES, initialValues);
 
-  vtkAbstractWidgetFactory.extend(publicAPI, model, initialValues);
+  vtkAngleWidget.extend(publicAPI, model, initialValues);
   macro.setGet(publicAPI, model, ['manipulator']);
 
-  vtkAngleWidget(publicAPI, model);
+  vtkAngle2DWidget(publicAPI, model);
 }
 
 // ----------------------------------------------------------------------------
 
-export const newInstance = macro.newInstance(extend, 'vtkAngleWidget');
+export const newInstance = macro.newInstance(extend, 'vtkAngle2DWidget');
 
 // ----------------------------------------------------------------------------
 

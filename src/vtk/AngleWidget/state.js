@@ -8,7 +8,7 @@ export default function generateState() {
       mixins: ['origin', 'color', 'scale1', 'visible'],
       name: 'moveHandle',
       initialValues: {
-        scale1: 0.1,
+        scale1: 50,
         origin: [-1, -1, -1],
         visible: false,
       },
@@ -18,7 +18,7 @@ export default function generateState() {
       mixins: ['origin', 'color', 'scale1'],
       name: 'handle',
       initialValues: {
-        scale1: 0.1,
+        scale1: 50,
         origin: [-1, -1, -1],
       },
     })

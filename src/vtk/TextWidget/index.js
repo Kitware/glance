@@ -1,12 +1,11 @@
 import macro from 'vtk.js/Sources/macro';
 import vtkAbstractWidgetFactory from 'vtk.js/Sources/Widgets/Core/AbstractWidgetFactory';
 import vtkPlanePointManipulator from 'vtk.js/Sources/Widgets/Manipulators/PlaneManipulator';
-import { distance2BetweenPoints } from 'vtk.js/Sources/Common/Core/Math';
+import vtkSphereHandleRepresentation from 'vtk.js/Sources/Widgets/Representations/SphereHandleRepresentation';
 
 import widgetBehavior from 'paraview-glance/src/vtk/TextWidget/behavior';
 import stateGenerator from 'paraview-glance/src/vtk/TextWidget/state';
 
-import vtkScaledSphereHandleRepresentation from 'paraview-glance/src/vtk/ScaledSphereHandleRepresentation';
 import vtkSVGCircleHandleRepresentation from 'paraview-glance/src/vtk/SVGCircleHandleRepresentation';
 import vtkSVGLabelRepresentation from 'paraview-glance/src/vtk/SVGLabelRepresentation';
 
@@ -16,7 +15,7 @@ import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 // Factory
 // ----------------------------------------------------------------------------
 
-function vtkDistanceWidget(publicAPI, model) {
+function vtkTextWidget(publicAPI, model) {
   model.classHierarchy.push('vtkDistanceWidget');
 
   // --- Widget Requirement ---------------------------------------------------
@@ -43,9 +42,15 @@ function vtkDistanceWidget(publicAPI, model) {
       case ViewTypes.VOLUME:
       default:
         return [
-          { builder: vtkScaledSphereHandleRepresentation, labels: ['handles'] },
           {
-            builder: vtkScaledSphereHandleRepresentation,
+            builder: vtkSphereHandleRepresentation,
+            labels: ['handles'],
+            initialValues: {
+              scaleInPixels: true,
+            },
+          },
+          {
+            builder: vtkSphereHandleRepresentation,
             labels: ['moveHandle'],
           },
           {
@@ -58,18 +63,6 @@ function vtkDistanceWidget(publicAPI, model) {
           },
         ];
     }
-  };
-
-  // --- Public methods -------------------------------------------------------
-
-  publicAPI.getDistance = () => {
-    const handles = model.widgetState.getHandleList();
-    if (handles.length !== 2) {
-      return 0;
-    }
-    return Math.sqrt(
-      distance2BetweenPoints(handles[0].getOrigin(), handles[1].getOrigin())
-    );
   };
 
   // --------------------------------------------------------------------------
@@ -103,12 +96,12 @@ export function extend(publicAPI, model, initialValues = {}) {
   vtkAbstractWidgetFactory.extend(publicAPI, model, initialValues);
   macro.setGet(publicAPI, model, ['manipulator']);
 
-  vtkDistanceWidget(publicAPI, model);
+  vtkTextWidget(publicAPI, model);
 }
 
 // ----------------------------------------------------------------------------
 
-export const newInstance = macro.newInstance(extend, 'vtkDistanceWidget');
+export const newInstance = macro.newInstance(extend, 'vtkTextWidget');
 
 // ----------------------------------------------------------------------------
 

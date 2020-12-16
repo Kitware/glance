@@ -96,17 +96,28 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
     const allViews = proxyManager.getViews();
     const allDataRanges = {};
     model.scene.forEach((sceneItem) => {
-      const { source, mapper, actor, name } = sceneItem;
-      const actorState = actor.get('origin', 'scale', 'position');
+      const { source, mapper, actor, volume, name } = sceneItem;
+      const actorState = actor ? actor.get('origin', 'scale', 'position') : {};
+      const volumeState = volume
+        ? volume.get('origin', 'scale', 'position')
+        : {};
+
       const propState = actor
-        .getProperty()
-        .get(
-          'representation',
-          'edgeVisibility',
-          'diffuseColor',
-          'pointSize',
-          'opacity'
-        );
+        ? actor
+            .getProperty()
+            .get(
+              'representation',
+              'edgeVisibility',
+              'diffuseColor',
+              'pointSize',
+              'opacity'
+            )
+        : {};
+
+      const volumePropState = volume
+        ? volume.getProperty().get('interpolationType')
+        : {};
+
       const mapperState = mapper.get(
         'colorByArrayName',
         'colorMode',
@@ -133,10 +144,27 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
         const view = allViews[i];
         const rep = proxyManager.getRepresentation(sourceProxy, allViews[i]);
         rep.setRescaleOnColorBy(false);
-        const actorFromRep = rep.getActors()[0];
-        actorFromRep.set(actorState);
-        actorFromRep.getProperty().set(propState);
-        actorFromRep.getMapper().set(mapperState);
+        if (actor) {
+          const actorFromRep = rep.getActors()[0];
+          if (actorFromRep) {
+            actorFromRep.set(actorState);
+            actorFromRep.getProperty().set(propState);
+            actorFromRep.getMapper().set(mapperState);
+
+            // Add textures back
+            actor.getTextures().forEach((t) => {
+              actorFromRep.addTexture(t);
+            });
+          }
+        }
+
+        if (volume) {
+          const volumeFromRep = rep.getVolumes()[0];
+          if (volumeFromRep) {
+            volumeFromRep.set(volumeState);
+            volumeFromRep.getProperty().set(volumePropState);
+          }
+        }
 
         // Use representation API to set active array
         let arrayLocation = 'pointData';
@@ -146,11 +174,6 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
           arrayLocation = 'cellData';
         }
         rep.setColorBy(mapperState.colorByArrayName, arrayLocation);
-
-        // Add textures back
-        actor.getTextures().forEach((t) => {
-          actorFromRep.addTexture(t);
-        });
 
         // Update camera if 3d view
         if (view.getName() === 'default') {

@@ -47,7 +47,7 @@
     "pug": "^3.0.0",
     "pug-plain-loader": "^1.0.0",
     "typeface-roboto": "0.0.75",
-    "vtk.js": "14.17.0",
+    "vtk.js": "15.4.0",
     "vue": "2.6.11",
     "vue-cli-plugin-vuetify": "^2.0.7",
     "vuetify": "2.3.4",
@@ -74,6 +74,7 @@
     "vuetify-loader": "^1.6.0",
     "webpack-merge": "4.1.2",
     "workbox-webpack-plugin": "5.1.2",
+    "worker-loader": "^3.0.6",
     "write-file-webpack-plugin": "^4.3.2"
   },
   "config": {

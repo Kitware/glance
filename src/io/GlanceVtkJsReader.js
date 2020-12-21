@@ -3,6 +3,10 @@ import macro from 'vtk.js/Sources/macro';
 import vtkHttpSceneLoader from 'vtk.js/Sources/IO/Core/HttpSceneLoader';
 import vtkMapper from 'vtk.js/Sources/Rendering/Core/Mapper';
 
+// Can't import both "Mode" objects directly.
+import LookupTableProxyConstants from 'vtk.js/Sources/Proxy/Core/LookupTableProxy/Constants';
+import PiecewiseFunctionProxyConstants from 'vtk.js/Sources/Proxy/Core/PiecewiseFunctionProxy/Constants';
+
 // ----------------------------------------------------------------------------
 // vtkGlanceVtkJsReader methods
 // ----------------------------------------------------------------------------
@@ -96,7 +100,14 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
     const allViews = proxyManager.getViews();
     const allDataRanges = {};
     model.scene.forEach((sceneItem) => {
-      const { source, mapper, actor, volume, name } = sceneItem;
+      const {
+        source,
+        mapper,
+        actor,
+        volume,
+        name,
+        volumeComponents,
+      } = sceneItem;
       const actorState = actor ? actor.get('origin', 'scale', 'position') : {};
       const volumeState = volume
         ? volume.get('origin', 'scale', 'position')
@@ -115,7 +126,9 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
         : {};
 
       const volumePropState = volume
-        ? volume.getProperty().get('interpolationType')
+        ? volume
+            .getProperty()
+            .get('interpolationType', 'independantComponents', 'shade')
         : {};
 
       const mapperState = mapper.get(
@@ -178,6 +191,42 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
         // Update camera if 3d view
         if (view.getName() === 'default') {
           view.getCamera().set(model.camera);
+        }
+
+        if (volumeComponents) {
+          const [colorByName] = rep.getColorBy();
+          const [{ rgbTransferFunction, scalarOpacity }] = volumeComponents;
+          const lutProxy = rep.getLookupTableProxy(colorByName);
+          const pwfProxy = rep.getPiecewiseFunctionProxy(colorByName);
+          if (rgbTransferFunction) {
+            // Push state data into lookup table
+            lutProxy.setPresetName('-');
+            const [min, max] = rgbTransferFunction.getMappingRange();
+            lutProxy.setDataRange(min, max);
+            lutProxy.setMode(LookupTableProxyConstants.Mode.Nodes);
+            lutProxy
+              .getLookupTable()
+              .setColorSpace(rgbTransferFunction.getColorSpace());
+            lutProxy.setNodes(rgbTransferFunction.get('nodes').nodes);
+          }
+          if (scalarOpacity) {
+            const pwf = pwfProxy.getPiecewiseFunction();
+            pwf.setClamping(scalarOpacity.getClamping());
+            const nodes = [];
+            for (
+              let nodeIdx = 0;
+              nodeIdx < scalarOpacity.getSize();
+              ++nodeIdx
+            ) {
+              const node = [];
+              scalarOpacity.getNodeValue(nodeIdx, node);
+              nodes.push([...node]);
+            }
+            pwfProxy.setMode(PiecewiseFunctionProxyConstants.Mode.Nodes);
+            const range = scalarOpacity.getRange();
+            pwfProxy.setDataRange(...range);
+            pwfProxy.setNodes(scalarOpacity.get('nodes').nodes);
+          }
         }
       }
 

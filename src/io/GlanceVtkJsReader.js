@@ -213,6 +213,12 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
             const pwf = pwfProxy.getPiecewiseFunction();
             pwf.setClamping(scalarOpacity.getClamping());
             const nodes = [];
+
+            const range = scalarOpacity.getRange();
+            pwfProxy.setDataRange(...range);
+
+            const width = range[1] - range[0];
+
             for (
               let nodeIdx = 0;
               nodeIdx < scalarOpacity.getSize();
@@ -220,12 +226,12 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
             ) {
               const node = [];
               scalarOpacity.getNodeValue(nodeIdx, node);
-              nodes.push([...node]);
+              const [x, y, midpoint, sharpness] = node;
+              // x needs to be normalized
+              nodes.push({ x: (x - range[0]) / width, y, midpoint, sharpness });
             }
             pwfProxy.setMode(PiecewiseFunctionProxyConstants.Mode.Nodes);
-            const range = scalarOpacity.getRange();
-            pwfProxy.setDataRange(...range);
-            pwfProxy.setNodes(scalarOpacity.get('nodes').nodes);
+            pwfProxy.setNodes(nodes);
           }
         }
       }

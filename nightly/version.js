@@ -1,1 +1,1 @@
-window.GLANCE_VERSION = "4.14.0";
+window.GLANCE_VERSION = "4.15.0";

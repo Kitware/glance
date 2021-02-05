@@ -47,7 +47,7 @@
     "pug": "^3.0.0",
     "pug-plain-loader": "^1.0.0",
     "typeface-roboto": "0.0.75",
-    "vtk.js": "15.4.0",
+    "vtk.js": "16.2.0",
     "vue": "2.6.11",
     "vue-cli-plugin-vuetify": "^2.0.7",
     "vuetify": "2.3.4",

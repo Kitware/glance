@@ -60,6 +60,12 @@ $ npm run dev
 
 This will run a development build and you can visit the application at `http://localhost:9999`.
 
+[git]: https://git-scm.com
+[node.js + npm]: https://nodejs.org/en
+
+Deploying to Production
+=======================
+
 To generate a production build, use the following commands:
 
 ```
@@ -67,6 +73,8 @@ $ npm run build:release
 ```
 
 This will output the final bundle and assets to `dist/`.
+You can then recursively copy all of those files into the web location of your choice.
+As there is no server-side code involved, all you need is some web hosting!
 
 If you make changes to any of the ITK filtering code under `itk/`, you should run the following
 command from the root folder. For more information, check out [itk.js].
@@ -75,8 +83,6 @@ command from the root folder. For more information, check out [itk.js].
 $ npx itk-js build itk/
 ```
 
-[git]: https://git-scm.com
-[node.js + npm]: https://nodejs.org/en
 [itk.js]: https://insightsoftwareconsortium.github.io/itk-js/examples/hello_world_node.html
 
 

@@ -1,5 +1,6 @@
 import { mapState, mapActions } from 'vuex';
 
+import AnimationControls from 'paraview-glance/src/components/widgets/AnimationControls';
 import GpuInformation from 'paraview-glance/src/components/widgets/GPUInformation';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
@@ -38,6 +39,7 @@ function getViewForVR() {
 export default {
   name: 'GlobalSettings',
   components: {
+    AnimationControls,
     PalettePicker,
     GpuInformation,
   },
@@ -135,6 +137,9 @@ export default {
       },
     },
     ...mapState(['collapseDatasetPanels']),
+    ...mapState('animations', {
+      isAnimated: (state) => state.frames.length > 0,
+    }),
     ...mapState('views', {
       backgroundColor: (state) => state.globalBackgroundColor,
       orientationAxis: (state) => state.axisVisible,

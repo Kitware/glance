@@ -27,6 +27,7 @@ function loadZip(zipContent) {
           if (++dsCount === sceneImporter.getScene().length) {
             const response = { ...sceneImporter.getMetadata() };
             response.scene = sceneImporter.getScene();
+            response.animationHandler = sceneImporter.getAnimationHandler();
             resolve(response);
           }
         });
@@ -80,12 +81,20 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
     model.rawDataBuffer = arrayBuffer;
 
     return loadZip(arrayBuffer).then(
-      ({ scene, camera, background, lookupTables, cameraViewPoints }) => {
+      ({
+        scene,
+        camera,
+        background,
+        lookupTables,
+        cameraViewPoints,
+        animationHandler,
+      }) => {
         model.scene = scene;
         model.camera = camera;
         model.background = background;
         model.lookupTables = lookupTables;
         model.cameraViewPoints = cameraViewPoints;
+        model.animationHandler = animationHandler;
         publicAPI.modified();
         return model.scene;
       }
@@ -191,6 +200,9 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
         // Update camera if 3d view
         if (view.getName() === 'default') {
           view.getCamera().set(model.camera);
+          if (model.animationHandler) {
+            model.animationHandler.addRenderer(view.getRenderer());
+          }
         }
 
         if (volumeComponents) {
@@ -266,6 +278,26 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
 
         // Start the downloads
         dataSetLODsLoader.startDownloads();
+      }
+      if (model.animationHandler) {
+        if (proxyManager.getProxyInGroup('AnimationManager').length) {
+          // Find an existing animation manager
+          const animationManager = proxyManager.getProxyInGroup(
+            'AnimationManager'
+          )[0];
+
+          const animation = proxyManager.createProxy(
+            'Animations',
+            'TimeStepAnimation'
+          );
+
+          animation.setInputAnimationHandler(model.animationHandler);
+          animationManager.addAnimation(animation);
+
+          animationManager.onCurrentFrameChanged(() =>
+            proxyManager.renderAllViews()
+          );
+        }
       }
     });
 

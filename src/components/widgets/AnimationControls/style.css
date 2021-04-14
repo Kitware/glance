@@ -1,0 +1,6 @@
+.wrapper {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  align-content: center;
+}

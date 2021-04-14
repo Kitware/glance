@@ -1,0 +1,47 @@
+<div :class="$style.wrapper">
+  <v-btn text :disabled="playing || isOnFirstFrame" small @click="firstFrame">
+    <v-icon>
+      mdi-chevron-double-left
+    </v-icon>
+  </v-btn>
+  <v-btn
+    text
+    :disabled="playing || isOnFirstFrame"
+    small
+    @click="previousFrame"
+  >
+    <v-icon>
+      mdi-chevron-left
+    </v-icon>
+  </v-btn>
+  <v-btn text small @click="play" v-if="!playing" :disabled="isOnLastFrame">
+    <v-icon>
+      mdi-play
+    </v-icon>
+  </v-btn>
+  <v-btn text small @click="pause" v-else>
+    <v-icon>
+      mdi-pause
+    </v-icon>
+  </v-btn>
+  <v-btn text :disabled="playing || isOnLastFrame" small @click="nextFrame">
+    <v-icon>
+      mdi-chevron-right
+    </v-icon>
+  </v-btn>
+  <v-btn text :disabled="playing || isOnLastFrame" small @click="lastFrame">
+    <v-icon>
+      mdi-chevron-double-right
+    </v-icon>
+  </v-btn>
+  <v-select
+    class="pv-no-select"
+    :disabled="playing"
+    :items="frames"
+    :value="currentFrame"
+    dense
+    flat
+    hide-details
+    @change="setCurrentFrame"
+  />
+</div>

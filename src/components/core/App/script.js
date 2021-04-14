@@ -107,6 +107,7 @@ export default {
       this.fileUploadDialog = true;
     });
     this.initViews();
+    this.initializeAnimations();
 
     // attach keyboard shortcuts
     shortcuts.forEach(({ key, action }) =>
@@ -151,6 +152,7 @@ export default {
       'load',
       'resetQueue',
     ]),
+    ...mapActions('animations', ['initializeAnimations']),
     showFileUpload() {
       this.fileUploadDialog = true;
     },

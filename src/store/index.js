@@ -14,6 +14,7 @@ import Config from 'paraview-glance/src/config';
 import files from 'paraview-glance/src/store/fileLoader';
 import views from 'paraview-glance/src/store/views';
 import widgets from 'paraview-glance/src/store/widgets';
+import animations from 'paraview-glance/src/store/animations';
 
 import {
   wrapMutationAsAction,
@@ -70,6 +71,10 @@ function createStore(injected) {
       proxyConfiguration: Config.Proxy,
     });
   }
+  const animationManager = proxyManager.createProxy(
+    'AnimationManager',
+    'AnimationProxyManager'
+  );
 
   const $store = new Vuex.Store({
     plugins: [ProxyManagerVuexPlugin(proxyManager)],
@@ -101,6 +106,7 @@ function createStore(injected) {
       files: files({ proxyManager, girder }),
       views: views({ proxyManager, girder }),
       widgets: widgets({ proxyManager, girder }),
+      animations: animations({ animationManager }),
     },
     mutations: {
       showLanding(state) {

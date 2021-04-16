@@ -20,6 +20,9 @@ import vtkLabelMapVolumeRepProxy from 'paraview-glance/src/vtk/LabelMapVolumeRep
 import vtkLabelMapSliceRepProxy from 'paraview-glance/src/vtk/LabelMapSliceRepProxy';
 import vtkWidgetProxy from 'paraview-glance/src/vtk/WidgetProxy';
 
+import vtkAnimationProxyManager from 'vtk.js/Sources/Proxy/Animation/AnimationProxyManager';
+import vtkTimeStepBasedAnimationProxy from 'vtk.js/Sources/Proxy/Animation/TimeStepBasedAnimationHandlerProxy';
+
 import ConfigUtils from 'paraview-glance/src/config/configUtils';
 
 import proxyUI from 'paraview-glance/src/config/proxyUI';
@@ -224,6 +227,16 @@ export default {
       View2D_X: createDefaultView(vtk2DView, proxyUI.View2D, { axis: 0 }),
       View2D_Y: createDefaultView(vtk2DView, proxyUI.View2D, { axis: 1 }),
       View2D_Z: createDefaultView(vtk2DView, proxyUI.View2D, { axis: 2 }),
+    },
+    AnimationManager: {
+      AnimationProxyManager: {
+        class: vtkAnimationProxyManager,
+      },
+    },
+    Animations: {
+      TimeStepAnimation: {
+        class: vtkTimeStepBasedAnimationProxy,
+      },
     },
   },
   representations: {

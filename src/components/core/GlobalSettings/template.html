@@ -1,4 +1,12 @@
 <v-container :class="$style.container">
+  <v-card flat :class="$style.card" v-if="isAnimated">
+    <div :class="$style.heading">
+      <span class="subtitle-2">Animation controls</span>
+    </div>
+    <v-divider class="mb-4" />
+    <animationControls />
+  </v-card>
+
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
       <span class="subtitle-2">General Settings</span>
@@ -84,7 +92,6 @@
           <v-slider
             :class="$style.slimInput"
             hide-details
-
             v-model="annotationOpacityModel"
             :min="0"
             :max="1"
@@ -125,7 +132,6 @@
             flat
             hide-details
             :disabled="!orientationAxis"
-
             v-model="axisTypeModel"
             :items="axisTypes"
           />
@@ -142,7 +148,6 @@
             dense
             flat
             hide-details
-
             v-model="orientationPresetModel"
             :items="orientationPresets"
           />
@@ -150,10 +155,7 @@
       </v-layout>
     </v-container>
   </v-card>
-  <gpu-information
-    :width="250"
-    :proxyManager="$proxyManager"
-  />
+  <gpu-information :width="250" :proxyManager="$proxyManager" />
   <v-card flat :class="$style.card" v-if="hasVR()">
     <div :class="$style.heading">
       <v-container grid-list-xs class="pa-0">
@@ -182,7 +184,6 @@
           <v-slider
             :class="$style.slimInput"
             hide-details
-
             v-model="physicalScale"
             min="0.1"
             max="10"
@@ -209,7 +210,7 @@
             type="number"
             v-model="maxTextureLODSizeModel"
             :min="100"
-            suffix='KiB'
+            suffix="KiB"
           />
         </v-flex>
       </v-layout>

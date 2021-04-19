@@ -1,0 +1,765 @@
+/* globally accessible and generic utility classes */
+.pv-break-word {
+  word-break: break-word;
+}
+
+.AboutBox-close-3yqzs {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+.AboutBox-aboutIcon-2qjby {
+  max-width: 100%;
+  height: 56px;
+}
+.AboutBox-glanceIcon-2xf8y {
+  width: 50%;
+  margin: 0 auto;
+}
+
+
+.PiecewiseFunctionEditor-container-482m9 {
+  position: relative;
+  left: -10px;
+}
+
+.PalettePicker-wrapper-49fzu {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+}
+.PalettePicker-item-21851 {
+  position: relative;
+}
+.PalettePicker-check-4vwdk {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  pointer-events: none;
+  color: white !important;
+  mix-blend-mode: exclusion;
+}
+.PalettePicker-blot-3ydet {
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+  border-radius: 25%;
+  margin: 4px;
+  cursor: pointer;
+  transition: border 50ms;
+}
+.PalettePicker-blot-3ydet:hover {
+  border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+.TreeView-wrapper-42p44 {
+  display: block;
+  padding: 4px 16px;
+  box-sizing: border-box;
+  background: white;
+  min-width: 300px;
+  overflow: auto;
+}
+.TreeView-node-2jcah {
+  list-style: none;
+  margin-left: 16px;
+}
+.TreeView-arrow-378jf {
+  transform: rotateZ(-90deg);
+}
+.TreeView-openArrow-45dza {
+  transform: rotateZ(0deg);
+}
+.TreeView-header-36wdd {
+  position: relative;
+  display: flex;
+  flex-flow: row;
+  padding: 4px 8px;
+  margin: 3px 0;
+  transition: background-color 300ms;
+  cursor: pointer;
+  user-select: none;
+}
+.TreeView-header-36wdd:hover {
+  background-color: #dfdfdf;
+}
+.TreeView-expander-2d5cb {
+  position: absolute;
+  left: -24px;
+  width: 16px;
+  flex: 0 0 auto;
+  padding: 0 4px;
+}
+.TreeView-name-289b6 {
+  flex: 1 1 auto;
+}
+.Datasets-block-2qet1 {
+  padding: 4px 0;
+  padding-right: 6px;
+}
+.Datasets-blockTitle-32azn {
+  padding: 8px 4px;
+}
+.Datasets-blockContent-4ppdt {
+  padding: 4px;
+}
+.Datasets-blockRow-4yapw {
+  margin: 4px 0;
+}
+.Datasets-slimInput-44gfy {
+  padding-top: 0;
+  margin-top: 0;
+}
+.Datasets-canSelect-3nara {
+  user-select: text;
+}
+.Datasets-clickable-2y3nf {
+  cursor: pointer;
+}
+.Datasets-smallLabel-vufaj {
+  font-size: 12px;
+}
+.Datasets-active-2nscn {
+  color: rgba(0,0,0,0.54) !important;
+}
+.Datasets-inactive-2m99r {
+  color: rgba(0,0,0,0.25) !important;
+}
+.Datasets-matrix-44p2j {
+  padding: 0;
+}
+.Datasets-disable-33htv {
+  opacity: 0.25;
+}
+.Datasets-lutImage-bny4y {
+  width: 100%;
+  height: 20px;
+  border: solid 1px #eee;
+}
+.Datasets-dropdownMenu-amgz4 {
+  min-width: 300px;
+  max-height: 500px;
+}
+.Datasets-button-x73mn {
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+}
+.Datasets-click-4eyup {
+  cursor: pointer;
+}
+.Datasets-negativeTopSpacing-2crnb {
+  margin-top: -4px;
+}
+
+.Datasets-datasetPanel-2uz4w:last-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* vuetify override */
+.Datasets-datasetPanel-2uz4w:before, .Datasets-subpanel-2n3xx:before {
+  box-shadow: none;
+}
+.Datasets-panelContent-38wau {
+  /* for positioning the color group absolutely */
+  position: relative;
+}
+
+/* vuetify override */
+.Datasets-panelContent-38wau > .v-expansion-panel-content__wrap {
+  padding: 0;
+}
+.Datasets-subpanel-2n3xx {
+  padding-left: 20px;
+}
+.Datasets-subpanel-2n3xx .Datasets-panelContent-38wau {
+  padding: 4px 0;
+}
+.Datasets-panelContent-38wau .Datasets-subpanel-2n3xx:first-child {
+  border-top: thin solid rgba(0, 0, 0, 0.1);
+}
+
+/* vuetify override */
+/* This sets flex-grow to 0 for header contents */
+.Datasets-panelHeader-2ddr7 > :not(.v-expansion-panel-header__icon) {
+  flex: unset;
+}
+.Datasets-headerMenuButton-q4ggj {
+  /* maintain icon width */
+  flex: 0 0 auto !important;
+}
+.Datasets-subpanelHeader-qj2zk {
+  /* the 12px is to line up the expansion panel hide/show icons */
+  padding: 2px 12px 2px 4px;
+  /* revert subpanel height to non-active height */
+  min-height: 48px !important;
+}
+
+.ColorGroup-container-4qdpd {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  z-index: 10;
+  background: gray;
+}
+
+.PopUp-container-48cms {
+  position: relative;
+}
+.PopUp-popup-2zwr1 {
+  position: absolute;
+  overflow: auto;
+  z-index: 20;
+  background: white;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+}
+
+.PaintTool-container-2dssk {
+  padding: 8px;
+}
+.PaintTool-container-2dssk * {
+  user-select: none;
+}
+.PaintTool-fullWidth-3eebm {
+  width: 100%;
+}
+.PaintTool-labelInput-4h7qf {
+  width: 100%;
+}
+.PaintTool-paintActions-22eg6 {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  padding: 16px;
+}
+.PaintTool-paintSwitch-246gn {
+  margin-top: 0;
+  flex: 2;
+}
+.PaintTool-radioGroup-32vbp {
+  width: 100%;
+  margin-top: 0;
+}
+.PaintTool-radioGroup-32vbp > .v-input__control {
+  width: 100%;
+}
+.PaintTool-headerRow-4cs6d {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  padding: 0;
+}
+.PaintTool-listRow-47rrr {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: visible;
+}
+.PaintTool-lowercaseText-2xq1v {
+  text-transform: none;
+  font-weight: normal;
+}
+.PaintTool-colorBoxBackground-2pbvh {
+  cursor: pointer;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.1);
+  margin-right: 4px;
+  background-image: linear-gradient(-45deg, #ccc 25%, transparent 25%, 75%, #ccc 75%),
+                    linear-gradient(-45deg, #ccc 25%, transparent 25%, 75%, #ccc 75%);
+  background-size: 10px 10px;
+  background-position: 0 0, -5px 5px;
+  background-repeat: repeat;
+}
+.PaintTool-colorBox-3db9u {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+.PaintTool-colorPicker-38m4j {
+  width: 200px;
+  padding: 8px;
+  overflow: hidden;
+}
+.PaintTool-opacitySlider-2mxrp {
+  width: 90%;
+}
+.PaintTool-activeRadio-3tgps {
+  margin-right: -8px;
+}
+
+.MeasurementTools-container-4anne {
+  padding: 8px;
+}
+.MeasurementTools-container-4anne * {
+  user-select: none;
+}
+.MeasurementTools-fullWidth-2qpb4 {
+  width: 100%;
+}
+.MeasurementTools-heading-2aq3z {
+  padding: 8px 0;
+}
+.MeasurementTools-popup-2qtgr {
+  width: 250px;
+  overflow: hidden;
+}
+.MeasurementTools-toolButton-3edmf {
+  /* override vuetify */
+  min-width: unset !important;
+  /* override vuetify */
+  padding: 0 6px !important;
+}
+.MeasurementTools-tools-4jxbs {
+  text-align: center;
+}
+.MeasurementTools-toolIcon-21c92 {
+  height: 20px;
+  width: 20px;
+}
+.MeasurementTools-row-21spd {
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+.MeasurementTools-rowAvatar-uhr7q {
+  flex: 0;
+  margin: 8px;
+}
+.MeasurementTools-rowContent-43t5d {
+  flex: 2;
+  display: flex;
+  flex-flow: column;
+  margin: 8px;
+  min-width: 0;
+}
+.MeasurementTools-rowContentName-45q89 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 4px;
+}
+.MeasurementTools-rowContentDetails-3md7s {
+  font-style: italic;
+  color: #444;
+  padding: 0 4px;
+}
+.MeasurementTools-action-4ra45 {
+  margin: 0 2px;
+}
+.MeasurementTools-toolIconOverlay-3ge6d {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #fff;
+  opacity: 0.75;
+}
+
+
+.CropTool-container-4dv1h {
+  padding: 0 8px 8px 8px;
+}
+.CropTool-container-4dv1h * {
+  user-select: none;
+}
+
+.MedianFilter-container-3jddk {
+  padding: 0 8px 8px 8px;
+}
+.MedianFilter-container-3jddk * {
+  user-select: none;
+}
+
+/* vuetify override */
+.EditTools-panelContent-2jdg5 > .v-expansion-panel-content__wrap {
+  padding: 0;
+}
+
+.AnimationControls-wrapper-4km6d {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  align-content: center;
+}
+
+.GPUInformation-card-5he5z {
+  padding: 8px 16px;
+}
+.GPUInformation-heading-2gfqj {
+  padding: 8px 0;
+}
+.GPUInformation-divider-3d9ne {
+  margin-bottom: 16px;
+}
+.GPUInformation-monitor-3hqg7 {
+  position: relative;
+}
+.GPUInformation-table-2yxu6 td {
+  padding: 0 10px;
+}
+
+.GlobalSettings-container-237n3 {
+  padding: 0;
+}
+.GlobalSettings-container-237n3 * {
+  user-select: none;
+}
+.GlobalSettings-card-4qkj2 {
+  padding: 8px 16px;
+}
+.GlobalSettings-heading-4pnf8 {
+  padding: 8px 0;
+}
+.GlobalSettings-divider-3rwwp {
+  margin-bottom: 16px;
+}
+.GlobalSettings-slimInput-2wy6k {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.ControlsDrawer-tabsContainer-4nm17 {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+.ControlsDrawer-tabItems-w7rkc {
+  flex: 2;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-flow: column;
+}
+
+/* needed so .tabItem doesn't default to auto height */
+.ControlsDrawer-tabItems-w7rkc > .v-window__container {
+  height: 100%;
+}
+.ControlsDrawer-tabItem-3gscf {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+.ControlsDrawer-tabComponent-4qmm6 {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.ErrorBox-errorTextarea-3vjg9 {
+  width: 100%;
+  min-height: 200px;
+  height: 40vh;
+  max-height: 500px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  padding: 8px;
+}
+
+.RawFileReader-toolbarButton-23gvm span {
+  margin-left: 4px;
+}
+.RawFileReader-overlay-35g3m {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  user-select: none;
+}
+.RawFileReader-overlayHidden-s6gb1 {
+  visibility: hidden;
+}
+.RawFileReader-overlayText-484c8 {
+  position: relative;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 80%;
+  margin: auto;
+}
+
+.GirderBox-close-a434y {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+
+.FileLoader-dragBox-4kpzx {
+  border: 1px dashed gray;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.FileLoader-dragBox-4kpzx:hover, .FileLoader-dropTarget-3ns34 {
+  background: rgba(0, 0, 0, 0.09);
+}
+
+.Landing-root-2gyew {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  overflow-y: auto;
+}
+.Landing-dnd-4yv9p {
+  height: 100%;
+}
+.Landing-banner-3wqzf {
+  min-height: 250px;
+}
+.Landing-fileUpload-23rfb {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  height: 100%;
+  border: 3px #aaa dashed;
+  border-radius: 5px;
+  background-color: #696969;
+}
+.Landing-fileUpload-23rfb:hover, .Landing-fileUploadHover-4994w {
+  background-color: #787878;
+  cursor: pointer;
+}
+.Landing-fileUploadContents-6bxch {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+}
+.Landing-sampleData-2pu6q {
+  flex: 1;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.Landing-linkOverlay-3vhxd {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 1;
+  opacity: 0;
+  background: rgba(255,255,255,0.1);
+  font-size: 300%;
+  text-align: center;
+  font-weight: bolder;
+  color: white;
+}
+.Landing-linkOverlay-3vhxd:hover {
+  opacity: 1;
+}
+.Landing-acknowledgement-3nt2v {
+  font-size: 80%;
+}
+.Landing-description-az55z {
+  font-size: 80%;
+  color: lightgray;
+}
+.Landing-linkOverlayText-3m6bu {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  background: rgba(0,0,0,0.75);
+  padding: 10px;
+}
+
+.ToolbarSheet-sheet-rq6y2 {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transition: visibility 0s 200ms;
+}
+.ToolbarSheet-slotWrapper-2dxzk {
+  transition: transform 200ms;
+}
+.ToolbarSheet-visible-418k6 {
+  visibility: visible;
+  transition-delay: 0s;
+}
+.VtkView-container-2s9uu {
+  position: relative;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+.VtkView-vtkView-8u9xt {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+.VtkView-viewTypeSelector-nqrvr {
+  max-width: 140px;
+  min-width: 140px;
+  user-select: none;
+}
+.VtkView-floatToolbar-3n34y {
+  position: absolute;
+  z-index: 1;
+  right: 10px;
+  top: 10px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 16px;
+}
+.VtkView-toolbarWrapper-4m19h {
+  position: relative;
+}
+.VtkView-button-3pbmr {
+  /* override vuetify */
+  margin: 2px 4px;
+}
+.VtkView-smallToolbar-g2qjg {
+  overflow: hidden;
+}
+.VtkView-activeView-tpnv3 {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 50%,rgba(255,255,255,0) 51%);
+}
+
+.LayoutView-container-5mpaf {
+  height: 100%;
+  padding: 0;
+}
+.LayoutView-grid-2kd2k {
+  height: 100%;
+  display: grid;
+  grid-column-gap: 2px;
+  grid-row-gap: 2px;
+  grid-template-areas: none;
+}
+.LayoutView-viewContainer-4auhr {
+  /* prevent view from overflowing our app during resize */
+  min-height: 0;
+  min-width: 0;
+}
+
+.ScreenshotDialog-imagePreview-32uw2 {
+  border: 2px dashed black;
+}
+
+.Screenshots-container-23drb {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  user-select: none;
+}
+.Screenshots-emptyState-2u619 {
+  flex: 2;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+.Screenshots-filename-2fmm7 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.Screenshots-action-4k1kr {
+  /* override vuetify */
+  min-width: unset;
+  /* override vuetify */
+  margin-left: 4px !important;
+}
+.Screenshots-hoverTooltip-32kkx {
+  background-color: white;
+  opacity: 1;
+}
+.Screenshots-hoverImage-gq2ay {
+  max-height: 200px;
+}
+
+.StateFileGenerator-hidden-47cwk {
+  display: none;
+}
+.StateFileGenerator-visible-4yx76 {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  top: 50%;
+  width: 450px;
+  transform: translate(-50%, -50%);
+
+  background: rgba(128,128,128,0.9);
+  border-radius: 10px;
+  text-align: center;
+  padding: 50px;
+  border: solid 1px #333;
+  box-shadow: rgba(0,0,0,0.5) 5px 5px 10px;
+}
+.StateFileGenerator-label-nmhg8 {
+  display: block;
+  font-weight: bolder;
+  color: white;
+  font-size: 25px;
+  margin-top: 30px;
+}
+
+/**
+ * NOTE: should technically modify stylus rules instead of patching
+ * individual classnames.
+ */
+.App-root-499kn .v-application--wrap {
+  position: absolute;
+  /* Fill to parent height, which will be the height of <html> */
+  height: 100%;
+  width: 100%;
+  /* override vuetify's min-height: 100vh.
+   * 100vh also includes navbar height, which we don't
+   * want b/c we want to contrain our app between the address bar
+   * and the bottom navbar.
+   */
+  min-height: 0;
+}
+.App-appContent-3p988 {
+  height: 100%;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+.App-overlay-jnb9f {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  user-select: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 100ms, visibility 0 100ms;
+}
+.App-overlayVisible-2q685 {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+.App-overlayText-3z6w5 {
+  position: relative;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 80%;
+  margin: auto;
+}
+.App-noTransition-3jawh {
+  transition: none;
+}
+

@@ -16,7 +16,9 @@ const RulerComponent = create2DTool('Ruler', {
     },
     getDisplayedMeasurements() {
       return {
-        Length: `${this.measurements.length.toFixed(2)} mm`,
+        Length: `${(
+          this.measurements.length * (this.distanceUnitFactor || 1.0)
+        ).toFixed(2)} ${this.distanceUnitSymbol || ''}`,
       };
     },
     updateMeasurements() {
@@ -63,6 +65,14 @@ const RulerComponent = create2DTool('Ruler', {
       updateProps(viewWidget, {
         Text: { style: `font-size: ${scaledSize}px` },
       });
+    },
+  },
+  watch: {
+    distanceUnitSymbol() {
+      this.widgetProxy.modified();
+    },
+    distanceUnitFactor() {
+      this.widgetProxy.modified();
     },
   },
 });

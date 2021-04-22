@@ -12,6 +12,9 @@ export default ({ proxyManager }) => ({
   state: {
     measurements: {}, // dataset id -> [{component name, ...{measurement info}}]
 
+    distanceUnitSymbol: 'mm',
+    distanceUnitFactor: 1.0,
+
     // paint
     imageToLabelmaps: {}, // image id -> [labelmap ids]
     labelmapStates: {}, // labelmap id -> { selectedLabel, lastColorIndex }
@@ -20,6 +23,12 @@ export default ({ proxyManager }) => ({
     croppingStates: {}, // dataset id -> cropping state
   },
   mutations: {
+    setDistanceUnitSymbol(state, symbol) {
+      state.distanceUnitSymbol = symbol;
+    },
+    setDistanceUnitFactor(state, factor) {
+      state.distanceUnitFactor = factor;
+    },
     addLabelmapToImage(state, { imageId, labelmapId }) {
       if (!(imageId in state.imageToLabelmaps)) {
         Vue.set(state.imageToLabelmaps, imageId, []);
@@ -72,6 +81,8 @@ export default ({ proxyManager }) => ({
     removeMeasurementTool: wrapMutationAsAction('removeMeasurementTool'),
     updateMeasurementTool: wrapMutationAsAction('updateMeasurementTool'),
     setCroppingState: wrapMutationAsAction('setCroppingState'),
+    setDistanceUnitSymbol: wrapMutationAsAction('setDistanceUnitSymbol'),
+    setDistanceUnitFactor: wrapMutationAsAction('setDistanceUnitFactor'),
     rewriteProxyIds: {
       root: true,
       handler: wrapMutationAsAction('rewriteProxyIds'),

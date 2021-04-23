@@ -1,4 +1,5 @@
 import { WIDGETS } from 'paraview-glance/src/palette';
+import { mapState } from 'vuex';
 
 // ----------------------------------------------------------------------------
 
@@ -64,6 +65,10 @@ export default (toolName, extraComponent = {}) => ({
     displayedMeasurements() {
       return this.getDisplayedMeasurements();
     },
+    ...mapState('widgets', {
+      distanceUnitSymbol: (state) => state.distanceUnitSymbol,
+      distanceUnitFactor: (state) => state.distanceUnitFactor,
+    }),
   },
   watch: extraComponent.watch || {},
   proxyManagerHooks: {

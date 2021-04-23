@@ -27,6 +27,46 @@
       </v-layout>
     </v-container>
   </v-card>
+
+  <!-- measurement unit selection -->
+  <v-card flat :class="$style.card">
+    <div :class="$style.heading">
+      <span class="subtitle-2">Measurements</span>
+    </div>
+    <v-divider class="mb-4" />
+    <v-container grid-list-xs class="pa-0">
+      <v-layout row align-center class="pt-1">
+        <v-flex xs9>
+          <span class="body-2">Distance unit symbol</span>
+        </v-flex>
+        <v-flex xs3>
+          <v-text-field
+            :class="$style.slimInput"
+            hint="Symbol"
+            hide-details
+            v-model="distanceUnitSymbolModel"
+            required
+          />
+        </v-flex>
+        <v-flex xs9>
+          <span class="body-2">Distance unit factor</span>
+        </v-flex>
+        <v-flex xs3>
+          <v-text-field
+            :class="$style.slimInput"
+            type="number"
+            hint="Factor"
+            hide-details
+            v-model="distanceUnitFactorModel"
+            :min="0"
+            :step="0.1"
+            required
+          />
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-card>
+
   <v-card flat :class="$style.card">
     <div :class="$style.heading">
       <span class="subtitle-2">Background</span>

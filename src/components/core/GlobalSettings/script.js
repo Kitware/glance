@@ -55,6 +55,22 @@ export default {
     };
   },
   computed: {
+    distanceUnitSymbolModel: {
+      get() {
+        return this.distanceUnitSymbol;
+      },
+      set(symbol) {
+        this.setDistanceUnitSymbol(symbol);
+      },
+    },
+    distanceUnitFactorModel: {
+      get() {
+        return this.distanceUnitFactor;
+      },
+      set(factor) {
+        this.setDistanceUnitFactor(factor);
+      },
+    },
     collapseDatasetPanelsModel: {
       get() {
         return this.collapseDatasetPanels;
@@ -150,6 +166,10 @@ export default {
       firstPersonMovementSpeed: (state) => state.firstPersonMovementSpeed,
       maxTextureLODSize: (state) => state.maxTextureLODSize,
     }),
+    ...mapState('widgets', {
+      distanceUnitSymbol: (state) => state.distanceUnitSymbol,
+      distanceUnitFactor: (state) => state.distanceUnitFactor,
+    }),
   },
   watch: {
     physicalScale() {
@@ -225,6 +245,12 @@ export default {
         dispatch('resetFirstPersonMovementSpeed'),
       setMaxTextureLODSize: (dispatch, size) =>
         dispatch('setMaxTextureLODSize', size),
+    }),
+    ...mapActions('widgets', {
+      setDistanceUnitSymbol: (dispatch, symbol) =>
+        dispatch('setDistanceUnitSymbol', symbol),
+      setDistanceUnitFactor: (dispatch, factor) =>
+        dispatch('setDistanceUnitFactor', factor),
     }),
   },
 };

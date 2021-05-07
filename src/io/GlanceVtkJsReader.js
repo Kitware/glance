@@ -1,3 +1,4 @@
+import 'vtk.js/Sources/IO/Core/DataAccessHelper/JSZipDataAccessHelper';
 import DataAccessHelper from 'vtk.js/Sources/IO/Core/DataAccessHelper';
 import macro from 'vtk.js/Sources/macro';
 import vtkHttpSceneLoader from 'vtk.js/Sources/IO/Core/HttpSceneLoader';

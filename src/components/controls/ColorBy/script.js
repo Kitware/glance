@@ -326,15 +326,6 @@ export default {
         }
 
         const rep = repGeometry || repVolume;
-        const colorByValue = rep.getColorBy();
-
-        // only get name and location of colorBy array
-        if (colorByValue.length) {
-          this.colorBy = colorByValue.slice(0, 2);
-        } else {
-          // should only happen with geometry
-          this.colorBy = 'solid';
-        }
 
         const propUI = rep
           .getReferenceByName('ui')
@@ -344,6 +335,23 @@ export default {
             propUI.domain.arrays,
             this.available === 'geometry'
           );
+        }
+
+        const colorByValue = rep.getColorBy();
+        const dataset = rep.getInputDataSet();
+        const pointScalars = dataset.getPointData().getScalars();
+        const cellScalars = dataset.getCellData().getScalars();
+
+        // only get name and location of colorBy array
+        if (colorByValue.length) {
+          this.colorBy = colorByValue.slice(0, 2);
+        } else if (pointScalars) {
+          this.colorBy = [pointScalars.getName(), 'pointData'];
+        } else if (cellScalars) {
+          this.colorBy = [cellScalars.getName(), 'cellData'];
+        } else {
+          // should only happen with geometry
+          this.colorBy = 'solid';
         }
 
         if (this.available === 'geometry') {

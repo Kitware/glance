@@ -22,15 +22,15 @@ jobs:
       - name: Build
         run: npm run build:release
 
-      - name: stable: check out worktree
+      - name: stable - check out worktree
         run: git worktree add stable stable
-      - name: stable: Install dependencies
+      - name: stable - Install dependencies
         working-directory: ./stable
         run: npm ci
-      - name: stable: Build
+      - name: stable - Build
         working-directory: ./stable
         run: npm run build:release
-      - name: stable: Write version
+      - name: stable - Write version
         working-directory: ./stable
         run: npm run version
 
@@ -41,7 +41,7 @@ jobs:
           GIT_PUBLISH_URL: https://${{ secrets.GH_PUBLISH_CREDS }}@github.com/Kitware/paraview-glance.git
         run: npm run doc:publish
 
-      - name: stable: remove worktree
+      - name: stable - remove worktree
         run: git worktree remove stable
 
       - name: Release

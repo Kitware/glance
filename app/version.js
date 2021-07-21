@@ -1,1 +1,1 @@
-window.GLANCE_VERSION = "4.9.13";
+window.GLANCE_VERSION = "0.0.0-semantically-release";

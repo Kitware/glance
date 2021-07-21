@@ -43,7 +43,7 @@ jobs:
         run: npm run doc:publish
 
       - name: stable - remove worktree
-        run: git worktree remove stable
+        run: git worktree remove --force stable
 
       - name: Release
         env:

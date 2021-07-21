@@ -38,6 +38,12 @@ jobs:
 
       - name: Generate bundle
         run: npm run bundle
+
+      - name: Set git config
+        run: |
+          git config --global user.name "Github Actions"
+          git config --global user.email "forrest.li@kitware.com"
+
       - name: Publish website
         env:
           GIT_PUBLISH_URL: https://${{ secrets.GH_PUBLISH_CREDS }}@github.com/Kitware/paraview-glance.git
@@ -50,7 +56,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          git config --global user.name "Github Actions"
-          git config --global user.email "forrest.li@kitware.com"
-          npm run semantic-release
+        run: npm run semantic-release

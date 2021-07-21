@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
+          fetch-depth: 0
       - name: Setup node
         uses: actions/setup-node@v1
         with:

@@ -1,8 +1,4 @@
-<v-expansion-panels
-  v-model="panelState"
-  multiple
-  accordion
->
+<v-expansion-panels v-model="panelState" multiple accordion>
   <v-expansion-panel
     v-for="(sourceId, index) in datasets"
     :key="sourceId"
@@ -29,10 +25,7 @@
         {{ getSourceName(sourceId) }}
       </div>
       <v-spacer />
-      <v-tooltip
-        v-if="datasets.length > 1"
-        bottom
-      >
+      <v-tooltip v-if="datasets.length > 1" bottom>
         <span class="pv-no-select">Activate source</span>
         <template v-slot:activator="{ on }">
           <v-btn
@@ -43,49 +36,34 @@
             v-on:click.stop="activateSource(sourceId)"
           >
             <v-icon>
-              {{ activeSourceId === sourceId ? 'mdi-bookmark-check' : 'mdi-bookmark-outline' }}
+              {{ activeSourceId === sourceId ? 'mdi-bookmark-check' :
+              'mdi-bookmark-outline' }}
             </v-icon>
           </v-btn>
         </template>
       </v-tooltip>
-      <div v-on:click.stop> <!-- prevent panel expansion on menu click -->
+      <div v-on:click.stop>
+        <!-- prevent panel expansion on menu click -->
         <v-menu offset-x>
           <template v-slot:activator="{ on }">
-            <v-btn
-              :class="$style.headerMenuButton"
-              icon
-              small
-              v-on="on"
-            >
+            <v-btn :class="$style.headerMenuButton" icon small v-on="on">
               <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
           </template>
           <v-list dense>
-            <v-list-item
-              v-on:click="deleteDataset(sourceId)"
-            >
+            <v-list-item v-on:click="deleteDataset(sourceId)">
               <v-list-item-title>Delete</v-list-item-title>
             </v-list-item>
-            <v-list-item
-              v-on:click="uploadDataset(sourceId)"
-            >
+            <v-list-item v-on:click="uploadDataset(sourceId)">
               <v-list-item-title>Upload To Girder</v-list-item-title>
-
             </v-list-item>
           </v-list>
         </v-menu>
       </div>
     </v-expansion-panel-header>
-    <v-expansion-panel-content :class="$style.panelContent">
-      <color-group
-        :index="index"
-        :visible="datasets.length > 1"
-      />
-      <v-expansion-panels
-        v-model="subpanels[sourceId]"
-        multiple
-        accordion
-      >
+    <v-expansion-panel-content eager :class="$style.panelContent">
+      <color-group :index="index" :visible="datasets.length > 1" />
+      <v-expansion-panels v-model="subpanels[sourceId]" multiple accordion>
         <v-expansion-panel
           v-for="(panel,i) in panels"
           :key="i"
@@ -97,13 +75,12 @@
             :class="$style.subpanelHeader"
           >
             <v-icon left class="flex-grow-0">{{ panel.icon }}</v-icon>
-            <span class="body-2 font-weight-medium flex-grow-0">{{ panel.name }}</span>
+            <span class="body-2 font-weight-medium flex-grow-0">
+              {{ panel.name }}
+            </span>
           </v-expansion-panel-header>
-          <v-expansion-panel-content :class="$style.panelContent">
-            <component
-              :is="panel.component"
-              :sourceId="sourceId"
-            />
+          <v-expansion-panel-content eager :class="$style.panelContent">
+            <component :is="panel.component" :sourceId="sourceId" />
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>

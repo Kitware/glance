@@ -1,0 +1,55 @@
+name: Build and Publish
+on:
+  push:
+    branches:
+      - master
+      - stable
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+          ref: master
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate
+        run: npm run validate
+      - name: Build
+        run: npm run build:release
+
+      - name: stable: check out worktree
+        run: git worktree add stable stable
+      - name: stable: Install dependencies
+        working-directory: ./stable
+        run: npm ci
+      - name: stable: Build
+        working-directory: ./stable
+        run: npm run build:release
+      - name: stable: Write version
+        working-directory: ./stable
+        run: npm run version
+
+      - name: Generate bundle
+        run: npm run bundle
+      - name: Publish website
+        env:
+          GIT_PUBLISH_URL: https://${{ secrets.GH_PUBLISH_CREDS }}@github.com/Kitware/paraview-glance.git
+        run: npm run doc:publish
+
+      - name: stable: remove worktree
+        run: git worktree remove stable
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          git config --global user.name "Github Actions"
+          git config --global user.email "forrest.li@kitware.com"
+          npm run semantic-release

@@ -18,17 +18,17 @@ module.exports = {
       dest: './build-tmp/public/nightly',
     },
     {
-      src: '../node_modules/paraview-glance/dist/*',
+      src: '../stable/dist/*',
       dest: './build-tmp/public/app',
-    },
-    {
-      src: '../node_modules/paraview-glance/dist/index-ga.html',
-      dest: './build-tmp/public/app/index.html',
     },
     // use analytics-enabled index.html
     {
       src: '../dist/index-ga.html',
       dest: './build-tmp/public/nightly/index.html',
+    },
+    {
+      src: '../stable/dist/index-ga.html',
+      dest: './build-tmp/public/app/index.html',
     },
   ],
 };

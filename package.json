@@ -43,6 +43,7 @@
     "@girder/components": "^2.2.4",
     "@linusborg/vue-simple-portal": "^0.1.3",
     "itk": "13.1.4",
+    "jszip": "^3.6.0",
     "mousetrap": "^1.6.3",
     "pug": "^3.0.0",
     "pug-plain-loader": "^1.0.0",

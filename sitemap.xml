@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://kitware.github.io/paraview-glance/gallery/index.html</loc>
+    
+    <lastmod>2021-07-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://kitware.github.io/paraview-glance/doc/index.html</loc>
+    
+    <lastmod>2021-07-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://kitware.github.io/paraview-glance/doc/keyboard_shortcuts.html</loc>
+    
+    <lastmod>2021-07-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://kitware.github.io/paraview-glance/doc/loading_files.html</loc>
+    
+    <lastmod>2021-07-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://kitware.github.io/paraview-glance/doc/readers.html</loc>
+    
+    <lastmod>2021-07-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://kitware.github.io/paraview-glance/2016/04/28/kw-doc/</loc>
+    
+    <lastmod>2021-07-30</lastmod>
+    
+  </url>
+  
+
+  <url>
+    <loc>https://kitware.github.io/paraview-glance</loc>
+    <lastmod>2021-07-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+
+  
+</urlset>

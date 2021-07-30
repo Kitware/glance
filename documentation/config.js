@@ -25,10 +25,12 @@ module.exports = {
     {
       src: '../dist/index-ga.html',
       dest: './build-tmp/public/nightly/index.html',
+      destIsTarget: true,
     },
     {
       src: '../stable/dist/index-ga.html',
       dest: './build-tmp/public/app/index.html',
+      destIsTarget: true,
     },
   ],
 };

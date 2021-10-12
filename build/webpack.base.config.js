@@ -32,7 +32,10 @@ module.exports = {
     rules: [
       {
         test: paths.entry,
-        loader: 'expose-loader?Glance',
+        loader: 'expose-loader',
+        options: {
+          exposes: ['Glance'],
+        },
       },
       {
         test: /\.vue$/,
@@ -77,6 +80,7 @@ module.exports = {
       },
       {
         test: /\.(js|vue)$/,
+        exclude: /node_modules/,
         loader: 'eslint-loader',
         enforce: 'pre',
       },
@@ -96,7 +100,11 @@ module.exports = {
           {
             loader: 'postcss-loader',
             options: {
-              plugins: () => [autoprefixer('last 3 version', 'ie >= 10')],
+              postcssOptions: {
+                plugins: [
+                  'postcss-preset-env',
+                ],
+              },
             },
           },
         ],
@@ -110,30 +118,19 @@ module.exports = {
     new VueLoaderPlugin(),
     new VuetifyLoaderPlugin(),
     new WriteFilePlugin(),
-    new CopyPlugin([
-      {
-        from: path.join(
-          paths.node_modules,
-          'workbox-sw',
-          'build',
-          'importScripts',
-          'workbox-sw.prod.*.js'
-        ),
-        flatten: true,
-      },
-      {
-        from: path.join(paths.node_modules, 'itk'),
-        to: 'itk',
-      },
-      {
-        from: path.join(paths.root, 'static'),
-      },
-      {
-        from: path.join(paths.root, 'itk', 'web-build', 'itkfiltering*'),
-        to: path.join('itk', 'Pipelines'),
-        flatten: true,
-      },
-    ]),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.join(paths.node_modules, 'itk'),
+          to: 'itk',
+        },
+        {
+          from: path.join(paths.root, 'itk', 'web-build', 'itkfiltering*'),
+          to: path.join('itk', 'Pipelines'),
+          to: '[name][ext]',
+        },
+      ]
+    }),
     new GenerateSW({
       cacheId: 'paraview-glance-',
       cleanupOutdatedCaches: true,

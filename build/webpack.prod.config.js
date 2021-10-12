@@ -1,7 +1,7 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 
 const baseConfig = require('./webpack.base.config');
 
@@ -30,7 +30,7 @@ function htmlTemplateParameters({ useGA = false } = { useGA: false }) {
   });
 }
 
-module.exports = merge.smart(baseConfig, {
+module.exports = merge(baseConfig, {
   mode: 'production',
   module: {
     rules: [

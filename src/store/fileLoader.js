@@ -192,9 +192,7 @@ export default ({ proxyManager, girder }) => ({
       const exts = getSupportedExtensions();
       return new Promise((resolve, reject) =>
         ReaderFactory.openFiles(exts, (files) => {
-          dispatch('openFiles', Array.from(files))
-            .then(resolve)
-            .catch(reject);
+          dispatch('openFiles', Array.from(files)).then(resolve).catch(reject);
         })
       );
     },
@@ -483,9 +481,8 @@ export default ({ proxyManager, girder }) => ({
 
           // attach measurements to most recently loaded image
           for (let i = 0; i < measurementFiles.length; i++) {
-            const measurements = measurementFiles[
-              i
-            ].reader.reader.getOutputData();
+            const measurements =
+              measurementFiles[i].reader.reader.getOutputData();
             for (let m = 0; m < measurements.length; m++) {
               dispatch(
                 'widgets/addMeasurementTool',

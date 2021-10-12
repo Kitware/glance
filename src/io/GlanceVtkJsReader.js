@@ -57,14 +57,8 @@ function updateRanges(container, name, dataRange) {
 function gatherRanges(container, dataset) {
   const fn = (array) =>
     updateRanges(container, array.getName(), array.getRange(-1));
-  dataset
-    .getPointData()
-    .getArrays()
-    .forEach(fn);
-  dataset
-    .getCellData()
-    .getArrays()
-    .forEach(fn);
+  dataset.getPointData().getArrays().forEach(fn);
+  dataset.getCellData().getArrays().forEach(fn);
 }
 
 // ----------------------------------------------------------------------------
@@ -110,14 +104,8 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
     const allViews = proxyManager.getViews();
     const allDataRanges = {};
     model.scene.forEach((sceneItem) => {
-      const {
-        source,
-        mapper,
-        actor,
-        volume,
-        name,
-        volumeComponents,
-      } = sceneItem;
+      const { source, mapper, actor, volume, name, volumeComponents } =
+        sceneItem;
       const actorState = actor ? actor.get('origin', 'scale', 'position') : {};
       const volumeState = volume
         ? volume.get('origin', 'scale', 'position')
@@ -256,8 +244,9 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
           proxyManager.renderAllViews
         );
 
-        const maxTextureLODSize = proxyManager.getReferenceByName('$store')
-          .state.views.maxTextureLODSize;
+        const maxTextureLODSize =
+          proxyManager.getReferenceByName('$store').state.views
+            .maxTextureLODSize;
         textureLODsDownloader.setMaxTextureLODSize(maxTextureLODSize);
 
         // Start the downloads
@@ -283,9 +272,8 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
       if (model.animationHandler) {
         if (proxyManager.getProxyInGroup('AnimationManager').length) {
           // Find an existing animation manager
-          const animationManager = proxyManager.getProxyInGroup(
-            'AnimationManager'
-          )[0];
+          const animationManager =
+            proxyManager.getProxyInGroup('AnimationManager')[0];
 
           const animation = proxyManager.createProxy(
             'Animations',

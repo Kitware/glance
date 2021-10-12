@@ -33,11 +33,7 @@ function updateWidget() {
 
     if (this.source) {
       this.piecewiseWidget.setDataArray(
-        this.source
-          .getDataset()
-          .getPointData()
-          .getScalars()
-          .getData()
+        this.source.getDataset().getPointData().getScalars().getData()
       );
     } else {
       this.piecewiseWidget.setDataArray(

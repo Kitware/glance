@@ -410,10 +410,7 @@ export default {
       labelmap.removeLabel(label);
 
       // clear label
-      const data = labelmap
-        .getPointData()
-        .getScalars()
-        .getData();
+      const data = labelmap.getPointData().getScalars().getData();
       for (let i = 0; i < data.length; i++) {
         if (data[i] === label) {
           data[i] = 0;

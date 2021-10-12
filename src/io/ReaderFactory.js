@@ -87,12 +87,8 @@ function readRawData({ fileName, data }) {
   return new Promise((resolve, reject) => {
     const readerMapping = getReader({ name: fileName });
     if (readerMapping) {
-      const {
-        vtkReader,
-        parseMethod,
-        fileNameMethod,
-        sourceType,
-      } = readerMapping;
+      const { vtkReader, parseMethod, fileNameMethod, sourceType } =
+        readerMapping;
       const reader = vtkReader.newInstance();
       if (fileNameMethod) {
         reader[fileNameMethod](fileName);
@@ -150,12 +146,8 @@ function loadFileSeries(files, extension, outFileName = '') {
     if (files.length) {
       const readerMapping = READER_MAPPING[extension];
       if (readerMapping) {
-        const {
-          vtkReader,
-          fileSeriesMethod,
-          fileNameMethod,
-          sourceType,
-        } = readerMapping;
+        const { vtkReader, fileSeriesMethod, fileNameMethod, sourceType } =
+          readerMapping;
         const reader = vtkReader.newInstance();
 
         if (fileNameMethod) {
@@ -206,9 +198,8 @@ function downloadDataset(fileName, url, options = {}) {
 function registerReadersToProxyManager(readers, proxyManager) {
   const retlist = [];
   for (let i = 0; i < readers.length; i += 1) {
-    const { reader, sourceType, name, dataset, metadata, proxyKeys } = readers[
-      i
-    ];
+    const { reader, sourceType, name, dataset, metadata, proxyKeys } =
+      readers[i];
     let retsource = null;
     if (reader || dataset) {
       const needSource =

@@ -282,9 +282,8 @@ export default {
         256
       );
 
-      this.piecewiseFunction = this.$proxyManager.getPiecewiseFunction(
-        arrayName
-      );
+      this.piecewiseFunction =
+        this.$proxyManager.getPiecewiseFunction(arrayName);
     },
     setPreset() {
       if (this.colorByName) {

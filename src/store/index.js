@@ -25,10 +25,7 @@ const STATE_VERSION = 2;
 
 // http://jsperf.com/typeofvar
 function typeOf(o) {
-  return {}.toString
-    .call(o)
-    .slice(8, -1)
-    .toLowerCase();
+  return {}.toString.call(o).slice(8, -1).toLowerCase();
 }
 
 // quick object merge using Vue.set
@@ -154,8 +151,9 @@ function createStore(injected) {
         const t = new Date();
         const fileName =
           fileNameToUse ||
-          `${t.getFullYear()}${t.getMonth() +
-            1}${t.getDate()}_${t.getHours()}-${t.getMinutes()}-${t.getSeconds()}.glance`;
+          `${t.getFullYear()}${
+            t.getMonth() + 1
+          }${t.getDate()}_${t.getHours()}-${t.getMinutes()}-${t.getSeconds()}.glance`;
 
         commit('savingState', fileName);
 

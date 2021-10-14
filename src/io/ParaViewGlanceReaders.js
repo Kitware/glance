@@ -3,6 +3,7 @@ import vtkXMLImageDataReader from 'vtk.js/Sources/IO/XML/XMLImageDataReader';
 import vtkSTLReader from 'vtk.js/Sources/IO/Geometry/STLReader';
 import vtkOBJReader from 'vtk.js/Sources/IO/Misc/OBJReader';
 import vtkPDBReader from 'vtk.js/Sources/IO/Misc/PDBReader';
+import vtkPLYReader from 'vtk.js/Sources/IO/Geometry/PLYReader';
 import vtkJSONReader from 'vtk.js/Sources/IO/Misc/JSONReader';
 import vtkSkyboxReader from 'vtk.js/Sources/IO/Misc/SkyboxReader';
 
@@ -96,4 +97,11 @@ ReaderFactory.registerReader({
   name: 'JSON Reader',
   vtkReader: vtkJSONReader,
   binary: false,
+});
+
+ReaderFactory.registerReader({
+  extension: 'ply',
+  name: 'PLY Reader',
+  vtkReader: vtkPLYReader,
+  binary: true,
 });

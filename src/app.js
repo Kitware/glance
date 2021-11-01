@@ -6,6 +6,8 @@ import Vuetify from 'vuetify/lib';
 import GirderProvider from 'paraview-glance/src/girder';
 import { vuetify as girderVuetify } from '@girder/components/src';
 
+import '@kitware/vtk.js/Rendering/Profiles/All';
+
 import vtkURLExtract from '@kitware/vtk.js/Common/Core/URLExtract';
 import vtkProxyManager from '@kitware/vtk.js/Proxy/Core/ProxyManager';
 

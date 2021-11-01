@@ -103,7 +103,12 @@
         </collapsible-toolbar>
       </v-app-bar>
 
-      <v-content :id="$style.appContent">
+      <v-content
+        :id="$style.appContent"
+        :style="{
+          position: landingVisible ? 'initial' : 'fixed',
+        }"
+      >
         <landing
           v-if="landingVisible"
           key="if-landing"

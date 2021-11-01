@@ -1,5 +1,5 @@
-import macro from 'vtk.js/Sources/macro';
-import vtkVolumeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/VolumeRepresentationProxy';
+import macro from '@kitware/vtk.js/macro';
+import vtkVolumeRepresentationProxy from '@kitware/vtk.js/Proxy/Representations/VolumeRepresentationProxy';
 
 // ----------------------------------------------------------------------------
 // vtkCustomVolumeRepresentationProxy methods

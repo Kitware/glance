@@ -1,12 +1,12 @@
-import macro from 'vtk.js/Sources/macro';
+import macro from '@kitware/vtk.js/macro';
 
-import vtkSphereHandleRepresentation from 'vtk.js/Sources/Widgets/Representations/SphereHandleRepresentation';
-import vtkOutlineContextRepresentation from 'vtk.js/Sources/Widgets/Representations/OutlineContextRepresentation';
-import vtkImageCroppingWidget from 'vtk.js/Sources/Widgets/Widgets3D/ImageCroppingWidget';
+import vtkSphereHandleRepresentation from '@kitware/vtk.js/Widgets/Representations/SphereHandleRepresentation';
+import vtkOutlineContextRepresentation from '@kitware/vtk.js/Widgets/Representations/OutlineContextRepresentation';
+import vtkImageCroppingWidget from '@kitware/vtk.js/Widgets/Widgets3D/ImageCroppingWidget';
 
 import behavior from 'paraview-glance/src/vtk/CropWidget/behavior';
 
-import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
+import { ViewTypes } from '@kitware/vtk.js/Widgets/Core/WidgetManager/Constants';
 
 // ----------------------------------------------------------------------------
 // Factory

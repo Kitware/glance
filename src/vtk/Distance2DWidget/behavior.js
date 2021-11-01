@@ -1,4 +1,4 @@
-import superWidgetBehavior from 'vtk.js/Sources/Widgets/Widgets3D/DistanceWidget/behavior';
+import superWidgetBehavior from '@kitware/vtk.js/Widgets/Widgets3D/DistanceWidget/behavior';
 
 import widgetManipulatorWatcher from 'paraview-glance/src/vtk/widgetManipulatorWatcher';
 

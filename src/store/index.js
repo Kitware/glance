@@ -2,8 +2,8 @@ import JSZip from 'jszip';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import vtk from 'vtk.js/Sources/vtk';
-import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
+import vtk from '@kitware/vtk.js/vtk';
+import vtkProxyManager from '@kitware/vtk.js/Proxy/Core/ProxyManager';
 
 import { ProxyManagerVuexPlugin } from 'paraview-glance/src/plugins';
 

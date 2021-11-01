@@ -11,7 +11,7 @@ import {
 
 import writeImageArrayBuffer from 'itk/writeImageArrayBuffer';
 
-import ITKHelper from 'vtk.js/Sources/Common/DataModel/ITKHelper';
+import ITKHelper from '@kitware/vtk.js/Common/DataModel/ITKHelper';
 
 export default {
   name: 'GirderBox',

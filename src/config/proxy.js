@@ -1,18 +1,18 @@
-import vtk2DView from 'vtk.js/Sources/Proxy/Core/View2DProxy';
-import vtkGeometryRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/GeometryRepresentationProxy';
-import vtkSkyboxRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/SkyboxRepresentationProxy';
-import vtkGlyphRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/GlyphRepresentationProxy';
-import vtkLookupTableProxy from 'vtk.js/Sources/Proxy/Core/LookupTableProxy';
-import vtkMoleculeRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/MoleculeRepresentationProxy';
-import vtkPiecewiseFunctionProxy from 'vtk.js/Sources/Proxy/Core/PiecewiseFunctionProxy';
-import vtkProxySource from 'vtk.js/Sources/Proxy/Core/SourceProxy';
-import vtkView from 'vtk.js/Sources/Proxy/Core/ViewProxy';
+import vtk2DView from '@kitware/vtk.js/Proxy/Core/View2DProxy';
+import vtkGeometryRepresentationProxy from '@kitware/vtk.js/Proxy/Representations/GeometryRepresentationProxy';
+import vtkSkyboxRepresentationProxy from '@kitware/vtk.js/Proxy/Representations/SkyboxRepresentationProxy';
+import vtkGlyphRepresentationProxy from '@kitware/vtk.js/Proxy/Representations/GlyphRepresentationProxy';
+import vtkLookupTableProxy from '@kitware/vtk.js/Proxy/Core/LookupTableProxy';
+import vtkMoleculeRepresentationProxy from '@kitware/vtk.js/Proxy/Representations/MoleculeRepresentationProxy';
+import vtkPiecewiseFunctionProxy from '@kitware/vtk.js/Proxy/Core/PiecewiseFunctionProxy';
+import vtkProxySource from '@kitware/vtk.js/Proxy/Core/SourceProxy';
+import vtkView from '@kitware/vtk.js/Proxy/Core/ViewProxy';
 
 import vtkCropWidget from 'paraview-glance/src/vtk/CropWidget';
 import vtkAngleWidget from 'paraview-glance/src/vtk/AngleWidget';
 import vtkDistance2DWidget from 'paraview-glance/src/vtk/Distance2DWidget';
 import vtkTextWidget from 'paraview-glance/src/vtk/TextWidget';
-import vtkPaintWidget from 'vtk.js/Sources/Widgets/Widgets3D/PaintWidget';
+import vtkPaintWidget from '@kitware/vtk.js/Widgets/Widgets3D/PaintWidget';
 
 import vtkCustomSliceRepresentationProxy from 'paraview-glance/src/vtk/CustomSliceRepresentationProxy';
 import vtkCustomVolumeRepresentationProxy from 'paraview-glance/src/vtk/CustomVolumeRepresentationProxy';
@@ -20,8 +20,8 @@ import vtkLabelMapVolumeRepProxy from 'paraview-glance/src/vtk/LabelMapVolumeRep
 import vtkLabelMapSliceRepProxy from 'paraview-glance/src/vtk/LabelMapSliceRepProxy';
 import vtkWidgetProxy from 'paraview-glance/src/vtk/WidgetProxy';
 
-import vtkAnimationProxyManager from 'vtk.js/Sources/Proxy/Animation/AnimationProxyManager';
-import vtkTimeStepBasedAnimationProxy from 'vtk.js/Sources/Proxy/Animation/TimeStepBasedAnimationHandlerProxy';
+import vtkAnimationProxyManager from '@kitware/vtk.js/Proxy/Animation/AnimationProxyManager';
+import vtkTimeStepBasedAnimationProxy from '@kitware/vtk.js/Proxy/Animation/TimeStepBasedAnimationHandlerProxy';
 
 import ConfigUtils from 'paraview-glance/src/config/configUtils';
 

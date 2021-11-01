@@ -1,5 +1,5 @@
-import macro from 'vtk.js/Sources/macro';
-import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/SliceRepresentationProxy';
+import macro from '@kitware/vtk.js/macro';
+import vtkSliceRepresentationProxy from '@kitware/vtk.js/Proxy/Representations/SliceRepresentationProxy';
 
 // ----------------------------------------------------------------------------
 // vtkCustomSliceRepresentationProxy methods

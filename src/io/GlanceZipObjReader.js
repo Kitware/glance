@@ -1,8 +1,8 @@
 import JSZip from 'jszip';
 
-import macro from 'vtk.js/Sources/macro';
-import vtkOBJReader from 'vtk.js/Sources/IO/Misc/OBJReader';
-import vtkMTLReader from 'vtk.js/Sources/IO/Misc/MTLReader';
+import macro from '@kitware/vtk.js/macro';
+import vtkOBJReader from '@kitware/vtk.js/IO/Misc/OBJReader';
+import vtkMTLReader from '@kitware/vtk.js/IO/Misc/MTLReader';
 
 // ----------------------------------------------------------------------------
 // vtkGlanceStateReader methods

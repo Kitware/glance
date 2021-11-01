@@ -1,7 +1,7 @@
 import { mapGetters, mapState, mapActions, mapMutations } from 'vuex';
 import Mousetrap from 'mousetrap';
 import { VBottomSheet, VDialog } from 'vuetify/lib';
-import macro from 'vtk.js/Sources/macro';
+import macro from '@kitware/vtk.js/macro';
 
 import AboutBox from 'paraview-glance/src/components/core/AboutBox';
 import BrowserIssues from 'paraview-glance/src/components/core/BrowserIssues';

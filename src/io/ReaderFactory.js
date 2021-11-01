@@ -1,4 +1,4 @@
-import vtkHttpDataAccessHelper from 'vtk.js/Sources/IO/Core/DataAccessHelper/HttpDataAccessHelper';
+import vtkHttpDataAccessHelper from '@kitware/vtk.js/IO/Core/DataAccessHelper/HttpDataAccessHelper';
 import { createRepresentationInAllViews } from 'paraview-glance/src/utils';
 
 const READER_MAPPING = {};

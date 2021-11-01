@@ -1,6 +1,6 @@
 import Vue from 'vue';
-import vtkWidgetManager from 'vtk.js/Sources/Widgets/Core/WidgetManager';
-import WidgetManagerConstants from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
+import vtkWidgetManager from '@kitware/vtk.js/Widgets/Core/WidgetManager';
+import WidgetManagerConstants from '@kitware/vtk.js/Widgets/Core/WidgetManager/Constants';
 
 import {
   DEFAULT_VIEW_TYPE,

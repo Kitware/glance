@@ -1,5 +1,5 @@
-import macro from 'vtk.js/Sources/macro';
-import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
+import macro from '@kitware/vtk.js/macro';
+import { ViewTypes } from '@kitware/vtk.js/Widgets/Core/WidgetManager/Constants';
 
 // ----------------------------------------------------------------------------
 

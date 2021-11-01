@@ -1,12 +1,12 @@
-import 'vtk.js/Sources/IO/Core/DataAccessHelper/JSZipDataAccessHelper';
-import DataAccessHelper from 'vtk.js/Sources/IO/Core/DataAccessHelper';
-import macro from 'vtk.js/Sources/macro';
-import vtkHttpSceneLoader from 'vtk.js/Sources/IO/Core/HttpSceneLoader';
-import vtkMapper from 'vtk.js/Sources/Rendering/Core/Mapper';
+import '@kitware/vtk.js/IO/Core/DataAccessHelper/JSZipDataAccessHelper';
+import DataAccessHelper from '@kitware/vtk.js/IO/Core/DataAccessHelper';
+import macro from '@kitware/vtk.js/macro';
+import vtkHttpSceneLoader from '@kitware/vtk.js/IO/Core/HttpSceneLoader';
+import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 
 // Can't import both "Mode" objects directly.
-import LookupTableProxyConstants from 'vtk.js/Sources/Proxy/Core/LookupTableProxy/Constants';
-import PiecewiseFunctionProxyConstants from 'vtk.js/Sources/Proxy/Core/PiecewiseFunctionProxy/Constants';
+import LookupTableProxyConstants from '@kitware/vtk.js/Proxy/Core/LookupTableProxy/Constants';
+import PiecewiseFunctionProxyConstants from '@kitware/vtk.js/Proxy/Core/PiecewiseFunctionProxy/Constants';
 
 // ----------------------------------------------------------------------------
 // vtkGlanceVtkJsReader methods

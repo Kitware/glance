@@ -6,8 +6,8 @@ import Vuetify from 'vuetify/lib';
 import GirderProvider from 'paraview-glance/src/girder';
 import { vuetify as girderVuetify } from '@girder/components/src';
 
-import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
-import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
+import vtkURLExtract from '@kitware/vtk.js/Common/Core/URLExtract';
+import vtkProxyManager from '@kitware/vtk.js/Proxy/Core/ProxyManager';
 
 /* eslint-disable-next-line import/extensions */
 import 'typeface-roboto';

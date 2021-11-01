@@ -6,7 +6,6 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-const vtkRules = require('vtk.js/Utilities/config/dependency').webpack;
 
 const externals = require('./externals.js');
 
@@ -109,7 +108,7 @@ module.exports = {
           },
         ],
       },
-    ].concat(vtkRules.core.rules),
+    ],
   },
   plugins: [
     new CleanWebpackPlugin({
@@ -151,7 +150,7 @@ module.exports = {
     alias: {
       vue$: 'vue/dist/vue.esm.js',
       'paraview-glance': paths.root,
-      'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps.json': path.join(paths.source, 'config/ColorMaps.json'),
+      '@kitware/vtk.js/Rendering/Core/ColorTransferFunction/ColorMaps.json': path.join(paths.source, 'config/ColorMaps.json'),
     },
   },
   optimization: {

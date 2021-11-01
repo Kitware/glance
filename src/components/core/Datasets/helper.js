@@ -1,5 +1,5 @@
 import { mapState } from 'vuex';
-import macro from 'vtk.js/Sources/macro';
+import macro from '@kitware/vtk.js/macro';
 
 const MAX_SLIDER_STEPS = 500;
 

@@ -1,7 +1,7 @@
 import JSZip from 'jszip';
 
-import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
-import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
+import vtkDataArray from '@kitware/vtk.js/Common/Core/DataArray';
+import vtkImageData from '@kitware/vtk.js/Common/DataModel/ImageData';
 
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import postProcessDataset from 'paraview-glance/src/io/postProcessing';

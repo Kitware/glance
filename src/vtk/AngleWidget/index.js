@@ -1,6 +1,6 @@
-import macro from 'vtk.js/Sources/macro';
-import vtkSphereHandleRepresentation from 'vtk.js/Sources/Widgets/Representations/SphereHandleRepresentation';
-import vtkAngleWidget from 'vtk.js/Sources/Widgets/Widgets3D/AngleWidget';
+import macro from '@kitware/vtk.js/macro';
+import vtkSphereHandleRepresentation from '@kitware/vtk.js/Widgets/Representations/SphereHandleRepresentation';
+import vtkAngleWidget from '@kitware/vtk.js/Widgets/Widgets3D/AngleWidget';
 
 import widgetBehavior from 'paraview-glance/src/vtk/AngleWidget/behavior';
 import stateGenerator from 'paraview-glance/src/vtk/AngleWidget/state';
@@ -9,7 +9,7 @@ import vtkSVGCircleHandleRepresentation from 'paraview-glance/src/vtk/SVGCircleH
 import vtkSVGLineRepresentation from 'paraview-glance/src/vtk/SVGLineRepresentation';
 import vtkSVGLabelRepresentation from 'paraview-glance/src/vtk/SVGLabelRepresentation';
 
-import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
+import { ViewTypes } from '@kitware/vtk.js/Widgets/Core/WidgetManager/Constants';
 
 // ----------------------------------------------------------------------------
 // Factory

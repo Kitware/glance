@@ -1,8 +1,8 @@
 import { mapState, mapActions } from 'vuex';
 
-import vtkDataArray from 'vtk.js/Sources/Common/Core/DataArray';
-import vtkPaintFilter from 'vtk.js/Sources/Filters/General/PaintFilter';
-import { SlicingMode } from 'vtk.js/Sources/Rendering/Core/ImageMapper/Constants';
+import vtkDataArray from '@kitware/vtk.js/Common/Core/DataArray';
+import vtkPaintFilter from '@kitware/vtk.js/Filters/General/PaintFilter';
+import { SlicingMode } from '@kitware/vtk.js/Rendering/Core/ImageMapper/Constants';
 
 import vtkLabelMap from 'paraview-glance/src/vtk/LabelMap';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';

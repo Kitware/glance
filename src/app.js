@@ -9,8 +9,7 @@ import { vuetify as girderVuetify } from '@girder/components/src';
 import vtkURLExtract from '@kitware/vtk.js/Common/Core/URLExtract';
 import vtkProxyManager from '@kitware/vtk.js/Proxy/Core/ProxyManager';
 
-/* eslint-disable-next-line import/extensions */
-import 'typeface-roboto';
+import 'typeface-roboto/index.css';
 import '@mdi/font/css/materialdesignicons.css';
 import 'paraview-glance/static/global.css';
 

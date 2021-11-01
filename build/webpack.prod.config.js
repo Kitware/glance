@@ -43,7 +43,7 @@ module.exports = merge(baseConfig, {
             loader: 'css-loader',
             options: {
               modules: {
-                localIdentName: '[folder]-[local]-[sha512:hash:base32:5]',
+                localIdentName: '[folder]-[local]-[hash:base64:5]',
               },
             },
           },

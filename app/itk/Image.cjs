@@ -1,13 +1,14 @@
 "use strict";
 
-const ImageType = require('./ImageType.js');
+var ImageType = require('./ImageType.js');
 
-const Matrix = require('./Matrix.js');
+var Matrix = require('./Matrix.js');
 
-const Image = function (imageType = new ImageType()) {
+var Image = function Image() {
+  var imageType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new ImageType();
   this.imageType = imageType;
   this.name = 'Image';
-  const dimension = imageType.dimension;
+  var dimension = imageType.dimension;
   this.origin = new Array(dimension);
   this.origin.fill(0.0);
   this.spacing = new Array(dimension);

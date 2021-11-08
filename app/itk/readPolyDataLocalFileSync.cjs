@@ -1,30 +1,30 @@
 "use strict";
 
-const path = require('path');
+var path = require('path');
 
-const mime = require('mime-types');
+var mime = require('mime-types');
 
-const fs = require('fs');
+var fs = require('fs');
 
-const mimeToIO = require('./MimeToPolyDataIO.js');
+var mimeToIO = require('./MimeToPolyDataIO.js');
 
-const getFileExtension = require('./getFileExtension.js');
+var getFileExtension = require('./getFileExtension.js');
 
-const extensionToIO = require('./extensionToPolyDataIO.js');
+var extensionToIO = require('./extensionToPolyDataIO.js');
 
-const IOTypes = require('./IOTypes.js');
+var IOTypes = require('./IOTypes.js');
 
-const loadEmscriptenModule = require('./loadEmscriptenModuleNode.js');
+var loadEmscriptenModule = require('./loadEmscriptenModuleNode.js');
 
-const runPipelineEmscripten = require('./runPipelineEmscripten.js');
+var runPipelineEmscripten = require('./runPipelineEmscripten.js');
 
-const readPolyDataLocalFileSync = filePath => {
-  const polyDataIOsPath = path.resolve(__dirname, 'PolyDataIOs');
-  const absoluteFilePath = path.resolve(filePath);
-  const filePathBasename = path.basename(filePath);
-  const mimeType = mime.lookup(absoluteFilePath);
-  const extension = getFileExtension(absoluteFilePath);
-  let io = null;
+var readPolyDataLocalFileSync = function readPolyDataLocalFileSync(filePath) {
+  var polyDataIOsPath = path.resolve(__dirname, 'PolyDataIOs');
+  var absoluteFilePath = path.resolve(filePath);
+  var filePathBasename = path.basename(filePath);
+  var mimeType = mime.lookup(absoluteFilePath);
+  var extension = getFileExtension(absoluteFilePath);
+  var io = null;
 
   if (mimeToIO.has(mimeType)) {
     io = mimeToIO.get(mimeType);
@@ -36,22 +36,23 @@ const readPolyDataLocalFileSync = filePath => {
     throw Error('Could not find IO for: ' + absoluteFilePath);
   }
 
-  const modulePath = path.join(polyDataIOsPath, io);
-  const Module = loadEmscriptenModule(modulePath);
-  const fileContents = new Uint8Array(fs.readFileSync(absoluteFilePath));
-  const args = [filePathBasename, filePathBasename + '.output.json'];
-  const desiredOutputs = [{
+  var modulePath = path.join(polyDataIOsPath, io);
+  var Module = loadEmscriptenModule(modulePath);
+  var fileContents = new Uint8Array(fs.readFileSync(absoluteFilePath));
+  var args = [filePathBasename, filePathBasename + '.output.json'];
+  var desiredOutputs = [{
     path: args[1],
     type: IOTypes.vtkPolyData
   }];
-  const inputs = [{
+  var inputs = [{
     path: args[0],
     type: IOTypes.Binary,
     data: fileContents
   }];
-  const {
-    outputs
-  } = runPipelineEmscripten(Module, args, desiredOutputs, inputs);
+
+  var _runPipelineEmscripte = runPipelineEmscripten(Module, args, desiredOutputs, inputs),
+      outputs = _runPipelineEmscripte.outputs;
+
   return outputs[0].data;
 };
 

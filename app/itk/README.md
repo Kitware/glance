@@ -1,7 +1,7 @@
 itk.js
 ======
 
-[![Build Status](https://dev.azure.com/InsightSoftwareConsortium/ITKModules/_apis/build/status/InsightSoftwareConsortium.ITKMeshToPolyData?branchName=master)](https://dev.azure.com/InsightSoftwareConsortium/ITKModules/_build/latest?definitionId=11&branchName=master)
+[![Build, test](https://github.com/InsightSoftwareConsortium/itk-js/actions/workflows/build-test.yml/badge.svg)](https://github.com/InsightSoftwareConsortium/itk-js/actions/workflows/build-test.yml)
 [![CircleCI](https://img.shields.io/circleci/project/github/InsightSoftwareConsortium/itk-js/master.svg)](https://circleci.com/gh/InsightSoftwareConsortium/itk-js)
 [![DOI](https://zenodo.org/badge/45812381.svg)](https://zenodo.org/badge/latestdoi/45812381)
 

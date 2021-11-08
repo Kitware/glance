@@ -36,6 +36,7 @@ function _asyncToGenerator(fn) {
 }
 
 module.exports = _asyncToGenerator;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 },{}],2:[function(require,module,exports){
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
@@ -44,6 +45,7 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 },{}],3:[function(require,module,exports){
 function _typeof(obj) {
   "@babel/helpers - typeof";
@@ -52,16 +54,21 @@ function _typeof(obj) {
     module.exports = _typeof = function _typeof(obj) {
       return typeof obj;
     };
+
+    module.exports["default"] = module.exports, module.exports.__esModule = true;
   } else {
     module.exports = _typeof = function _typeof(obj) {
       return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
+
+    module.exports["default"] = module.exports, module.exports.__esModule = true;
   }
 
   return _typeof(obj);
 }
 
 module.exports = _typeof;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 },{}],4:[function(require,module,exports){
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
@@ -80,6 +87,24 @@ var runtime = (function (exports) {
   var iteratorSymbol = $Symbol.iterator || "@@iterator";
   var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
   var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+
+  function define(obj, key, value) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+    return obj[key];
+  }
+  try {
+    // IE 8 has a broken Object.defineProperty that only works on DOM objects.
+    define({}, "");
+  } catch (err) {
+    define = function(obj, key, value) {
+      return obj[key] = value;
+    };
+  }
 
   function wrap(innerFn, outerFn, self, tryLocsList) {
     // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
@@ -151,16 +176,19 @@ var runtime = (function (exports) {
     Generator.prototype = Object.create(IteratorPrototype);
   GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
   GeneratorFunctionPrototype.constructor = GeneratorFunction;
-  GeneratorFunctionPrototype[toStringTagSymbol] =
-    GeneratorFunction.displayName = "GeneratorFunction";
+  GeneratorFunction.displayName = define(
+    GeneratorFunctionPrototype,
+    toStringTagSymbol,
+    "GeneratorFunction"
+  );
 
   // Helper for defining the .next, .throw, and .return methods of the
   // Iterator interface in terms of a single ._invoke method.
   function defineIteratorMethods(prototype) {
     ["next", "throw", "return"].forEach(function(method) {
-      prototype[method] = function(arg) {
+      define(prototype, method, function(arg) {
         return this._invoke(method, arg);
-      };
+      });
     });
   }
 
@@ -179,9 +207,7 @@ var runtime = (function (exports) {
       Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
     } else {
       genFun.__proto__ = GeneratorFunctionPrototype;
-      if (!(toStringTagSymbol in genFun)) {
-        genFun[toStringTagSymbol] = "GeneratorFunction";
-      }
+      define(genFun, toStringTagSymbol, "GeneratorFunction");
     }
     genFun.prototype = Object.create(Gp);
     return genFun;
@@ -451,7 +477,7 @@ var runtime = (function (exports) {
   // unified ._invoke helper method.
   defineIteratorMethods(Gp);
 
-  Gp[toStringTagSymbol] = "Generator";
+  define(Gp, toStringTagSymbol, "Generator");
 
   // A Generator should always return itself as the iterator object when the
   // @@iterator function is called on it. Some browsers' implementations of the
@@ -1111,6 +1137,8 @@ var _runPipelineEmscripten = _interopRequireDefault(require("../runPipelineEmscr
 
 var _IOTypes = _interopRequireDefault(require("../IOTypes"));
 
+var _getTransferable = _interopRequireDefault(require("../getTransferable"));
+
 // To cache loaded pipeline modules
 var pipelinePathToModule = {};
 
@@ -1132,9 +1160,7 @@ function runPipeline(_x, _x2, _x3, _x4) {
 }
 
 function _runPipeline() {
-  _runPipeline = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee2(pipelineModule, args, outputs, inputs) {
+  _runPipeline = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(pipelineModule, args, outputs, inputs) {
     var result, transferables;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
@@ -1145,86 +1171,79 @@ function _runPipeline() {
 
             if (result.outputs) {
               result.outputs.forEach(function (output) {
-                switch (output.type) {
+                if (output.type === _IOTypes["default"].Binary) {
                   // Binary data
-                  case _IOTypes["default"].Binary:
-                    if (output.data.buffer) {
-                      transferables.push(output.data.buffer);
-                    } else if (output.data.byteLength) {
-                      transferables.push(output.data);
-                    }
+                  var transferable = (0, _getTransferable["default"])(output.data);
 
-                    break;
+                  if (transferable) {
+                    transferables.push(transferable);
+                  }
+                } else if (output.type === _IOTypes["default"].Image) {
                   // Image data
+                  var _transferable = (0, _getTransferable["default"])(output.data.data);
 
-                  case _IOTypes["default"].Image:
-                    if (output.data.data.buffer) {
-                      transferables.push(output.data.data.buffer);
-                    } else if (output.data.data.byteLength) {
-                      transferables.push(output.data.data);
-                    }
-
-                    break;
+                  if (_transferable) {
+                    transferables.push(_transferable);
+                  }
+                } else if (output.type === _IOTypes["default"].Mesh) {
                   // Mesh data
+                  if (output.data.points) {
+                    var _transferable2 = (0, _getTransferable["default"])(output.data.points);
 
-                  case _IOTypes["default"].Mesh:
-                    if (output.data.points) {
-                      if (output.data.points.buffer) {
-                        transferables.push(output.data.points.buffer);
-                      } else if (output.data.points.byteLength) {
-                        transferables.push(output.data.points);
-                      }
+                    if (_transferable2) {
+                      transferables.push(_transferable2);
                     }
+                  }
 
-                    if (output.data.pointData) {
-                      if (output.data.pointData.buffer) {
-                        transferables.push(output.data.pointData.buffer);
-                      } else if (output.data.pointData.byteLength) {
-                        transferables.push(output.data.pointData);
-                      }
+                  if (output.data.pointData) {
+                    var _transferable3 = (0, _getTransferable["default"])(output.data.pointData);
+
+                    if (_transferable3) {
+                      transferables.push(_transferable3);
                     }
+                  }
 
-                    if (output.data.cells) {
-                      if (output.data.cells.buffer) {
-                        transferables.push(output.data.cells.buffer);
-                      } else if (output.data.cells.byteLength) {
-                        transferables.push(output.data.cells);
-                      }
+                  if (output.data.cells) {
+                    var _transferable4 = (0, _getTransferable["default"])(output.data.cells);
+
+                    if (_transferable4) {
+                      transferables.push(_transferable4);
                     }
+                  }
 
-                    if (output.data.cellData) {
-                      if (output.data.cellData.buffer) {
-                        transferables.push(output.data.cellData.buffer);
-                      } else if (output.data.cellData.byteLength) {
-                        transferables.push(output.data.cellData);
-                      }
+                  if (output.data.cellData) {
+                    var _transferable5 = (0, _getTransferable["default"])(output.data.cellData);
+
+                    if (_transferable5) {
+                      transferables.push(_transferable5);
                     }
-
-                    break;
+                  }
+                } else if (output.type === _IOTypes["default"].vtkPolyData) {
                   // vtkPolyData data
+                  var polyData = output.data;
+                  var cellTypes = ['points', 'verts', 'lines', 'polys', 'strips'];
+                  cellTypes.forEach(function (cellName) {
+                    if (polyData[cellName]) {
+                      var _transferable6 = (0, _getTransferable["default"])(polyData[cellName]);
 
-                  case _IOTypes["default"].vtkPolyData:
-                    var polyData = output.data;
-                    var cellTypes = ['points', 'verts', 'lines', 'polys', 'strips'];
-                    cellTypes.forEach(function (cellName) {
-                      if (polyData[cellName]) {
-                        if (polyData[cellName].buffer) {
-                          transferables.push(polyData[cellName].buffer);
+                      if (_transferable6) {
+                        transferables.push(_transferable6);
+                      }
+                    }
+                  });
+                  var dataSetType = ['pointData', 'cellData', 'fieldData'];
+                  dataSetType.forEach(function (dataName) {
+                    if (polyData[dataName]) {
+                      var data = polyData[dataName];
+                      data.arrays.forEach(function (array) {
+                        var transferable = (0, _getTransferable["default"])(array.data);
+
+                        if (transferable) {
+                          transferables.push(transferable);
                         }
-                      }
-                    });
-                    var dataSetType = ['pointData', 'cellData', 'fieldData'];
-                    dataSetType.forEach(function (dataName) {
-                      if (polyData[dataName]) {
-                        var data = polyData[dataName];
-                        data.arrays.forEach(function (array) {
-                          if (array.data.buffer) {
-                            transferables.push(array.data.buffer);
-                          }
-                        });
-                      }
-                    });
-                    break;
+                      });
+                    }
+                  });
                 }
               });
             }
@@ -1241,12 +1260,8 @@ function _runPipeline() {
   return _runPipeline.apply(this, arguments);
 }
 
-(0, _register["default"])(
-/*#__PURE__*/
-function () {
-  var _ref = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee(input) {
+(0, _register["default"])( /*#__PURE__*/function () {
+  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(input) {
     var pipelineModule;
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
@@ -1292,7 +1307,7 @@ function () {
   };
 }());
 
-},{"../IOTypes":9,"../loadEmscriptenModuleBrowser":13,"../runPipelineEmscripten":14,"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/regenerator":5,"webworker-promise/lib/register":6}],12:[function(require,module,exports){
+},{"../IOTypes":9,"../getTransferable":13,"../loadEmscriptenModuleBrowser":14,"../runPipelineEmscripten":15,"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/regenerator":5,"webworker-promise/lib/register":6}],12:[function(require,module,exports){
 "use strict";
 
 var IntTypes = require('./IntTypes.js');
@@ -1341,12 +1356,12 @@ var bufferToTypedArray = function bufferToTypedArray(jsType, buffer) {
 
     case IntTypes.UInt64:
       {
-        throw new Error('Type is not supported as a TypedArray');
+        throw new BigUint64Array(buffer);
       }
 
     case IntTypes.Int64:
       {
-        throw new Error('Type is not supported as a TypedArray');
+        throw new BigInt64Array(buffer);
       }
 
     case FloatTypes.Float32:
@@ -1383,6 +1398,35 @@ var bufferToTypedArray = function bufferToTypedArray(jsType, buffer) {
 module.exports = bufferToTypedArray;
 
 },{"./FloatTypes.js":8,"./IntTypes.js":10}],13:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+var haveSharedArrayBuffer = typeof self.SharedArrayBuffer === 'function'; // eslint-disable-line
+
+function getTransferable(data) {
+  var result = null;
+
+  if (data.buffer) {
+    result = data.buffer;
+  } else if (data.byteLength) {
+    result = data;
+  }
+
+  if (!!result && haveSharedArrayBuffer && result instanceof SharedArrayBuffer) {
+    // eslint-disable-line
+    result = null;
+  }
+
+  return result;
+}
+
+var _default = getTransferable;
+exports["default"] = _default;
+
+},{}],14:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -1452,13 +1496,21 @@ function loadEmscriptenModule(itkModulesPath, modulesDirectory, pipelinePath, is
 var _default = loadEmscriptenModule;
 exports["default"] = _default;
 
-},{"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/helpers/typeof":3}],14:[function(require,module,exports){
-(function (global){
+},{"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/helpers/typeof":3}],15:[function(require,module,exports){
+(function (global){(function (){
 "use strict";
 
 var IOTypes = require('./IOTypes.js');
 
 var bufferToTypedArray = require('./bufferToTypedArray.js');
+
+var haveSharedArrayBuffer = false;
+
+if (typeof window !== 'undefined') {
+  haveSharedArrayBuffer = typeof window.SharedArrayBuffer === 'function';
+} else {
+  haveSharedArrayBuffer = typeof global.SharedArrayBuffer === 'function';
+}
 
 var typedArrayForBuffer = function typedArrayForBuffer(typedArrayType, buffer) {
   var TypedArrayFunction = null;
@@ -1472,6 +1524,28 @@ var typedArrayForBuffer = function typedArrayForBuffer(typedArrayType, buffer) {
   }
 
   return new TypedArrayFunction(buffer);
+};
+
+var readFileSharedArray = function readFileSharedArray(emscriptenModule, path) {
+  var opts = {
+    flags: 'r',
+    encoding: 'binary'
+  };
+  var stream = emscriptenModule.open(path, opts.flags);
+  var stat = emscriptenModule.stat(path);
+  var length = stat.size;
+  var arrayBuffer = null;
+
+  if (haveSharedArrayBuffer) {
+    arrayBuffer = new SharedArrayBuffer(length); // eslint-disable-line
+  } else {
+    arrayBuffer = new ArrayBuffer(length);
+  }
+
+  var array = new Uint8Array(arrayBuffer);
+  emscriptenModule.read(stream, array, 0, length, 0);
+  emscriptenModule.close(stream);
+  return array;
 };
 
 var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args, outputs, inputs) {
@@ -1570,9 +1644,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args,
 
         case IOTypes.Binary:
           {
-            populatedOutput.data = pipelineModule.readFile(output.path, {
-              encoding: 'binary'
-            });
+            populatedOutput.data = readFileSharedArray(pipelineModule, output.path);
             break;
           }
 
@@ -1582,9 +1654,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args,
               encoding: 'utf8'
             });
             var image = JSON.parse(imageJSON);
-            var dataUint8 = pipelineModule.readFile(image.data, {
-              encoding: 'binary'
-            });
+            var dataUint8 = readFileSharedArray(pipelineModule, image.data);
             image.data = bufferToTypedArray(image.imageType.componentType, dataUint8.buffer);
             populatedOutput.data = image;
             break;
@@ -1598,36 +1668,28 @@ var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args,
             var mesh = JSON.parse(meshJSON);
 
             if (mesh.numberOfPoints) {
-              var dataUint8Points = pipelineModule.readFile(mesh.points, {
-                encoding: 'binary'
-              });
+              var dataUint8Points = readFileSharedArray(pipelineModule, mesh.points);
               mesh.points = bufferToTypedArray(mesh.meshType.pointComponentType, dataUint8Points.buffer);
             } else {
               mesh.points = bufferToTypedArray(mesh.meshType.pointComponentType, new ArrayBuffer(0));
             }
 
             if (mesh.numberOfPointPixels) {
-              var dataUint8PointData = pipelineModule.readFile(mesh.pointData, {
-                encoding: 'binary'
-              });
+              var dataUint8PointData = readFileSharedArray(pipelineModule, mesh.pointData);
               mesh.pointData = bufferToTypedArray(mesh.meshType.pointPixelComponentType, dataUint8PointData.buffer);
             } else {
               mesh.pointData = bufferToTypedArray(mesh.meshType.pointPixelComponentType, new ArrayBuffer(0));
             }
 
             if (mesh.numberOfCells) {
-              var dataUint8Cells = pipelineModule.readFile(mesh.cells, {
-                encoding: 'binary'
-              });
+              var dataUint8Cells = readFileSharedArray(pipelineModule, mesh.cells);
               mesh.cells = bufferToTypedArray(mesh.meshType.cellComponentType, dataUint8Cells.buffer);
             } else {
               mesh.cells = bufferToTypedArray(mesh.meshType.cellComponentType, new ArrayBuffer(0));
             }
 
             if (mesh.numberOfCellPixels) {
-              var dataUint8CellData = pipelineModule.readFile(mesh.cellData, {
-                encoding: 'binary'
-              });
+              var dataUint8CellData = readFileSharedArray(pipelineModule, mesh.cellData);
               mesh.cellData = bufferToTypedArray(mesh.meshType.cellPixelComponentType, dataUint8CellData.buffer);
             } else {
               mesh.cellData = bufferToTypedArray(mesh.meshType.cellPixelComponentType, new ArrayBuffer(0));
@@ -1649,9 +1711,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args,
                 var cell = polyData[cellName];
 
                 if (cell.ref) {
-                  var _dataUint = pipelineModule.readFile("".concat(output.path, "/").concat(cell.ref.basepath, "/").concat(cell.ref.id), {
-                    encoding: 'binary'
-                  });
+                  var _dataUint = readFileSharedArray(pipelineModule, "".concat(output.path, "/").concat(cell.ref.basepath, "/").concat(cell.ref.id));
 
                   polyData[cellName].buffer = _dataUint.buffer;
                   polyData[cellName].values = typedArrayForBuffer(polyData[cellName].dataType, _dataUint.buffer);
@@ -1665,9 +1725,7 @@ var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args,
                 var data = polyData[dataName];
                 data.arrays.forEach(function (array) {
                   if (array.data.ref) {
-                    var _dataUint2 = pipelineModule.readFile("".concat(output.path, "/").concat(array.data.ref.basepath, "/").concat(array.data.ref.id), {
-                      encoding: 'binary'
-                    });
+                    var _dataUint2 = readFileSharedArray(pipelineModule, "".concat(output.path, "/").concat(array.data.ref.basepath, "/").concat(array.data.ref.id));
 
                     array.data.buffer = _dataUint2.buffer;
                     array.data.values = typedArrayForBuffer(array.data.dataType, _dataUint2.buffer);
@@ -1697,5 +1755,5 @@ var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args,
 
 module.exports = runPipelineEmscripten;
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./IOTypes.js":9,"./bufferToTypedArray.js":12}]},{},[11]);

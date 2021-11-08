@@ -1,11 +1,11 @@
 "use strict";
 
-const IntTypes = require('./IntTypes.js');
+var IntTypes = require('./IntTypes.js');
 
-const FloatTypes = require('./FloatTypes.js');
+var FloatTypes = require('./FloatTypes.js');
 
-const meshJSComponentToIOComponent = (module, componentType) => {
-  let ioComponentType = null;
+var meshJSComponentToIOComponent = function meshJSComponentToIOComponent(module, componentType) {
+  var ioComponentType = null;
 
   switch (componentType) {
     case null:

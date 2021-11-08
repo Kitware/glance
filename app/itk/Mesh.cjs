@@ -1,8 +1,9 @@
 "use strict";
 
-const MeshType = require('./MeshType.js');
+var MeshType = require('./MeshType.js');
 
-const Mesh = function (meshType = new MeshType()) {
+var Mesh = function Mesh() {
+  var meshType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new MeshType();
   this.meshType = meshType;
   this.name = 'Mesh';
   this.numberOfPoints = 0;

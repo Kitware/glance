@@ -1,36 +1,36 @@
 "use strict";
 
-const Unknown = 0;
-const Scalar = 1;
-const RGB = 2;
-const RGBA = 3;
-const Offset = 4;
-const Vector = 5;
-const Point = 6;
-const CovariantVector = 7;
-const SymmetricSecondRankTensor = 8;
-const DiffusionTensor3D = 9;
-const Complex = 10;
-const FixedArray = 11;
-const Array = 12;
-const Matrix = 13;
-const VariableLengthVector = 14;
-const VariableSizeMatrix = 15;
+var Unknown = 0;
+var Scalar = 1;
+var RGB = 2;
+var RGBA = 3;
+var Offset = 4;
+var Vector = 5;
+var Point = 6;
+var CovariantVector = 7;
+var SymmetricSecondRankTensor = 8;
+var DiffusionTensor3D = 9;
+var Complex = 10;
+var FixedArray = 11;
+var Array = 12;
+var Matrix = 13;
+var VariableLengthVector = 14;
+var VariableSizeMatrix = 15;
 module.exports = {
-  Unknown,
-  Scalar,
-  RGB,
-  RGBA,
-  Offset,
-  Vector,
-  Point,
-  CovariantVector,
-  SymmetricSecondRankTensor,
-  DiffusionTensor3D,
-  Complex,
-  FixedArray,
-  Array,
-  Matrix,
-  VariableLengthVector,
-  VariableSizeMatrix
+  Unknown: Unknown,
+  Scalar: Scalar,
+  RGB: RGB,
+  RGBA: RGBA,
+  Offset: Offset,
+  Vector: Vector,
+  Point: Point,
+  CovariantVector: CovariantVector,
+  SymmetricSecondRankTensor: SymmetricSecondRankTensor,
+  DiffusionTensor3D: DiffusionTensor3D,
+  Complex: Complex,
+  FixedArray: FixedArray,
+  Array: Array,
+  Matrix: Matrix,
+  VariableLengthVector: VariableLengthVector,
+  VariableSizeMatrix: VariableSizeMatrix
 };

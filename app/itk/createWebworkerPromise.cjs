@@ -1,49 +1,50 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 
-var _webworkerPromise = _interopRequireDefault(require("webworker-promise"));
+var _webworkerPromise2 = _interopRequireDefault(require("webworker-promise"));
 
 var _axios = _interopRequireDefault(require("axios"));
 
 var _itkConfig = _interopRequireDefault(require("./itkConfig"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 // Internal function to create a web worker promise
-const createWebworkerPromise = (name, existingWorker) => {
+var createWebworkerPromise = function createWebworkerPromise(name, existingWorker) {
   if (existingWorker) {
-    const webworkerPromise = new _webworkerPromise.default(existingWorker);
+    var _webworkerPromise = new _webworkerPromise2.default(existingWorker);
+
     return Promise.resolve({
-      webworkerPromise,
+      webworkerPromise: _webworkerPromise,
       worker: existingWorker
     });
   }
 
-  const webWorkerUrl = `${_itkConfig.default.itkModulesPath}/WebWorkers/${name}.worker.js`;
+  var webWorkerUrl = "".concat(_itkConfig.default.itkModulesPath, "/WebWorkers/").concat(name, ".worker.js");
 
   if (webWorkerUrl.startsWith('http')) {
     return _axios.default.get(webWorkerUrl, {
       responseType: 'blob'
     }).then(function (response) {
-      const worker = new window.Worker(URL.createObjectURL(response.data) // eslint-disable-line
+      var worker = new window.Worker(URL.createObjectURL(response.data) // eslint-disable-line
       );
-      const webworkerPromise = new _webworkerPromise.default(worker);
+      var webworkerPromise = new _webworkerPromise2.default(worker);
       return {
-        webworkerPromise,
-        worker
+        webworkerPromise: webworkerPromise,
+        worker: worker
       };
     });
   }
 
-  const worker = new window.Worker(webWorkerUrl);
-  const webworkerPromise = new _webworkerPromise.default(worker);
+  var worker = new window.Worker(webWorkerUrl);
+  var webworkerPromise = new _webworkerPromise2.default(worker);
   return Promise.resolve({
-    webworkerPromise,
-    worker
+    webworkerPromise: webworkerPromise,
+    worker: worker
   });
 };
 

@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -9,15 +11,21 @@ var _createWebworkerPromise = _interopRequireDefault(require("./createWebworkerP
 
 var _itkConfig = _interopRequireDefault(require("./itkConfig"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _getTransferable = _interopRequireDefault(require("./getTransferable"));
 
-const writeImageArrayBuffer = (webWorker, useCompression, image, fileName, mimeType) => {
-  let worker = webWorker;
-  return (0, _createWebworkerPromise.default)('ImageIO', worker).then(({
-    webworkerPromise,
-    worker: usedWorker
-  }) => {
+var writeImageArrayBuffer = function writeImageArrayBuffer(webWorker, useCompression, image, fileName, mimeType) {
+  var worker = webWorker;
+  return (0, _createWebworkerPromise.default)('ImageIO', worker).then(function (_ref) {
+    var webworkerPromise = _ref.webworkerPromise,
+        usedWorker = _ref.worker;
     worker = usedWorker;
+    var transferables = [];
+    var transferable = (0, _getTransferable.default)(image.data);
+
+    if (transferable) {
+      transferables.push(transferable);
+    }
+
     return webworkerPromise.postMessage({
       operation: 'writeImage',
       name: fileName,
@@ -25,9 +33,9 @@ const writeImageArrayBuffer = (webWorker, useCompression, image, fileName, mimeT
       image: image,
       useCompression: useCompression,
       config: _itkConfig.default
-    }, [image.data.buffer]).then(function (arrayBuffer) {
+    }, transferables).then(function (arrayBuffer) {
       return Promise.resolve({
-        arrayBuffer,
+        arrayBuffer: arrayBuffer,
         webWorker: worker
       });
     });

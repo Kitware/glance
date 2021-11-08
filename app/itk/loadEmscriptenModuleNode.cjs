@@ -1,7 +1,7 @@
 "use strict";
 
-const loadEmscriptenModuleNode = modulePath => {
-  const result = require(modulePath);
+var loadEmscriptenModuleNode = function loadEmscriptenModuleNode(modulePath) {
+  var result = require(modulePath);
 
   return result;
 };

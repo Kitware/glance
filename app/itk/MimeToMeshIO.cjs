@@ -1,4 +1,4 @@
 "use strict";
 
-const mimeToIO = new Map([]);
+var mimeToIO = new Map([]);
 module.exports = mimeToIO;

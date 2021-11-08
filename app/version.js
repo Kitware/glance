@@ -1,1 +1,1 @@
-window.GLANCE_VERSION = "nightly (master)";
+window.GLANCE_VERSION = "master";

@@ -10,42 +10,12 @@ Vue.use(Girder);
 // environment variable is set at build-time
 const { girderRoute } = vtkURLExtract.extractURLParameters();
 
-let apiRoot = girderRoute || 'https://data.kitware.com/api/v1';
-
-let apiRootChanged = false;
-
-function checkAPIValidity(root) {
-  try {
-    const req = new XMLHttpRequest();
-    req.open('GET', `${root}/system/check`, false);
-    req.send();
-    if (req.status !== 200) {
-      return false;
-    }
-  } catch (err) {
-    console.log(err);
-    return false;
-  }
-  return true;
-}
-if (!checkAPIValidity(apiRoot)) {
-  // eslint-disable-next-line no-alert
-  alert(
-    `The server ${apiRoot} did not respond correctly.\
- This could be because the url is wrong, the server is down, or because its\
- CORS policy does not permit access from this website.\
- Paraview Glance is defaulting to https://data.kitware.com/api/v1.\
- Hint: for localhost, try: https://localhost:9000/api/v1`
-  );
-  apiRootChanged = true;
-  apiRoot = 'https://data.kitware.com/api/v1';
-}
+const apiRoot = girderRoute || 'https://data.kitware.com/api/v1';
 
 // Create the axios-based client to be used for all API requests
 const girderRest = new RestClient({
   apiRoot,
 });
-girderRest.apiRootChanged = apiRootChanged;
 girderRest.fetchUser();
 
 // This is passed to our Vue instance; it will be available in all components

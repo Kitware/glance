@@ -25,7 +25,7 @@ jobs:
         run: npm run build:release
 
       - name: stable - check out worktree
-        run: git worktree add stable stable
+        run: git worktree add -f stable stable
       - name: stable - Install dependencies
         working-directory: ./stable
         run: npm ci

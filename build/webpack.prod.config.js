@@ -1,7 +1,7 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { merge } = require('webpack-merge');
+const { mergeWithRules } = require('webpack-merge');
 
 const baseConfig = require('./webpack.base.config');
 
@@ -16,6 +16,16 @@ const htmlMinifyOptions = {
   removeStyleLinkTypeAttributes: true,
   useShortDoctype: true
 };
+
+const merge = mergeWithRules({
+  module: {
+    rules: {
+      test: 'match',
+      exclude: 'match',
+      use: 'replace',
+    },
+  },
+});
 
 function htmlTemplateParameters({ useGA = false } = { useGA: false }) {
   return (compilation, assets, assetTags, options) => ({
@@ -66,12 +76,14 @@ module.exports = merge(baseConfig, {
     ],
   },
   optimization: {
-    occurrenceOrder: true,
+    chunkIds: 'total-size',
+    moduleIds: 'size',
+    minimize: true,
     minimizer: [
       new TerserPlugin({
-        cache: true,
         parallel: true,
-        sourceMap: true,
+        // avoids optimizing ITK files
+        exclude: [/itk\//],
       }),
     ],
   },

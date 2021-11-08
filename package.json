@@ -30,7 +30,7 @@
     "doc:www": "kw-doc -c ./documentation/config.js -s",
     "doc:publish": "kw-doc -c ./documentation/config.js -mp",
     "build": "webpack --config build/webpack.dev.config.js",
-    "build:release": "webpack --config build/webpack.prod.config.js -p",
+    "build:release": "webpack --progress --config build/webpack.prod.config.js",
     "version": "node ./build/writeVersion.js",
     "dev": "webpack-dev-server --config build/webpack.dev.config.js",
     "bundle": "inline-source --compress false --root ./dist ./dist/index.html ./dist/ParaViewGlance.html",

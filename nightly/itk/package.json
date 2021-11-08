@@ -1,6 +1,6 @@
 {
   "name": "itk",
-  "version": "13.1.4",
+  "version": "14.1.1",
   "description": "High performance spatial analysis in a JavaScript runtime environment.",
   "main": "./dist/itk.js",
   "directories": {
@@ -13,10 +13,11 @@
     "doc:publish": "kw-doc -c ./doc/config.js -mp",
     "commit": "git cz",
     "build": "npm run build:wasm && npm run build:webpack",
-    "build:webpack": "webpack --progress --colors -p",
+    "build:debug": "node ./build.js --debug && webpack --progress --mode development",
+    "build:webpack": "webpack --progress --mode production",
     "build:wasm": "node ./build.js",
     "test": "npm run test:lint && npm run test:node && npm run test:browser",
-    "test:lint": "standard \"src/*.js\" \"test/**/*.js\"",
+    "test:lint": "standard \"src/*.js\" \"test/*.js\" \"test/Browser/*.js\"",
     "test:node": "ava test/*.js",
     "test:browser": "karma start ./karma.conf.js",
     "test:browser-debug": "karma start ./karma.conf.js --no-single-run"
@@ -44,42 +45,44 @@
   },
   "homepage": "https://insightsoftwareconsortium.github.io/itk-js/",
   "devDependencies": {
-    "@babel/core": "^7.8.3",
-    "@babel/plugin-transform-modules-commonjs": "^7.10.4",
-    "@babel/plugin-transform-runtime": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
-    "async": "^2.6.1",
-    "ava": "^3.5.1",
-    "babel-loader": "^8.0.6",
+    "@babel/core": "^7.13.1",
+    "@babel/plugin-transform-modules-commonjs": "^7.13.0",
+    "@babel/plugin-transform-runtime": "^7.13.6",
+    "@babel/preset-env": "^7.13.5",
+    "async": "^2.6.3",
+    "ava": "^3.15.0",
+    "babel-loader": "^8.2.2",
     "babelify": "^10.0.0",
-    "browserify": "^16.5.0",
-    "commitizen": "^4.2.1",
+    "browserify": "^16.5.2",
+    "commitizen": "^4.2.4",
     "cz-conventional-changelog": "2.1.0",
     "file-api": "^0.10.4",
     "glob": "^7.1.6",
     "json-loader": "^0.5.7",
-    "karma": "^4.4.1",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-tap": "^4.1.4",
-    "karma-tap-pretty-reporter": "^4.1.0",
-    "karma-webpack": "3.0.5",
-    "kw-doc": "^1.3.2",
+    "karma": "^6.3.2",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-tap": "^4.2.0",
+    "karma-tap-pretty-reporter": "^4.2.0",
+    "karma-webpack": "^5.0.0",
+    "kw-doc": "^3.0.6",
     "puppeteer": "^2.1.1",
     "ramda": "^0.26.1",
-    "standard": "^14.3.3",
+    "readable-stream": "^3.6.0",
+    "standard": "^16.0.3",
+    "stream-browserify": "^3.0.0",
     "tap-spec": "^5.0.0",
-    "tape": "^4.9.1",
+    "tape": "^4.13.0",
     "uglifyify": "^5.0.2",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.2.3"
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.6.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.9.2",
-    "axios": "^0.19.0",
-    "commander": "^2.19.0",
-    "fs-extra": "^9.0.0",
-    "mime-types": "^2.1.21",
-    "promise-file-reader": "^1.0.2",
+    "@babel/runtime": "^7.13.6",
+    "axios": "^0.21.1",
+    "commander": "^2.20.3",
+    "fs-extra": "^9.1.0",
+    "mime-types": "^2.1.29",
+    "promise-file-reader": "^1.0.3",
     "webworker-promise": "^0.4.2"
   },
   "bin": {
@@ -99,8 +102,4 @@
       "examples/UMD/test/index.js"
     ]
   }
-
-,"_resolved": "https://registry.npmjs.org/itk/-/itk-13.1.4.tgz"
-,"_integrity": "sha512-WS3su/SaU/ks+9rsAgBKJh6aVw2Mg0lEEXYPJmMJzGpbLiP0MEoHEo0bsTigFAGWMkDq4/PfaIf7RO0PGq962Q=="
-,"_from": "itk@13.1.4"
 }

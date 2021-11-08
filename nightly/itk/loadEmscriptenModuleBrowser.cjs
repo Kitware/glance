@@ -1,9 +1,13 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 // Load the Emscripten module in the browser.
 //
@@ -25,37 +29,37 @@ exports.default = void 0;
 // pipelinePath is the file name of the emscripten module without the ".js"
 // extension
 function loadEmscriptenModule(itkModulesPath, modulesDirectory, pipelinePath, isAbsoluteURL) {
-  let prefix = itkModulesPath;
+  var prefix = itkModulesPath;
 
   if (itkModulesPath[0] !== '/' && !itkModulesPath.startsWith('http')) {
     prefix = '..';
   }
 
-  const moduleScriptDir = prefix + '/' + modulesDirectory;
+  var moduleScriptDir = prefix + '/' + modulesDirectory;
 
-  if (typeof WebAssembly === 'object' && typeof WebAssembly.Memory === 'function') {
-    let modulePath = moduleScriptDir + '/' + pipelinePath + 'Wasm.js';
+  if ((typeof WebAssembly === "undefined" ? "undefined" : (0, _typeof2.default)(WebAssembly)) === 'object' && typeof WebAssembly.Memory === 'function') {
+    var modulePath = moduleScriptDir + '/' + pipelinePath + 'Wasm.js';
 
     if (isAbsoluteURL) {
       modulePath = pipelinePath + 'Wasm.js';
     }
 
     importScripts(modulePath);
-    const moduleBaseName = pipelinePath.replace(/.*\//, '');
-    const module = self[moduleBaseName]({
-      moduleScriptDir,
-      isAbsoluteURL,
-      pipelinePath
+    var moduleBaseName = pipelinePath.replace(/.*\//, '');
+    var module = self[moduleBaseName]({
+      moduleScriptDir: moduleScriptDir,
+      isAbsoluteURL: isAbsoluteURL,
+      pipelinePath: pipelinePath
     });
     return module;
   } else {
-    let modulePath = moduleScriptDir + '/' + pipelinePath + '.js';
+    var _modulePath = moduleScriptDir + '/' + pipelinePath + '.js';
 
     if (isAbsoluteURL) {
-      modulePath = pipelinePath + '.js';
+      _modulePath = pipelinePath + '.js';
     }
 
-    importScripts(modulePath);
+    importScripts(_modulePath);
     return Module;
   }
 }

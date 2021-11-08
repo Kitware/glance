@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -15,11 +17,9 @@ var _extensionToMeshIO = _interopRequireDefault(require("./extensionToMeshIO"));
 
 var _MimeToMeshIO = _interopRequireDefault(require("./MimeToMeshIO"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const readArrayBuffer = (webWorker, arrayBuffer, fileName, mimeType) => {
-  const extension = (0, _getFileExtension.default)(fileName);
-  const isMesh = !!_extensionToMeshIO.default.has(extension) || !!_MimeToMeshIO.default.has(mimeType);
+var readArrayBuffer = function readArrayBuffer(webWorker, arrayBuffer, fileName, mimeType) {
+  var extension = (0, _getFileExtension.default)(fileName);
+  var isMesh = !!_extensionToMeshIO.default.has(extension) || !!_MimeToMeshIO.default.has(mimeType);
 
   if (isMesh) {
     return (0, _readMeshArrayBuffer.default)(webWorker, arrayBuffer, fileName, mimeType).catch(function () {

@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 "use strict";
 
-const fs = require('fs-extra');
+var fs = require('fs-extra');
 
-const path = require('path');
+var path = require('path');
 
-const spawnSync = require('child_process').spawnSync;
+var spawnSync = require('child_process').spawnSync;
 
-const program = require('commander');
+var program = require('commander');
 
-const build = sourceDir => {
+var build = function build(sourceDir) {
   // Check that the source directory exists and chdir to it.
   if (!fs.existsSync(sourceDir)) {
     console.error('The source directory: ' + sourceDir + ' does not exist!');
@@ -26,7 +26,7 @@ const build = sourceDir => {
   } // Check that we have docker and can run it.
 
 
-  const dockerVersion = spawnSync('docker', ['--version'], {
+  var dockerVersion = spawnSync('docker', ['--version'], {
     env: process.env,
     stdio: ['ignore', 'ignore', 'ignore']
   });
@@ -42,26 +42,27 @@ const build = sourceDir => {
     process.exit(dockerVersion.status);
   }
 
-  let dockerImage = 'insighttoolkit/itk-js:20200518-2906428';
+  var dockerImage = 'insighttoolkit/itk-js:20210520-bafb1b5';
 
   if (program.commands[0].image) {
     dockerImage = program.commands[0].image;
   } // Ensure we have the 'dockcross' Docker build environment driver script
 
 
-  const dockcrossScript = 'web-build/itk-js-build-env';
+  var dockcrossScript = 'web-build/itk-js-build-env';
 
   try {
     fs.statSync(dockcrossScript);
   } catch (err) {
     if (err.code === 'ENOENT') {
-      const output = fs.openSync(dockcrossScript, 'w');
-      const dockerCall = spawnSync('docker', ['run', '--rm', dockerImage], {
+      var output = fs.openSync(dockcrossScript, 'w');
+      var dockerCall = spawnSync('docker', ['run', '--rm', dockerImage], {
         env: process.env,
         stdio: ['ignore', output, null]
       });
 
       if (dockerCall.status !== 0) {
+        console.error(dockerCall.stderr.toString());
         process.exit(dockerCall.status);
       }
 
@@ -72,8 +73,10 @@ const build = sourceDir => {
     }
   }
 
-  const hypenIndex = program.rawArgs.findIndex(arg => arg === '--');
-  let cmakeArgs = [];
+  var hypenIndex = program.rawArgs.findIndex(function (arg) {
+    return arg === '--';
+  });
+  var cmakeArgs = [];
 
   if (hypenIndex !== -1) {
     cmakeArgs = program.rawArgs.slice(hypenIndex + 1);
@@ -92,20 +95,20 @@ const build = sourceDir => {
 
     process.exit(dockerBuild.status);
   } else {
-    const dockerBuild = spawnSync('bash', [dockcrossScript, 'web-build'].concat(cmakeArgs), {
+    var _dockerBuild = spawnSync('bash', [dockcrossScript, 'web-build'].concat(cmakeArgs), {
       env: process.env,
       stdio: 'inherit'
     });
 
-    if (dockerBuild.status !== 0) {
-      console.error(dockerBuild.error);
+    if (_dockerBuild.status !== 0) {
+      console.error(_dockerBuild.error);
     }
 
-    process.exit(dockerBuild.status);
+    process.exit(_dockerBuild.status);
   }
 };
 
-const test = sourceDir => {
+var test = function test(sourceDir) {
   // Check that the source directory exists and chdir to it.
   if (!fs.existsSync(sourceDir)) {
     console.error('The source directory: ' + sourceDir + ' does not exist!');
@@ -113,7 +116,7 @@ const test = sourceDir => {
   }
 
   process.chdir(sourceDir);
-  const dockcrossScript = path.join('web-build/itk-js-build-env');
+  var dockcrossScript = path.join('web-build/itk-js-build-env');
 
   try {
     fs.statSync(dockcrossScript);
@@ -128,8 +131,10 @@ const test = sourceDir => {
     process.exit(1);
   }
 
-  const hypenIndex = program.rawArgs.findIndex(arg => arg === '--');
-  let ctestArgs = '';
+  var hypenIndex = program.rawArgs.findIndex(function (arg) {
+    return arg === '--';
+  });
+  var ctestArgs = '';
 
   if (hypenIndex !== -1) {
     ctestArgs = program.rawArgs.slice(hypenIndex + 1).join(' ');
@@ -148,11 +153,12 @@ const test = sourceDir => {
 
     process.exit(dockerBuild.status);
   } else {
-    const dockerBuild = spawnSync('bash', [dockcrossScript, 'bash', '-c', 'cd web-build && ctest ' + ctestArgs], {
+    var _dockerBuild2 = spawnSync('bash', [dockcrossScript, 'bash', '-c', 'cd web-build && ctest ' + ctestArgs], {
       env: process.env,
       stdio: 'inherit'
     });
-    process.exit(dockerBuild.status);
+
+    process.exit(_dockerBuild2.status);
   }
 };
 

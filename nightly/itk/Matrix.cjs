@@ -2,7 +2,7 @@
 
 function Matrix(rows, columns) {
   if (rows instanceof Matrix) {
-    const other = rows;
+    var other = rows;
     this.rows = other.rows;
     this.columns = other.columns;
     this.data = other.data.slice();
@@ -15,8 +15,8 @@ function Matrix(rows, columns) {
 }
 
 Matrix.prototype.setIdentity = function () {
-  for (let ii = 0; ii < this.rows; ++ii) {
-    for (let jj = 0; jj < this.columns; ++jj) {
+  for (var ii = 0; ii < this.rows; ++ii) {
+    for (var jj = 0; jj < this.columns; ++jj) {
       if (ii === jj) {
         this.data[jj + ii * this.columns] = 1.0;
       } else {

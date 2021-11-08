@@ -1,16 +1,12 @@
-import _regeneratorRuntime from "@babel/runtime/regenerator";
 import _asyncToGenerator from "@babel/runtime/helpers/asyncToGenerator";
+import _regeneratorRuntime from "@babel/runtime/regenerator";
 import createWebworkerPromise from './createWebworkerPromise';
 import PromiseFileReader from 'promise-file-reader';
 import config from './itkConfig';
 
-var readImageFile =
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(webWorker, file) {
-    var worker, _ref2, webworkerPromise, usedWorker, arrayBuffer, image;
+var readImageFile = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(webWorker, file) {
+    var worker, _yield$createWebworke, webworkerPromise, usedWorker, arrayBuffer, image;
 
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -21,9 +17,9 @@ function () {
             return createWebworkerPromise('ImageIO', worker);
 
           case 3:
-            _ref2 = _context.sent;
-            webworkerPromise = _ref2.webworkerPromise;
-            usedWorker = _ref2.worker;
+            _yield$createWebworke = _context.sent;
+            webworkerPromise = _yield$createWebworke.webworkerPromise;
+            usedWorker = _yield$createWebworke.worker;
             worker = usedWorker;
             _context.next = 9;
             return PromiseFileReader.readAsArrayBuffer(file);

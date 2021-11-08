@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -11,16 +13,13 @@ var _promiseFileReader = _interopRequireDefault(require("promise-file-reader"));
 
 var _itkConfig = _interopRequireDefault(require("./itkConfig"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const readImageBlob = (webWorker, blob, fileName, mimeType) => {
-  let worker = webWorker;
-  return (0, _createWebworkerPromise.default)('ImageIO', worker).then(({
-    webworkerPromise,
-    worker: usedWorker
-  }) => {
+var readImageBlob = function readImageBlob(webWorker, blob, fileName, mimeType) {
+  var worker = webWorker;
+  return (0, _createWebworkerPromise.default)('ImageIO', worker).then(function (_ref) {
+    var webworkerPromise = _ref.webworkerPromise,
+        usedWorker = _ref.worker;
     worker = usedWorker;
-    return _promiseFileReader.default.readAsArrayBuffer(blob).then(arrayBuffer => {
+    return _promiseFileReader.default.readAsArrayBuffer(blob).then(function (arrayBuffer) {
       return webworkerPromise.postMessage({
         operation: 'readImage',
         name: fileName,
@@ -30,7 +29,7 @@ const readImageBlob = (webWorker, blob, fileName, mimeType) => {
       }, [arrayBuffer]);
     }).then(function (image) {
       return Promise.resolve({
-        image,
+        image: image,
         webWorker: worker
       });
     });

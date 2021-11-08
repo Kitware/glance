@@ -1,6 +1,6 @@
 "use strict";
 
-const getMatrixElement = (matrix, row, column) => {
+var getMatrixElement = function getMatrixElement(matrix, row, column) {
   return matrix.data[column + row * matrix.columns];
 };
 

@@ -1,4 +1,3 @@
-import _regeneratorRuntime from "@babel/runtime/regenerator";
 import _asyncToGenerator from "@babel/runtime/helpers/asyncToGenerator";
 
 /* eslint-disable-next-line no-unused-vars */
@@ -9,15 +8,11 @@ import WorkerPool from './WorkerPool';
 import stackImages from './stackImages';
 import config from './itkConfig';
 
-var workerFunction =
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(webWorker, fileDescriptions) {
+var workerFunction = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(webWorker, fileDescriptions) {
     var singleSortedSeries,
         worker,
-        _ref2,
+        _yield$createWebworke,
         webworkerPromise,
         usedWorker,
         transferables,
@@ -25,7 +20,7 @@ function () {
         image,
         _args = arguments;
 
-    return _regeneratorRuntime.wrap(function _callee$(_context) {
+    return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -35,9 +30,9 @@ function () {
             return createWebworkerPromise('ImageIO', worker);
 
           case 4:
-            _ref2 = _context.sent;
-            webworkerPromise = _ref2.webworkerPromise;
-            usedWorker = _ref2.worker;
+            _yield$createWebworke = _context.sent;
+            webworkerPromise = _yield$createWebworke.webworkerPromise;
+            usedWorker = _yield$createWebworke.worker;
             worker = usedWorker;
             transferables = fileDescriptions.map(function (description) {
               return description.data;
@@ -75,12 +70,8 @@ var numberOfWorkers = navigator.hardwareConcurrency ? navigator.hardwareConcurre
 var workerPool = new WorkerPool(numberOfWorkers, workerFunction);
 var seriesBlockSize = 8;
 
-var readImageDICOMFileSeries =
-/*#__PURE__*/
-function () {
-  var _ref3 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee2(fileList) {
+var readImageDICOMFileSeries = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(fileList) {
     var singleSortedSeries,
         fetchFileDescriptions,
         fileDescriptions,
@@ -94,7 +85,7 @@ function () {
         _results,
         _args2 = arguments;
 
-    return _regeneratorRuntime.wrap(function _callee2$(_context2) {
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
@@ -128,7 +119,7 @@ function () {
             }
 
             _context2.next = 10;
-            return workerPool.runTasks(taskArgsArray);
+            return workerPool.runTasks(taskArgsArray).promise;
 
           case 10:
             results = _context2.sent;
@@ -144,7 +135,7 @@ function () {
           case 16:
             _taskArgsArray = [[fileDescriptions, singleSortedSeries]];
             _context2.next = 19;
-            return workerPool.runTasks(_taskArgsArray);
+            return workerPool.runTasks(_taskArgsArray).promise;
 
           case 19:
             _results = _context2.sent;
@@ -162,7 +153,7 @@ function () {
   }));
 
   return function readImageDICOMFileSeries(_x3) {
-    return _ref3.apply(this, arguments);
+    return _ref2.apply(this, arguments);
   };
 }();
 

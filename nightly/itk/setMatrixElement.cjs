@@ -1,9 +1,9 @@
 "use strict";
 
-const Matrix = require('./Matrix.js');
+var Matrix = require('./Matrix.js');
 
-const setMatrixElement = (matrix, row, column, value) => {
-  const newMatrix = new Matrix(matrix);
+var setMatrixElement = function setMatrixElement(matrix, row, column, value) {
+  var newMatrix = new Matrix(matrix);
   newMatrix.data[column + row * newMatrix.columns] = value;
   return newMatrix;
 };

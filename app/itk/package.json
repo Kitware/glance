@@ -99,8 +99,4 @@
       "examples/UMD/test/index.js"
     ]
   }
-
-,"_resolved": "https://registry.npmjs.org/itk/-/itk-13.1.4.tgz"
-,"_integrity": "sha512-WS3su/SaU/ks+9rsAgBKJh6aVw2Mg0lEEXYPJmMJzGpbLiP0MEoHEo0bsTigFAGWMkDq4/PfaIf7RO0PGq962Q=="
-,"_from": "itk@13.1.4"
 }

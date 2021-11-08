@@ -3,9 +3,7 @@ import _toConsumableArray from "@babel/runtime/helpers/toConsumableArray";
 import _classCallCheck from "@babel/runtime/helpers/classCallCheck";
 import _createClass from "@babel/runtime/helpers/createClass";
 
-var WorkerPool =
-/*#__PURE__*/
-function () {
+var WorkerPool = /*#__PURE__*/function () {
   /* poolSize is the maximum number of web workers to create in the pool.
    *
    * The function, fcn, should accept null or an existing worker as its first argument.
@@ -25,9 +23,13 @@ function () {
    * Run the tasks specified by the arguments in the taskArgsArray that will
    * be passed to the pool fcn.
    *
-   * An optional progressCallback will be cassed with the number of complete
+   * An optional progressCallback will be called with the number of complete
    * tasks and the total number of tasks as arguments every time a task has
    * completed.
+   *
+   * Returns an object containing a promise ('promise') to communicate results
+   * as well as an id ('runId') which can be used to cancel any remaining pending
+   * tasks before they complete.
    */
 
 
@@ -42,21 +44,25 @@ function () {
         addingTasks: false,
         postponed: false,
         runningWorkers: 0,
-        progressCallback: progressCallback
+        progressCallback: progressCallback,
+        canceled: false
       };
       this.runInfo.push(info);
       info.index = this.runInfo.length - 1;
-      return new Promise(function (resolve, reject) {
-        info.resolve = resolve;
-        info.reject = reject;
-        info.results = new Array(taskArgsArray.length);
-        info.completedTasks = 0;
-        info.addingTasks = true;
-        taskArgsArray.forEach(function (taskArg, index) {
-          _this.addTask(info.index, index, taskArg);
-        });
-        info.addingTasks = false;
-      });
+      return {
+        promise: new Promise(function (resolve, reject) {
+          info.resolve = resolve;
+          info.reject = reject;
+          info.results = new Array(taskArgsArray.length);
+          info.completedTasks = 0;
+          info.addingTasks = true;
+          taskArgsArray.forEach(function (taskArg, index) {
+            _this.addTask(info.index, index, taskArg);
+          });
+          info.addingTasks = false;
+        }),
+        runId: info.index
+      };
     }
   }, {
     key: "terminateWorkers",
@@ -70,6 +76,15 @@ function () {
 
         this.workerQueue[index] = null;
       }
+    }
+  }, {
+    key: "cancel",
+    value: function cancel(runId) {
+      var info = this.runInfo[runId];
+
+      if (info) {
+        info.canceled = true;
+      }
     } // todo: change to #addTask(resultIndex, taskArgs) { after private methods
     // proposal accepted and supported by default in Babel.
 
@@ -80,6 +95,12 @@ function () {
 
       var info = this.runInfo[infoIndex];
 
+      if (info && info.canceled) {
+        this.clearTask(info.index);
+        info.reject('Remaining tasks canceled');
+        return;
+      }
+
       if (this.workerQueue.length > 0) {
         var worker = this.workerQueue.pop();
         info.runningWorkers++;
@@ -87,30 +108,35 @@ function () {
           var webWorker = _ref.webWorker,
               result = _objectWithoutProperties(_ref, ["webWorker"]);
 
-          _this2.workerQueue.push(webWorker);
+          _this2.workerQueue.push(webWorker); // Check if this task was canceled while it was getting done
 
-          info.runningWorkers--;
-          info.results[resultIndex] = result;
-          info.completedTasks++;
 
-          if (info.progressCallback) {
-            info.progressCallback(info.completedTasks, info.results.length);
-          }
+          if (_this2.runInfo[infoIndex] !== null) {
+            info.runningWorkers--;
+            info.results[resultIndex] = result;
+            info.completedTasks++;
 
-          if (info.taskQueue.length > 0) {
-            var reTask = info.taskQueue.shift();
+            if (info.progressCallback) {
+              info.progressCallback(info.completedTasks, info.results.length);
+            }
 
-            _this2.addTask.apply(_this2, [infoIndex].concat(_toConsumableArray(reTask)));
-          } else if (!info.addingTasks && !info.runningWorkers) {
-            var results = info.results;
-            var clearIndex = info.index;
-            _this2.runInfo[clearIndex] = null;
-            info.resolve(results);
+            if (info.taskQueue.length > 0) {
+              var reTask = info.taskQueue.shift();
+
+              _this2.addTask.apply(_this2, [infoIndex].concat(_toConsumableArray(reTask)));
+            } else if (!info.addingTasks && !info.runningWorkers) {
+              var results = info.results;
+
+              _this2.clearTask(info.index);
+
+              info.resolve(results);
+            }
           }
         })["catch"](function (error) {
           var reject = info.reject;
-          var clearIndex = info.index;
-          _this2.runInfo[clearIndex] = null;
+
+          _this2.clearTask(info.index);
+
           reject(error);
         });
       } else {
@@ -128,6 +154,17 @@ function () {
           }, 50);
         }
       }
+    } // todo: change to #clearTask(clearIndex) { after private methods
+    // proposal accepted and supported by default in Babel.
+
+  }, {
+    key: "clearTask",
+    value: function clearTask(clearIndex) {
+      this.runInfo[clearIndex].results = null;
+      this.runInfo[clearIndex].taskQueue = null;
+      this.runInfo[clearIndex].progressCallback = null;
+      this.runInfo[clearIndex].canceled = null;
+      this.runInfo[clearIndex] = null;
     }
   }]);
 

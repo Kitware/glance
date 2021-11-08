@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 var _copyImage = _interopRequireDefault(require("./copyImage"));
 
 var _extensionToImageIO = _interopRequireDefault(require("./extensionToImageIO"));
@@ -64,6 +66,8 @@ var _readImageArrayBuffer = _interopRequireDefault(require("./readImageArrayBuff
 
 var _readImageBlob = _interopRequireDefault(require("./readImageBlob.js"));
 
+var _readImageFileSeries = _interopRequireDefault(require("./readImageFileSeries.js"));
+
 var _readImageDICOMFileSeries = _interopRequireDefault(require("./readImageDICOMFileSeries.js"));
 
 var _readImageFile = _interopRequireDefault(require("./readImageFile.js"));
@@ -96,9 +100,7 @@ var _writeImageArrayBuffer = _interopRequireDefault(require("./writeImageArrayBu
 
 var _writeMeshArrayBuffer = _interopRequireDefault(require("./writeMeshArrayBuffer.js"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const itk = {};
+var itk = {};
 itk.copyImage = _copyImage.default;
 itk.extensionToImageIO = _extensionToImageIO.default;
 itk.extensionToMeshIO = _extensionToMeshIO.default;
@@ -131,6 +133,7 @@ itk.readBlob = _readBlob.default;
 itk.readFile = _readFile.default;
 itk.readImageArrayBuffer = _readImageArrayBuffer.default;
 itk.readImageBlob = _readImageBlob.default;
+itk.readImageFileSeries = _readImageFileSeries.default;
 itk.readImageDICOMFileSeries = _readImageDICOMFileSeries.default;
 itk.readImageFile = _readImageFile.default;
 itk.readImageHTTP = _readImageHTTP.default;

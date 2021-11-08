@@ -1,14 +1,14 @@
 "use strict";
 
-const path = require('path');
+var path = require('path');
 
-const getFileExtension = require('./getFileExtension.js');
+var getFileExtension = require('./getFileExtension.js');
 
-const extensionToMeshIO = require('./extensionToMeshIO.js');
+var extensionToMeshIO = require('./extensionToMeshIO.js');
 
-const writeImageLocalFile = require('./writeImageLocalFile.js');
+var writeImageLocalFile = require('./writeImageLocalFile.js');
 
-const writeMeshLocalFileSync = require('./writeMeshLocalFileSync.js');
+var writeMeshLocalFileSync = require('./writeMeshLocalFileSync.js');
 /**
  * Write an image or mesh to a file on the local filesystem in Node.js.
  *
@@ -20,12 +20,12 @@ const writeMeshLocalFileSync = require('./writeMeshLocalFileSync.js');
  */
 
 
-const writeLocalFile = (useCompression, imageOrMesh, filePath) => {
-  const absoluteFilePath = path.resolve(filePath);
-  const extension = getFileExtension(absoluteFilePath);
+var writeLocalFile = function writeLocalFile(useCompression, imageOrMesh, filePath) {
+  var absoluteFilePath = path.resolve(filePath);
+  var extension = getFileExtension(absoluteFilePath);
   return new Promise(function (resolve, reject) {
     try {
-      const isMesh = extensionToMeshIO.has(extension);
+      var isMesh = extensionToMeshIO.has(extension);
 
       if (isMesh) {
         try {
@@ -33,12 +33,12 @@ const writeLocalFile = (useCompression, imageOrMesh, filePath) => {
           resolve(null);
         } catch (err) {
           // Was a .vtk image file? Continue to write as an image.
-          writeImageLocalFile(useCompression, imageOrMesh, filePath).then(() => {
+          writeImageLocalFile(useCompression, imageOrMesh, filePath).then(function () {
             resolve(null);
           });
         }
       } else {
-        writeImageLocalFile(useCompression, imageOrMesh, filePath).then(() => {
+        writeImageLocalFile(useCompression, imageOrMesh, filePath).then(function () {
           resolve(null);
         });
       }

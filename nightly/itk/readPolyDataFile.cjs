@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -19,20 +21,17 @@ var _IOTypes = _interopRequireDefault(require("./IOTypes"));
 
 var _itkConfig = _interopRequireDefault(require("./itkConfig"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const readPolyDataFile = (webWorker, file) => {
-  let worker = webWorker;
-  return (0, _createWebworkerPromise.default)('Pipeline', worker).then(({
-    webworkerPromise,
-    worker: usedWorker
-  }) => {
+var readPolyDataFile = function readPolyDataFile(webWorker, file) {
+  var worker = webWorker;
+  return (0, _createWebworkerPromise.default)('Pipeline', worker).then(function (_ref) {
+    var webworkerPromise = _ref.webworkerPromise,
+        usedWorker = _ref.worker;
     worker = usedWorker;
-    return _promiseFileReader.default.readAsArrayBuffer(file).then(arrayBuffer => {
-      const filePath = file.name;
-      const mimeType = file.type;
-      const extension = (0, _getFileExtension.default)(filePath);
-      let pipelinePath = null;
+    return _promiseFileReader.default.readAsArrayBuffer(file).then(function (arrayBuffer) {
+      var filePath = file.name;
+      var mimeType = file.type;
+      var extension = (0, _getFileExtension.default)(filePath);
+      var pipelinePath = null;
 
       if (_MimeToPolyDataIO.default.has(mimeType)) {
         pipelinePath = _MimeToPolyDataIO.default.get(mimeType);
@@ -44,17 +43,17 @@ const readPolyDataFile = (webWorker, file) => {
         Promise.reject(Error('Could not find IO for: ' + filePath));
       }
 
-      const args = [file.name, file.name + '.output.json'];
-      const outputs = [{
+      var args = [file.name, file.name + '.output.json'];
+      var outputs = [{
         path: args[1],
         type: _IOTypes.default.vtkPolyData
       }];
-      const inputs = [{
+      var inputs = [{
         path: args[0],
         type: _IOTypes.default.Binary,
         data: new Uint8Array(arrayBuffer)
       }];
-      const transferables = [];
+      var transferables = [];
       inputs.forEach(function (input) {
         // Binary data
         if (input.type === _IOTypes.default.Binary) {
@@ -68,15 +67,14 @@ const readPolyDataFile = (webWorker, file) => {
       return webworkerPromise.postMessage({
         operation: 'runPolyDataIOPipeline',
         config: _itkConfig.default,
-        pipelinePath,
-        args,
-        outputs,
-        inputs
-      }, transferables).then(function ({
-        stdout,
-        stderr,
-        outputs
-      }) {
+        pipelinePath: pipelinePath,
+        args: args,
+        outputs: outputs,
+        inputs: inputs
+      }, transferables).then(function (_ref2) {
+        var stdout = _ref2.stdout,
+            stderr = _ref2.stderr,
+            outputs = _ref2.outputs;
         return Promise.resolve({
           polyData: outputs[0].data,
           webWorker: worker

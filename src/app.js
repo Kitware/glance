@@ -4,13 +4,14 @@ import Vuex from 'vuex';
 import Vuetify from 'vuetify/lib';
 
 import GirderProvider from 'paraview-glance/src/girder';
-import { vuetifyConfig as girderVuetifyConfig } from '@girder/components/src/utils';
+import { vuetify as girderVuetify } from '@girder/components/src';
 
-import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
-import vtkProxyManager from 'vtk.js/Sources/Proxy/Core/ProxyManager';
+import '@kitware/vtk.js/Rendering/Profiles/All';
 
-/* eslint-disable-next-line import/extensions */
-import 'typeface-roboto';
+import vtkURLExtract from '@kitware/vtk.js/Common/Core/URLExtract';
+import vtkProxyManager from '@kitware/vtk.js/Proxy/Core/ProxyManager';
+
+import 'typeface-roboto/index.css';
 import '@mdi/font/css/materialdesignicons.css';
 import 'paraview-glance/static/global.css';
 
@@ -71,7 +72,7 @@ export function createViewer(container, proxyConfig = null) {
     provide: GirderProvider,
     // if in the future we want to configure vuetify ourselves, see
     // https://github.com/girder/girder_web_components/blob/master/README.md
-    vuetify: new Vuetify(girderVuetifyConfig),
+    vuetify: girderVuetify,
     proxyManager,
     template: '<App />',
   });

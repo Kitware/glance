@@ -15,7 +15,8 @@ function getBrowserIssues() {
       this.$set(this.issues, 'webglVersion', WEBGL_VERSION.value);
     }
 
-    const strToTest = `${UNMASKED_VENDOR.value} / ${UNMASKED_RENDERER.value}`.toLowerCase();
+    const strToTest =
+      `${UNMASKED_VENDOR.value} / ${UNMASKED_RENDERER.value}`.toLowerCase();
     if (strToTest.indexOf('intel') !== -1) {
       this.$set(this.issues, 'integratedGPU', UNMASKED_RENDERER.value);
     }

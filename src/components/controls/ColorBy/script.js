@@ -1,7 +1,7 @@
-import macro from 'vtk.js/Sources/macro';
-import vtkMath from 'vtk.js/Sources/Common/Core/Math';
-import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
-import PwfProxyConstants from 'vtk.js/Sources/Proxy/Core/PiecewiseFunctionProxy/Constants';
+import macro from '@kitware/vtk.js/macro';
+import vtkMath from '@kitware/vtk.js/Common/Core/Math';
+import vtkColorMaps from '@kitware/vtk.js/Rendering/Core/ColorTransferFunction/ColorMaps';
+import PwfProxyConstants from '@kitware/vtk.js/Proxy/Core/PiecewiseFunctionProxy/Constants';
 
 import PiecewiseFunctionEditor from 'paraview-glance/src/components/widgets/PiecewiseFunctionEditor';
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
@@ -282,9 +282,8 @@ export default {
         256
       );
 
-      this.piecewiseFunction = this.$proxyManager.getPiecewiseFunction(
-        arrayName
-      );
+      this.piecewiseFunction =
+        this.$proxyManager.getPiecewiseFunction(arrayName);
     },
     setPreset() {
       if (this.colorByName) {

@@ -1,4 +1,4 @@
-import vtkFPSMonitor from 'vtk.js/Sources/Interaction/UI/FPSMonitor';
+import vtkFPSMonitor from '@kitware/vtk.js/Interaction/UI/FPSMonitor';
 
 // ----------------------------------------------------------------------------
 

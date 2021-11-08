@@ -9,10 +9,7 @@ export default function widgetBehavior(publicAPI, model) {
   model.representations
     .filter((rep) => rep.isA('vtkOutlineContextRepresentation'))
     .forEach((rep) =>
-      rep
-        .getActor()
-        .getProperty()
-        .set({ ambient: 1, diffuse: 0 })
+      rep.getActor().getProperty().set({ ambient: 1, diffuse: 0 })
     );
 
   // override the default handle scale

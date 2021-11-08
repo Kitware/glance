@@ -1,8 +1,8 @@
 /* eslint-disable-next-line no-unused-vars */
 import regeneratorRuntime from 'regenerator-runtime';
 
-import macro from 'vtk.js/Sources/macro';
-import ITKHelper from 'vtk.js/Sources/Common/DataModel/ITKHelper';
+import macro from '@kitware/vtk.js/macro';
+import ITKHelper from '@kitware/vtk.js/Common/DataModel/ITKHelper';
 
 import readImageDICOMFileSeries from 'itk/readImageDICOMFileSeries';
 

@@ -1,15 +1,14 @@
-.root {
+#root {
   display: flex;
   flex-flow: column;
   height: 100%;
-  overflow-y: auto;
 }
 
 .dnd {
   height: 100%;
 }
 
-.banner {
+#banner {
   min-height: 250px;
 }
 

@@ -1,12 +1,22 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const merge = require('webpack-merge');
+const { mergeWithRules } = require('webpack-merge');
 
 const baseConfig = require('./webpack.base.config');
 
 const HOST = process.env.HOST;
 const PORT = process.env.PORT && Number(process.env.PORT);
 
-module.exports = merge.smart(baseConfig, {
+const merge = mergeWithRules({
+  module: {
+    rules: {
+      test: 'match',
+      exclude: 'match',
+      use: 'replace',
+    },
+  },
+});
+
+module.exports = merge(baseConfig, {
   mode: 'development',
   // devtool: 'inline-cheap-module-source-map',
   module: {
@@ -20,7 +30,7 @@ module.exports = merge.smart(baseConfig, {
             loader: 'css-loader',
             options: {
               modules: {
-                localIdentName: '[folder]-[local]-[sha512:hash:base32:5]',
+                localIdentName: '[folder]-[local]-[hash:base64:5]',
               },
             },
           },
@@ -43,15 +53,23 @@ module.exports = merge.smart(baseConfig, {
     ],
   },
   devServer: {
-    contentBase: baseConfig.output.path,
+    static: {
+      directory: baseConfig.output.path,
+    },
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      },
+    },
     host: HOST || '0.0.0.0',
     port: PORT || 9999,
-    disableHostCheck: true,
+    allowedHosts: 'all',
     hot: false,
-    quiet: false,
-    noInfo: false,
-    stats: {
-      colors: true,
+    devMiddleware: {
+      stats: {
+        colors: true,
+      },
     },
   },
   plugins: [

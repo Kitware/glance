@@ -1,7 +1,7 @@
 // https://github.com/girder/girder_web_components
 import Vue from 'vue';
 import Girder, { RestClient } from '@girder/components/src';
-import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
+import vtkURLExtract from '@kitware/vtk.js/Common/Core/URLExtract';
 
 // Install the Vue plugin that lets us use the components
 Vue.use(Girder);
@@ -10,10 +10,7 @@ Vue.use(Girder);
 // environment variable is set at build-time
 const { girderRoute } = vtkURLExtract.extractURLParameters();
 
-let apiRoot =
-  girderRoute ||
-  process.env.VUE_APP_API_ROOT ||
-  'https://data.kitware.com/api/v1';
+let apiRoot = girderRoute || 'https://data.kitware.com/api/v1';
 
 let apiRootChanged = false;
 
@@ -32,6 +29,7 @@ function checkAPIValidity(root) {
   return true;
 }
 if (!checkAPIValidity(apiRoot)) {
+  // eslint-disable-next-line no-alert
   alert(
     `The server ${apiRoot} did not respond correctly.\
  This could be because the url is wrong, the server is down, or because its\

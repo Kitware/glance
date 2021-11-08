@@ -3,13 +3,15 @@ import { mapState } from 'vuex';
 
 import Datasets from 'paraview-glance/src/components/core/Datasets';
 
-import { Authentication as GirderAuthentication } from '@girder/components/src/components';
-import { FileManager as GirderFileManager } from '@girder/components/src/components/Snippet';
-import { Upload as GirderUpload } from '@girder/components/src/utils';
+import {
+  GirderAuthentication,
+  GirderFileManager,
+  GirderUpload,
+} from '@girder/components/src';
 
 import writeImageArrayBuffer from 'itk/writeImageArrayBuffer';
 
-import ITKHelper from 'vtk.js/Sources/Common/DataModel/ITKHelper';
+import ITKHelper from '@kitware/vtk.js/Common/DataModel/ITKHelper';
 
 export default {
   name: 'GirderBox',
@@ -72,26 +74,24 @@ export default {
   },
   methods: {
     load() {
-      const rfiles = this.selected.map((elem) => {
-        return {
-          /* eslint-disable-next-line no-underscore-dangle */
-          url: `${this.girderRest.apiRoot}/item/${elem._id}/download`,
-          name: elem.name,
-          withGirderToken: true,
-          proxyKeys: {
-            girderProvenance: {
-              ...this.location,
-              apiRoot: this.girderRest.apiRoot,
-            },
-            girderItem: {
-              /* eslint-disable-next-line no-underscore-dangle */
-              itemId: elem._id,
-              itemName: elem.name,
-            },
-            meta: elem.meta,
+      const rfiles = this.selected.map((elem) => ({
+        /* eslint-disable-next-line no-underscore-dangle */
+        url: `${this.girderRest.apiRoot}/item/${elem._id}/download`,
+        name: elem.name,
+        withGirderToken: true,
+        proxyKeys: {
+          girderProvenance: {
+            ...this.location,
+            apiRoot: this.girderRest.apiRoot,
           },
-        };
-      });
+          girderItem: {
+            /* eslint-disable-next-line no-underscore-dangle */
+            itemId: elem._id,
+            itemName: elem.name,
+          },
+          meta: elem.meta,
+        },
+      }));
 
       this.$store.dispatch('files/openRemoteFiles', rfiles);
     },
@@ -103,7 +103,7 @@ export default {
       // becomes invalid because it's been transferred:
       image.data = image.data.slice(0);
       writeImageArrayBuffer(null, false, image, 'out.mha').then(
-        function recieve({ arrayBuffer }) {
+        ({ arrayBuffer }) => {
           const blob = new Blob([arrayBuffer]);
           const url = URL.createObjectURL(blob);
           const anchor = document.createElement('a');

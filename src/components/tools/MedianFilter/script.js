@@ -1,7 +1,7 @@
 import runPipelineBrowser from 'itk/runPipelineBrowser';
 import IOTypes from 'itk/IOTypes';
-import macro from 'vtk.js/Sources/macro';
-import ITKHelper from 'vtk.js/Sources/Common/DataModel/ITKHelper';
+import macro from '@kitware/vtk.js/macro';
+import ITKHelper from '@kitware/vtk.js/Common/DataModel/ITKHelper';
 
 import { Portal } from '@linusborg/vue-simple-portal';
 

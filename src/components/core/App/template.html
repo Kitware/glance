@@ -3,9 +3,7 @@
   v-on:drop="openFileList"
 >
   <template v-slot:default="{ dragHover }">
-    <v-app
-      :class="$style.root"
-    >
+    <v-app>
       <v-navigation-drawer
         v-model="controlsDrawer"
         :clipped="$vuetify.breakpoint.mdAndUp"
@@ -105,7 +103,12 @@
         </collapsible-toolbar>
       </v-app-bar>
 
-      <v-content :class="$style.appContent">
+      <v-content
+        :id="$style.appContent"
+        :style="{
+          position: landingVisible ? 'initial' : 'fixed',
+        }"
+      >
         <landing
           v-if="landingVisible"
           key="if-landing"

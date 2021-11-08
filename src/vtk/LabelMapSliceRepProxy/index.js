@@ -1,8 +1,8 @@
-import macro from 'vtk.js/Sources/macro';
-import vtkColorTransferFunction from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction';
-import vtkPiecewiseFunction from 'vtk.js/Sources/Common/DataModel/PiecewiseFunction';
-import vtkSliceRepresentationProxy from 'vtk.js/Sources/Proxy/Representations/SliceRepresentationProxy';
-import ImagePropertyConstants from 'vtk.js/Sources/Rendering/Core/ImageProperty/Constants';
+import macro from '@kitware/vtk.js/macro';
+import vtkColorTransferFunction from '@kitware/vtk.js/Rendering/Core/ColorTransferFunction';
+import vtkPiecewiseFunction from '@kitware/vtk.js/Common/DataModel/PiecewiseFunction';
+import vtkSliceRepresentationProxy from '@kitware/vtk.js/Proxy/Representations/SliceRepresentationProxy';
+import ImagePropertyConstants from '@kitware/vtk.js/Rendering/Core/ImageProperty/Constants';
 
 import { makeSubManager } from 'paraview-glance/src/utils';
 

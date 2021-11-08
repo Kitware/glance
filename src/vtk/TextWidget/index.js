@@ -1,7 +1,7 @@
-import macro from 'vtk.js/Sources/macro';
-import vtkAbstractWidgetFactory from 'vtk.js/Sources/Widgets/Core/AbstractWidgetFactory';
-import vtkPlanePointManipulator from 'vtk.js/Sources/Widgets/Manipulators/PlaneManipulator';
-import vtkSphereHandleRepresentation from 'vtk.js/Sources/Widgets/Representations/SphereHandleRepresentation';
+import macro from '@kitware/vtk.js/macro';
+import vtkAbstractWidgetFactory from '@kitware/vtk.js/Widgets/Core/AbstractWidgetFactory';
+import vtkPlanePointManipulator from '@kitware/vtk.js/Widgets/Manipulators/PlaneManipulator';
+import vtkSphereHandleRepresentation from '@kitware/vtk.js/Widgets/Representations/SphereHandleRepresentation';
 
 import widgetBehavior from 'paraview-glance/src/vtk/TextWidget/behavior';
 import stateGenerator from 'paraview-glance/src/vtk/TextWidget/state';
@@ -9,7 +9,7 @@ import stateGenerator from 'paraview-glance/src/vtk/TextWidget/state';
 import vtkSVGCircleHandleRepresentation from 'paraview-glance/src/vtk/SVGCircleHandleRepresentation';
 import vtkSVGLabelRepresentation from 'paraview-glance/src/vtk/SVGLabelRepresentation';
 
-import { ViewTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
+import { ViewTypes } from '@kitware/vtk.js/Widgets/Core/WidgetManager/Constants';
 
 // ----------------------------------------------------------------------------
 // Factory

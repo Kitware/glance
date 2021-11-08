@@ -1,12 +1,12 @@
-import 'vtk.js/Sources/IO/Core/DataAccessHelper/JSZipDataAccessHelper';
-import DataAccessHelper from 'vtk.js/Sources/IO/Core/DataAccessHelper';
-import macro from 'vtk.js/Sources/macro';
-import vtkHttpSceneLoader from 'vtk.js/Sources/IO/Core/HttpSceneLoader';
-import vtkMapper from 'vtk.js/Sources/Rendering/Core/Mapper';
+import '@kitware/vtk.js/IO/Core/DataAccessHelper/JSZipDataAccessHelper';
+import DataAccessHelper from '@kitware/vtk.js/IO/Core/DataAccessHelper';
+import macro from '@kitware/vtk.js/macro';
+import vtkHttpSceneLoader from '@kitware/vtk.js/IO/Core/HttpSceneLoader';
+import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 
 // Can't import both "Mode" objects directly.
-import LookupTableProxyConstants from 'vtk.js/Sources/Proxy/Core/LookupTableProxy/Constants';
-import PiecewiseFunctionProxyConstants from 'vtk.js/Sources/Proxy/Core/PiecewiseFunctionProxy/Constants';
+import LookupTableProxyConstants from '@kitware/vtk.js/Proxy/Core/LookupTableProxy/Constants';
+import PiecewiseFunctionProxyConstants from '@kitware/vtk.js/Proxy/Core/PiecewiseFunctionProxy/Constants';
 
 // ----------------------------------------------------------------------------
 // vtkGlanceVtkJsReader methods
@@ -57,14 +57,8 @@ function updateRanges(container, name, dataRange) {
 function gatherRanges(container, dataset) {
   const fn = (array) =>
     updateRanges(container, array.getName(), array.getRange(-1));
-  dataset
-    .getPointData()
-    .getArrays()
-    .forEach(fn);
-  dataset
-    .getCellData()
-    .getArrays()
-    .forEach(fn);
+  dataset.getPointData().getArrays().forEach(fn);
+  dataset.getCellData().getArrays().forEach(fn);
 }
 
 // ----------------------------------------------------------------------------
@@ -110,14 +104,8 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
     const allViews = proxyManager.getViews();
     const allDataRanges = {};
     model.scene.forEach((sceneItem) => {
-      const {
-        source,
-        mapper,
-        actor,
-        volume,
-        name,
-        volumeComponents,
-      } = sceneItem;
+      const { source, mapper, actor, volume, name, volumeComponents } =
+        sceneItem;
       const actorState = actor ? actor.get('origin', 'scale', 'position') : {};
       const volumeState = volume
         ? volume.get('origin', 'scale', 'position')
@@ -256,8 +244,9 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
           proxyManager.renderAllViews
         );
 
-        const maxTextureLODSize = proxyManager.getReferenceByName('$store')
-          .state.views.maxTextureLODSize;
+        const maxTextureLODSize =
+          proxyManager.getReferenceByName('$store').state.views
+            .maxTextureLODSize;
         textureLODsDownloader.setMaxTextureLODSize(maxTextureLODSize);
 
         // Start the downloads
@@ -283,9 +272,8 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
       if (model.animationHandler) {
         if (proxyManager.getProxyInGroup('AnimationManager').length) {
           // Find an existing animation manager
-          const animationManager = proxyManager.getProxyInGroup(
-            'AnimationManager'
-          )[0];
+          const animationManager =
+            proxyManager.getProxyInGroup('AnimationManager')[0];
 
           const animation = proxyManager.createProxy(
             'Animations',

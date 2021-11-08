@@ -1,4 +1,4 @@
-import vtkColorMaps from 'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps';
+import vtkColorMaps from '@kitware/vtk.js/Rendering/Core/ColorTransferFunction/ColorMaps';
 import Presets from 'paraview-glance/src/config/Presets.json';
 
 const DEFAULT_PRESET = {

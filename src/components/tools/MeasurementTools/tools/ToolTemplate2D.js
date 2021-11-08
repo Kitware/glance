@@ -128,14 +128,8 @@ export default (toolName, extraComponent = {}) => ({
     this.widgetPid = proxy.getProxyId();
 
     if (this.toolData) {
-      const {
-        name,
-        lockToSlice,
-        points,
-        color,
-        textSize,
-        axis,
-      } = this.toolData;
+      const { name, lockToSlice, points, color, textSize, axis } =
+        this.toolData;
       this.name = name;
       this.lockToSlice = lockToSlice;
       this.color = color;

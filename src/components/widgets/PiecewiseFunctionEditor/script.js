@@ -1,4 +1,4 @@
-import vtkPiecewiseGaussianWidget from 'vtk.js/Sources/Interaction/Widgets/PiecewiseGaussianWidget';
+import vtkPiecewiseGaussianWidget from '@kitware/vtk.js/Interaction/Widgets/PiecewiseGaussianWidget';
 
 // Act as a semaphore. Only one widget should be the source of changes
 // to prevent conflicting update with several instance of that widget
@@ -33,11 +33,7 @@ function updateWidget() {
 
     if (this.source) {
       this.piecewiseWidget.setDataArray(
-        this.source
-          .getDataset()
-          .getPointData()
-          .getScalars()
-          .getData()
+        this.source.getDataset().getPointData().getScalars().getData()
       );
     } else {
       this.piecewiseWidget.setDataArray(

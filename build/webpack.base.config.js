@@ -6,7 +6,6 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-const vtkRules = require('vtk.js/Utilities/config/dependency').webpack;
 
 const externals = require('./externals.js');
 
@@ -32,7 +31,10 @@ module.exports = {
     rules: [
       {
         test: paths.entry,
-        loader: 'expose-loader?Glance',
+        loader: 'expose-loader',
+        options: {
+          exposes: ['Glance'],
+        },
       },
       {
         test: /\.vue$/,
@@ -45,11 +47,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|svg|ttf|woff2?|eot|otf)$/,
-        loader: 'url-loader',
-        options: {
-          // Make sure this is just big enough to load one font file
-          limit: 300000,
-        },
+        type: 'asset/resource'
       },
       {
         test: /\.css$/,
@@ -77,6 +75,7 @@ module.exports = {
       },
       {
         test: /\.(js|vue)$/,
+        exclude: /node_modules/,
         loader: 'eslint-loader',
         enforce: 'pre',
       },
@@ -89,19 +88,23 @@ module.exports = {
             loader: 'css-loader',
             options: {
               modules: {
-                localIdentName: '[name]-[local]-[sha512:hash:base32:5]',
+                localIdentName: '[name]-[local]-[hash:base64:5]',
               },
             },
           },
           {
             loader: 'postcss-loader',
             options: {
-              plugins: () => [autoprefixer('last 3 version', 'ie >= 10')],
+              postcssOptions: {
+                plugins: [
+                  'postcss-preset-env',
+                ],
+              },
             },
           },
         ],
       },
-    ].concat(vtkRules.core.rules),
+    ],
   },
   plugins: [
     new CleanWebpackPlugin({
@@ -110,30 +113,19 @@ module.exports = {
     new VueLoaderPlugin(),
     new VuetifyLoaderPlugin(),
     new WriteFilePlugin(),
-    new CopyPlugin([
-      {
-        from: path.join(
-          paths.node_modules,
-          'workbox-sw',
-          'build',
-          'importScripts',
-          'workbox-sw.prod.*.js'
-        ),
-        flatten: true,
-      },
-      {
-        from: path.join(paths.node_modules, 'itk'),
-        to: 'itk',
-      },
-      {
-        from: path.join(paths.root, 'static'),
-      },
-      {
-        from: path.join(paths.root, 'itk', 'web-build', 'itkfiltering*'),
-        to: path.join('itk', 'Pipelines'),
-        flatten: true,
-      },
-    ]),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.join(paths.node_modules, 'itk'),
+          to: 'itk',
+        },
+        {
+          from: path.join(paths.root, 'itk', 'web-build', 'itkfiltering*'),
+          to: path.join('itk', 'Pipelines'),
+          to: '[name][ext]',
+        },
+      ]
+    }),
     new GenerateSW({
       cacheId: 'paraview-glance-',
       cleanupOutdatedCaches: true,
@@ -154,7 +146,7 @@ module.exports = {
     alias: {
       vue$: 'vue/dist/vue.esm.js',
       'paraview-glance': paths.root,
-      'vtk.js/Sources/Rendering/Core/ColorTransferFunction/ColorMaps.json': path.join(paths.source, 'config/ColorMaps.json'),
+      '@kitware/vtk.js/Rendering/Core/ColorTransferFunction/ColorMaps.json': path.join(paths.source, 'config/ColorMaps.json'),
     },
   },
   optimization: {

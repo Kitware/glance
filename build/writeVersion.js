@@ -8,7 +8,7 @@ const gitTag = execSync('git tag -l --points-at HEAD').toString().trim();
 
 let version = gitTag || require(packageJson).version;
 if (!version || version === '0.0.0-semantically-release') {
-  version = 'nightly (master)';
+  version = 'master';
 }
 
 fs.writeFileSync(versionFile, `window.GLANCE_VERSION = "${version}";\n`);

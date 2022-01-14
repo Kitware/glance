@@ -83,10 +83,7 @@ export default ({ proxyManager }) => ({
     setCroppingState: wrapMutationAsAction('setCroppingState'),
     setDistanceUnitSymbol: wrapMutationAsAction('setDistanceUnitSymbol'),
     setDistanceUnitFactor: wrapMutationAsAction('setDistanceUnitFactor'),
-    rewriteProxyIds: {
-      root: true,
-      handler: wrapMutationAsAction('rewriteProxyIds'),
-    },
+    rewriteProxyIds: wrapMutationAsAction('rewriteProxyIds'),
     pxmProxyCreated: {
       root: true,
       handler({ state }, { proxy, proxyId }) {

@@ -498,6 +498,11 @@ function createStore(injected) {
         const ind = (keys.indexOf(lastViewPoint) + 1) % keys.length;
         dispatch('changeCameraViewPoint', keys[ind]);
       },
+
+      rewriteProxyIds({ dispatch }, oldToNewMapping) {
+        dispatch('widgets/rewriteProxyIds', oldToNewMapping);
+        dispatch('views/rewriteProxyIds', oldToNewMapping);
+      },
     },
   });
 

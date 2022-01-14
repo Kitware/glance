@@ -2,7 +2,7 @@ import Images from 'paraview-glance/src/samples/images';
 
 const version =
   window.GLANCE_VERSION && window.GLANCE_VERSION !== 'master'
-    ? `v${window.GLANCE_VERSION}`
+    ? window.GLANCE_VERSION
     : 'master';
 
 // prettier-ignore

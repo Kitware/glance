@@ -9,6 +9,8 @@ import {
 } from 'paraview-glance/src/components/core/VtkView/constants';
 import { DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 
+import { wrapMutationAsAction } from 'paraview-glance/src/utils';
+
 const { CaptureOn } = WidgetManagerConstants;
 
 export default ({ proxyManager }) => ({
@@ -79,6 +81,11 @@ export default ({ proxyManager }) => ({
       const srcViewType = state.viewOrder[index];
       Vue.set(state.viewOrder, index, viewType);
       Vue.set(state.viewOrder, dstIndex, srcViewType);
+    },
+    rewriteProxyIds(state, idMapping) {
+      Object.entries(state.viewTypeToId).forEach(([type, id]) => {
+        state.viewTypeToId[type] = idMapping[id];
+      });
     },
   },
   actions: {
@@ -235,5 +242,6 @@ export default ({ proxyManager }) => ({
     setMaxTextureLODSize({ commit }, size) {
       commit('setMaxTextureLODSize', size);
     },
+    rewriteProxyIds: wrapMutationAsAction('rewriteProxyIds'),
   },
 });

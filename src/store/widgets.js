@@ -60,7 +60,7 @@ export default ({ proxyManager }) => ({
     setCroppingState(state, { datasetId, planes }) {
       state.croppingStates[datasetId] = Array.from(planes);
     },
-    rewriteProxyIds(state, idMapping) {
+    rewriteProxyIds(state, { sources: idMapping }) {
       state.measurements = remapIdKeys(state.measurements, idMapping);
       state.imageToLabelmaps = remapIdKeys(state.imageToLabelmaps, idMapping);
       state.labelmapStates = remapIdKeys(state.labelmapStates, idMapping);

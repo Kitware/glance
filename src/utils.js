@@ -45,6 +45,21 @@ export function remapIdKeys(obj, mapping) {
 }
 
 /**
+ * Renames values in an object according to a lookup.
+ */
+export function remapIdValues(obj, mapping) {
+  const newObj = {};
+  Object.entries(obj).forEach(([key, id]) => {
+    let newId = id;
+    if (id in mapping) {
+      newId = mapping[id];
+    }
+    newObj[key] = newId;
+  });
+  return newObj;
+}
+
+/**
  * Replaces elements in a list according to a mapping.
  */
 export function remapIdList(list, mapping) {

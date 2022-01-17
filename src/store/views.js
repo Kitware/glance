@@ -9,7 +9,7 @@ import {
 } from 'paraview-glance/src/components/core/VtkView/constants';
 import { DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 
-import { wrapMutationAsAction } from 'paraview-glance/src/utils';
+import { remapIdValues, wrapMutationAsAction } from 'paraview-glance/src/utils';
 
 const { CaptureOn } = WidgetManagerConstants;
 
@@ -82,10 +82,8 @@ export default ({ proxyManager }) => ({
       Vue.set(state.viewOrder, index, viewType);
       Vue.set(state.viewOrder, dstIndex, srcViewType);
     },
-    rewriteProxyIds(state, idMapping) {
-      Object.entries(state.viewTypeToId).forEach(([type, id]) => {
-        state.viewTypeToId[type] = idMapping[id];
-      });
+    rewriteProxyIds(state, { views: idMapping }) {
+      state.viewTypeToId = remapIdValues(state.viewTypeToId, idMapping);
     },
   },
   actions: {

@@ -308,7 +308,10 @@ function createStore(injected) {
 
             // make sure store modules have a chance to rewrite their saved mappings
             // before we re-populate proxy manager state
-            dispatch('rewriteProxyIds', $oldToNewIdMapping).then(() => {
+            dispatch('rewriteProxyIds', {
+              appState,
+              mapping: $oldToNewIdMapping,
+            }).then(() => {
               // Force update
               proxyManager.modified();
 
@@ -499,9 +502,26 @@ function createStore(injected) {
         dispatch('changeCameraViewPoint', keys[ind]);
       },
 
-      rewriteProxyIds({ dispatch }, oldToNewMapping) {
-        dispatch('widgets/rewriteProxyIds', oldToNewMapping);
-        dispatch('views/rewriteProxyIds', oldToNewMapping);
+      rewriteProxyIds({ dispatch }, { appState, mapping }) {
+        // split out the mappings
+        const extractMapping = (objs) =>
+          objs.reduce(
+            (map, obj) => ({ ...map, [obj.id]: mapping[obj.id] }),
+            {}
+          );
+
+        const sourcesMapping = extractMapping(appState.sources);
+        const viewsMapping = extractMapping(appState.views);
+        const repsMapping = extractMapping(appState.representations);
+        const maps = {
+          sources: sourcesMapping,
+          views: viewsMapping,
+          reps: repsMapping,
+          all: mapping,
+        };
+
+        dispatch('widgets/rewriteProxyIds', maps);
+        dispatch('views/rewriteProxyIds', maps);
       },
     },
   });

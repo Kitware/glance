@@ -20,24 +20,6 @@
   </url>
   
   <url>
-    <loc>https://kitware.github.io/paraview-glance/doc/index.html</loc>
-    
-    <lastmod>2022-02-08</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://kitware.github.io/paraview-glance/doc/keyboard_shortcuts.html</loc>
-    
-    <lastmod>2022-02-08</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://kitware.github.io/paraview-glance/doc/loading_files.html</loc>
     
     <lastmod>2022-02-08</lastmod>
@@ -48,6 +30,24 @@
   
   <url>
     <loc>https://kitware.github.io/paraview-glance/doc/readers.html</loc>
+    
+    <lastmod>2022-02-08</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kitware.github.io/paraview-glance/doc/index.html</loc>
+    
+    <lastmod>2022-02-08</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kitware.github.io/paraview-glance/doc/keyboard_shortcuts.html</loc>
     
     <lastmod>2022-02-08</lastmod>
     

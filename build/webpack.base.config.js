@@ -128,7 +128,7 @@ module.exports = {
       ]
     }),
     new GenerateSW({
-      cacheId: 'paraview-glance-',
+      cacheId: 'paraview-glance-2-',
       cleanupOutdatedCaches: true,
       include: [/\.js$/],
       exclude: ['serviceWorker.js'],
@@ -136,7 +136,7 @@ module.exports = {
       skipWaiting: true,
       runtimeCaching: [
         {
-          handler: 'CacheFirst',
+          handler: 'NetworkFirst',
           urlPattern: /(\.css|\.ttf|\.eot|\.woff|\.js|\.png|\.svg|\.wasm)$/,
         },
       ],

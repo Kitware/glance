@@ -134,6 +134,7 @@ export default ({ proxyManager, girder }) => ({
           Object.assign(fileState, {
             state: 'needsDownload',
             remoteURL: fileInfo.remoteURL,
+            remoteOpts: fileInfo.remoteOpts,
             withGirderToken: !!fileInfo.withGirderToken,
           });
         }
@@ -212,6 +213,7 @@ export default ({ proxyManager, girder }) => ({
           type: 'remote',
           name: rfile.name,
           remoteURL: rfile.url,
+          remoteOpts: rfile.options,
           withGirderToken: !!rfile.withGirderToken,
           // Key value pairs to be eventually set on the proxy
           proxyKeys: rfile.proxyKeys,
@@ -286,13 +288,13 @@ export default ({ proxyManager, girder }) => ({
       }
 
       if (file.state === 'needsDownload' && file.remoteURL) {
-        const opts = {};
         if (file.withGirderToken) {
-          opts.headers = {
+          file.remoteOpts.headers = {
+            ...file.remoteOpts.headers,
             'Girder-Token': girder.girderRest.token,
           };
         }
-        ret = ReaderFactory.downloadDataset(file.name, file.remoteURL, opts)
+        ret = ReaderFactory.downloadDataset(file.name, file.remoteURL, file.remoteOpts)
           .then((datasetFile) => {
             commit('setRemoteFile', {
               index: fileIndex,

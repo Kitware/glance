@@ -297,7 +297,7 @@ function vtkGlanceVtkJsReader(publicAPI, model) {
     });
 
     // Update LookupTables with PV ranges
-    Object.keys(model.lookupTables).forEach((fieldName) => {
+    Object.keys(model.lookupTables || {}).forEach((fieldName) => {
       const lutState = model.lookupTables[fieldName];
       const lutProxy = proxyManager.getLookupTable(fieldName);
       const lut = lutProxy.getLookupTable();

@@ -294,7 +294,11 @@ export default ({ proxyManager, girder }) => ({
             'Girder-Token': girder.girderRest.token,
           };
         }
-        ret = ReaderFactory.downloadDataset(file.name, file.remoteURL, file.remoteOpts)
+        ret = ReaderFactory.downloadDataset(
+          file.name,
+          file.remoteURL,
+          file.remoteOpts
+        )
           .then((datasetFile) => {
             commit('setRemoteFile', {
               index: fileIndex,

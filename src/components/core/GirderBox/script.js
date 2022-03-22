@@ -12,6 +12,44 @@ import {
 import writeImageArrayBuffer from 'itk/writeImageArrayBuffer';
 
 import ITKHelper from '@kitware/vtk.js/Common/DataModel/ITKHelper';
+import vtkXMLPolyDataWriter from '@kitware/vtk.js/IO/XML/XMLPolyDataWriter';
+import vtkXMLWriter from '@kitware/vtk.js/IO/XML/XMLWriter';
+import vtkSTLWriter from '@kitware/vtk.js/IO/Geometry/STLWriter';
+
+function arrayBufferToFile(ab, name) {
+  const blob = new Blob([ab]);
+  return new File([blob], name);
+}
+
+function writeDatasetToFile(dataset, name) {
+  return new Promise((resolve, reject) => {
+    if (dataset.isA('vtkImageData')) {
+      const image = ITKHelper.convertVtkToItkImage(dataset);
+      // If we don't copy here, the renderer's copy of the ArrayBuffer
+      // becomes invalid because it's been transferred:
+      image.data = image.data.slice(0);
+      writeImageArrayBuffer(null, false, image, name).then((ab) =>
+        resolve(arrayBufferToFile(ab, name))
+      );
+    } else if (dataset.isA('vtkPolyData')) {
+      let writer = null;
+      if (name.endsWith('.vtp')) {
+        writer = vtkXMLPolyDataWriter.newInstance();
+        writer.setFormat(vtkXMLWriter.FormatTypes.BINARY);
+      } else if (name.endsWith('.stl')) {
+        writer = vtkSTLWriter.newInstance();
+      }
+
+      if (writer) {
+        resolve(arrayBufferToFile(writer.write(dataset), name));
+      } else {
+        reject(new Error(`Cannot save polydata dataset ${name}`));
+      }
+    } else {
+      reject(new Error(`Cannot save dataset ${name}`));
+    }
+  });
+}
 
 export default {
   name: 'GirderBox',
@@ -20,6 +58,7 @@ export default {
     GirderAuthentication,
     GirderFileManager,
     Datasets,
+    GirderUpload,
   },
   inject: ['girderRest', '$notify'],
   data() {
@@ -142,7 +181,9 @@ export default {
       if (!this.checkUploadPossible()) {
         return;
       }
-      const dataset = this.$proxyManager.getProxyById(proxyId).get().dataset;
+      const dataProxy = this.$proxyManager.getProxyById(proxyId);
+      const dataset = dataProxy.getDataset();
+      const name = dataProxy.getName();
 
       const metadata = {
         glanceDataType: dataset.getClassName(),
@@ -156,42 +197,31 @@ export default {
 
       this.$notify('Uploading...', true);
 
-      const image = ITKHelper.convertVtkToItkImage(dataset);
-      // If we don't copy here, the renderer's copy of the ArrayBuffer
-      // becomes invalid because it's been transferred:
-      image.data = image.data.slice(0);
-      writeImageArrayBuffer(
-        null,
-        false,
-        image,
-        this.$proxyManager.getProxyById(proxyId).get().name
-      ).then((valueReturned) => {
-        const buffer = valueReturned.arrayBuffer;
-        const blob = new Blob([buffer]);
-        const file = new File(
-          [blob],
-          this.$proxyManager.getProxyById(proxyId).get().name
-        );
-        const upload = new GirderUpload(file, {
-          $rest: this.girderRest,
-          parent:
-            this.$proxyManager
-              .getProxyById(proxyId)
-              .getKey('girderProvenance') || this.location,
-        });
-        upload
-          .start()
-          .then((response) => {
-            const { itemId } = response;
-            this.girderRest.put(
-              `${this.girderRest.apiRoot}/item/${itemId}`,
-              `metadata=${JSON.stringify(metadata)}`
-            );
-            this.$notify('Image uploaded');
-            this.$refs.girderFileManager.refresh();
+      writeDatasetToFile(dataset, name).then((file) => {
+        const dest =
+          this.$proxyManager.getProxyById(proxyId).getKey('girderProvenance') ||
+          this.location;
+
+        // hacky; I would extract the upload logic, but
+        // this will do for now.
+        this.$refs.girderUploader.setFiles([file]);
+        this.$refs.girderUploader.inputFilesChanged([file]);
+        this.$refs.girderUploader
+          .start({
+            dest,
+            postUpload: ({ results }) => {
+              const { itemId } = results[0];
+              this.girderRest.put(
+                `${this.girderRest.apiRoot}/item/${itemId}`,
+                `metadata=${JSON.stringify(metadata)}`
+              );
+              this.$notify('Dataset uploaded');
+              this.$refs.girderFileManager.refresh();
+            },
           })
-          .catch(() => {
-            this.$notify('Upload error');
+          .catch((e) => {
+            this.$notify(`Upload error: ${e}`);
+            console.error('Upload error', e);
           });
       });
     },
@@ -204,22 +234,27 @@ export default {
         const proxyName = this.$proxyManager.getProxyById(proxyId).getName();
         const name = `${proxyName}.measurements.json`;
         const file = new File([JSON.stringify(measurements)], name);
+        const dest =
+          this.$proxyManager.getProxyById(proxyId).getKey('girderProvenance') ||
+          this.location;
+
         this.$notify('Uploading...', true);
-        const upload = new GirderUpload(file, {
-          $rest: this.girderRest,
-          parent:
-            this.$proxyManager
-              .getProxyById(proxyId)
-              .getKey('girderProvenance') || this.location,
-        });
-        upload
-          .start()
-          .then(() => {
-            this.$notify('Measurements uploaded');
-            this.$refs.girderFileManager.refresh();
+
+        // hacky; I would extract the upload logic, but
+        // this will do for now.
+        this.$refs.girderUploader.setFiles([file]);
+        this.$refs.girderUploader.inputFilesChanged([file]);
+        this.$refs.girderUploader
+          .start({
+            dest,
+            postUpload: () => {
+              this.$notify('Measurements uploaded');
+              this.$refs.girderFileManager.refresh();
+            },
           })
-          .catch(() => {
-            this.$notify('Upload error');
+          .catch((e) => {
+            this.$notify(`Upload error: ${e}`);
+            console.error('Upload error', e);
           });
       }
     },

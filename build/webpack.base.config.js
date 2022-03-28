@@ -120,11 +120,12 @@ module.exports = {
           to: 'itk',
         },
         {
-          from: path.join(paths.root, 'itk', 'web-build', 'itkfiltering*'),
+          // globs use forward slashes
+          from: `${paths.root.replace(/\\/g,'/')}/itk/web-build/itkfiltering*`,
           to: path.join('itk', 'Pipelines'),
           to: '[name][ext]',
         },
-        { from: path.join('static', 'ParaView.png') },
+        { from: 'static/ParaView.png' },
       ]
     }),
     new GenerateSW({

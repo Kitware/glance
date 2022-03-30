@@ -41,7 +41,7 @@
   "author": "Kitware",
   "dependencies": {
     "@girder/components": "3.1.0",
-    "@kitware/vtk.js": "20.0.0",
+    "@kitware/vtk.js": "23.4.2",
     "@linusborg/vue-simple-portal": "0.1.5",
     "itk": "14.1.1",
     "jszip": "3.7.1",

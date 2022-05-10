@@ -134,7 +134,7 @@ export default ({ proxyManager, girder }) => ({
           Object.assign(fileState, {
             state: 'needsDownload',
             remoteURL: fileInfo.remoteURL,
-            remoteOpts: fileInfo.remoteOpts,
+            remoteOpts: fileInfo.remoteOpts || {},
             withGirderToken: !!fileInfo.withGirderToken,
           });
         }

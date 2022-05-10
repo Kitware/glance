@@ -1,11 +1,11 @@
-![ParaView Glance](documentation/content/ParaViewGlance_Logo.png)
+![Glance](documentation/content/ParaViewGlance_Logo.png)
 
 Introduction
 ============
 [ParaView Glance][] is an open-source, javascript visualization application created by [Kitware][], based on [Visualization Toolkit (VTK)][VTK], and intended to serve as a light-weight companion to [Paraview][].  It is part of
 the [ParaView Web][] suite of tools.
 
-[ParaView Glance]: https://kitware.github.io/paraview-glance/
+[ParaView Glance]: https://kitware.github.io/Glance/
 [ParaView Web]: http://www.paraview.org/web
 [ParaView]: http://www.paraview.org
 [VTK]: http://www.vtk.org
@@ -25,7 +25,7 @@ Learning Resources
 [ParaView Discourse]: https://discourse.paraview.org/
 [Kitware Support]: http://www.kitware.com/products/support.html
 [Kitware Training]: http://www.kitware.com/products/protraining.php
-[ParaView Glance GitHub.io]: https://kitware.github.io/paraview-glance/
+[ParaView Glance GitHub.io]: https://kitware.github.io/Glance/
 
 
 Live Demonstrations
@@ -37,9 +37,9 @@ Because of ParaView Glance's ease of distribution, the stable and nightly releas
 
 Visit these URLs to run the [stable][] and [nightly][] release of ParaView Glance.
 
-[github]: https://github.com/kitware/paraview-glance
-[stable]: https://kitware.github.io/paraview-glance/app
-[nightly]: https://kitware.github.io/paraview-glance/nightly
+[github]: https://github.com/kitware/Glance
+[stable]: https://kitware.github.io/Glance/app
+[nightly]: https://kitware.github.io/Glance/nightly
 
 
 Building
@@ -51,8 +51,8 @@ If you wish to view, enhance, or adapt this application in any way, you can acce
 
 
 ```
-$ git clone https://github.com/Kitware/paraview-glance.git
-$ cd paraview-glance/
+$ git clone https://github.com/Kitware/Glance.git
+$ cd Glance/
 $ npm install
 $ npm run build
 $ npm run dev
@@ -95,7 +95,7 @@ If you have found a bug or have a suggestion for improving ParaView Glance:
 
 2. If you have a bug to report or a feature to request, please open an entry in the [ParaView Glance Issue Tracker][].
 
-[ParaView Glance Issue Tracker]: https://github.com/kitware/paraview-glance/issues
+[ParaView Glance Issue Tracker]: https://github.com/kitware/Glance/issues
 
 
 License

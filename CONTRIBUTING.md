@@ -3,15 +3,15 @@ Contributing to ParaView Glance
 
 This page documents at a very high level how to contribute to ParaView Glance Viewer.
 
-1. The ParaView Glance Viewer source is maintained on Github at [github.com/kitware/paraview-glance](https://github.com/kitware/paraview-glance)
+1. The ParaView Glance Viewer source is maintained on Github at [github.com/kitware/Glance](https://github.com/kitware/Glance)
 
 2. [Fork ParaView Glance] into your user's namespace on Github.
 
 3. Create a local clone of the main repository:
 
     ```sh
-    $ git clone https://github.com/kitware/paraview-glance.git
-    $ cd paraview-glance
+    $ git clone https://github.com/kitware/Glance.git
+    $ cd Glance
     ```
 
     The main repository will be configured as your `origin` remote.
@@ -50,5 +50,5 @@ to coordinate development and to provide support.
 
 [Fork ParaView Glance]: https://help.github.com/articles/fork-a-repo/
 [Create a Pull Request]: https://help.github.com/articles/creating-a-pull-request/
-[DevSite]: http://kitware.github.io/paraview-glance
+[DevSite]: http://kitware.github.io/Glance
 [forum]: https://discourse.paraview.org/

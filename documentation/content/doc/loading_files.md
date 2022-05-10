@@ -8,18 +8,18 @@ The most straightfoward way to load files into ParaView Glance is to hit the "Op
 If the data is remote, ParaView Glance can automatically load the data upon startup. ParaView Glance supports two query parameters: `name` and `url`. When given a name and url, Glance will load the data from `url` and name it as the given `name`. As an example, take the dataset `diskout.vtp`, located at address https://data.kitware.com/api/v1/item/59de9de58d777f31ac641dc5/download. The full URL to load the data at startup is as follows:
 
 ```
-https://kitware.github.io/paraview-glance/app/?name=diskout.vtp&url=https://data.kitware.com/api/v1/item/59de9de58d777f31ac641dc5/download
+https://kitware.github.io/Glance/app/?name=diskout.vtp&url=https://data.kitware.com/api/v1/item/59de9de58d777f31ac641dc5/download
 ```
 
-You can try out this link here: [diskout.vtp](https://kitware.github.io/paraview-glance/app/?name=diskout.vtp&url=https://data.kitware.com/api/v1/item/59de9de58d777f31ac641dc5/download)
+You can try out this link here: [diskout.vtp](https://kitware.github.io/Glance/app/?name=diskout.vtp&url=https://data.kitware.com/api/v1/item/59de9de58d777f31ac641dc5/download)
 
 In order to load multiple remote files at once on startup, wrap the query parameters in square brackets like so:
 
 ```
-https://kitware.github.io/paraview-glance/app/?name=[diskout.vtp,cow.vtp]&url=[https://data.kitware.com/api/v1/item/59de9de58d777f31ac641dc5/download,https://data.kitware.com/api/v1/file/5afd936e8d777f15ebe1b4ea/download]
+https://kitware.github.io/Glance/app/?name=[diskout.vtp,cow.vtp]&url=[https://data.kitware.com/api/v1/item/59de9de58d777f31ac641dc5/download,https://data.kitware.com/api/v1/file/5afd936e8d777f15ebe1b4ea/download]
 ```
 
-You can try out this link here: [diskout.vtp and cow.vtp](https://kitware.github.io/paraview-glance/app/?name=[diskout.vtp,cow.vtp]&url=[https://data.kitware.com/api/v1/item/59de9de58d777f31ac641dc5/download,https://data.kitware.com/api/v1/file/5afd936e8d777f15ebe1b4ea/download])
+You can try out this link here: [diskout.vtp and cow.vtp](https://kitware.github.io/Glance/app/?name=[diskout.vtp,cow.vtp]&url=[https://data.kitware.com/api/v1/item/59de9de58d777f31ac641dc5/download,https://data.kitware.com/api/v1/file/5afd936e8d777f15ebe1b4ea/download])
 
 ## Loading data from Girder
 
@@ -43,4 +43,4 @@ When saving Glance state, your data is saved along with the application state. T
 
 For remote files, Glance is smart enough to not save a copy of your dataset in the state file. For instance, if Glance had a remote URL file and a Girder file saved, Glance will automatically recognize that and only save a link to those datasets. That way, the generated state file does not contain a copy of your datasets, keeping the state file small.
 
-If you have Glance state files that are either remote or on Girder, you can load them using the techniques outlined above! Glance will restore with whatever state file you provide, whether it be from some web server or from Girder. This means you can also load Glance state files automatically via the URL, so long as the URL query parameters point to a `*.glance` file. Here is an example that loads `202-t.glance`, one of the samples found on the ParaView Glance landing page: [202-t.glance](https://kitware.github.io/paraview-glance/app/?name=202-t.glance&url=https://raw.githubusercontent.com/Kitware/paraview-glance/master/data/202-t.glance).
+If you have Glance state files that are either remote or on Girder, you can load them using the techniques outlined above! Glance will restore with whatever state file you provide, whether it be from some web server or from Girder. This means you can also load Glance state files automatically via the URL, so long as the URL query parameters point to a `*.glance` file. Here is an example that loads `202-t.glance`, one of the samples found on the ParaView Glance landing page: [202-t.glance](https://kitware.github.io/Glance/app/?name=202-t.glance&url=https://raw.githubusercontent.com/Kitware/Glance/master/data/202-t.glance).

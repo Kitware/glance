@@ -2,63 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://kitware.github.io/paraview-glance/index.html</loc>
+    <loc>https://kitware.github.io/Glance/gallery/index.html</loc>
     
-    <lastmod>2022-04-19</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://kitware.github.io/paraview-glance/gallery/index.html</loc>
-    
-    <lastmod>2022-04-19</lastmod>
+    <lastmod>2022-05-10</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://kitware.github.io/paraview-glance/doc/keyboard_shortcuts.html</loc>
+    <loc>https://kitware.github.io/Glance/doc/keyboard_shortcuts.html</loc>
     
-    <lastmod>2022-04-19</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://kitware.github.io/paraview-glance/doc/loading_files.html</loc>
-    
-    <lastmod>2022-04-19</lastmod>
+    <lastmod>2022-05-10</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://kitware.github.io/paraview-glance/doc/readers.html</loc>
+    <loc>https://kitware.github.io/Glance/doc/loading_files.html</loc>
     
-    <lastmod>2022-04-19</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://kitware.github.io/paraview-glance/doc/index.html</loc>
-    
-    <lastmod>2022-04-19</lastmod>
+    <lastmod>2022-05-10</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://kitware.github.io/paraview-glance/2016/04/29/kw-doc/</loc>
+    <loc>https://kitware.github.io/Glance/doc/readers.html</loc>
     
-    <lastmod>2022-04-19</lastmod>
+    <lastmod>2022-05-10</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kitware.github.io/Glance/doc/index.html</loc>
+    
+    <lastmod>2022-05-10</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kitware.github.io/Glance/2016/04/29/kw-doc/</loc>
+    
+    <lastmod>2022-05-10</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -66,8 +57,8 @@
   
 
   <url>
-    <loc>https://kitware.github.io/paraview-glance</loc>
-    <lastmod>2022-04-19</lastmod>
+    <loc>https://kitware.github.io/Glance</loc>
+    <lastmod>2022-05-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

@@ -1,22 +1,22 @@
-Contributing to ParaView Glance
+Contributing to Glance
 ================================
 
-This page documents at a very high level how to contribute to ParaView Glance Viewer.
+This page documents at a very high level how to contribute to the Glance Viewer.
 
-1. The ParaView Glance Viewer source is maintained on Github at [github.com/kitware/Glance](https://github.com/kitware/Glance)
+1. Glance's source is maintained on Github at [github.com/kitware/glance](https://github.com/kitware/glance)
 
-2. [Fork ParaView Glance] into your user's namespace on Github.
+2. [Fork Glance] into your user's namespace on Github.
 
 3. Create a local clone of the main repository:
 
     ```sh
-    $ git clone https://github.com/kitware/Glance.git
+    $ git clone https://github.com/kitware/glance.git
     $ cd Glance
     ```
 
     The main repository will be configured as your `origin` remote.
 
-4. Run the setup script to prepare ParaView Glance:
+4. Run the setup script to prepare Glance:
     ```sh
     $ npm install
     ```
@@ -40,7 +40,7 @@ This page documents at a very high level how to contribute to ParaView Glance Vi
     For more information see: [Create a Pull Request]
 
 
-ParaView Glance Viewer uses Github for code review and Travis-CI to test proposed
+Glance uses Github for code review and Travis-CI to test proposed
 patches before they are merged.
 
 Our [DevSite] is used to document features, flesh out designs and host other
@@ -48,7 +48,7 @@ documentation as well as the API. There are also a [forum]
 to coordinate development and to provide support.
 
 
-[Fork ParaView Glance]: https://help.github.com/articles/fork-a-repo/
+[Fork Glance]: https://help.github.com/articles/fork-a-repo/
 [Create a Pull Request]: https://help.github.com/articles/creating-a-pull-request/
-[DevSite]: http://kitware.github.io/Glance
+[DevSite]: http://kitware.github.io/glance
 [forum]: https://discourse.paraview.org/

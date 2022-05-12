@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://kitware.github.io/Glance/index.html</loc>
+    <loc>https://kitware.github.io/glance/index.html</loc>
     
     <lastmod>2022-05-12</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>https://kitware.github.io/Glance/gallery/index.html</loc>
+    <loc>https://kitware.github.io/glance/gallery/index.html</loc>
     
     <lastmod>2022-05-12</lastmod>
     
@@ -20,7 +20,7 @@
   </url>
   
   <url>
-    <loc>https://kitware.github.io/Glance/doc/index.html</loc>
+    <loc>https://kitware.github.io/glance/doc/index.html</loc>
     
     <lastmod>2022-05-12</lastmod>
     
@@ -29,7 +29,7 @@
   </url>
   
   <url>
-    <loc>https://kitware.github.io/Glance/doc/keyboard_shortcuts.html</loc>
+    <loc>https://kitware.github.io/glance/doc/keyboard_shortcuts.html</loc>
     
     <lastmod>2022-05-12</lastmod>
     
@@ -38,7 +38,7 @@
   </url>
   
   <url>
-    <loc>https://kitware.github.io/Glance/doc/loading_files.html</loc>
+    <loc>https://kitware.github.io/glance/doc/loading_files.html</loc>
     
     <lastmod>2022-05-12</lastmod>
     
@@ -47,7 +47,7 @@
   </url>
   
   <url>
-    <loc>https://kitware.github.io/Glance/doc/readers.html</loc>
+    <loc>https://kitware.github.io/glance/doc/readers.html</loc>
     
     <lastmod>2022-05-12</lastmod>
     
@@ -56,7 +56,7 @@
   </url>
   
   <url>
-    <loc>https://kitware.github.io/Glance/2016/04/29/kw-doc/</loc>
+    <loc>https://kitware.github.io/glance/2016/04/29/kw-doc/</loc>
     
     <lastmod>2022-05-12</lastmod>
     
@@ -66,7 +66,7 @@
   
 
   <url>
-    <loc>https://kitware.github.io/Glance</loc>
+    <loc>https://kitware.github.io/glance</loc>
     <lastmod>2022-05-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>

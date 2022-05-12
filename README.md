@@ -2,10 +2,10 @@
 
 Introduction
 ============
-[ParaView Glance][] is an open-source, javascript visualization application created by [Kitware][], based on [Visualization Toolkit (VTK)][VTK], and intended to serve as a light-weight companion to [Paraview][].  It is part of
+[Glance][] is an open-source, javascript visualization application created by [Kitware][], based on [Visualization Toolkit (VTK)][VTK], and intended to serve as a light-weight companion to [Paraview][].  It is part of
 the [ParaView Web][] suite of tools.
 
-[ParaView Glance]: https://kitware.github.io/Glance/
+[Glance]: https://kitware.github.io/glance/
 [ParaView Web]: http://www.paraview.org/web
 [ParaView]: http://www.paraview.org
 [VTK]: http://www.vtk.org
@@ -20,26 +20,26 @@ Learning Resources
 
 * Commercial [support][Kitware Support] and [training][Kitware Training] are available from [Kitware][].
 
-* Additional documentation is being created and will be released as it is created on our [documentation pages][ParaView Glance GitHub.io].
+* Additional documentation is being created and will be released as it is created on our [documentation pages][Glance GitHub.io].
 
 [ParaView Discourse]: https://discourse.paraview.org/
 [Kitware Support]: http://www.kitware.com/products/support.html
 [Kitware Training]: http://www.kitware.com/products/protraining.php
-[ParaView Glance GitHub.io]: https://kitware.github.io/Glance/
+[Glance GitHub.io]: https://kitware.github.io/glance/
 
 
 Live Demonstrations
 ===================
 
-As a javascript application, ParaView Glance can be run by pointing any browser at an appropriate URL or loading an HTML file.
+As a javascript application, Glance can be run by pointing any browser at an appropriate URL or loading an HTML file.
 
-Because of ParaView Glance's ease of distribution, the stable and nightly releases of the code on [github][] can be run by visiting the appropriate web page:
+Because of Glance's ease of distribution, the stable and nightly releases of the code on [github][] can be run by visiting the appropriate web page:
 
-Visit these URLs to run the [stable][] and [nightly][] release of ParaView Glance.
+Visit these URLs to run the [stable][] and [nightly][] release of Glance.
 
-[github]: https://github.com/kitware/Glance
-[stable]: https://kitware.github.io/Glance/app
-[nightly]: https://kitware.github.io/Glance/nightly
+[github]: https://github.com/kitware/glance
+[stable]: https://kitware.github.io/glance/app
+[nightly]: https://kitware.github.io/glance/nightly
 
 
 Building
@@ -51,8 +51,8 @@ If you wish to view, enhance, or adapt this application in any way, you can acce
 
 
 ```
-$ git clone https://github.com/Kitware/Glance.git
-$ cd Glance/
+$ git clone https://github.com/Kitware/glance.git
+$ cd glance/
 $ npm install
 $ npm run build
 $ npm run dev
@@ -89,19 +89,19 @@ $ npx itk-js build itk/
 Reporting Bugs and Making Contributions
 =======================================
 
-If you have found a bug or have a suggestion for improving ParaView Glance:
+If you have found a bug or have a suggestion for improving Glance:
 
 1. If you have source code to contribute, please fork the github repository into your own github account, create a branch with your changes, and then create a merge request with the main repo.
 
-2. If you have a bug to report or a feature to request, please open an entry in the [ParaView Glance Issue Tracker][].
+2. If you have a bug to report or a feature to request, please open an entry in the [Glance Issue Tracker][].
 
-[ParaView Glance Issue Tracker]: https://github.com/kitware/Glance/issues
+[Glance Issue Tracker]: https://github.com/kitware/glance/issues
 
 
 License
 =======
 
-ParaView Glance is distributed under the OSI-approved BSD 3-clause License.  See [COPYRIGHT][] and [LICENSE][] for details. For additional licenses, refer to [ParaView Licenses][].
+Glance is distributed under the OSI-approved BSD 3-clause License.  See [COPYRIGHT][] and [LICENSE][] for details. For additional licenses, refer to [ParaView Licenses][].
 
 [COPYRIGHT]: COPYRIGHT
 [LICENSE]: LICENSE

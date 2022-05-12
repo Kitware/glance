@@ -1,15 +1,15 @@
 module.exports = {
-  baseUrl: '/Glance',
+  baseUrl: '/glance',
   work: './build-tmp',
   config: {
-    title: 'ParaView Glance',
+    title: 'Glance',
     description: '"The Web Viewer for your data"',
     subtitle: '"Enable visualization on any computer."',
     author: 'Kitware Inc.',
     timezone: 'UTC',
-    url: 'https://kitware.github.io/Glance',
-    root: '/Glance/',
-    github: 'kitware/Glance',
+    url: 'https://kitware.github.io/glance',
+    root: '/glance/',
+    github: 'kitware/glance',
     google_analytics: 'UA-90338862-10',
   },
   copy: [

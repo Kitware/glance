@@ -1,5 +1,5 @@
 {
-  "name": "Glance",
+  "name": "glance",
   "version": "0.0.0-semantically-release",
   "description": "Web application for Visualizing Scientific and Medical datasets",
   "keywords": [
@@ -16,13 +16,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kitware/Glance.git"
+    "url": "https://github.com/kitware/glance.git"
   },
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/kitware/Glance/issues"
+    "url": "https://github.com/kitware/glance/issues"
   },
-  "homepage": "https://github.com/kitware/Glance",
+  "homepage": "https://github.com/kitware/glance",
   "scripts": {
     "validate": "prettier --config ./prettier.config.js --list-different \"src/**/*.js\"",
     "reformat": "prettier --config ./prettier.config.js --write \"src/**/*.js\"",

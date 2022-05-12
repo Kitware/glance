@@ -1,5 +1,5 @@
 {
-  "name": "paraview-glance",
+  "name": "Glance",
   "version": "0.0.0-semantically-release",
   "description": "Web application for Visualizing Scientific and Medical datasets",
   "keywords": [
@@ -16,13 +16,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kitware/paraview-glance.git"
+    "url": "https://github.com/kitware/Glance.git"
   },
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/kitware/paraview-glance/issues"
+    "url": "https://github.com/kitware/Glance/issues"
   },
-  "homepage": "https://github.com/kitware/paraview-glance#readme",
+  "homepage": "https://github.com/kitware/Glance",
   "scripts": {
     "validate": "prettier --config ./prettier.config.js --list-different \"src/**/*.js\"",
     "reformat": "prettier --config ./prettier.config.js --write \"src/**/*.js\"",

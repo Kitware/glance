@@ -145,8 +145,20 @@
           <v-card-title
             class="justify-center text-center title black--text pv-break-word"
           >
-            Loading {{ autoloadLabel }}...
+            Loading {{ autoloadLabel }}&nbsp;
+            <span v-if="fileLoadingProgress === 1">
+              (reading...)
+            </span>
+            <span v-else-if="fileLoadingProgress !== Infinity">
+              ({{ Math.round(fileLoadingProgress * 100) }}%)
+            </span>
           </v-card-title>
+          <v-card-text>
+            <v-progress-linear
+              :indeterminate="fileLoadingProgress === Infinity"
+              :value="fileLoadingProgress * 100"
+            />
+          </v-card-text>
         </v-card>
       </v-dialog>
 

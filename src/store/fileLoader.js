@@ -5,6 +5,7 @@ import vtkImageData from '@kitware/vtk.js/Common/DataModel/ImageData';
 
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import postProcessDataset from 'paraview-glance/src/io/postProcessing';
+import Vue from 'vue';
 
 // ----------------------------------------------------------------------------
 
@@ -86,6 +87,7 @@ export default ({ proxyManager, girder }) => ({
     remoteFileList: [],
     fileList: [],
     loading: false,
+    progress: {},
   },
 
   getters: {
@@ -93,6 +95,17 @@ export default ({ proxyManager, girder }) => ({
       return state.fileList.reduce(
         (flag, file) => flag || file.state === 'error',
         false
+      );
+    },
+
+    totalProgress(state) {
+      const itemProgresses = Object.values(state.progress);
+      if (itemProgresses.length === 0) {
+        return 0;
+      }
+      return (
+        itemProgresses.reduce((sum, val) => sum + val, 0) /
+        itemProgresses.length
       );
     },
   },
@@ -185,6 +198,14 @@ export default ({ proxyManager, girder }) => ({
       if (index >= 0 && index < state.fileList.length) {
         state.fileList.splice(index, 1);
       }
+    },
+
+    setProgress(state, { id, percentage }) {
+      Vue.set(state.progress, id, percentage);
+    },
+
+    clearProgresses(state) {
+      state.progress = {};
     },
   },
 
@@ -294,11 +315,15 @@ export default ({ proxyManager, girder }) => ({
             'Girder-Token': girder.girderRest.token,
           };
         }
-        ret = ReaderFactory.downloadDataset(
-          file.name,
-          file.remoteURL,
-          file.remoteOpts
-        )
+        ret = ReaderFactory.downloadDataset(file.name, file.remoteURL, {
+          ...file.remoteOpts,
+          progressCallback(progress) {
+            const percentage = progress.lengthComputable
+              ? progress.loaded / progress.total
+              : Infinity;
+            commit('setProgress', { id: file.name, percentage });
+          },
+        })
           .then((datasetFile) => {
             commit('setRemoteFile', {
               index: fileIndex,
@@ -381,6 +406,7 @@ export default ({ proxyManager, girder }) => ({
 
     load({ state, commit, dispatch }) {
       commit('startLoading');
+      commit('clearProgresses');
 
       const readyFiles = state.fileList.filter((f) => f.state === 'ready');
       let promise = Promise.resolve();

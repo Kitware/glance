@@ -247,7 +247,15 @@ function createStore(injected) {
                 };
               }
 
-              return ReaderFactory.downloadDataset(name, url, options)
+              return ReaderFactory.downloadDataset(name, url, {
+                ...options,
+                progressCallback(progress) {
+                  const percentage = progress.lengthComputable
+                    ? progress.loaded / progress.total
+                    : Infinity;
+                  commit('files/setProgress', { id: name, percentage });
+                },
+              })
                 .then((file) => ReaderFactory.loadFiles([file]))
                 .then((readers) => readers[0])
                 .then(({ dataset, reader }) => {

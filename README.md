@@ -33,13 +33,9 @@ Live Demonstrations
 
 As a javascript application, Glance can be run by pointing any browser at an appropriate URL or loading an HTML file.
 
-Because of Glance's ease of distribution, the stable and nightly releases of the code on [github][] can be run by visiting the appropriate web page:
+[Click on this link][app] to run the live version of Glance.
 
-Visit these URLs to run the [stable][] and [nightly][] release of Glance.
-
-[github]: https://github.com/kitware/glance
-[stable]: https://kitware.github.io/glance/app
-[nightly]: https://kitware.github.io/glance/nightly
+[app]: https://kitware.github.io/glance/app
 
 
 Building

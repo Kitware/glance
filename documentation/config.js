@@ -15,20 +15,16 @@ module.exports = {
   copy: [
     {
       src: '../dist/*',
-      dest: './build-tmp/public/nightly',
+      dest: './build-tmp/public/app',
     },
     {
-      src: '../stable/dist/*',
-      dest: './build-tmp/public/app',
+      src: '../dist/redirect-app.html',
+      dest: './build-tmp/public/nightly/index.html',
+      destIsTarget: true,
     },
     // use analytics-enabled index.html
     {
       src: '../dist/index-ga.html',
-      dest: './build-tmp/public/nightly/index.html',
-      destIsTarget: true,
-    },
-    {
-      src: '../stable/dist/index-ga.html',
       dest: './build-tmp/public/app/index.html',
       destIsTarget: true,
     },

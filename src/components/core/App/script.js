@@ -90,6 +90,7 @@ export default {
     }),
     ...mapGetters('files', {
       anyFileLoadingErrors: 'anyErrors',
+      fileLoadingProgress: 'totalProgress',
     }),
   },
   proxyManagerHooks: {

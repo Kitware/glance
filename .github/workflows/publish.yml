@@ -23,19 +23,8 @@ jobs:
         run: npm run validate
       - name: Build
         run: npm run build:release
-
-      - name: stable - check out worktree
-        run: git worktree add -f stable stable
-      - name: stable - Install dependencies
-        working-directory: ./stable
-        run: npm ci
-      - name: stable - Build
-        working-directory: ./stable
-        run: npm run build:release
-      - name: stable - Write version
-        working-directory: ./stable
+      - name: Write version
         run: npm run version
-
       - name: Generate bundle
         run: npm run bundle
 
@@ -48,9 +37,6 @@ jobs:
         env:
           GIT_PUBLISH_URL: https://${{ secrets.GH_PUBLISH_CREDS }}@github.com/Kitware/glance.git
         run: npm run doc:publish
-
-      - name: stable - remove worktree
-        run: git worktree remove --force stable
 
       - name: Release
         env:

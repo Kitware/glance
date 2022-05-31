@@ -2,6 +2,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { mergeWithRules } = require('webpack-merge');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const baseConfig = require('./webpack.base.config');
 
@@ -88,6 +89,13 @@ module.exports = merge(baseConfig, {
     ],
   },
   plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'static/redirect-app.html',
+        },
+      ]
+    }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'static/index.html',

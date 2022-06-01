@@ -1,6 +1,7 @@
 menu:
   documentation: Documentation
   gallery: Gallery
+  app: Launch App
   nightly: Nightly
   news: News
   search: Search

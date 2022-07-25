@@ -26,6 +26,7 @@ module.exports = {
     path: paths.output,
     filename: '[name].[contenthash].js',
     libraryTarget: 'umd',
+    publicPath: '',
   },
   module: {
     rules: [

@@ -20,6 +20,15 @@
   </url>
   
   <url>
+    <loc>https://kitware.github.io/glance/doc/index.html</loc>
+    
+    <lastmod>2022-08-10</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://kitware.github.io/glance/doc/keyboard_shortcuts.html</loc>
     
     <lastmod>2022-08-10</lastmod>
@@ -39,15 +48,6 @@
   
   <url>
     <loc>https://kitware.github.io/glance/doc/readers.html</loc>
-    
-    <lastmod>2022-08-10</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://kitware.github.io/glance/doc/index.html</loc>
     
     <lastmod>2022-08-10</lastmod>
     

@@ -1,4 +1,4 @@
-![Glance](documentation/content/ParaViewGlance_Logo.png)
+![Glance](documentation/content/GlanceLogo.png)
 
 Introduction
 ============

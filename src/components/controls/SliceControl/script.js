@@ -27,6 +27,21 @@ function generateSetGet(field) {
 
 // ----------------------------------------------------------------------------
 
+function generateSetGetSliceDomain(name) {
+  return {
+    set() {},
+    get() {
+      return {
+        ...this.domains[name],
+        min: Math.floor(this.domains[name].min),
+        max: Math.floor(this.domains[name].max),
+      };
+    },
+  };
+}
+
+// ----------------------------------------------------------------------------
+
 const FIELDS = [
   { name: 'visibility', initialValue: false },
   { name: 'windowLevel', initialValue: 1024 },
@@ -38,6 +53,18 @@ const FIELDS = [
   { name: 'ySliceVisibility', initialValue: false },
   { name: 'zSliceVisibility', initialValue: false },
   { name: 'opacity', initialValue: 1.0 },
+  {
+    name: 'xSliceDomain',
+    computed: generateSetGetSliceDomain('xSlice'),
+  },
+  {
+    name: 'ySliceDomain',
+    computed: generateSetGetSliceDomain('ySlice'),
+  },
+  {
+    name: 'zSliceDomain',
+    computed: generateSetGetSliceDomain('zSlice'),
+  },
   // Fake props that don't exist on proxy
   {
     name: 'toggleSliceX',

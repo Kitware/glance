@@ -10,15 +10,15 @@ const MAX_SLIDER_STEPS = 500;
 /* eslint-disable no-param-reassign */
 function extractDomains(domains, uiList) {
   for (let i = 0; i < uiList.length; i++) {
-    if (uiList[i].name && uiList[i].domain) {
+    const { name } = uiList[i];
+    if (name && uiList[i].domain) {
       const { domain } = uiList[i];
-      domains[uiList[i].name] = { ...domain };
+      domains[name] = { ...domain };
       if (domain.step && domain.step === 'any') {
         if (Number.isInteger(domain.min) && Number.isInteger(domain.max)) {
-          domains[uiList[i].name].step = 0.01;
+          domains[name].step = 0.01;
         } else {
-          domains[uiList[i].name].step =
-            (domain.max - domain.min) / MAX_SLIDER_STEPS;
+          domains[name].step = (domain.max - domain.min) / MAX_SLIDER_STEPS;
         }
       }
     } else if (uiList[i].children) {

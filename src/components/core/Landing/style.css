@@ -2,6 +2,7 @@
   display: flex;
   flex-flow: column;
   height: 100%;
+  padding-bottom: 16px;
 }
 
 .dnd {

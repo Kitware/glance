@@ -245,8 +245,8 @@ export default (toolName, extraComponent = {}) => ({
       // since normal points away from camera, have handle normal point
       // towards camera so the paint widget can render the handle on top
       // of the image.
-      manipulator.setNormal(normal);
-      manipulator.setOrigin(position);
+      manipulator.setUserNormal(normal);
+      manipulator.setUserOrigin(position);
     },
     toggleLock() {
       if (this.lockToSlice === null) {

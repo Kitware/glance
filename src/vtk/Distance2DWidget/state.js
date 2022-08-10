@@ -5,7 +5,7 @@ export default function generateState() {
     .createBuilder()
     .addStateFromMixin({
       labels: ['moveHandle'],
-      mixins: ['origin', 'color', 'scale1', 'visible'],
+      mixins: ['origin', 'color', 'scale1', 'visible', 'manipulator'],
       name: 'moveHandle',
       initialValues: {
         scale1: 50,
@@ -15,11 +15,12 @@ export default function generateState() {
     })
     .addDynamicMixinState({
       labels: ['handles'],
-      mixins: ['origin', 'color', 'scale1'],
+      mixins: ['origin', 'color', 'scale1', 'visible', 'manipulator'],
       name: 'handle',
       initialValues: {
         scale1: 50,
         origin: [0, 0, 0],
+        visible: true,
       },
     })
     .build();

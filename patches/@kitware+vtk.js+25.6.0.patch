@@ -1,0 +1,23 @@
+diff --git a/node_modules/@kitware/vtk.js/Widgets/SVG/SVGRepresentation.js b/node_modules/@kitware/vtk.js/Widgets/SVG/SVGRepresentation.js
+index fe75b1a..2f3b42d 100644
+--- a/node_modules/@kitware/vtk.js/Widgets/SVG/SVGRepresentation.js
++++ b/node_modules/@kitware/vtk.js/Widgets/SVG/SVGRepresentation.js
+@@ -82,12 +82,13 @@ function vtkSVGRepresentation(publicAPI, model) {
+   publicAPI.addActor(model.psActor); // --------------------------------------------------------------------------
+ 
+   publicAPI.worldPointsToPixelSpace = function (points3d) {
+-    var pts = new Float32Array(points3d.length * 3);
++    const validPoints = points3d.filter(Boolean);
++    var pts = new Float32Array(validPoints.length * 3);
+ 
+-    for (var i = 0; i < points3d.length; i++) {
+-      pts[i * 3 + 0] = points3d[i][0];
+-      pts[i * 3 + 1] = points3d[i][1];
+-      pts[i * 3 + 2] = points3d[i][2];
++    for (var i = 0; i < validPoints.length; i++) {
++      pts[i * 3 + 0] = validPoints[i][0];
++      pts[i * 3 + 1] = validPoints[i][1];
++      pts[i * 3 + 2] = validPoints[i][2];
+     }
+ 
+     model.points.getPoints().setData(pts);

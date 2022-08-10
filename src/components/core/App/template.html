@@ -33,8 +33,8 @@
               v-on:click.prevent="toggleLanding"
             >
               <svg-icon
-                :icon="`paraview-glance${smallScreen ? '-small' : ''}`"
-                height="52px"
+                :icon="`glance-logo${smallScreen ? '-mark' : ''}`"
+                height="36px"
                 style="margin-top: 6px"
               />
             </a>
@@ -91,12 +91,7 @@
               v-on:click="aboutDialog = true"
               :state="state"
             >
-              <!-- width of other icons in toolbar -->
-              <svg-icon
-                icon="kitware-logo"
-                width="24px"
-                class="mr-2"
-              />
+              <v-icon left>mdi-information</v-icon>
               <span v-show="state !== 'dense'">About</span>
             </collapsible-toolbar-item>
           </template>

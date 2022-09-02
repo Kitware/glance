@@ -31,11 +31,12 @@ function generateSetGetSliceDomain(name) {
   return {
     set() {},
     get() {
-      return {
-        ...this.domains[name],
-        min: Math.floor(this.domains[name].min),
-        max: Math.floor(this.domains[name].max),
-      };
+      const domain = { ...this.domains[name] };
+      if (domain && 'min' in domain && 'max' in domain) {
+        domain.min = Math.floor(domain.min);
+        domain.max = Math.floor(domain.max);
+      }
+      return domain;
     },
   };
 }

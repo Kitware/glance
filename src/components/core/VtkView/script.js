@@ -177,6 +177,7 @@ export default {
       if (view) {
         this.internalViewId = view.getProxyId();
         view.setContainer(this.$el.querySelector('.js-view'));
+        view.setOrientationAxesVisibility(this.axisVisible);
         const widgetManager = view.getReferenceByName('widgetManager');
         if (widgetManager) {
           widgetManager.setUseSvgLayer(true);

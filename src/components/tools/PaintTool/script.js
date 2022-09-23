@@ -446,7 +446,7 @@ export default {
       );
       // representation is in XYZ, not IJK, so slice is in world space
       position[view.getAxis()] = representation.getSlice();
-      manipulator.setOrigin(position);
+      manipulator.setHandleOrigin(position);
     },
     enablePainting() {
       const paintProxy = this.$proxyManager.createProxy('Widgets', 'Paint');

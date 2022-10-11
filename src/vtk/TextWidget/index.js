@@ -16,7 +16,7 @@ import { ViewTypes } from '@kitware/vtk.js/Widgets/Core/WidgetManager/Constants'
 // ----------------------------------------------------------------------------
 
 function vtkTextWidget(publicAPI, model) {
-  model.classHierarchy.push('vtkDistanceWidget');
+  model.classHierarchy.push('vtkTextWidget');
 
   // --- Widget Requirement ---------------------------------------------------
 

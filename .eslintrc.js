@@ -29,6 +29,7 @@ module.exports = {
     'no-plusplus': 0,
     'import/no-extraneous-dependencies': 0, // paraview-glance alias
     'linebreak-style': 0,
+    'no-underscore-dangle': 0,
 
     'vue/component-tags-order': 0,
 

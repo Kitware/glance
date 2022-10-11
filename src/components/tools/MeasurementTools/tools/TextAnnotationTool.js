@@ -4,7 +4,7 @@ import create2DTool, {
 
 // ----------------------------------------------------------------------------
 
-const RulerComponent = create2DTool('Text', {
+const TextComponent = create2DTool('Text', {
   watch: {
     name() {
       this.updateMeasurements();
@@ -59,4 +59,4 @@ const RulerComponent = create2DTool('Text', {
   },
 });
 
-export default RulerComponent;
+export default TextComponent;

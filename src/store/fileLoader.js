@@ -17,7 +17,7 @@ function getSupportedExtensions() {
 
 // ----------------------------------------------------------------------------
 
-function getExtension(filename) {
+export function getExtension(filename) {
   const i = filename.lastIndexOf('.');
   if (i > -1) {
     return filename.substr(i + 1).toLowerCase();

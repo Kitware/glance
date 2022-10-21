@@ -11,7 +11,7 @@ import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import postProcessDataset from 'paraview-glance/src/io/postProcessing';
 import Config from 'paraview-glance/src/config';
-import files from 'paraview-glance/src/store/fileLoader';
+import files, { getExtension } from 'paraview-glance/src/store/fileLoader';
 import views from 'paraview-glance/src/store/views';
 import widgets from 'paraview-glance/src/store/widgets';
 import animations from 'paraview-glance/src/store/animations';
@@ -26,6 +26,10 @@ const STATE_VERSION = 2;
 // http://jsperf.com/typeofvar
 function typeOf(o) {
   return {}.toString.call(o).slice(8, -1).toLowerCase();
+}
+
+function extractFilenameFromUrl(url) {
+  return url.split('/').pop()?.split('?').shift();
 }
 
 // quick object merge using Vue.set
@@ -247,17 +251,35 @@ function createStore(injected) {
                 };
               }
 
-              return ReaderFactory.downloadDataset(name, url, {
-                ...options,
-                progressCallback(progress) {
-                  const percentage = progress.lengthComputable
-                    ? progress.loaded / progress.total
-                    : Infinity;
-                  commit('files/setProgress', { id: name, percentage });
-                },
-              })
-                .then((file) => ReaderFactory.loadFiles([file]))
-                .then((readers) => readers[0])
+              let loadDataset;
+
+              if (ds.seriesUrls) {
+                const extension = getExtension(ds.name);
+                const promises = ds.seriesUrls.map((u) =>
+                  ReaderFactory.downloadDataset(
+                    extractFilenameFromUrl(u),
+                    u,
+                    options
+                  )
+                );
+                loadDataset = Promise.all(promises).then((fileSeries) =>
+                  ReaderFactory.loadFileSeries(fileSeries, extension, name)
+                );
+              } else {
+                loadDataset = ReaderFactory.downloadDataset(name, url, {
+                  ...options,
+                  progressCallback(progress) {
+                    const percentage = progress.lengthComputable
+                      ? progress.loaded / progress.total
+                      : Infinity;
+                    commit('files/setProgress', { id: name, percentage });
+                  },
+                })
+                  .then((file) => ReaderFactory.loadFiles([file]))
+                  .then((readers) => readers[0]);
+              }
+
+              return loadDataset
                 .then(({ dataset, reader }) => {
                   let outDS = null;
                   if (reader && reader.getOutputData) {
@@ -269,20 +291,21 @@ function createStore(injected) {
                     return null;
                   }
 
-                  if (outDS) {
-                    if (ds.serializedType === 'girder') {
-                      outDS = postProcessDataset(outDS, ds.meta);
-                      restoreProxyKeys.set(outDS, {
-                        girderProvenance: ds.provenance,
-                        girderItem: ds.item,
-                        meta: ds.meta,
-                      });
-                    } else {
-                      outDS.set(ds, true); // Attach remote data origin
-                    }
-                    return outDS;
+                  if (!outDS) {
+                    throw new Error('Invalid dataset');
                   }
-                  throw new Error('Invalid dataset');
+
+                  if (ds.serializedType === 'girder') {
+                    outDS = postProcessDataset(outDS, ds.meta);
+                    restoreProxyKeys.set(outDS, {
+                      girderProvenance: ds.provenance,
+                      girderItem: ds.item,
+                      meta: ds.meta,
+                    });
+                  } else {
+                    outDS.set(ds, true); // Attach remote data origin
+                  }
+                  return outDS;
                 })
                 .catch((e) => {
                   // more meaningful error

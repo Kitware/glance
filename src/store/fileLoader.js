@@ -370,8 +370,8 @@ export default ({ proxyManager, girder }) => ({
                 index: fileIndex,
                 error,
               });
+              return ret;
             }
-            return ret;
           }
         }
 

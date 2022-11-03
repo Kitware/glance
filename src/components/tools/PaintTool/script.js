@@ -80,6 +80,7 @@ export default {
   computed: {
     ...mapState('widgets', {
       imageToLabelmaps: (state) => state.imageToLabelmaps,
+      labelmapToImage: (state) => state.labelmapToImage,
       labelmapStates: (state) => state.labelmapStates,
     }),
     labelmaps() {
@@ -98,6 +99,11 @@ export default {
     },
     activeLabelmapProxy() {
       return this.$proxyManager.getProxyById(this.activeLabelmapId);
+    },
+    activeLabelmapParentImageProxy() {
+      return this.$proxyManager.getProxyById(
+        this.labelmapToImage[this.activeLabelmapId]
+      );
     },
     activeLabelmapState() {
       return this.labelmapStates[this.activeLabelmapId];
@@ -248,6 +254,9 @@ export default {
           labelmapState,
         });
       },
+      deleteLabelmapInternal(dispatch, labelmapId) {
+        return dispatch('widgets/deleteLabelmap', labelmapId);
+      },
     }),
     setRadius(r) {
       this.radius = Math.max(1, Math.round(r));
@@ -264,7 +273,10 @@ export default {
       }
     },
     deleteLabelmap() {
-      this.$proxyManager.deleteProxy(this.activeLabelmapProxy);
+      if (this.activeLabelmapProxy) {
+        this.deleteLabelmapInternal(this.activeLabelmapProxy.getProxyId());
+        this.$proxyManager.deleteProxy(this.activeLabelmapProxy);
+      }
     },
     filterImageData(source) {
       return (
@@ -306,13 +318,6 @@ export default {
 
         const baseImageName = this.targetImageProxy.getName();
         lmProxy.setName(`Labelmap ${labelmapNum} ${baseImageName}`);
-
-        if (this.targetImageProxy.getKey('girderProvenance')) {
-          lmProxy.setKey(
-            'girderProvenance',
-            this.targetImageProxy.getKey('girderProvenance')
-          );
-        }
 
         const labelMap = createLabelMapFromImage(backgroundImage);
         labelMap.setLabelColor(lmState.selectedLabel, fromHex(this.palette[0]));
@@ -538,12 +543,19 @@ export default {
       this.widgetId = -1;
     },
     upload() {
-      const proxy = this.activeLabelmapProxy;
-      if (proxy) {
-        setTimeout(() => {
+      setTimeout(() => {
+        const proxy = this.activeLabelmapProxy;
+        const parentImageProxy = this.activeLabelmapParentImageProxy;
+        if (proxy && parentImageProxy) {
+          if (parentImageProxy.getKey('girderProvenance')) {
+            proxy.setKey(
+              'girderProvenance',
+              parentImageProxy.getKey('girderProvenance')
+            );
+          }
           this.$root.$emit('girder_upload_proxy', this.activeLabelmapId);
-        }, 10);
-      }
+        }
+      }, 10);
     },
   },
 };

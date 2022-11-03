@@ -17,6 +17,7 @@ export default ({ proxyManager }) => ({
 
     // paint
     imageToLabelmaps: {}, // image id -> [labelmap ids]
+    labelmapToImage: {}, // labelmap id -> parent image id
     labelmapStates: {}, // labelmap id -> { selectedLabel, lastColorIndex }
 
     // crop
@@ -33,7 +34,18 @@ export default ({ proxyManager }) => ({
       if (!(imageId in state.imageToLabelmaps)) {
         Vue.set(state.imageToLabelmaps, imageId, []);
       }
+      Vue.set(state.labelmapToImage, labelmapId, imageId);
       state.imageToLabelmaps[imageId].push(labelmapId);
+    },
+    deleteLabelmap(state, labelmapId) {
+      if (labelmapId in state.labelmapToImage) {
+        const imageId = state.labelmapToImage[labelmapId];
+        Vue.delete(state.labelmapToImage, labelmapId);
+        state.imageToLabelmaps[imageId].splice(
+          state.imageToLabelmaps[imageId].indexOf(labelmapId),
+          1
+        );
+      }
     },
     setLabelmapState(state, { labelmapId, labelmapState }) {
       Vue.set(state.labelmapStates, labelmapId, labelmapState);
@@ -72,10 +84,17 @@ export default ({ proxyManager }) => ({
           idMapping
         );
       });
+
+      const newLabelmapToImage = {};
+      Object.entries(state.labelmapToImage).forEach(([lmId, imageId]) => {
+        newLabelmapToImage[idMapping[lmId]] = idMapping[imageId];
+      });
+      state.labelmapToImage = newLabelmapToImage;
     },
   },
   actions: {
     addLabelmapToImage: wrapMutationAsAction('addLabelmapToImage'),
+    deleteLabelmap: wrapMutationAsAction('deleteLabelmap'),
     setLabelmapState: wrapMutationAsAction('setLabelmapState'),
     addMeasurementTool: wrapMutationAsAction('addMeasurementTool'),
     removeMeasurementTool: wrapMutationAsAction('removeMeasurementTool'),

@@ -15,6 +15,7 @@ export default function postProcessDataset(ds, meta = {}) {
   if (meta.glanceDataType === 'vtkLabelMap') {
     const lm = copyImageToLabelMap(ds);
     if (meta.colorMap) {
+      console.log("labelmap");
       lm.setColorMap(meta.colorMap);
     }
     return lm;

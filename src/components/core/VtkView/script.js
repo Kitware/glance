@@ -4,14 +4,13 @@ import { Breakpoints } from 'paraview-glance/src/constants';
 import {
   ANNOTATIONS,
   DEFAULT_VIEW_TYPE,
-  VIEW_TYPES,
-  VIEW_TYPES_LPS,
-  VIEW_ORIENTATIONS,
 } from 'paraview-glance/src/components/core/VtkView/constants';
 
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import ToolbarSheet from 'paraview-glance/src/components/core/ToolbarSheet';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
+
+import { updateViewOrientationFromBasisAndAxis } from 'paraview-glance/src/utils';
 
 const ROTATION_STEP = 2;
 
@@ -69,6 +68,15 @@ export default {
       axisPreset(state) {
         return state.axisPreset;
       },
+      viewOrientation(state) {
+        return state.viewOrientation;
+      },
+      viewTypeItems(state) {
+        return Object.entries(state.viewTypes).map(([viewType, text]) => ({
+          text,
+          value: viewType,
+        }));
+      },
     }),
     ...mapGetters(['cameraViewPoints']),
     type() {
@@ -79,9 +87,6 @@ export default {
     },
     orientationLabels() {
       return this.axisPreset === 'lps' ? ['L', 'P', 'S'] : ['X', 'Y', 'Z'];
-    },
-    viewTypes() {
-      return this.axisPreset === 'lps' ? VIEW_TYPES_LPS : VIEW_TYPES;
     },
     smallScreen() {
       return this.$vuetify.breakpoint.width < Breakpoints.md;
@@ -250,8 +255,12 @@ export default {
     updateOrientation(mode) {
       if (this.view && !this.inAnimation) {
         this.inAnimation = true;
-        const { axis, orientation, viewUp } = VIEW_ORIENTATIONS[mode];
-        this.view.updateOrientation(axis, orientation, viewUp, 100).then(() => {
+        updateViewOrientationFromBasisAndAxis(
+          this.view,
+          this.viewOrientation,
+          mode,
+          this.type === 'View3D' ? 100 : 0
+        ).then(() => {
           this.inAnimation = false;
         });
       }

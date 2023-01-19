@@ -86,7 +86,7 @@ export default ({ proxyManager }) => ({
     setViewOrientation(state, orientation) {
       state.viewOrientation = orientation;
     },
-    setMasterSourceId(state, { sourceId }) {
+    setMasterSourceId(state, sourceId) {
       state.masterSourceId = sourceId;
     },
     setPreviousConfigurationPreset(state, preset) {
@@ -201,9 +201,9 @@ export default ({ proxyManager }) => ({
         view.setPresetToOrientationAxes(axisPreset);
       });
       commit('setAxisPreset', axisPreset);
-      dispatch('configureViewOrientationAndTypes');
+      dispatch('configureViewOrientationAndTypes', false);
     },
-    setViewOrientation({ commit, state }, orientation) {
+    setViewOrientation({ commit, state }, { orientation, blockAnimation }) {
       commit('setViewOrientation', orientation);
       Object.entries(state.viewTypeToId).forEach(([viewType, viewId]) => {
         const view = proxyManager.getProxyById(viewId);
@@ -212,18 +212,19 @@ export default ({ proxyManager }) => ({
           view,
           orientation,
           name,
-          type === 'View3D' ? 100 : 0
+          !blockAnimation && type === 'View3D' ? 100 : 0
         );
       });
     },
     setViewTypes({ commit }, viewTypes) {
       commit('setViewTypes', viewTypes);
     },
-    configureViewOrientationAndTypes({ commit, dispatch, state }) {
+    configureViewOrientationAndTypes(
+      { commit, dispatch, state },
+      blockAnimation
+    ) {
       if (state.axisPreset === 'lps') {
-        const masterSource =
-          state.masterSourceId &&
-          proxyManager.getProxyById(state.masterSourceId);
+        const masterSource = proxyManager.getProxyById(state.masterSourceId);
         if (masterSource?.getDataset().isA('vtkImageData')) {
           // lps mode with a master volume
           const directionMatrix = masterSource.getDataset().getDirection();
@@ -241,16 +242,25 @@ export default ({ proxyManager }) => ({
             lpsDirections.s.vector,
           ];
           dispatch('setViewTypes', viewTypes);
-          dispatch('setViewOrientation', viewOrientation);
+          dispatch('setViewOrientation', {
+            orientation: viewOrientation,
+            blockAnimation,
+          });
         } else if (state.previousConfigurationPreset !== 'lps') {
           // lps mode but no master volume and previous configuration wasn't lps
           dispatch('setViewTypes', DEFAULT_LPS_VIEW_TYPES);
-          dispatch('setViewOrientation', DEFAULT_VIEW_ORIENTATION);
+          dispatch('setViewOrientation', {
+            orientation: DEFAULT_VIEW_ORIENTATION,
+            blockAnimation,
+          });
         }
       } else {
         // Not in lps mode
         dispatch('setViewTypes', DEFAULT_VIEW_TYPES);
-        dispatch('setViewOrientation', DEFAULT_VIEW_ORIENTATION);
+        dispatch('setViewOrientation', {
+          orientation: DEFAULT_VIEW_ORIENTATION,
+          blockAnimation,
+        });
       }
       commit('setPreviousConfigurationPreset', state.axisPreset);
     },
@@ -265,16 +275,17 @@ export default ({ proxyManager }) => ({
 
       if (!fullyVisibleDatasets.includes(state.masterSourceId)) {
         if (fullyVisibleDatasets.length === 0) {
-          dispatch('setMasterSourceId', { sourceId: null });
+          dispatch('setMasterSourceId', null);
         } else {
-          dispatch('setMasterSourceId', { sourceId: fullyVisibleDatasets[0] });
+          dispatch('setMasterSourceId', fullyVisibleDatasets[0]);
         }
       }
     },
-    setMasterSourceId({ commit, dispatch, state }, { sourceId }) {
-      commit('setMasterSourceId', { sourceId });
+    setMasterSourceId({ commit, dispatch, state }, sourceId) {
+      const blockAnimation = state.masterSourceId === null && sourceId !== null;
+      commit('setMasterSourceId', sourceId);
       if (state.axisPreset === 'lps') {
-        dispatch('configureViewOrientationAndTypes');
+        dispatch('configureViewOrientationAndTypes', blockAnimation);
       }
     },
     setAxisVisible({ commit }, visible) {

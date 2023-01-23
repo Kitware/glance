@@ -1,18 +1,13 @@
 export const DEFAULT_VIEW_TYPE = 'View3D:default';
 
-export const VIEW_TYPES = [
-  { text: '3D', value: 'View3D:default' },
-  { text: 'Orientation Y', value: 'View2D_Y:y' },
-  { text: 'Orientation X', value: 'View2D_X:x' },
-  { text: 'Orientation Z', value: 'View2D_Z:z' },
-];
+export const DEFAULT_AXIS_PRESET = 'default';
 
-export const VIEW_TYPES_LPS = [
-  { text: '3D', value: 'View3D:default' },
-  { text: 'Sagittal', value: 'View2D_Y:y' },
-  { text: 'Coronal', value: 'View2D_X:x' },
-  { text: 'Axial', value: 'View2D_Z:z' },
-];
+export const VIEW_TYPE_VALUES = {
+  default: 'View3D:default',
+  x: 'View2D_X:x',
+  y: 'View2D_Y:y',
+  z: 'View2D_Z:z',
+};
 
 /* eslint-disable  no-template-curly-in-string */
 export const CURSOR_ANNOTATIONS = {
@@ -26,25 +21,22 @@ export const ANNOTATIONS = {
 };
 /* eslint-enable no-template-curly-in-string */
 
-export const VIEW_ORIENTATIONS = {
-  default: {
-    axis: 1,
-    orientation: -1,
-    viewUp: [0, 0, 1],
-  },
-  x: {
-    axis: 0,
-    orientation: 1,
-    viewUp: [0, 0, 1],
-  },
-  y: {
-    axis: 1,
-    orientation: -1,
-    viewUp: [0, 0, 1],
-  },
-  z: {
-    axis: 2,
-    orientation: -1,
-    viewUp: [0, -1, 0],
-  },
+export const DEFAULT_VIEW_TYPES = {
+  [VIEW_TYPE_VALUES.default]: '3D',
+  [VIEW_TYPE_VALUES.x]: 'Orientation X',
+  [VIEW_TYPE_VALUES.y]: 'Orientation Y',
+  [VIEW_TYPE_VALUES.z]: 'Orientation Z',
 };
+
+export const DEFAULT_LPS_VIEW_TYPES = {
+  [VIEW_TYPE_VALUES.default]: '3D',
+  [VIEW_TYPE_VALUES.x]: 'Sagittal',
+  [VIEW_TYPE_VALUES.y]: 'Coronal',
+  [VIEW_TYPE_VALUES.z]: 'Axial',
+};
+
+export const DEFAULT_VIEW_ORIENTATION = [
+  [1, 0, 0],
+  [0, 1, 0],
+  [0, 0, 1],
+];

@@ -4,12 +4,20 @@ import WidgetManagerConstants from '@kitware/vtk.js/Widgets/Core/WidgetManager/C
 
 import {
   DEFAULT_VIEW_TYPE,
-  VIEW_TYPES,
-  VIEW_ORIENTATIONS,
+  DEFAULT_AXIS_PRESET,
+  VIEW_TYPE_VALUES,
+  DEFAULT_VIEW_TYPES,
+  DEFAULT_LPS_VIEW_TYPES,
+  DEFAULT_VIEW_ORIENTATION,
 } from 'paraview-glance/src/components/core/VtkView/constants';
 import { DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
 
-import { remapIdValues, wrapMutationAsAction } from 'paraview-glance/src/utils';
+import {
+  remapIdValues,
+  wrapMutationAsAction,
+  getLPSDirections,
+  updateViewOrientationFromBasisAndAxis,
+} from 'paraview-glance/src/utils';
 
 const { CaptureOn } = WidgetManagerConstants;
 
@@ -21,7 +29,7 @@ export default ({ proxyManager }) => ({
     backgroundColors: {}, // viewType -> bg
     globalBackgroundColor: DEFAULT_BACKGROUND,
     axisType: 'arrow',
-    axisPreset: 'default',
+    axisPreset: DEFAULT_AXIS_PRESET,
     axisVisible: true,
     annotationOpacity: 1,
     interactionStyle3D: '3D',
@@ -30,8 +38,14 @@ export default ({ proxyManager }) => ({
     // If null, it will be calculated and set on first use
     firstPersonMovementSpeed: null,
     maxTextureLODSize: 50000, // Units are in KiB
-    viewOrder: VIEW_TYPES.map((v) => v.value),
+    viewOrder: Object.values(VIEW_TYPE_VALUES),
     visibleCount: 1,
+    // a basis in column-major order (list of 3 vectors): number[3][3]
+    viewOrientation: DEFAULT_VIEW_ORIENTATION,
+    // for each view type, the corresponding text to display { viewType: text }
+    viewTypes: DEFAULT_VIEW_TYPES,
+    masterSourceId: null, // null or string
+    previousConfigurationPreset: null, // null or string, can only be set to a string
   },
   mutations: {
     setGlobalBackground(state, background) {
@@ -66,6 +80,18 @@ export default ({ proxyManager }) => ({
     mapViewTypeToId(state, { viewType, viewId }) {
       Vue.set(state.viewTypeToId, viewType, viewId);
     },
+    setViewTypes(state, types) {
+      state.viewTypes = types;
+    },
+    setViewOrientation(state, orientation) {
+      state.viewOrientation = orientation;
+    },
+    setMasterSourceId(state, sourceId) {
+      state.masterSourceId = sourceId;
+    },
+    setPreviousConfigurationPreset(state, preset) {
+      state.previousConfigurationPreset = preset;
+    },
     changeBackground(state, { viewType, color }) {
       state.backgroundColors[viewType] = color;
     },
@@ -97,8 +123,11 @@ export default ({ proxyManager }) => ({
           const view = proxyManager.createProxy('Views', type, { name });
 
           // Update orientation
-          const { axis, orientation, viewUp } = VIEW_ORIENTATIONS[name];
-          view.updateOrientation(axis, orientation, viewUp);
+          updateViewOrientationFromBasisAndAxis(
+            view,
+            state.viewOrientation,
+            name
+          );
 
           // set background to transparent
           view.setBackground(0, 0, 0, 0);
@@ -167,11 +196,97 @@ export default ({ proxyManager }) => ({
       });
       commit('setAxisType', axisType);
     },
-    setAxisPreset({ commit }, axisPreset) {
+    setAxisPreset({ commit, dispatch }, axisPreset) {
       proxyManager.getViews().forEach((view) => {
         view.setPresetToOrientationAxes(axisPreset);
       });
       commit('setAxisPreset', axisPreset);
+      dispatch('configureViewOrientationAndTypes', false);
+    },
+    setViewOrientation({ commit, state }, { orientation, blockAnimation }) {
+      commit('setViewOrientation', orientation);
+      Object.entries(state.viewTypeToId).forEach(([viewType, viewId]) => {
+        const view = proxyManager.getProxyById(viewId);
+        const [type, name] = viewType.split(':');
+        updateViewOrientationFromBasisAndAxis(
+          view,
+          orientation,
+          name,
+          !blockAnimation && type === 'View3D' ? 100 : 0
+        );
+      });
+    },
+    setViewTypes({ commit }, viewTypes) {
+      commit('setViewTypes', viewTypes);
+    },
+    configureViewOrientationAndTypes(
+      { commit, dispatch, state },
+      blockAnimation
+    ) {
+      if (state.axisPreset === 'lps') {
+        const masterSource = proxyManager.getProxyById(state.masterSourceId);
+        if (masterSource?.getDataset().isA('vtkImageData')) {
+          // lps mode with a master volume
+          const directionMatrix = masterSource.getDataset().getDirection();
+          const lpsDirections = getLPSDirections(directionMatrix);
+          const axisToXYZ = ['x', 'y', 'z'];
+          const viewTypes = {
+            [VIEW_TYPE_VALUES.default]: '3D',
+            [VIEW_TYPE_VALUES[axisToXYZ[lpsDirections.l.axis]]]: 'Sagittal',
+            [VIEW_TYPE_VALUES[axisToXYZ[lpsDirections.p.axis]]]: 'Coronal',
+            [VIEW_TYPE_VALUES[axisToXYZ[lpsDirections.s.axis]]]: 'Axial',
+          };
+          const viewOrientation = [
+            lpsDirections.l.vector,
+            lpsDirections.p.vector,
+            lpsDirections.s.vector,
+          ];
+          dispatch('setViewTypes', viewTypes);
+          dispatch('setViewOrientation', {
+            orientation: viewOrientation,
+            blockAnimation,
+          });
+        } else if (state.previousConfigurationPreset !== 'lps') {
+          // lps mode but no master volume and previous configuration wasn't lps
+          dispatch('setViewTypes', DEFAULT_LPS_VIEW_TYPES);
+          dispatch('setViewOrientation', {
+            orientation: DEFAULT_VIEW_ORIENTATION,
+            blockAnimation,
+          });
+        }
+      } else {
+        // Not in lps mode
+        dispatch('setViewTypes', DEFAULT_VIEW_TYPES);
+        dispatch('setViewOrientation', {
+          orientation: DEFAULT_VIEW_ORIENTATION,
+          blockAnimation,
+        });
+      }
+      commit('setPreviousConfigurationPreset', state.axisPreset);
+    },
+    updateMasterSourceId({ dispatch, state }, datasets) {
+      const hiddenDatasets = proxyManager
+        .getRepresentations()
+        .filter((r) => !r.isVisible())
+        .map((r) => r.getInput().getProxyId());
+      const fullyVisibleDatasets = datasets.filter(
+        (dataset) => !hiddenDatasets.includes(dataset)
+      );
+
+      if (!fullyVisibleDatasets.includes(state.masterSourceId)) {
+        if (fullyVisibleDatasets.length === 0) {
+          dispatch('setMasterSourceId', null);
+        } else {
+          dispatch('setMasterSourceId', fullyVisibleDatasets[0]);
+        }
+      }
+    },
+    setMasterSourceId({ commit, dispatch, state }, sourceId) {
+      const blockAnimation = state.masterSourceId === null && sourceId !== null;
+      commit('setMasterSourceId', sourceId);
+      if (state.axisPreset === 'lps') {
+        dispatch('configureViewOrientationAndTypes', blockAnimation);
+      }
     },
     setAxisVisible({ commit }, visible) {
       proxyManager.getViews().forEach((view) => {

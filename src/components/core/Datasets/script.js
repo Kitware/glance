@@ -112,6 +112,7 @@ export default {
       }
 
       this.datasets = sources.map((s) => s.getProxyId());
+      this.$store.dispatch('views/updateMasterSourceId', this.datasets);
     },
     getSourceName(sourceId) {
       const proxy = this.$proxyManager.getProxyById(sourceId);

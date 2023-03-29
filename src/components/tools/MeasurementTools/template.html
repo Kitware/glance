@@ -76,7 +76,7 @@
                 </span>
               </div>
               <div :class="$style.action">
-                <v-tooltip bottom>
+                <v-tooltip v-if="tool.data && tool.data.axis !== null" bottom>
                   <template v-slot:activator="{ on }">
                     <v-btn
                       small
@@ -142,6 +142,13 @@
                             step="1"
                             :value="toolState.textSize"
                             @input="toolState.setTextSize"
+                          />
+                        </v-flex>
+                        <v-flex v-if="tool.data.axis !== null" xs9>
+                          <v-checkbox
+                            label="Show in 3D View"
+                            :input-value="toolState.show3d"
+                            @change="toolState.setShow3d"
                           />
                         </v-flex>
                       </v-layout>

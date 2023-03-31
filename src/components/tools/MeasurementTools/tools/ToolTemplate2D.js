@@ -42,6 +42,7 @@ export default (toolName, extraComponent = {}) => ({
       targetViewId: -1,
       color: WIDGETS[0],
       textSize: 16,
+      show3d: false,
       measurements: this.initialMeasurements(),
       measurementLabels: this.getMeasurementLabels(),
     };
@@ -128,12 +129,13 @@ export default (toolName, extraComponent = {}) => ({
     this.widgetPid = proxy.getProxyId();
 
     if (this.toolData) {
-      const { name, lockToSlice, points, color, textSize, axis } =
+      const { name, lockToSlice, points, color, textSize, axis, show3d } =
         this.toolData;
       this.name = name;
       this.lockToSlice = lockToSlice;
       this.color = color;
       this.textSize = textSize;
+      this.show3d = show3d;
 
       const view = this.$proxyManager
         .getViews()
@@ -173,7 +175,10 @@ export default (toolName, extraComponent = {}) => ({
       }
 
       const view3dHandler = (view, widgetManager, viewWidget) => {
-        widgetManager.removeWidget(viewWidget);
+        this.setupViewWidget(viewWidget);
+        this.setWidgetColor(viewWidget, this.color);
+        this.setWidgetTextSize(viewWidget, this.textSize);
+        viewWidget.setVisibility(this.show3d);
       };
 
       const view2dHandler = (view, widgetManager, viewWidget) => {
@@ -297,6 +302,19 @@ export default (toolName, extraComponent = {}) => ({
       this.renderViewWidgets();
       this.saveData();
     },
+    setShow3d(show) {
+      this.show3d = show;
+      const view3d = this.$proxyManager
+        .getViews()
+        .find((view) => view.getProxyName() === 'View3D');
+      const vw = this.widgetProxy.getViewWidget(view3d);
+
+      vw.setVisibility(show);
+
+      this.renderViewWidgets();
+      this.$proxyManager.renderAllViews();
+      this.saveData();
+    },
     renderViewWidgets() {
       this.$proxyManager.getViews().forEach((view) => {
         const manager = view.getReferenceByName('widgetManager');
@@ -314,6 +332,7 @@ export default (toolName, extraComponent = {}) => ({
         points: state.getHandleList().map((handle) => handle.getOrigin()),
         color: this.color,
         textSize: this.textSize,
+        show3d: this.show3d,
         axis: this.targetView.getAxis(),
       };
       this.$emit('saveData', data);
@@ -362,6 +381,7 @@ export default (toolName, extraComponent = {}) => ({
         :tool-name="name"
         :color="color"
         :text-size="textSize"
+        :show-3d="show3d"
         :measurements="displayedMeasurements"
         :labels="measurementLabels"
         :toggle-lock="toggleLock"
@@ -369,6 +389,7 @@ export default (toolName, extraComponent = {}) => ({
         :set-name="setName"
         :set-color="setColor"
         :set-text-size="setTextSize"
+        :set-show-3d="setShow3d"
       >
       </slot>
     </div>

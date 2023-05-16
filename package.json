@@ -67,6 +67,7 @@
     "@babel/runtime": "7.21.5",
     "@mdi/font": "6.2.95",
     "@vue/eslint-config-airbnb": "5.3.0",
+    "autoprefixer": "^10.4.14",
     "babel-eslint": "10.1.0",
     "babel-loader": "8.2.2",
     "clean-webpack-plugin": "4.0.0",

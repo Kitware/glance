@@ -5,10 +5,6 @@ import vtkAngleWidget from '@kitware/vtk.js/Widgets/Widgets3D/AngleWidget';
 import widgetBehavior from 'paraview-glance/src/vtk/AngleWidget/behavior';
 import stateGenerator from 'paraview-glance/src/vtk/AngleWidget/state';
 
-import vtkSVGCircleHandleRepresentation from 'paraview-glance/src/vtk/SVGCircleHandleRepresentation';
-import vtkSVGLineRepresentation from 'paraview-glance/src/vtk/SVGLineRepresentation';
-import vtkSVGLabelRepresentation from 'paraview-glance/src/vtk/SVGLabelRepresentation';
-
 import { ViewTypes } from '@kitware/vtk.js/Widgets/Core/WidgetManager/Constants';
 
 // ----------------------------------------------------------------------------
@@ -54,18 +50,18 @@ function vtkAngle2DWidget(publicAPI, model) {
               scaleInPixels: true,
             },
           },
-          {
-            builder: vtkSVGCircleHandleRepresentation,
-            labels: ['handles', 'moveHandle'],
-          },
-          {
-            builder: vtkSVGLineRepresentation,
-            labels: ['handles', 'moveHandle'],
-          },
-          {
-            builder: vtkSVGLabelRepresentation,
-            labels: ['handles'],
-          },
+          // {
+          //   builder: vtkSVGCircleHandleRepresentation,
+          //   labels: ['handles', 'moveHandle'],
+          // },
+          // {
+          //   builder: vtkSVGLineRepresentation,
+          //   labels: ['handles', 'moveHandle'],
+          // },
+          // {
+          //   builder: vtkSVGLabelRepresentation,
+          //   labels: ['handles'],
+          // },
         ];
     }
   };

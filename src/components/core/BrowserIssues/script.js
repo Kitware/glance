@@ -7,7 +7,7 @@ import { mapState, mapActions } from 'vuex';
 function getBrowserIssues() {
   const view = this.$proxyManager.getViews()[0];
   if (view) {
-    const glRW = view.getOpenglRenderWindow();
+    const glRW = view.getOpenGLRenderWindow();
     const allInfo = glRW.getGLInformations();
     const { UNMASKED_RENDERER, UNMASKED_VENDOR, WEBGL_VERSION } = allInfo;
 

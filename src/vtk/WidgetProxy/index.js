@@ -82,8 +82,8 @@ function vtkWidgetProxy(publicAPI, model) {
   publicAPI.getAllViewWidgets = () =>
     model.proxyManager
       .getViews()
-      .map((view) => publicAPI.getViewWidget(view))
-      .filter(Boolean);
+      .map((view) => [publicAPI.getViewWidget(view), view])
+      .filter(([vw]) => !!vw);
 
   publicAPI.executeViewFuncs = (funcs) => {
     forEachView((view, widgetManager) => {

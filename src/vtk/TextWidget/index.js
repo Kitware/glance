@@ -6,9 +6,6 @@ import vtkSphereHandleRepresentation from '@kitware/vtk.js/Widgets/Representatio
 import widgetBehavior from 'paraview-glance/src/vtk/TextWidget/behavior';
 import stateGenerator from 'paraview-glance/src/vtk/TextWidget/state';
 
-import vtkSVGCircleHandleRepresentation from 'paraview-glance/src/vtk/SVGCircleHandleRepresentation';
-import vtkSVGLabelRepresentation from 'paraview-glance/src/vtk/SVGLabelRepresentation';
-
 import { ViewTypes } from '@kitware/vtk.js/Widgets/Core/WidgetManager/Constants';
 
 // ----------------------------------------------------------------------------
@@ -53,14 +50,14 @@ function vtkTextWidget(publicAPI, model) {
             builder: vtkSphereHandleRepresentation,
             labels: ['moveHandle'],
           },
-          {
-            builder: vtkSVGCircleHandleRepresentation,
-            labels: ['handles', 'moveHandle'],
-          },
-          {
-            builder: vtkSVGLabelRepresentation,
-            labels: ['handles'],
-          },
+          // {
+          //   builder: vtkSVGCircleHandleRepresentation,
+          //   labels: ['handles', 'moveHandle'],
+          // },
+          // {
+          //   builder: vtkSVGLabelRepresentation,
+          //   labels: ['handles'],
+          // },
         ];
     }
   };

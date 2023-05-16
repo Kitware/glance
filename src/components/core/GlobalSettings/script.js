@@ -186,7 +186,7 @@ export default {
   methods: {
     hasVR() {
       const view = this.getViewForVR();
-      return view && !!view.getOpenglRenderWindow().getVrDisplay();
+      return view && !!view.getOpenGLRenderWindow().getVrDisplay();
     },
     getViewForVR,
     toggleVR(vr) {
@@ -194,7 +194,7 @@ export default {
       if (view) {
         const camera = view.getCamera();
         const renderer = view.getRenderer();
-        const glRenderWindow = view.getOpenglRenderWindow();
+        const glRenderWindow = view.getOpenGLRenderWindow();
         if (vr) {
           view.setOrientationAxesVisibility(false);
           renderer.resetCamera();

@@ -15,7 +15,7 @@ export default function generateState() {
     })
     .addDynamicMixinState({
       labels: ['handles'],
-      mixins: ['origin', 'color', 'scale1'],
+      mixins: ['origin', 'color', 'scale1', 'visible'],
       name: 'handle',
       initialValues: {
         scale1: 50,

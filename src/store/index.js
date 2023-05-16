@@ -5,7 +5,7 @@ import Vuex from 'vuex';
 import vtk from '@kitware/vtk.js/vtk';
 import vtkProxyManager from '@kitware/vtk.js/Proxy/Core/ProxyManager';
 
-import { ProxyManagerVuexPlugin } from 'paraview-glance/src/plugins';
+import { ProxyManagerVuexPlugin } from 'paraview-glance/src/plugins/proxyManagerPlugins';
 
 import viewHelper from 'paraview-glance/src/components/core/VtkView/helper';
 import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';

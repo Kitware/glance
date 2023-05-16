@@ -10,7 +10,7 @@ function onMounted() {
     const rw = view ? view.getRenderWindow() : null;
 
     if (view) {
-      const glRW = view.getOpenglRenderWindow();
+      const glRW = view.getOpenGLRenderWindow();
       const allInfo = glRW.getGLInformations();
       const { UNMASKED_RENDERER, UNMASKED_VENDOR, WEBGL_VERSION } = allInfo;
 

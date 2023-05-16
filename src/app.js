@@ -2,6 +2,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Vuetify from 'vuetify/lib';
+import PortalVue from 'portal-vue';
 
 import GirderProvider from 'paraview-glance/src/girder';
 import { vuetify as girderVuetify } from '@girder/components/src';
@@ -24,8 +25,9 @@ import ReaderFactory from 'paraview-glance/src/io/ReaderFactory';
 import App from 'paraview-glance/src/components/core/App';
 import Config from 'paraview-glance/src/config';
 import createStore from 'paraview-glance/src/store';
-import { ProxyManagerVuePlugin } from 'paraview-glance/src/plugins';
+import { ProxyManagerVuePlugin } from 'paraview-glance/src/plugins/proxyManagerPlugins';
 import Settings from 'paraview-glance/src/settings';
+import ToolSvgPortalPlugin from 'paraview-glance/src/plugins/toolSvgPortal';
 
 // Expose IO API to Glance global object
 export const {
@@ -42,6 +44,8 @@ export const {
 Vue.use(Vuex);
 Vue.use(Vuetify);
 Vue.use(ProxyManagerVuePlugin);
+Vue.use(PortalVue);
+Vue.use(ToolSvgPortalPlugin);
 
 let activeProxyConfig = null;
 /**

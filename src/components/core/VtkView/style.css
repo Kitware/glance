@@ -47,3 +47,13 @@
   height: 8px;
   background: linear-gradient(135deg, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 50%,rgba(255,255,255,0) 51%);
 }
+
+.svgLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* v-toolbar height is 45px */
+  height: calc(100% - 45px);
+  width: 100%;
+  pointer-events: none;
+}

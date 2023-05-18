@@ -1,100 +1,55 @@
 <v-container fluid :class="$style.container">
   <v-layout column :class="$style.floatToolbar">
-    <v-tooltip
-      left
-      :disabled="smallScreen"
-    >
+    <v-tooltip left :disabled="smallScreen">
       <span class="pv-no-select">Reset camera</span>
       <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          dark
-          v-on="on"
-          v-on:click="resetCamera()"
-        >
+        <v-btn icon dark v-on="on" v-on:click="resetCamera()">
           <v-icon>mdi-image-filter-center-focus</v-icon>
         </v-btn>
       </template>
     </v-tooltip>
-    <v-tooltip
-      left
-      :disabled="smallScreen"
-    >
+    <v-tooltip left :disabled="smallScreen">
       <span class="pv-no-select">Rotate camera left 90°</span>
       <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          dark
-          v-on="on"
-          v-on:click="rollLeft()"
-        >
+        <v-btn icon dark v-on="on" v-on:click="rollLeft()">
           <v-icon>mdi-rotate-left</v-icon>
         </v-btn>
       </template>
     </v-tooltip>
-    <v-tooltip
-      left
-      :disabled="smallScreen"
-    >
+    <v-tooltip left :disabled="smallScreen">
       <span class="pv-no-select">Rotate camera right 90°</span>
       <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          dark
-          v-on="on"
-          v-on:click="rollRight()"
-        >
+        <v-btn icon dark v-on="on" v-on:click="rollRight()">
           <v-icon>mdi-rotate-right</v-icon>
         </v-btn>
       </template>
     </v-tooltip>
-    <v-tooltip
-      left
-      v-if="type === 'View3D'"
-      :disabled="smallScreen"
-    >
-      <span class="pv-no-select">Reset Camera to Orientation {{orientationLabels[0]}}</span>
+    <v-tooltip left v-if="type === 'View3D'" :disabled="smallScreen">
+      <span class="pv-no-select"
+        >Reset Camera to Orientation {{orientationLabels[0]}}</span
+      >
       <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          dark
-          v-on="on"
-          v-on:click="updateOrientation('x')"
-        >
+        <v-btn icon dark v-on="on" v-on:click="updateOrientation('x')">
           {{orientationLabels[0]}}
         </v-btn>
       </template>
     </v-tooltip>
-    <v-tooltip
-      left
-      v-if="type === 'View3D'"
-      :disabled="smallScreen"
-    >
-      <span class="pv-no-select">Reset Camera to Orientation {{orientationLabels[1]}}</span>
+    <v-tooltip left v-if="type === 'View3D'" :disabled="smallScreen">
+      <span class="pv-no-select"
+        >Reset Camera to Orientation {{orientationLabels[1]}}</span
+      >
       <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          dark
-          v-on="on"
-          v-on:click="updateOrientation('y')"
-        >
+        <v-btn icon dark v-on="on" v-on:click="updateOrientation('y')">
           {{orientationLabels[1]}}
         </v-btn>
       </template>
     </v-tooltip>
-    <v-tooltip
-      left
-      v-if="type === 'View3D'"
-      :disabled="smallScreen"
-    >
-      <span class="pv-no-select">Reset Camera to Orientation {{orientationLabels[2]}}</span>
+    <v-tooltip left v-if="type === 'View3D'" :disabled="smallScreen">
+      <span class="pv-no-select"
+        >Reset Camera to Orientation {{orientationLabels[2]}}</span
+      >
       <template v-slot:activator="{ on }">
-        <v-btn
-          icon
-          dark
-          v-on="on"
-          v-on:click="updateOrientation('z')"
-        >
+        <v-btn icon dark v-on="on" v-on:click="updateOrientation('z')">
           {{orientationLabels[2]}}
         </v-btn>
       </template>
@@ -108,9 +63,11 @@
       :style="{ background: backgroundColor }"
       v-on:mousedown="view.activate()"
     />
-    <div
-      v-if="isActive"
-      :class="$style.activeView"
+    <div v-if="isActive" :class="$style.activeView" />
+    <tool-svg-target
+      :view-proxy-id="viewProxyId"
+      :class="$style.svgLayer"
+      :viewBox="svgViewBox"
     />
     <div :class="$style.toolbarWrapper">
       <toolbar-sheet v-model="backgroundSheet">
@@ -126,11 +83,7 @@
           </v-layout>
         </v-container>
       </toolbar-sheet>
-      <v-toolbar
-        dark
-        height="45px"
-        :class="$style.smallToolbar"
-      >
+      <v-toolbar dark height="45px" :class="$style.smallToolbar">
         <v-select
           dense
           flat
@@ -172,10 +125,7 @@
           </template>
           <span class="pv-no-select">Change View Point</span>
         </v-tooltip>
-        <v-tooltip
-          top
-          :disabled="smallScreen"
-        >
+        <v-tooltip top :disabled="smallScreen">
           <span class="pv-no-select">Background color</span>
           <template v-slot:activator="{ on }">
             <v-btn
@@ -189,10 +139,7 @@
             </v-btn>
           </template>
         </v-tooltip>
-        <v-tooltip
-          top
-          :disabled="smallScreen"
-        >
+        <v-tooltip top :disabled="smallScreen">
           <span class="pv-no-select">Screenshot</span>
           <template v-slot:activator="{ on }">
             <v-btn
@@ -205,11 +152,7 @@
             </v-btn>
           </template>
         </v-tooltip>
-        <v-tooltip
-          top
-          v-if="!smallScreen && singleViewButton"
-          key="singleView"
-        >
+        <v-tooltip top v-if="!smallScreen && singleViewButton" key="singleView">
           <span class="pv-no-select">Single view</span>
           <template v-slot:activator="{ on }">
             <v-btn
@@ -222,11 +165,7 @@
             </v-btn>
           </template>
         </v-tooltip>
-        <v-tooltip
-          top
-          v-if="!smallScreen && flipViewButton"
-          key="flipView"
-        >
+        <v-tooltip top v-if="!smallScreen && flipViewButton" key="flipView">
           <span class="pv-no-select">Split view</span>
           <template v-slot:activator="{ on }">
             <v-btn
@@ -239,11 +178,7 @@
             </v-btn>
           </template>
         </v-tooltip>
-        <v-tooltip
-          top
-          v-if="!smallScreen && quadViewButton"
-          key="quadView"
-        >
+        <v-tooltip top v-if="!smallScreen && quadViewButton" key="quadView">
           <span class="pv-no-select">Quad view</span>
           <template v-slot:activator="{ on }">
             <v-btn

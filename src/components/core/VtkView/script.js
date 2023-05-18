@@ -9,6 +9,7 @@ import {
 import PalettePicker from 'paraview-glance/src/components/widgets/PalettePicker';
 import ToolbarSheet from 'paraview-glance/src/components/core/ToolbarSheet';
 import { BACKGROUND } from 'paraview-glance/src/components/core/VtkView/palette';
+import ToolSvgTarget from 'paraview-glance/src/components/tools/ToolSvgTarget';
 
 import { updateViewOrientationFromBasisAndAxis } from 'paraview-glance/src/utils';
 
@@ -23,6 +24,7 @@ export default {
   components: {
     PalettePicker,
     ToolbarSheet,
+    ToolSvgTarget,
   },
   props: {
     layoutIndex: {
@@ -50,10 +52,14 @@ export default {
       backgroundSheet: false,
       inAnimation: false,
       viewPointMenuVisible: false,
+      svgViewBox: '0 0 10 10',
     };
   },
   computed: {
     ...mapState('views', {
+      viewProxyId(state) {
+        return state.viewTypeToId[this.viewType];
+      },
       view(state) {
         return this.$proxyManager.getProxyById(
           state.viewTypeToId[this.viewType]
@@ -155,16 +161,19 @@ export default {
     if (this.view) {
       this.tryMountView(this.view);
     }
-    window.addEventListener('resize', this.resizeCurrentView);
+    this.resizeObserver = new ResizeObserver(() => {
+      this.resizeCurrentView();
+    });
+    this.resizeObserver.observe(this.$el);
 
     // Initial setup
     this.resizeCurrentView();
   },
   beforeDestroy() {
+    this.resizeObserver.disconnect();
     if (this.view) {
       this.unmountView(this.view);
     }
-    window.removeEventListener('resize', this.resizeCurrentView);
   },
   beforeUpdate() {
     if (!this.view) {
@@ -185,7 +194,6 @@ export default {
         view.setOrientationAxesVisibility(this.axisVisible);
         const widgetManager = view.getReferenceByName('widgetManager');
         if (widgetManager) {
-          widgetManager.setUseSvgLayer(true);
           // workaround to disable picking if previously disabled
           if (!widgetManager.getPickingEnabled()) {
             widgetManager.disablePicking();
@@ -194,11 +202,6 @@ export default {
       }
     },
     unmountView(view) {
-      const widgetManager = view.getReferenceByName('widgetManager');
-      if (widgetManager) {
-        // we can't use svg anyways if there is no container
-        widgetManager.setUseSvgLayer(false);
-      }
       view.setContainer(null);
     },
     changeViewType(viewType) {
@@ -268,6 +271,9 @@ export default {
     resizeCurrentView() {
       if (this.view) {
         this.view.resize();
+
+        const [w, h] = this.view.getOpenGLRenderWindow().getSize();
+        this.svgViewBox = `0 0 ${w} ${h}`;
       }
     },
     screenCapture() {

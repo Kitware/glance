@@ -1,5 +1,7 @@
 import { WIDGETS } from 'paraview-glance/src/palette';
 import { mapState } from 'vuex';
+import ToolSvgPortal from 'paraview-glance/src/components/tools/ToolSvgPortal';
+import Vue from 'vue';
 
 // ----------------------------------------------------------------------------
 
@@ -16,6 +18,7 @@ export function updateProps(viewWidget, propsToUpdate) {
 
 export default (toolName, extraComponent = {}) => ({
   name: `${toolName}Tool`,
+  components: { ToolSvgPortal },
   props: {
     // should always be a valid proxy id
     targetPid: { required: true },
@@ -44,6 +47,11 @@ export default (toolName, extraComponent = {}) => ({
       textSize: 16,
       measurements: this.initialMeasurements(),
       measurementLabels: this.getMeasurementLabels(),
+      initialSlicePlacement: null,
+      mouseFocusedViewId: -1,
+      svgComponent: extraComponent.svgComponent,
+      // viewProxyId -> properties: { visible }
+      viewWidgetProperties: {},
     };
   },
   computed: {
@@ -119,10 +127,6 @@ export default (toolName, extraComponent = {}) => ({
       }
     },
   },
-  created() {
-    this.initialSlicePlacement = null;
-    this.mouseFocusedViewId = -1;
-  },
   mounted() {
     const proxy = this.$proxyManager.createProxy('Widgets', toolName);
     this.widgetPid = proxy.getProxyId();
@@ -180,10 +184,7 @@ export default (toolName, extraComponent = {}) => ({
         this.setupViewWidget(viewWidget);
 
         // start off invisible, unless we have a pre-defined axis
-        viewWidget.setVisibility(this.axis === view.getAxis());
-
-        this.setWidgetColor(viewWidget, this.color);
-        this.setWidgetTextSize(viewWidget, this.textSize);
+        this.setVisibility(viewWidget, view, this.axis === view.getAxis());
 
         const moveSub = view.getInteractor().onMouseMove(() => {
           if (this.targetViewId !== -1) {
@@ -197,11 +198,11 @@ export default (toolName, extraComponent = {}) => ({
           this.updateOrientation();
 
           if (!viewWidget.getVisibility()) {
-            viewWidget.setVisibility(true);
+            this.setVisibility(viewWidget, view, true);
             proxy
               .getAllViewWidgets()
-              .filter((vw) => vw !== viewWidget)
-              .forEach((vw) => vw.setVisibility(false));
+              .filter(([vw]) => vw !== viewWidget)
+              .forEach(([vw, view_]) => this.setVisibility(vw, view_, false));
 
             // render visibility changes
             widgetManager.renderWidgets();
@@ -263,7 +264,9 @@ export default (toolName, extraComponent = {}) => ({
       }
 
       const slice = Math.round(this.targetRepresentation.getSlice());
-      viewWidget.setVisibility(
+      this.setVisibility(
+        viewWidget,
+        this.targetView,
         this.lockToSlice === null || this.lockToSlice === slice
       );
       this.renderViewWidgets();
@@ -276,25 +279,24 @@ export default (toolName, extraComponent = {}) => ({
         this.widgetPid = -1;
       }
     },
+    setVisibility(viewWidget, view, visible) {
+      const id = view.getProxyId();
+      Vue.set(this.viewWidgetProperties, view.getProxyId(), {
+        ...this.viewWidgetProperties[id],
+        visible,
+      });
+      viewWidget.setVisibility(visible);
+    },
     setName(name) {
       this.name = name;
-      this.renderViewWidgets();
       this.saveData();
     },
     setColor(colorHex) {
       this.color = colorHex;
-      this.widgetProxy
-        .getAllViewWidgets()
-        .forEach((viewWidget) => this.setWidgetColor(viewWidget, colorHex));
-      this.renderViewWidgets();
       this.saveData();
     },
     setTextSize(size) {
       this.textSize = size;
-      this.widgetProxy
-        .getAllViewWidgets()
-        .forEach((viewWidget) => this.setWidgetTextSize(viewWidget, size));
-      this.renderViewWidgets();
       this.saveData();
     },
     renderViewWidgets() {
@@ -347,12 +349,6 @@ export default (toolName, extraComponent = {}) => ({
     setupViewWidget(/* viewWidget */) {
       throw new Error('setupViewWidget not implemented');
     },
-    setWidgetColor(/* viewWidget, hex */) {
-      throw new Error('setWidgetColor not implemented');
-    },
-    setWidgetTextSize(/* viewWidget, size */) {
-      throw new Error('setWidgetTextSize not implemented');
-    },
     ...(extraComponent.methods || {}),
   },
   template: `
@@ -369,8 +365,24 @@ export default (toolName, extraComponent = {}) => ({
         :set-name="setName"
         :set-color="setColor"
         :set-text-size="setTextSize"
-      >
-      </slot>
+      />
+      <tool-svg-portal v-if="svgComponent">
+        <template #default="{ viewProxyId }">
+          <component
+            v-if="viewProxyId in viewWidgetProperties""
+            :is="svgComponent"
+            :widget-state="widgetProxy.getWidgetState()"
+            :view-proxy-id="viewProxyId"
+            :visible="viewWidgetProperties[viewProxyId].visible"
+            :finalized="finalized"
+            :tool-name="name"
+            :color="color"
+            :text-size="textSize"
+            :measurements="displayedMeasurements"
+            :labels="measurementLabels"
+          />
+        </template>
+      </tool-svg-portal>
     </div>
   `,
 });

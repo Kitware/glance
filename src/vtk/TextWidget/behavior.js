@@ -75,7 +75,7 @@ export default function widgetBehavior(publicAPI, model) {
       model.activeState.getActive() &&
       !ignoreKey(callData)
     ) {
-      const worldCoords = model.manipulator.handleEvent(
+      const { worldCoords } = model.manipulator.handleEvent(
         callData,
         model._apiSpecificRenderWindow
       );

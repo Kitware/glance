@@ -13,7 +13,7 @@ export default {
     /**
      * Automatically unsubs a subscription when component is destroyed.
      */
-    autoSub(sub) {
+    trackVtkSubscription(sub) {
       this[subsKey].push(sub);
     },
   },

@@ -1,10 +1,10 @@
-import create2DTool, {
-  updateProps,
-} from 'paraview-glance/src/components/tools/MeasurementTools/tools/ToolTemplate2D';
+import create2DTool from 'paraview-glance/src/components/tools/MeasurementTools/tools/ToolTemplate2D';
+import AngleSvg from 'paraview-glance/src/components/tools/MeasurementTools/svg/AngleSvg';
 
 // ----------------------------------------------------------------------------
 
 const AngleComponent = create2DTool('Angle', {
+  svgComponent: AngleSvg,
   methods: {
     initialMeasurements() {
       return {
@@ -22,12 +22,6 @@ const AngleComponent = create2DTool('Angle', {
     updateMeasurements() {
       const widget = this.widgetProxy.getWidget();
       this.measurements.angle = (widget.getAngle() * 180) / Math.PI;
-
-      if (this.finalized) {
-        this.widgetProxy.getAllViewWidgets().forEach((vw) => {
-          vw.setText(this.displayedMeasurements.Angle);
-        });
-      }
     },
     donePlacing() {
       const state = this.widgetProxy.getWidgetState();
@@ -35,34 +29,7 @@ const AngleComponent = create2DTool('Angle', {
       return numberOfHandles === 3;
     },
     setupViewWidget(viewWidget) {
-      viewWidget.setCircleProps({
-        'stroke-width': 3,
-        fill: 'transparent',
-        r: 8,
-      });
-      viewWidget.setLineProps({
-        'stroke-width': 2,
-      });
-      viewWidget.setTextProps({
-        dx: 12,
-        dy: -12,
-      });
-      viewWidget.setText('');
       viewWidget.setHandleVisibility(false);
-      viewWidget.setTextStateIndex(1);
-    },
-    setWidgetColor(viewWidget, hex) {
-      updateProps(viewWidget, {
-        Text: { fill: hex },
-        Circle: { stroke: hex },
-        Line: { stroke: hex },
-      });
-    },
-    setWidgetTextSize(viewWidget, size) {
-      const scaledSize = size * (window.devicePixelRatio || 1);
-      updateProps(viewWidget, {
-        Text: { style: `font-size: ${scaledSize}px` },
-      });
     },
   },
 });

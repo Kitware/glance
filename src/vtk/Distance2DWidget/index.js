@@ -5,10 +5,6 @@ import vtkDistanceWidget from '@kitware/vtk.js/Widgets/Widgets3D/DistanceWidget'
 import widgetBehavior from 'paraview-glance/src/vtk/Distance2DWidget/behavior';
 import stateGenerator from 'paraview-glance/src/vtk/Distance2DWidget/state';
 
-import vtkSVGCircleHandleRepresentation from 'paraview-glance/src/vtk/SVGCircleHandleRepresentation';
-import vtkSVGLineRepresentation from 'paraview-glance/src/vtk/SVGLineRepresentation';
-import vtkSVGLabelRepresentation from 'paraview-glance/src/vtk/SVGLabelRepresentation';
-
 import { ViewTypes } from '@kitware/vtk.js/Widgets/Core/WidgetManager/Constants';
 
 // ----------------------------------------------------------------------------
@@ -52,18 +48,6 @@ function vtkDistance2DWidget(publicAPI, model) {
             initialValues: {
               scaleInPixels: true,
             },
-          },
-          {
-            builder: vtkSVGCircleHandleRepresentation,
-            labels: ['handles', 'moveHandle'],
-          },
-          {
-            builder: vtkSVGLineRepresentation,
-            labels: ['handles', 'moveHandle'],
-          },
-          {
-            builder: vtkSVGLabelRepresentation,
-            labels: ['handles'],
           },
         ];
     }

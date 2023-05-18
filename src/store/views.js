@@ -142,8 +142,6 @@ export default ({ proxyManager }) => ({
 
           if (!view.getReferenceByName('widgetManager')) {
             const widgetManager = vtkWidgetManager.newInstance();
-            // workaround for view not yet being mounted
-            widgetManager.set({ useSvgLayer: false }, false, true);
             widgetManager.setRenderer(view.getRenderer());
             widgetManager.setCaptureOn(CaptureOn.MOUSE_MOVE);
             view.set({ widgetManager }, true);

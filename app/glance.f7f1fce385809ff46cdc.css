@@ -1,0 +1,757 @@
+/* globally accessible and generic utility classes */
+.pv-break-word {
+  word-break: break-word;
+}
+
+.AboutBox-close-_khm3 {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+.AboutBox-aboutIcon-npj_s {
+  max-width: 100%;
+  height: 56px;
+}
+.AboutBox-glanceIcon-x8OkE {
+  width: 50%;
+  margin: 0 auto;
+}
+
+
+.PiecewiseFunctionEditor-container-_jIUo {
+  position: relative;
+  left: -10px;
+}
+
+.PalettePicker-wrapper-Cz9zR {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+}
+.PalettePicker-item-q0Hig {
+  position: relative;
+}
+.PalettePicker-check-m60ux {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  pointer-events: none;
+  color: white !important;
+  mix-blend-mode: exclusion;
+}
+.PalettePicker-blot-JTooX {
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+  border-radius: 25%;
+  margin: 4px;
+  cursor: pointer;
+  transition: border 50ms;
+}
+.PalettePicker-blot-JTooX:hover {
+  border: 1px solid rgba(0, 0, 0, 0.8);
+}
+
+.TreeView-wrapper-Uw6mP {
+  display: block;
+  padding: 4px 16px;
+  box-sizing: border-box;
+  background: white;
+  min-width: 300px;
+  overflow: auto;
+}
+.TreeView-node-gbM0d {
+  list-style: none;
+  margin-left: 16px;
+}
+.TreeView-arrow-KW7L0 {
+  transform: rotateZ(-90deg);
+}
+.TreeView-openArrow-ezZCc {
+  transform: rotateZ(0deg);
+}
+.TreeView-header-KxYvL {
+  position: relative;
+  display: flex;
+  flex-flow: row;
+  padding: 4px 8px;
+  margin: 3px 0;
+  transition: background-color 300ms;
+  cursor: pointer;
+  user-select: none;
+}
+.TreeView-header-KxYvL:hover {
+  background-color: #dfdfdf;
+}
+.TreeView-expander-SVvAO {
+  position: absolute;
+  left: -24px;
+  width: 16px;
+  flex: 0 0 auto;
+  padding: 0 4px;
+}
+.TreeView-name-_uKWF {
+  flex: 1 1 auto;
+}
+.Datasets-block-MOv47 {
+  padding: 4px 0;
+  padding-right: 6px;
+}
+.Datasets-blockTitle-hRnLc {
+  padding: 8px 4px;
+}
+.Datasets-blockContent-a3h1_ {
+  padding: 4px;
+}
+.Datasets-blockRow-lFOcN {
+  margin: 4px 0;
+}
+.Datasets-slimInput-Cnehi {
+  padding-top: 0;
+  margin-top: 0;
+}
+.Datasets-canSelect-w1m5T {
+  user-select: text;
+}
+.Datasets-clickable-JOYIZ {
+  cursor: pointer;
+}
+.Datasets-smallLabel-_8o5q {
+  font-size: 12px;
+}
+.Datasets-active-zv1WS {
+  color: rgba(0,0,0,0.54) !important;
+}
+.Datasets-inactive-twtbQ {
+  color: rgba(0,0,0,0.25) !important;
+}
+.Datasets-matrix-_nvw3 {
+  padding: 0;
+}
+.Datasets-disable-wMFzA {
+  opacity: 0.25;
+}
+.Datasets-lutImage-h8bWl {
+  width: 100%;
+  height: 20px;
+  border: solid 1px #eee;
+}
+.Datasets-dropdownMenu-Z0GS3 {
+  min-width: 300px;
+  max-height: 500px;
+}
+.Datasets-button-W4Ok7 {
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+}
+.Datasets-click-URBWc {
+  cursor: pointer;
+}
+.Datasets-negativeTopSpacing-HrNz2 {
+  margin-top: -4px;
+}
+
+.Datasets-datasetPanel-B9jFW:last-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* vuetify override */
+.Datasets-datasetPanel-B9jFW:before, .Datasets-subpanel-RQd0h:before {
+  box-shadow: none;
+}
+.Datasets-panelContent-kpRWg {
+  /* for positioning the color group absolutely */
+  position: relative;
+}
+
+/* vuetify override */
+.Datasets-panelContent-kpRWg > .v-expansion-panel-content__wrap {
+  padding: 0;
+}
+.Datasets-subpanel-RQd0h {
+  padding-left: 20px;
+}
+.Datasets-subpanel-RQd0h .Datasets-panelContent-kpRWg {
+  padding: 4px 0;
+}
+.Datasets-panelContent-kpRWg .Datasets-subpanel-RQd0h:first-child {
+  border-top: thin solid rgba(0, 0, 0, 0.1);
+}
+
+/* vuetify override */
+/* This sets flex-grow to 0 for header contents */
+.Datasets-panelHeader-uNZ70 > :not(.v-expansion-panel-header__icon) {
+  flex: unset;
+}
+.Datasets-headerMenuButton-_t8U7 {
+  /* maintain icon width */
+  flex: 0 0 auto !important;
+}
+.Datasets-subpanelHeader-_vvrH {
+  /* the 12px is to line up the expansion panel hide/show icons */
+  padding: 2px 12px 2px 4px;
+  /* revert subpanel height to non-active height */
+  min-height: 48px !important;
+}
+
+.ColorGroup-container-xP4_7 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  z-index: 10;
+  background: gray;
+}
+
+.PopUp-container-MOF8K {
+  position: relative;
+}
+.PopUp-popup-P9jw2 {
+  position: absolute;
+  overflow: auto;
+  z-index: 20;
+  background: white;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+}
+
+.PaintTool-container-K_01H {
+  padding: 8px;
+}
+.PaintTool-container-K_01H * {
+  user-select: none;
+}
+.PaintTool-fullWidth-ygvJa {
+  width: 100%;
+}
+.PaintTool-labelInput-CX7Np {
+  width: 100%;
+}
+.PaintTool-paintActions-NWnXC {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  padding: 16px;
+}
+.PaintTool-paintSwitch-CEy8P {
+  margin-top: 0;
+  flex: 2;
+}
+.PaintTool-radioGroup-oAs8K {
+  width: 100%;
+  margin-top: 0;
+}
+.PaintTool-radioGroup-oAs8K > .v-input__control {
+  width: 100%;
+}
+.PaintTool-headerRow-SXk6M {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  padding: 0;
+}
+.PaintTool-listRow-QOnht {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: visible;
+}
+.PaintTool-lowercaseText-Cncdr {
+  text-transform: none;
+  font-weight: normal;
+}
+.PaintTool-colorBoxBackground-uCP_B {
+  cursor: pointer;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.1);
+  margin-right: 4px;
+  background-image: linear-gradient(-45deg, #ccc 25%, transparent 25%, 75%, #ccc 75%),
+                    linear-gradient(-45deg, #ccc 25%, transparent 25%, 75%, #ccc 75%);
+  background-size: 10px 10px;
+  background-position: 0 0, -5px 5px;
+  background-repeat: repeat;
+}
+.PaintTool-colorBox-MGe3f {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+.PaintTool-colorPicker-LSW1f {
+  width: 200px;
+  padding: 8px;
+  overflow: hidden;
+}
+.PaintTool-opacitySlider-_m6x7 {
+  width: 90%;
+}
+.PaintTool-activeRadio-BOPEG {
+  margin-right: -8px;
+}
+
+.MeasurementTools-container-T9yiM {
+  padding: 8px;
+}
+.MeasurementTools-container-T9yiM * {
+  user-select: none;
+}
+.MeasurementTools-fullWidth-jg_o5 {
+  width: 100%;
+}
+.MeasurementTools-heading-x9G8M {
+  padding: 8px 0;
+}
+.MeasurementTools-popup-Rgjca {
+  width: 250px;
+  overflow: hidden;
+}
+.MeasurementTools-toolButton-AuiAl {
+  /* override vuetify */
+  min-width: unset !important;
+  /* override vuetify */
+  padding: 0 6px !important;
+}
+.MeasurementTools-tools-Zplkp {
+  text-align: center;
+}
+.MeasurementTools-toolIcon-_ACfO {
+  height: 20px;
+  width: 20px;
+}
+.MeasurementTools-row-IsEDx {
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+.MeasurementTools-rowAvatar-AoIB_ {
+  flex: 0;
+  margin: 8px;
+}
+.MeasurementTools-rowContent-OAflc {
+  flex: 2;
+  display: flex;
+  flex-flow: column;
+  margin: 8px;
+  min-width: 0;
+}
+.MeasurementTools-rowContentName-qZi21 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 4px;
+}
+.MeasurementTools-rowContentDetails-IT3d5 {
+  font-style: italic;
+  color: #444;
+  padding: 0 4px;
+}
+.MeasurementTools-action-pSwKW {
+  margin: 0 2px;
+}
+.MeasurementTools-toolIconOverlay-PpV_8 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #fff;
+  opacity: 0.75;
+}
+
+
+.CropTool-container-O3Hvl {
+  padding: 0 8px 8px 8px;
+}
+.CropTool-container-O3Hvl * {
+  user-select: none;
+}
+
+.MedianFilter-container-Bl5Bg {
+  padding: 0 8px 8px 8px;
+}
+.MedianFilter-container-Bl5Bg * {
+  user-select: none;
+}
+
+/* vuetify override */
+.EditTools-panelContent-wgcJ9 > .v-expansion-panel-content__wrap {
+  padding: 0;
+}
+
+.AnimationControls-wrapper-LJEUM {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  align-content: center;
+}
+
+.GPUInformation-card-uYItl {
+  padding: 8px 16px;
+}
+.GPUInformation-heading-_XHR1 {
+  padding: 8px 0;
+}
+.GPUInformation-divider-JhBB2 {
+  margin-bottom: 16px;
+}
+.GPUInformation-monitor-Fu0yC {
+  position: relative;
+}
+.GPUInformation-table-BU0Qk td {
+  padding: 0 10px;
+}
+
+.GlobalSettings-container-_zf5o {
+  padding: 0;
+}
+.GlobalSettings-container-_zf5o * {
+  user-select: none;
+}
+.GlobalSettings-card-zqI_u {
+  padding: 8px 16px;
+}
+.GlobalSettings-heading-ftN6X {
+  padding: 8px 0;
+}
+.GlobalSettings-divider-_12Zl {
+  margin-bottom: 16px;
+}
+.GlobalSettings-slimInput-tiNot {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.ControlsDrawer-tabsContainer-D9UMb {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+.ControlsDrawer-tabItems-O9Lf9 {
+  flex: 2;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-flow: column;
+}
+
+/* needed so .tabItem doesn't default to auto height */
+.ControlsDrawer-tabItems-O9Lf9 > .v-window__container {
+  height: 100%;
+}
+.ControlsDrawer-tabItem-voKeM {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+.ControlsDrawer-tabComponent-K9eUY {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.ErrorBox-errorTextarea-_ViHl {
+  width: 100%;
+  min-height: 200px;
+  height: 40vh;
+  max-height: 500px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  padding: 8px;
+}
+
+.RawFileReader-toolbarButton-Qwep7 span {
+  margin-left: 4px;
+}
+.RawFileReader-overlay-EEhkR {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  user-select: none;
+}
+.RawFileReader-overlayHidden-A2Yvq {
+  visibility: hidden;
+}
+.RawFileReader-overlayText-iq_lG {
+  position: relative;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 80%;
+  margin: auto;
+}
+
+.GirderBox-close-eeT8j {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+
+.FileLoader-dragBox-wtic9 {
+  border: 1px dashed gray;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.FileLoader-dragBox-wtic9:hover, .FileLoader-dropTarget-KZYE7 {
+  background: rgba(0, 0, 0, 0.09);
+}
+
+#Landing-root-MDMR5 {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  padding-bottom: 16px;
+}
+.Landing-dnd-wOnpL {
+  height: 100%;
+}
+#Landing-banner-glRow {
+  min-height: 250px;
+}
+.Landing-fileUpload-yjnik {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  height: 100%;
+  border: 3px #aaa dashed;
+  border-radius: 5px;
+  background-color: #696969;
+}
+.Landing-fileUpload-yjnik:hover, .Landing-fileUploadHover-gEEmi {
+  background-color: #787878;
+  cursor: pointer;
+}
+.Landing-fileUploadContents-G0R9l {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+}
+.Landing-sampleData-LDmnt {
+  flex: 1;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.Landing-linkOverlay-HstJ9 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 1;
+  opacity: 0;
+  background: rgba(255,255,255,0.1);
+  font-size: 300%;
+  text-align: center;
+  font-weight: bolder;
+  color: white;
+}
+.Landing-linkOverlay-HstJ9:hover {
+  opacity: 1;
+}
+.Landing-acknowledgement-jf6A6 {
+  font-size: 80%;
+}
+.Landing-description-_xRo0 {
+  font-size: 80%;
+  color: lightgray;
+}
+.Landing-linkOverlayText-o_OYL {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  background: rgba(0,0,0,0.75);
+  padding: 10px;
+}
+
+.ToolbarSheet-sheet-xndXH {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transition: visibility 0s 200ms;
+}
+.ToolbarSheet-slotWrapper-NSeT7 {
+  transition: transform 200ms;
+}
+.ToolbarSheet-visible-dRAdL {
+  visibility: visible;
+  transition-delay: 0s;
+}
+.VtkView-container-xoSjw {
+  position: relative;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+.VtkView-vtkView-_T34c {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+.VtkView-viewTypeSelector-Y_5cJ {
+  max-width: 140px;
+  min-width: 140px;
+  user-select: none;
+}
+.VtkView-floatToolbar-_eQCk {
+  position: absolute;
+  z-index: 1;
+  right: 10px;
+  top: 10px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 16px;
+}
+.VtkView-toolbarWrapper-_mikW {
+  position: relative;
+}
+.VtkView-button-B4bSE {
+  /* override vuetify */
+  margin: 2px 4px;
+}
+.VtkView-smallToolbar-ZdwuJ {
+  overflow: hidden;
+}
+.VtkView-activeView-ES8oq {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 50%,rgba(255,255,255,0) 51%);
+}
+.VtkView-svgLayer-BTr2n {
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* v-toolbar height is 45px */
+  height: calc(100% - 45px);
+  width: 100%;
+  pointer-events: none;
+}
+.LayoutView-container-_kxKm {
+  height: 100%;
+  padding: 0;
+}
+.LayoutView-grid-T7vhg {
+  height: 100%;
+  display: grid;
+  grid-column-gap: 2px;
+  grid-row-gap: 2px;
+  grid-template-areas: none;
+}
+.LayoutView-viewContainer-kpqmi {
+  /* prevent view from overflowing our app during resize */
+  min-height: 0;
+  min-width: 0;
+}
+
+.ScreenshotDialog-imagePreview-UShNL {
+  border: 2px dashed black;
+}
+
+.Screenshots-container-QUtU6 {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  user-select: none;
+}
+.Screenshots-emptyState-A_kb2 {
+  flex: 2;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+.Screenshots-filename-_4xgf {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.Screenshots-action-BSST7 {
+  /* override vuetify */
+  min-width: unset;
+  /* override vuetify */
+  margin-left: 4px !important;
+}
+.Screenshots-hoverTooltip-WDQlH {
+  background-color: white;
+  opacity: 1;
+}
+.Screenshots-hoverImage-_Qhil {
+  max-height: 200px;
+}
+
+.StateFileGenerator-hidden-W1iZI {
+  display: none;
+}
+.StateFileGenerator-visible-mpB0c {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  top: 50%;
+  width: 450px;
+  transform: translate(-50%, -50%);
+
+  background: rgba(128,128,128,0.9);
+  border-radius: 10px;
+  text-align: center;
+  padding: 50px;
+  border: solid 1px #333;
+  box-shadow: rgba(0,0,0,0.5) 5px 5px 10px;
+}
+.StateFileGenerator-label-kWzey {
+  display: block;
+  font-weight: bolder;
+  color: white;
+  font-size: 25px;
+  margin-top: 30px;
+}
+
+#App-appContent-GhXJH {
+  height: 100%;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+.App-overlay-B_drw {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  user-select: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 100ms, visibility 0 100ms;
+}
+.App-overlayVisible-XKImt {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+.App-overlayText-WTZRN {
+  position: relative;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 80%;
+  margin: auto;
+}
+.App-noTransition-IOu4K {
+  transition: none;
+}
+

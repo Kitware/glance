@@ -63,8 +63,6 @@ import readImageArrayBuffer from './readImageArrayBuffer.js';
 itk.readImageArrayBuffer = readImageArrayBuffer;
 import readImageBlob from './readImageBlob.js';
 itk.readImageBlob = readImageBlob;
-import readImageFileSeries from './readImageFileSeries.js';
-itk.readImageFileSeries = readImageFileSeries;
 import readImageDICOMFileSeries from './readImageDICOMFileSeries.js';
 itk.readImageDICOMFileSeries = readImageDICOMFileSeries;
 import readImageFile from './readImageFile.js';

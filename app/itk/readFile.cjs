@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -19,12 +17,14 @@ var _extensionToMeshIO = _interopRequireDefault(require("./extensionToMeshIO"));
 
 var _extensionToPolyDataIO = _interopRequireDefault(require("./extensionToPolyDataIO"));
 
-var readFile = function readFile(webWorker, file) {
-  var extension = (0, _getFileExtension.default)(file.name);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  var isMesh = _extensionToMeshIO.default.has(extension);
+const readFile = (webWorker, file) => {
+  const extension = (0, _getFileExtension.default)(file.name);
 
-  var isPolyData = _extensionToPolyDataIO.default.has(extension);
+  const isMesh = _extensionToMeshIO.default.has(extension);
+
+  const isPolyData = _extensionToPolyDataIO.default.has(extension);
 
   if (isMesh) {
     return (0, _readMeshFile.default)(webWorker, file).catch(function () {

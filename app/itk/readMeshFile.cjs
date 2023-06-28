@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -13,13 +11,16 @@ var _promiseFileReader = _interopRequireDefault(require("promise-file-reader"));
 
 var _itkConfig = _interopRequireDefault(require("./itkConfig"));
 
-var readMeshFile = function readMeshFile(webWorker, file) {
-  var worker = webWorker;
-  return (0, _createWebworkerPromise.default)('MeshIO', worker).then(function (_ref) {
-    var webworkerPromise = _ref.webworkerPromise,
-        usedWorker = _ref.worker;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const readMeshFile = (webWorker, file) => {
+  let worker = webWorker;
+  return (0, _createWebworkerPromise.default)('MeshIO', worker).then(({
+    webworkerPromise,
+    worker: usedWorker
+  }) => {
     worker = usedWorker;
-    return _promiseFileReader.default.readAsArrayBuffer(file).then(function (arrayBuffer) {
+    return _promiseFileReader.default.readAsArrayBuffer(file).then(arrayBuffer => {
       return webworkerPromise.postMessage({
         operation: 'readMesh',
         name: file.name,
@@ -29,7 +30,7 @@ var readMeshFile = function readMeshFile(webWorker, file) {
       }, [arrayBuffer]);
     }).then(function (mesh) {
       return Promise.resolve({
-        mesh: mesh,
+        mesh,
         webWorker: worker
       });
     });

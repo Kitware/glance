@@ -1,12 +1,11 @@
+import _regeneratorRuntime from "@babel/runtime/regenerator";
 import _asyncToGenerator from "@babel/runtime/helpers/asyncToGenerator";
 import _typeof from "@babel/runtime/helpers/typeof";
-import _regeneratorRuntime from "@babel/runtime/regenerator";
 import axios from 'axios';
 import createWebworkerPromise from './createWebworkerPromise';
 import config from './itkConfig';
 import IOTypes from './IOTypes';
-import runPipelineEmscripten from './runPipelineEmscripten';
-import getTransferable from './getTransferable'; // To cache loaded pipeline modules
+import runPipelineEmscripten from './runPipelineEmscripten'; // To cache loaded pipeline modules
 
 var pipelinePathToModule = {};
 
@@ -32,7 +31,11 @@ function loadEmscriptenModuleMainThread(itkModulesPath, modulesDirectory, pipeli
       s.onload = resolve;
       s.onerror = reject;
       document.head.appendChild(s);
-    }).then( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee() {
+    }).then(
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    _regeneratorRuntime.mark(function _callee() {
       var moduleBaseName, wasmPath, response, wasmBinary;
       return _regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -92,7 +95,9 @@ function loadPipelineModule(_x, _x2, _x3) {
 }
 
 function _loadPipelineModule() {
-  _loadPipelineModule = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee2(moduleDirectory, pipelinePath, isAbsoluteURL) {
+  _loadPipelineModule = _asyncToGenerator(
+  /*#__PURE__*/
+  _regeneratorRuntime.mark(function _callee2(moduleDirectory, pipelinePath, isAbsoluteURL) {
     var pipelineModule;
     return _regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
@@ -130,6 +135,25 @@ function _loadPipelineModule() {
   return _loadPipelineModule.apply(this, arguments);
 }
 
+var haveSharedArrayBuffer = typeof window.SharedArrayBuffer === 'function';
+
+function getTransferable(data) {
+  var result = null;
+
+  if (data.buffer) {
+    result = data.buffer;
+  } else if (data.byteLength) {
+    result = data;
+  }
+
+  if (!!result && haveSharedArrayBuffer && result instanceof SharedArrayBuffer) {
+    // eslint-disable-line
+    result = null;
+  }
+
+  return result;
+}
+
 var runPipelineBrowser = function runPipelineBrowser(webWorker, pipelinePath, args, outputs, inputs) {
   var isAbsoluteURL = pipelinePath instanceof URL;
 
@@ -149,22 +173,26 @@ var runPipelineBrowser = function runPipelineBrowser(webWorker, pipelinePath, ar
 
     if (inputs) {
       inputs.forEach(function (input) {
+        // Binary data
         if (input.type === IOTypes.Binary) {
-          // Binary data
           var transferable = getTransferable(input.data);
 
           if (transferable) {
             transferables.push(transferable);
           }
-        } else if (input.type === IOTypes.Image) {
-          // Image data
+        } // Image data
+
+
+        if (input.type === IOTypes.Image) {
           var _transferable = getTransferable(input.data.data);
 
           if (_transferable) {
             transferables.push(_transferable);
           }
-        } else if (input.type === IOTypes.Mesh) {
-          // Mesh data
+        } // Mesh data
+
+
+        if (input.type === IOTypes.Mesh) {
           if (input.data.points) {
             var _transferable2 = getTransferable(input.data.points);
 

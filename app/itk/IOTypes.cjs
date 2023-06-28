@@ -1,14 +1,14 @@
 "use strict";
 
-var Text = 'Text';
-var Binary = 'Binary';
-var Image = 'Image';
-var Mesh = 'Mesh';
-var vtkPolyData = 'vtkPolyData';
+const Text = 'Text';
+const Binary = 'Binary';
+const Image = 'Image';
+const Mesh = 'Mesh';
+const vtkPolyData = 'vtkPolyData';
 module.exports = {
-  Text: Text,
-  Binary: Binary,
-  Image: Image,
-  Mesh: Mesh,
-  vtkPolyData: vtkPolyData
+  Text,
+  Binary,
+  Image,
+  Mesh,
+  vtkPolyData
 };

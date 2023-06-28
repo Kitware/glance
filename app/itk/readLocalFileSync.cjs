@@ -1,18 +1,18 @@
 "use strict";
 
-var path = require('path');
+const path = require('path');
 
-var getFileExtension = require('./getFileExtension.js');
+const getFileExtension = require('./getFileExtension.js');
 
-var extensionToMeshIO = require('./extensionToMeshIO.js');
+const extensionToMeshIO = require('./extensionToMeshIO.js');
 
-var extensionToPolyDataIO = require('./extensionToPolyDataIO.js');
+const extensionToPolyDataIO = require('./extensionToPolyDataIO.js');
 
-var readImageLocalFileSync = require('./readImageLocalFileSync.js');
+const readImageLocalFileSync = require('./readImageLocalFileSync.js');
 
-var readMeshLocalFileSync = require('./readMeshLocalFileSync.js');
+const readMeshLocalFileSync = require('./readMeshLocalFileSync.js');
 
-var readPolyDataLocalFileSync = require('./readPolyDataLocalFileSync.js');
+const readPolyDataLocalFileSync = require('./readPolyDataLocalFileSync.js');
 /**
  * Read an image or mesh from a file on the local filesystem in Node.js.
  *
@@ -20,28 +20,27 @@ var readPolyDataLocalFileSync = require('./readPolyDataLocalFileSync.js');
  */
 
 
-var readLocalFileSync = function readLocalFileSync(filePath) {
-  var absoluteFilePath = path.resolve(filePath);
-  var extension = getFileExtension(absoluteFilePath);
-  var isMesh = extensionToMeshIO.has(extension);
-  var isPolyData = extensionToPolyDataIO.has(extension);
+const readLocalFileSync = filePath => {
+  const absoluteFilePath = path.resolve(filePath);
+  const extension = getFileExtension(absoluteFilePath);
+  const isMesh = extensionToMeshIO.has(extension);
+  const isPolyData = extensionToPolyDataIO.has(extension);
 
   if (isMesh) {
     try {
-      var mesh = readMeshLocalFileSync(filePath);
+      const mesh = readMeshLocalFileSync(filePath);
       return mesh;
     } catch (err) {
       // Was a .vtk image file? Continue to read as an image.
-      var image = readImageLocalFileSync(filePath);
+      const image = readImageLocalFileSync(filePath);
       return image;
     }
   } else if (isPolyData) {
-    var polyData = readPolyDataLocalFileSync(filePath);
+    const polyData = readPolyDataLocalFileSync(filePath);
     return polyData;
   } else {
-    var _image = readImageLocalFileSync(filePath);
-
-    return _image;
+    const image = readImageLocalFileSync(filePath);
+    return image;
   }
 };
 

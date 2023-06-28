@@ -1,13 +1,9 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 // Load the Emscripten module in the browser.
 //
@@ -29,37 +25,37 @@ var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 // pipelinePath is the file name of the emscripten module without the ".js"
 // extension
 function loadEmscriptenModule(itkModulesPath, modulesDirectory, pipelinePath, isAbsoluteURL) {
-  var prefix = itkModulesPath;
+  let prefix = itkModulesPath;
 
   if (itkModulesPath[0] !== '/' && !itkModulesPath.startsWith('http')) {
     prefix = '..';
   }
 
-  var moduleScriptDir = prefix + '/' + modulesDirectory;
+  const moduleScriptDir = prefix + '/' + modulesDirectory;
 
-  if ((typeof WebAssembly === "undefined" ? "undefined" : (0, _typeof2.default)(WebAssembly)) === 'object' && typeof WebAssembly.Memory === 'function') {
-    var modulePath = moduleScriptDir + '/' + pipelinePath + 'Wasm.js';
+  if (typeof WebAssembly === 'object' && typeof WebAssembly.Memory === 'function') {
+    let modulePath = moduleScriptDir + '/' + pipelinePath + 'Wasm.js';
 
     if (isAbsoluteURL) {
       modulePath = pipelinePath + 'Wasm.js';
     }
 
     importScripts(modulePath);
-    var moduleBaseName = pipelinePath.replace(/.*\//, '');
-    var module = self[moduleBaseName]({
-      moduleScriptDir: moduleScriptDir,
-      isAbsoluteURL: isAbsoluteURL,
-      pipelinePath: pipelinePath
+    const moduleBaseName = pipelinePath.replace(/.*\//, '');
+    const module = self[moduleBaseName]({
+      moduleScriptDir,
+      isAbsoluteURL,
+      pipelinePath
     });
     return module;
   } else {
-    var _modulePath = moduleScriptDir + '/' + pipelinePath + '.js';
+    let modulePath = moduleScriptDir + '/' + pipelinePath + '.js';
 
     if (isAbsoluteURL) {
-      _modulePath = pipelinePath + '.js';
+      modulePath = pipelinePath + '.js';
     }
 
-    importScripts(_modulePath);
+    importScripts(modulePath);
     return Module;
   }
 }

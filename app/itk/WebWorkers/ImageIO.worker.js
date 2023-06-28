@@ -36,7 +36,6 @@ function _asyncToGenerator(fn) {
 }
 
 module.exports = _asyncToGenerator;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
 },{}],2:[function(require,module,exports){
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
@@ -45,7 +44,6 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
 },{}],3:[function(require,module,exports){
 function _typeof(obj) {
   "@babel/helpers - typeof";
@@ -54,21 +52,16 @@ function _typeof(obj) {
     module.exports = _typeof = function _typeof(obj) {
       return typeof obj;
     };
-
-    module.exports["default"] = module.exports, module.exports.__esModule = true;
   } else {
     module.exports = _typeof = function _typeof(obj) {
       return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
-
-    module.exports["default"] = module.exports, module.exports.__esModule = true;
   }
 
   return _typeof(obj);
 }
 
 module.exports = _typeof;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
 },{}],4:[function(require,module,exports){
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
@@ -87,24 +80,6 @@ var runtime = (function (exports) {
   var iteratorSymbol = $Symbol.iterator || "@@iterator";
   var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
   var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
-
-  function define(obj, key, value) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-    return obj[key];
-  }
-  try {
-    // IE 8 has a broken Object.defineProperty that only works on DOM objects.
-    define({}, "");
-  } catch (err) {
-    define = function(obj, key, value) {
-      return obj[key] = value;
-    };
-  }
 
   function wrap(innerFn, outerFn, self, tryLocsList) {
     // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
@@ -176,19 +151,16 @@ var runtime = (function (exports) {
     Generator.prototype = Object.create(IteratorPrototype);
   GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
   GeneratorFunctionPrototype.constructor = GeneratorFunction;
-  GeneratorFunction.displayName = define(
-    GeneratorFunctionPrototype,
-    toStringTagSymbol,
-    "GeneratorFunction"
-  );
+  GeneratorFunctionPrototype[toStringTagSymbol] =
+    GeneratorFunction.displayName = "GeneratorFunction";
 
   // Helper for defining the .next, .throw, and .return methods of the
   // Iterator interface in terms of a single ._invoke method.
   function defineIteratorMethods(prototype) {
     ["next", "throw", "return"].forEach(function(method) {
-      define(prototype, method, function(arg) {
+      prototype[method] = function(arg) {
         return this._invoke(method, arg);
-      });
+      };
     });
   }
 
@@ -207,7 +179,9 @@ var runtime = (function (exports) {
       Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
     } else {
       genFun.__proto__ = GeneratorFunctionPrototype;
-      define(genFun, toStringTagSymbol, "GeneratorFunction");
+      if (!(toStringTagSymbol in genFun)) {
+        genFun[toStringTagSymbol] = "GeneratorFunction";
+      }
     }
     genFun.prototype = Object.create(Gp);
     return genFun;
@@ -477,7 +451,7 @@ var runtime = (function (exports) {
   // unified ._invoke helper method.
   defineIteratorMethods(Gp);
 
-  define(Gp, toStringTagSymbol, "Generator");
+  Gp[toStringTagSymbol] = "Generator";
 
   // A Generator should always return itself as the iterator object when the
   // @@iterator function is called on it. Some browsers' implementations of the
@@ -1102,7 +1076,7 @@ module.exports = Image;
 },{"./ImageType.js":11,"./Matrix.js":13}],10:[function(require,module,exports){
 "use strict";
 
-var ImageIOIndex = ['itkPNGImageIOJSBinding', 'itkMetaImageIOJSBinding', 'itkDCMTKImageIOJSBinding', 'itkTIFFImageIOJSBinding', 'itkNiftiImageIOJSBinding', 'itkJPEGImageIOJSBinding', 'itkNrrdImageIOJSBinding', 'itkVTKImageIOJSBinding', 'itkBMPImageIOJSBinding', 'itkHDF5ImageIOJSBinding', 'itkMINCImageIOJSBinding', 'itkMRCImageIOJSBinding', 'itkLSMImageIOJSBinding', 'itkMGHImageIOJSBinding', 'itkBioRadImageIOJSBinding', 'itkGiplImageIOJSBinding', 'itkGEAdwImageIOJSBinding', 'itkGE4ImageIOJSBinding', 'itkGE5ImageIOJSBinding', 'itkGDCMImageIOJSBinding', 'itkScancoImageIOJSBinding', 'itkFDFImageIOJSBinding', 'itkJSONImageIOJSBinding'];
+var ImageIOIndex = ['itkPNGImageIOJSBinding', 'itkMetaImageIOJSBinding', 'itkDCMTKImageIOJSBinding', 'itkTIFFImageIOJSBinding', 'itkNiftiImageIOJSBinding', 'itkJPEGImageIOJSBinding', 'itkNrrdImageIOJSBinding', 'itkVTKImageIOJSBinding', 'itkBMPImageIOJSBinding', 'itkHDF5ImageIOJSBinding', 'itkMINCImageIOJSBinding', 'itkMRCImageIOJSBinding', 'itkLSMImageIOJSBinding', 'itkMGHImageIOJSBinding', 'itkBioRadImageIOJSBinding', 'itkGiplImageIOJSBinding', 'itkGEAdwImageIOJSBinding', 'itkGE4ImageIOJSBinding', 'itkGE5ImageIOJSBinding', 'itkGDCMImageIOJSBinding', 'itkJSONImageIOJSBinding'];
 module.exports = ImageIOIndex;
 
 },{}],11:[function(require,module,exports){
@@ -1265,21 +1239,13 @@ var _writeImageEmscriptenFSFile = _interopRequireDefault(require("../writeImageE
 
 var _readImageEmscriptenFSDICOMFileSeries = _interopRequireDefault(require("../readImageEmscriptenFSDICOMFileSeries"));
 
-var _readDICOMTagsEmscriptenFSFile = _interopRequireDefault(require("../readDICOMTagsEmscriptenFSFile"));
-
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-var _marked = /*#__PURE__*/_regenerator["default"].mark(availableIOModules);
+var _marked =
+/*#__PURE__*/
+_regenerator["default"].mark(availableIOModules);
 
 // To cache loaded io modules
 var ioToModule = {};
 var seriesReaderModule = null;
-var tagReaderModule = null;
-var haveSharedArrayBuffer = typeof self.SharedArrayBuffer === 'function'; // eslint-disable-line
 
 function availableIOModules(input) {
   var idx, _trialIO, ioModule;
@@ -1319,26 +1285,22 @@ function readImage(_x) {
 }
 
 function _readImage() {
-  _readImage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(input) {
-    var extension, mountpoint, io, idx, _iterator, _step, mod, _trialIO2, imageIO, filePath, inputToResponse, ioModule, _ioModule;
+  _readImage = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee2(input) {
+    var extension, mountpoint, io, idx, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, mod, _trialIO2, imageIO, filePath, inputToResponse, ioModule, _ioModule;
 
     return _regenerator["default"].wrap(function _callee2$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            inputToResponse = function _inputToResponse(ioModule) {
+            inputToResponse = function _ref2(ioModule) {
               ioModule.mkdirs(mountpoint);
               var filePath = "".concat(mountpoint, "/").concat(input.name);
               ioModule.writeFile(filePath, new Uint8Array(input.data));
               var image = (0, _readImageEmscriptenFSFile["default"])(ioModule, filePath);
               ioModule.unlink(filePath);
-
-              if (haveSharedArrayBuffer && image.data.buffer instanceof SharedArrayBuffer) {
-                // eslint-disable-line
-                return new _register["default"].TransferableResponse(image, []);
-              } else {
-                return new _register["default"].TransferableResponse(image, [image.data.buffer]);
-              }
+              return new _register["default"].TransferableResponse(image, [image.data.buffer]);
             };
 
             extension = (0, _getFileExtension["default"])(input.name);
@@ -1351,7 +1313,7 @@ function _readImage() {
             }
 
             io = _MimeToImageIO["default"].get(input.type);
-            _context3.next = 43;
+            _context3.next = 52;
             break;
 
           case 8:
@@ -1361,19 +1323,20 @@ function _readImage() {
             }
 
             io = _extensionToImageIO["default"].get(extension);
-            _context3.next = 43;
+            _context3.next = 52;
             break;
 
           case 12:
             idx = 0;
-            _iterator = _createForOfIteratorHelper(availableIOModules(input));
-            _context3.prev = 14;
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            _context3.prev = 16;
+            _iterator = availableIOModules(input)[Symbol.iterator]();
 
-            _iterator.s();
-
-          case 16:
-            if ((_step = _iterator.n()).done) {
-              _context3.next = 33;
+          case 18:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              _context3.next = 36;
               break;
             }
 
@@ -1386,68 +1349,86 @@ function _readImage() {
             imageIO.SetFileName(filePath);
 
             if (!imageIO.CanReadFile(filePath)) {
-              _context3.next = 29;
+              _context3.next = 31;
               break;
             }
 
             io = _trialIO2;
             mod.unlink(filePath);
             ioToModule[io] = mod;
-            return _context3.abrupt("break", 33);
+            return _context3.abrupt("break", 36);
 
-          case 29:
+          case 31:
             mod.unlink(filePath);
             idx++;
 
-          case 31:
-            _context3.next = 16;
-            break;
-
           case 33:
-            _context3.next = 38;
+            _iteratorNormalCompletion = true;
+            _context3.next = 18;
             break;
 
-          case 35:
-            _context3.prev = 35;
-            _context3.t0 = _context3["catch"](14);
-
-            _iterator.e(_context3.t0);
+          case 36:
+            _context3.next = 42;
+            break;
 
           case 38:
             _context3.prev = 38;
+            _context3.t0 = _context3["catch"](16);
+            _didIteratorError = true;
+            _iteratorError = _context3.t0;
 
-            _iterator.f();
+          case 42:
+            _context3.prev = 42;
+            _context3.prev = 43;
 
-            return _context3.finish(38);
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+              _iterator["return"]();
+            }
 
-          case 41:
+          case 45:
+            _context3.prev = 45;
+
+            if (!_didIteratorError) {
+              _context3.next = 48;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 48:
+            return _context3.finish(45);
+
+          case 49:
+            return _context3.finish(42);
+
+          case 50:
             if (!(io === null)) {
-              _context3.next = 43;
+              _context3.next = 52;
               break;
             }
 
             throw new Error('Could not find IO for: ' + input.name);
 
-          case 43:
+          case 52:
             if (!(io in ioToModule)) {
-              _context3.next = 48;
+              _context3.next = 57;
               break;
             }
 
             ioModule = ioToModule[io];
             return _context3.abrupt("return", inputToResponse(ioModule));
 
-          case 48:
+          case 57:
             _ioModule = (0, _loadEmscriptenModuleBrowser["default"])(input.config.itkModulesPath, 'ImageIOs', io);
             ioToModule[io] = _ioModule;
             return _context3.abrupt("return", inputToResponse(_ioModule));
 
-          case 51:
+          case 60:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee2, null, [[14, 35, 38, 41]]);
+    }, _callee2, null, [[16, 38, 42, 50], [43,, 45, 49]]);
   }));
   return _readImage.apply(this, arguments);
 }
@@ -1457,8 +1438,10 @@ function writeImage(_x2) {
 }
 
 function _writeImage() {
-  _writeImage = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(input) {
-    var extension, mountpoint, io, _iterator2, _step2, _ioModule2, imageIO, _filePath, ioModule, filePath, writtenFile;
+  _writeImage = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee3(input) {
+    var extension, mountpoint, io, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, _ioModule2, imageIO, _filePath, ioModule, filePath, writtenFile;
 
     return _regenerator["default"].wrap(function _callee3$(_context4) {
       while (1) {
@@ -1474,7 +1457,7 @@ function _writeImage() {
             }
 
             io = _MimeToImageIO["default"].get(input.type);
-            _context4.next = 32;
+            _context4.next = 41;
             break;
 
           case 7:
@@ -1484,18 +1467,19 @@ function _writeImage() {
             }
 
             io = _extensionToImageIO["default"].get(extension);
-            _context4.next = 32;
+            _context4.next = 41;
             break;
 
           case 11:
-            _iterator2 = _createForOfIteratorHelper(availableIOModules(input));
-            _context4.prev = 12;
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            _context4.prev = 14;
+            _iterator2 = availableIOModules(input)[Symbol.iterator]();
 
-            _iterator2.s();
-
-          case 14:
-            if ((_step2 = _iterator2.n()).done) {
-              _context4.next = 24;
+          case 16:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              _context4.next = 27;
               break;
             }
 
@@ -1505,44 +1489,62 @@ function _writeImage() {
             imageIO.SetFileName(_filePath);
 
             if (!imageIO.CanWriteFile(_filePath)) {
-              _context4.next = 22;
+              _context4.next = 24;
               break;
             }
 
             io = trialIO;
-            return _context4.abrupt("break", 24);
-
-          case 22:
-            _context4.next = 14;
-            break;
+            return _context4.abrupt("break", 27);
 
           case 24:
-            _context4.next = 29;
+            _iteratorNormalCompletion2 = true;
+            _context4.next = 16;
             break;
 
-          case 26:
-            _context4.prev = 26;
-            _context4.t0 = _context4["catch"](12);
-
-            _iterator2.e(_context4.t0);
+          case 27:
+            _context4.next = 33;
+            break;
 
           case 29:
             _context4.prev = 29;
+            _context4.t0 = _context4["catch"](14);
+            _didIteratorError2 = true;
+            _iteratorError2 = _context4.t0;
 
-            _iterator2.f();
+          case 33:
+            _context4.prev = 33;
+            _context4.prev = 34;
 
-            return _context4.finish(29);
+            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+              _iterator2["return"]();
+            }
 
-          case 32:
+          case 36:
+            _context4.prev = 36;
+
+            if (!_didIteratorError2) {
+              _context4.next = 39;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 39:
+            return _context4.finish(36);
+
+          case 40:
+            return _context4.finish(33);
+
+          case 41:
             if (!(io === null)) {
-              _context4.next = 35;
+              _context4.next = 44;
               break;
             }
 
             ioToModule = {};
             throw new Error('Could not find IO for: ' + input.name);
 
-          case 35:
+          case 44:
             ioModule = null;
 
             if (io in ioToModule) {
@@ -1559,23 +1561,14 @@ function _writeImage() {
               encoding: 'binary'
             });
             ioModule.unlink(filePath);
-
-            if (!(haveSharedArrayBuffer && writtenFile.buffer instanceof SharedArrayBuffer)) {
-              _context4.next = 46;
-              break;
-            }
-
-            return _context4.abrupt("return", new _register["default"].TransferableResponse(writtenFile.buffer, []));
-
-          case 46:
             return _context4.abrupt("return", new _register["default"].TransferableResponse(writtenFile.buffer, [writtenFile.buffer]));
 
-          case 47:
+          case 52:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee3, null, [[12, 26, 29, 32]]);
+    }, _callee3, null, [[14, 29, 33, 41], [34,, 36, 40]]);
   }));
   return _writeImage.apply(this, arguments);
 }
@@ -1585,7 +1578,9 @@ function readDICOMImageSeries(_x3) {
 }
 
 function _readDICOMImageSeries() {
-  _readDICOMImageSeries = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(input) {
+  _readDICOMImageSeries = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee4(input) {
     var seriesReader, mountpoint, filePaths, ii, filePath, image, _ii;
 
     return _regenerator["default"].wrap(function _callee4$(_context5) {
@@ -1614,17 +1609,9 @@ function _readDICOMImageSeries() {
               seriesReaderModule.unlink(filePaths[_ii]);
             }
 
-            if (!(haveSharedArrayBuffer && image.data.buffer instanceof SharedArrayBuffer)) {
-              _context5.next = 12;
-              break;
-            }
-
-            return _context5.abrupt("return", new _register["default"].TransferableResponse(image, []));
-
-          case 12:
             return _context5.abrupt("return", new _register["default"].TransferableResponse(image, [image.data.buffer]));
 
-          case 13:
+          case 9:
           case "end":
             return _context5.stop();
         }
@@ -1634,43 +1621,12 @@ function _readDICOMImageSeries() {
   return _readDICOMImageSeries.apply(this, arguments);
 }
 
-function readDICOMTags(_x4) {
-  return _readDICOMTags.apply(this, arguments);
-}
-
-function _readDICOMTags() {
-  _readDICOMTags = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(input) {
-    var tagReader, mountpoint, filePath, tagValues;
-    return _regenerator["default"].wrap(function _callee5$(_context6) {
-      while (1) {
-        switch (_context6.prev = _context6.next) {
-          case 0:
-            tagReader = 'itkDICOMTagReaderJSBinding';
-
-            if (!tagReaderModule) {
-              tagReaderModule = (0, _loadEmscriptenModuleBrowser["default"])(input.config.itkModulesPath, 'ImageIOs', tagReader);
-            }
-
-            mountpoint = '/work';
-            tagReaderModule.mkdirs(mountpoint);
-            filePath = "".concat(mountpoint, "/").concat(input.name);
-            tagReaderModule.writeFile(filePath, new Uint8Array(input.data));
-            tagValues = (0, _readDICOMTagsEmscriptenFSFile["default"])(tagReaderModule, filePath, input.tags);
-            tagReaderModule.unlink(filePath);
-            return _context6.abrupt("return", new _register["default"].TransferableResponse(tagValues, []));
-
-          case 9:
-          case "end":
-            return _context6.stop();
-        }
-      }
-    }, _callee5);
-  }));
-  return _readDICOMTags.apply(this, arguments);
-}
-
-(0, _register["default"])( /*#__PURE__*/function () {
-  var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(input) {
+(0, _register["default"])(
+/*#__PURE__*/
+function () {
+  var _ref = (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee(input) {
     return _regenerator["default"].wrap(function _callee$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -1699,17 +1655,9 @@ function _readDICOMTags() {
             return _context2.abrupt("return", readDICOMImageSeries(input));
 
           case 12:
-            if (!(input.operation === 'readDICOMTags')) {
-              _context2.next = 16;
-              break;
-            }
-
-            return _context2.abrupt("return", readDICOMTags(input));
-
-          case 16:
             throw new Error('Unknown worker operation');
 
-          case 17:
+          case 13:
           case "end":
             return _context2.stop();
         }
@@ -1717,15 +1665,15 @@ function _readDICOMTags() {
     }, _callee);
   }));
 
-  return function (_x5) {
+  return function (_x4) {
     return _ref.apply(this, arguments);
   };
 }());
 
-},{"../ImageIOIndex":10,"../MimeToImageIO":14,"../extensionToImageIO":17,"../getFileExtension":18,"../loadEmscriptenModuleBrowser":24,"../readDICOMTagsEmscriptenFSFile":25,"../readImageEmscriptenFSDICOMFileSeries":26,"../readImageEmscriptenFSFile":27,"../writeImageEmscriptenFSFile":28,"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/regenerator":5,"webworker-promise/lib/register":6}],17:[function(require,module,exports){
+},{"../ImageIOIndex":10,"../MimeToImageIO":14,"../extensionToImageIO":17,"../getFileExtension":18,"../loadEmscriptenModuleBrowser":24,"../readImageEmscriptenFSDICOMFileSeries":25,"../readImageEmscriptenFSFile":26,"../writeImageEmscriptenFSFile":27,"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/regenerator":5,"webworker-promise/lib/register":6}],17:[function(require,module,exports){
 "use strict";
 
-var extensionToIO = new Map([['bmp', 'itkBMPImageIOJSBinding'], ['BMP', 'itkBMPImageIOJSBinding'], ['dcm', 'itkGDCMImageIOJSBinding'], ['DCM', 'itkGDCMImageIOJSBinding'], ['gipl', 'itkGiplImageIOJSBinding'], ['gipl.gz', 'itkGiplImageIOJSBinding'], ['hdf5', 'itkHDF5ImageIOJSBinding'], ['jpg', 'itkJPEGImageIOJSBinding'], ['JPG', 'itkJPEGImageIOJSBinding'], ['jpeg', 'itkJPEGImageIOJSBinding'], ['JPEG', 'itkJPEGImageIOJSBinding'], ['json', 'itkJSONImageIOJSBinding'], ['lsm', 'itkLSMImageIOJSBinding'], ['mnc', 'itkMINCImageIOJSBinding'], ['MNC', 'itkMINCImageIOJSBinding'], ['mnc.gz', 'itkMINCImageIOJSBinding'], ['MNC.GZ', 'itkMINCImageIOJSBinding'], ['mnc2', 'itkMINCImageIOJSBinding'], ['MNC2', 'itkMINCImageIOJSBinding'], ['mgh', 'itkMGHImageIOJSBinding'], ['mgz', 'itkMGHImageIOJSBinding'], ['mgh.gz', 'itkMGHImageIOJSBinding'], ['mha', 'itkMetaImageIOJSBinding'], ['mhd', 'itkMetaImageIOJSBinding'], ['mrc', 'itkMRCImageIOJSBinding'], ['nia', 'itkNiftiImageIOJSBinding'], ['nii', 'itkNiftiImageIOJSBinding'], ['nii.gz', 'itkNiftiImageIOJSBinding'], ['hdr', 'itkNiftiImageIOJSBinding'], ['nrrd', 'itkNrrdImageIOJSBinding'], ['NRRD', 'itkNrrdImageIOJSBinding'], ['nhdr', 'itkNrrdImageIOJSBinding'], ['NHDR', 'itkNrrdImageIOJSBinding'], ['png', 'itkPNGImageIOJSBinding'], ['PNG', 'itkPNGImageIOJSBinding'], ['pic', 'itkBioRadImageIOJSBinding'], ['PIC', 'itkBioRadImageIOJSBinding'], ['tif', 'itkTIFFImageIOJSBinding'], ['TIF', 'itkTIFFImageIOJSBinding'], ['tiff', 'itkTIFFImageIOJSBinding'], ['TIFF', 'itkTIFFImageIOJSBinding'], ['vtk', 'itkVTKImageIOJSBinding'], ['VTK', 'itkVTKImageIOJSBinding'], ['isq', 'itkScancoImageIOJSBinding'], ['ISQ', 'itkScancoImageIOJSBinding'], ['fdf', 'itkFDFImageIOJSBinding'], ['FDF', 'itkFDFImageIOJSBinding']]);
+var extensionToIO = new Map([['bmp', 'itkBMPImageIOJSBinding'], ['BMP', 'itkBMPImageIOJSBinding'], ['dcm', 'itkGDCMImageIOJSBinding'], ['DCM', 'itkGDCMImageIOJSBinding'], ['gipl', 'itkGiplImageIOJSBinding'], ['gipl.gz', 'itkGiplImageIOJSBinding'], ['hdf5', 'itkHDF5ImageIOJSBinding'], ['jpg', 'itkJPEGImageIOJSBinding'], ['JPG', 'itkJPEGImageIOJSBinding'], ['jpeg', 'itkJPEGImageIOJSBinding'], ['JPEG', 'itkJPEGImageIOJSBinding'], ['json', 'itkJSONImageIOJSBinding'], ['lsm', 'itkLSMImageIOJSBinding'], ['mnc', 'itkMINCImageIOJSBinding'], ['MNC', 'itkMINCImageIOJSBinding'], ['mnc.gz', 'itkMINCImageIOJSBinding'], ['MNC.GZ', 'itkMINCImageIOJSBinding'], ['mnc2', 'itkMINCImageIOJSBinding'], ['MNC2', 'itkMINCImageIOJSBinding'], ['mgh', 'itkMGHImageIOJSBinding'], ['mgz', 'itkMGHImageIOJSBinding'], ['mgh.gz', 'itkMGHImageIOJSBinding'], ['mha', 'itkMetaImageIOJSBinding'], ['mhd', 'itkMetaImageIOJSBinding'], ['mrc', 'itkMRCImageIOJSBinding'], ['nia', 'itkNiftiImageIOJSBinding'], ['nii', 'itkNiftiImageIOJSBinding'], ['nii.gz', 'itkNiftiImageIOJSBinding'], ['hdr', 'itkNiftiImageIOJSBinding'], ['nrrd', 'itkNrrdImageIOJSBinding'], ['NRRD', 'itkNrrdImageIOJSBinding'], ['nhdr', 'itkNrrdImageIOJSBinding'], ['NHDR', 'itkNrrdImageIOJSBinding'], ['png', 'itkPNGImageIOJSBinding'], ['PNG', 'itkPNGImageIOJSBinding'], ['pic', 'itkBioRadImageIOJSBinding'], ['PIC', 'itkBioRadImageIOJSBinding'], ['tif', 'itkTIFFImageIOJSBinding'], ['TIF', 'itkTIFFImageIOJSBinding'], ['tiff', 'itkTIFFImageIOJSBinding'], ['TIFF', 'itkTIFFImageIOJSBinding'], ['vtk', 'itkVTKImageIOJSBinding'], ['VTK', 'itkVTKImageIOJSBinding']]);
 module.exports = extensionToIO;
 
 },{}],18:[function(require,module,exports){
@@ -2190,36 +2138,6 @@ exports["default"] = _default;
 },{"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/helpers/typeof":3}],25:[function(require,module,exports){
 "use strict";
 
-var readDICOMTagsEmscriptenFSFile = function readDICOMTagsEmscriptenFSFile(tagReaderModule, fileName) {
-  var tags = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-  var tagReader = new tagReaderModule.ITKDICOMTagReader();
-  tagReader.SetFileName(fileName);
-  var tagMap = new Map();
-
-  if (Array.isArray(tags)) {
-    for (var i = 0; i < tags.length; i++) {
-      var key = tags[i];
-      tagMap.set(key, tagReader.ReadTag(key.toLowerCase()));
-    }
-  } else {
-    var allTagsMap = tagReader.ReadAllTags();
-    var keys = allTagsMap.keys();
-
-    for (var _i = 0; _i < keys.size(); _i++) {
-      var _key = keys.get(_i);
-
-      tagMap.set(_key, allTagsMap.get(_key));
-    }
-  }
-
-  return tagMap;
-};
-
-module.exports = readDICOMTagsEmscriptenFSFile;
-
-},{}],26:[function(require,module,exports){
-"use strict";
-
 var Image = require('./Image.js');
 
 var ImageType = require('./ImageType.js');
@@ -2281,7 +2199,7 @@ var readImageEmscriptenFSDICOMFileSeries = function readImageEmscriptenFSDICOMFi
 
 module.exports = readImageEmscriptenFSDICOMFileSeries;
 
-},{"./Image.js":9,"./ImageType.js":11,"./imageIOComponentToJSComponent.js":20,"./imageIOPixelTypeToJSPixelType.js":21}],27:[function(require,module,exports){
+},{"./Image.js":9,"./ImageType.js":11,"./imageIOComponentToJSComponent.js":20,"./imageIOPixelTypeToJSPixelType.js":21}],26:[function(require,module,exports){
 "use strict";
 
 var Image = require('./Image.js');
@@ -2361,7 +2279,7 @@ var readImageEmscriptenFSFile = function readImageEmscriptenFSFile(imageModule, 
 
 module.exports = readImageEmscriptenFSFile;
 
-},{"./Image.js":9,"./ImageType.js":11,"./Matrix.js":13,"./imageIOComponentToJSComponent.js":20,"./imageIOPixelTypeToJSPixelType.js":21}],28:[function(require,module,exports){
+},{"./Image.js":9,"./ImageType.js":11,"./Matrix.js":13,"./imageIOComponentToJSComponent.js":20,"./imageIOPixelTypeToJSPixelType.js":21}],27:[function(require,module,exports){
 "use strict";
 
 var getMatrixElement = require('./getMatrixElement.js');

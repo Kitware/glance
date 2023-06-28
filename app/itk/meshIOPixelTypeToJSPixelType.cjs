@@ -1,9 +1,9 @@
 "use strict";
 
-var PixelTypes = require('./PixelTypes.js');
+const PixelTypes = require('./PixelTypes.js');
 
-var meshIOPixelTypeToJSPixelType = function meshIOPixelTypeToJSPixelType(module, ioPixelType) {
-  var pixelType = null;
+const meshIOPixelTypeToJSPixelType = (module, ioPixelType) => {
+  let pixelType = null;
 
   switch (ioPixelType) {
     case module.IOPixelType.UNKNOWNPIXELTYPE:

@@ -1,4 +1,4 @@
 "use strict";
 
-var MeshIOIndex = ['itkBYUMeshIOJSBinding', 'itkFreeSurferAsciiMeshIOJSBinding', 'itkFreeSurferBinaryMeshIOJSBinding', 'itkOBJMeshIOJSBinding', 'itkOFFMeshIOJSBinding', 'itkSTLMeshIOJSBinding', 'itkVTKPolyDataMeshIOJSBinding'];
+const MeshIOIndex = ['itkBYUMeshIOJSBinding', 'itkFreeSurferAsciiMeshIOJSBinding', 'itkFreeSurferBinaryMeshIOJSBinding', 'itkOBJMeshIOJSBinding', 'itkOFFMeshIOJSBinding', 'itkSTLMeshIOJSBinding', 'itkVTKPolyDataMeshIOJSBinding'];
 module.exports = MeshIOIndex;

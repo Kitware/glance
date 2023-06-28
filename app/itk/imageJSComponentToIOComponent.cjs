@@ -1,11 +1,11 @@
 "use strict";
 
-var IntTypes = require('./IntTypes.js');
+const IntTypes = require('./IntTypes.js');
 
-var FloatTypes = require('./FloatTypes.js');
+const FloatTypes = require('./FloatTypes.js');
 
-var imageJSComponentToIOComponent = function imageJSComponentToIOComponent(module, componentType) {
-  var ioComponentType = null;
+const imageJSComponentToIOComponent = (module, componentType) => {
+  let ioComponentType = null;
 
   switch (componentType) {
     case IntTypes.UInt8:

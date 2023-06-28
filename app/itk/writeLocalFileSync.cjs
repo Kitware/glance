@@ -1,14 +1,14 @@
 "use strict";
 
-var path = require('path');
+const path = require('path');
 
-var getFileExtension = require('./getFileExtension.js');
+const getFileExtension = require('./getFileExtension.js');
 
-var extensionToMeshIO = require('./extensionToMeshIO.js');
+const extensionToMeshIO = require('./extensionToMeshIO.js');
 
-var writeImageLocalFileSync = require('./writeImageLocalFileSync.js');
+const writeImageLocalFileSync = require('./writeImageLocalFileSync.js');
 
-var writeMeshLocalFileSync = require('./writeMeshLocalFileSync.js');
+const writeMeshLocalFileSync = require('./writeMeshLocalFileSync.js');
 /**
  * Write an image or mesh to a file on the local filesystem in Node.js.
  *
@@ -20,10 +20,10 @@ var writeMeshLocalFileSync = require('./writeMeshLocalFileSync.js');
  */
 
 
-var writeLocalFileSync = function writeLocalFileSync(useCompression, imageOrMesh, filePath) {
-  var absoluteFilePath = path.resolve(filePath);
-  var extension = getFileExtension(absoluteFilePath);
-  var isMesh = extensionToMeshIO.has(extension);
+const writeLocalFileSync = (useCompression, imageOrMesh, filePath) => {
+  const absoluteFilePath = path.resolve(filePath);
+  const extension = getFileExtension(absoluteFilePath);
+  const isMesh = extensionToMeshIO.has(extension);
 
   if (isMesh) {
     try {

@@ -1,16 +1,16 @@
 "use strict";
 
-var Image = require('./Image.js');
+const Image = require('./Image.js');
 
-var ImageType = require('./ImageType.js');
+const ImageType = require('./ImageType.js');
 
-var imageIOComponentToJSComponent = require('./imageIOComponentToJSComponent.js');
+const imageIOComponentToJSComponent = require('./imageIOComponentToJSComponent.js');
 
-var imageIOPixelTypeToJSPixelType = require('./imageIOPixelTypeToJSPixelType.js');
+const imageIOPixelTypeToJSPixelType = require('./imageIOPixelTypeToJSPixelType.js');
 
-var readImageEmscriptenFSDICOMFileSeries = function readImageEmscriptenFSDICOMFileSeries(seriesReaderModule, fileNames, singleSortedSeries) {
-  var seriesReader = new seriesReaderModule.ITKDICOMImageSeriesReader();
-  var firstFile = fileNames[0];
+const readImageEmscriptenFSDICOMFileSeries = (seriesReaderModule, fileNames, singleSortedSeries) => {
+  const seriesReader = new seriesReaderModule.ITKDICOMImageSeriesReader();
+  const firstFile = fileNames[0];
 
   if (!seriesReader.CanReadTestFile(firstFile)) {
     throw new Error('Could not read file: ' + firstFile);
@@ -18,25 +18,25 @@ var readImageEmscriptenFSDICOMFileSeries = function readImageEmscriptenFSDICOMFi
 
   seriesReader.SetTestFileName(firstFile);
   seriesReader.ReadTestImageInformation();
-  var dimension = 3;
-  var imageType = new ImageType(dimension);
-  var ioComponentType = seriesReader.GetIOComponentType();
+  const dimension = 3;
+  const imageType = new ImageType(dimension);
+  const ioComponentType = seriesReader.GetIOComponentType();
   imageType.componentType = imageIOComponentToJSComponent(seriesReaderModule, ioComponentType);
-  var ioPixelType = seriesReader.GetIOPixelType();
+  const ioPixelType = seriesReader.GetIOPixelType();
   imageType.pixelType = imageIOPixelTypeToJSPixelType(seriesReaderModule, ioPixelType);
   imageType.components = seriesReader.GetNumberOfComponents();
-  var image = new Image(imageType);
+  const image = new Image(imageType);
   seriesReader.SetIOComponentType(ioComponentType);
   seriesReader.SetIOPixelType(ioPixelType);
-  var fileNamesContainer = new seriesReaderModule.FileNamesContainerType();
-  fileNames.forEach(function (fileName) {
+  const fileNamesContainer = new seriesReaderModule.FileNamesContainerType();
+  fileNames.forEach(fileName => {
     fileNamesContainer.push_back(fileName);
   });
 
   if (singleSortedSeries) {
     seriesReader.SetFileNames(fileNamesContainer);
   } else {
-    var directory = fileNames[0].match(/.*\//)[0];
+    const directory = fileNames[0].match(/.*\//)[0];
     seriesReader.SetDirectory(directory);
   }
 
@@ -44,12 +44,12 @@ var readImageEmscriptenFSDICOMFileSeries = function readImageEmscriptenFSDICOMFi
     throw new Error('Could not read series');
   }
 
-  for (var ii = 0; ii < dimension; ++ii) {
+  for (let ii = 0; ii < dimension; ++ii) {
     image.spacing[ii] = seriesReader.GetSpacing(ii);
     image.size[ii] = seriesReader.GetSize(ii);
     image.origin[ii] = seriesReader.GetOrigin(ii);
 
-    for (var jj = 0; jj < dimension; ++jj) {
+    for (let jj = 0; jj < dimension; ++jj) {
       image.direction.setElement(ii, jj, seriesReader.GetDirection(ii, jj));
     }
   }

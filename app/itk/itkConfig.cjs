@@ -12,7 +12,7 @@ exports.default = void 0;
 // - MeshIOs/
 // - PolyDataIOs/
 //
-var itkConfig = {
+const itkConfig = {
   itkModulesPath: 'itk'
 };
 var _default = itkConfig;

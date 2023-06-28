@@ -44,12 +44,12 @@ var bufferToTypedArray = function bufferToTypedArray(jsType, buffer) {
 
     case IntTypes.UInt64:
       {
-        throw new BigUint64Array(buffer);
+        throw new Error('Type is not supported as a TypedArray');
       }
 
     case IntTypes.Int64:
       {
-        throw new BigInt64Array(buffer);
+        throw new Error('Type is not supported as a TypedArray');
       }
 
     case FloatTypes.Float32:

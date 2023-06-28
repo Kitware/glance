@@ -2,14 +2,6 @@ var IOTypes = require('./IOTypes.js');
 
 var bufferToTypedArray = require('./bufferToTypedArray.js');
 
-var haveSharedArrayBuffer = false;
-
-if (typeof window !== 'undefined') {
-  haveSharedArrayBuffer = typeof window.SharedArrayBuffer === 'function';
-} else {
-  haveSharedArrayBuffer = typeof global.SharedArrayBuffer === 'function';
-}
-
 var typedArrayForBuffer = function typedArrayForBuffer(typedArrayType, buffer) {
   var TypedArrayFunction = null;
 
@@ -22,28 +14,6 @@ var typedArrayForBuffer = function typedArrayForBuffer(typedArrayType, buffer) {
   }
 
   return new TypedArrayFunction(buffer);
-};
-
-var readFileSharedArray = function readFileSharedArray(emscriptenModule, path) {
-  var opts = {
-    flags: 'r',
-    encoding: 'binary'
-  };
-  var stream = emscriptenModule.open(path, opts.flags);
-  var stat = emscriptenModule.stat(path);
-  var length = stat.size;
-  var arrayBuffer = null;
-
-  if (haveSharedArrayBuffer) {
-    arrayBuffer = new SharedArrayBuffer(length); // eslint-disable-line
-  } else {
-    arrayBuffer = new ArrayBuffer(length);
-  }
-
-  var array = new Uint8Array(arrayBuffer);
-  emscriptenModule.read(stream, array, 0, length, 0);
-  emscriptenModule.close(stream);
-  return array;
 };
 
 var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args, outputs, inputs) {
@@ -142,7 +112,9 @@ var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args,
 
         case IOTypes.Binary:
           {
-            populatedOutput.data = readFileSharedArray(pipelineModule, output.path);
+            populatedOutput.data = pipelineModule.readFile(output.path, {
+              encoding: 'binary'
+            });
             break;
           }
 
@@ -152,7 +124,9 @@ var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args,
               encoding: 'utf8'
             });
             var image = JSON.parse(imageJSON);
-            var dataUint8 = readFileSharedArray(pipelineModule, image.data);
+            var dataUint8 = pipelineModule.readFile(image.data, {
+              encoding: 'binary'
+            });
             image.data = bufferToTypedArray(image.imageType.componentType, dataUint8.buffer);
             populatedOutput.data = image;
             break;
@@ -166,28 +140,36 @@ var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args,
             var mesh = JSON.parse(meshJSON);
 
             if (mesh.numberOfPoints) {
-              var dataUint8Points = readFileSharedArray(pipelineModule, mesh.points);
+              var dataUint8Points = pipelineModule.readFile(mesh.points, {
+                encoding: 'binary'
+              });
               mesh.points = bufferToTypedArray(mesh.meshType.pointComponentType, dataUint8Points.buffer);
             } else {
               mesh.points = bufferToTypedArray(mesh.meshType.pointComponentType, new ArrayBuffer(0));
             }
 
             if (mesh.numberOfPointPixels) {
-              var dataUint8PointData = readFileSharedArray(pipelineModule, mesh.pointData);
+              var dataUint8PointData = pipelineModule.readFile(mesh.pointData, {
+                encoding: 'binary'
+              });
               mesh.pointData = bufferToTypedArray(mesh.meshType.pointPixelComponentType, dataUint8PointData.buffer);
             } else {
               mesh.pointData = bufferToTypedArray(mesh.meshType.pointPixelComponentType, new ArrayBuffer(0));
             }
 
             if (mesh.numberOfCells) {
-              var dataUint8Cells = readFileSharedArray(pipelineModule, mesh.cells);
+              var dataUint8Cells = pipelineModule.readFile(mesh.cells, {
+                encoding: 'binary'
+              });
               mesh.cells = bufferToTypedArray(mesh.meshType.cellComponentType, dataUint8Cells.buffer);
             } else {
               mesh.cells = bufferToTypedArray(mesh.meshType.cellComponentType, new ArrayBuffer(0));
             }
 
             if (mesh.numberOfCellPixels) {
-              var dataUint8CellData = readFileSharedArray(pipelineModule, mesh.cellData);
+              var dataUint8CellData = pipelineModule.readFile(mesh.cellData, {
+                encoding: 'binary'
+              });
               mesh.cellData = bufferToTypedArray(mesh.meshType.cellPixelComponentType, dataUint8CellData.buffer);
             } else {
               mesh.cellData = bufferToTypedArray(mesh.meshType.cellPixelComponentType, new ArrayBuffer(0));
@@ -209,7 +191,9 @@ var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args,
                 var cell = polyData[cellName];
 
                 if (cell.ref) {
-                  var _dataUint = readFileSharedArray(pipelineModule, "".concat(output.path, "/").concat(cell.ref.basepath, "/").concat(cell.ref.id));
+                  var _dataUint = pipelineModule.readFile("".concat(output.path, "/").concat(cell.ref.basepath, "/").concat(cell.ref.id), {
+                    encoding: 'binary'
+                  });
 
                   polyData[cellName].buffer = _dataUint.buffer;
                   polyData[cellName].values = typedArrayForBuffer(polyData[cellName].dataType, _dataUint.buffer);
@@ -223,7 +207,9 @@ var runPipelineEmscripten = function runPipelineEmscripten(pipelineModule, args,
                 var data = polyData[dataName];
                 data.arrays.forEach(function (array) {
                   if (array.data.ref) {
-                    var _dataUint2 = readFileSharedArray(pipelineModule, "".concat(output.path, "/").concat(array.data.ref.basepath, "/").concat(array.data.ref.id));
+                    var _dataUint2 = pipelineModule.readFile("".concat(output.path, "/").concat(array.data.ref.basepath, "/").concat(array.data.ref.id), {
+                      encoding: 'binary'
+                    });
 
                     array.data.buffer = _dataUint2.buffer;
                     array.data.values = typedArrayForBuffer(array.data.dataType, _dataUint2.buffer);

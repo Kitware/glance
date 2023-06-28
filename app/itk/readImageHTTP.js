@@ -1,5 +1,5 @@
-import _asyncToGenerator from "@babel/runtime/helpers/asyncToGenerator";
 import _regeneratorRuntime from "@babel/runtime/regenerator";
+import _asyncToGenerator from "@babel/runtime/helpers/asyncToGenerator";
 import axios from 'axios';
 import bufferToTypedArray from './bufferToTypedArray';
 
@@ -8,7 +8,9 @@ function readImageHTTP(_x) {
 }
 
 function _readImageHTTP() {
-  _readImageHTTP = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(url) {
+  _readImageHTTP = _asyncToGenerator(
+  /*#__PURE__*/
+  _regeneratorRuntime.mark(function _callee(url) {
     var imageResponse, image, pixelBufferResponse;
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {

@@ -1,11 +1,11 @@
 "use strict";
 
-var IntTypes = require('./IntTypes.js');
+const IntTypes = require('./IntTypes.js');
 
-var FloatTypes = require('./FloatTypes.js');
+const FloatTypes = require('./FloatTypes.js');
 
-var bufferToTypedArray = function bufferToTypedArray(jsType, buffer) {
-  var typedArray = null;
+const bufferToTypedArray = (jsType, buffer) => {
+  let typedArray = null;
 
   switch (jsType) {
     case IntTypes.UInt8:
@@ -46,12 +46,12 @@ var bufferToTypedArray = function bufferToTypedArray(jsType, buffer) {
 
     case IntTypes.UInt64:
       {
-        throw new BigUint64Array(buffer);
+        throw new Error('Type is not supported as a TypedArray');
       }
 
     case IntTypes.Int64:
       {
-        throw new BigInt64Array(buffer);
+        throw new Error('Type is not supported as a TypedArray');
       }
 
     case FloatTypes.Float32:

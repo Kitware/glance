@@ -1,13 +1,13 @@
 "use strict";
 
-var Image = require('./Image.js');
+const Image = require('./Image.js');
 
-var Matrix = require('./Matrix.js');
+const Matrix = require('./Matrix.js');
 
-var copyImage = function copyImage(image) {
-  var copy = new Image(image.imageType);
+const copyImage = image => {
+  const copy = new Image(image.imageType);
   copy.name = image.name;
-  var dimension = image.imageType.dimension;
+  const dimension = image.imageType.dimension;
   copy.origin = Array.from(image.origin);
   copy.spacing = Array.from(image.spacing);
   copy.direction = new Matrix(dimension, dimension);

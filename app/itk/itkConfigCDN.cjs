@@ -1,6 +1,6 @@
 "use strict";
 
-var itkConfig = {
+const itkConfig = {
   itkModulesPath: __webpack_public_path__
 };
 module.exports = itkConfig;

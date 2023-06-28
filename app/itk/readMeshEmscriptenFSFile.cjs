@@ -1,15 +1,15 @@
 "use strict";
 
-var Mesh = require('./Mesh.js');
+const Mesh = require('./Mesh.js');
 
-var MeshType = require('./MeshType.js');
+const MeshType = require('./MeshType.js');
 
-var meshIOComponentToJSComponent = require('./meshIOComponentToJSComponent.js');
+const meshIOComponentToJSComponent = require('./meshIOComponentToJSComponent.js');
 
-var meshIOPixelTypeToJSPixelType = require('./meshIOPixelTypeToJSPixelType.js');
+const meshIOPixelTypeToJSPixelType = require('./meshIOPixelTypeToJSPixelType.js');
 
-var readMeshEmscriptenFSFile = function readMeshEmscriptenFSFile(module, filePath) {
-  var meshIO = new module.ITKMeshIO();
+const readMeshEmscriptenFSFile = (module, filePath) => {
+  const meshIO = new module.ITKMeshIO();
   meshIO.SetFileName(filePath);
 
   if (!meshIO.CanReadFile(filePath)) {
@@ -17,23 +17,23 @@ var readMeshEmscriptenFSFile = function readMeshEmscriptenFSFile(module, filePat
   }
 
   meshIO.ReadMeshInformation();
-  var ioDimensions = meshIO.GetPointDimension();
-  var meshType = new MeshType(ioDimensions);
-  var pointComponentType = meshIO.GetPointComponentType();
+  const ioDimensions = meshIO.GetPointDimension();
+  const meshType = new MeshType(ioDimensions);
+  const pointComponentType = meshIO.GetPointComponentType();
   meshType.pointComponentType = meshIOComponentToJSComponent(module, pointComponentType);
-  var cellComponentType = meshIO.GetCellComponentType();
+  const cellComponentType = meshIO.GetCellComponentType();
   meshType.cellComponentType = meshIOComponentToJSComponent(module, cellComponentType);
-  var pointPixelComponentType = meshIO.GetPointPixelComponentType();
+  const pointPixelComponentType = meshIO.GetPointPixelComponentType();
   meshType.pointPixelComponentType = meshIOComponentToJSComponent(module, pointPixelComponentType);
-  var pointPixelType = meshIO.GetPointPixelType();
+  const pointPixelType = meshIO.GetPointPixelType();
   meshType.pointPixelType = meshIOPixelTypeToJSPixelType(module, pointPixelType);
   meshType.pointPixelComponents = meshIO.GetNumberOfPointPixelComponents();
-  var cellPixelComponentType = meshIO.GetCellPixelComponentType();
+  const cellPixelComponentType = meshIO.GetCellPixelComponentType();
   meshType.cellPixelComponentType = meshIOComponentToJSComponent(module, cellPixelComponentType);
-  var cellPixelType = meshIO.GetCellPixelType();
+  const cellPixelType = meshIO.GetCellPixelType();
   meshType.cellPixelType = meshIOPixelTypeToJSPixelType(module, cellPixelType);
   meshType.cellPixelComponents = meshIO.GetNumberOfCellPixelComponents();
-  var mesh = new Mesh(meshType);
+  const mesh = new Mesh(meshType);
   mesh.numberOfPoints = meshIO.GetNumberOfPoints();
 
   if (mesh.numberOfPoints > 0) {

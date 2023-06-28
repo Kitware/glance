@@ -1,2 +1,2 @@
-var PolyDataIOIndex = ['VTKExodusFileReader', 'VTKLegacyFileReader', 'VTKXMLFileReader', 'VTKPLYFileReader'];
+var PolyDataIOIndex = ['VTKExodusFileReader', 'VTKLegacyFileReader', 'VTKXMLFileReader'];
 module.exports = PolyDataIOIndex;

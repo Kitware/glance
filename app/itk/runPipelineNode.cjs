@@ -1,14 +1,14 @@
 "use strict";
 
-var loadEmscriptenModule = require('./loadEmscriptenModuleNode.js');
+const loadEmscriptenModule = require('./loadEmscriptenModuleNode.js');
 
-var runPipelineEmscripten = require('./runPipelineEmscripten.js');
+const runPipelineEmscripten = require('./runPipelineEmscripten.js');
 
-var runPipelineNode = function runPipelineNode(pipelinePath, args, outputs, inputs) {
+const runPipelineNode = (pipelinePath, args, outputs, inputs) => {
   return new Promise(function (resolve, reject) {
     try {
-      var Module = loadEmscriptenModule(pipelinePath);
-      var result = runPipelineEmscripten(Module, args, outputs, inputs);
+      const Module = loadEmscriptenModule(pipelinePath);
+      const result = runPipelineEmscripten(Module, args, outputs, inputs);
       resolve(result);
     } catch (err) {
       reject(err);

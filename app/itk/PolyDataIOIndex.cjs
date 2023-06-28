@@ -1,4 +1,4 @@
 "use strict";
 
-var PolyDataIOIndex = ['VTKExodusFileReader', 'VTKLegacyFileReader', 'VTKXMLFileReader', 'VTKPLYFileReader'];
+const PolyDataIOIndex = ['VTKExodusFileReader', 'VTKLegacyFileReader', 'VTKXMLFileReader'];
 module.exports = PolyDataIOIndex;

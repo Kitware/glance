@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -11,11 +9,14 @@ var _createWebworkerPromise = _interopRequireDefault(require("./createWebworkerP
 
 var _itkConfig = _interopRequireDefault(require("./itkConfig"));
 
-var readImageArrayBuffer = function readImageArrayBuffer(webWorker, arrayBuffer, fileName, mimeType) {
-  var worker = webWorker;
-  return (0, _createWebworkerPromise.default)('ImageIO', worker).then(function (_ref) {
-    var webworkerPromise = _ref.webworkerPromise,
-        usedWorker = _ref.worker;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const readImageArrayBuffer = (webWorker, arrayBuffer, fileName, mimeType) => {
+  let worker = webWorker;
+  return (0, _createWebworkerPromise.default)('ImageIO', worker).then(({
+    webworkerPromise,
+    worker: usedWorker
+  }) => {
     worker = usedWorker;
     return webworkerPromise.postMessage({
       operation: 'readImage',
@@ -26,7 +27,7 @@ var readImageArrayBuffer = function readImageArrayBuffer(webWorker, arrayBuffer,
     }, [arrayBuffer]);
   }).then(function (image) {
     return Promise.resolve({
-      image: image,
+      image,
       webWorker: worker
     });
   });

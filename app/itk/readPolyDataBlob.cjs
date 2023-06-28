@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -21,15 +19,18 @@ var _IOTypes = _interopRequireDefault(require("./IOTypes"));
 
 var _itkConfig = _interopRequireDefault(require("./itkConfig"));
 
-var readPolyDataBlob = function readPolyDataBlob(webWorker, blob, fileName, mimeType) {
-  var worker = webWorker;
-  return (0, _createWebworkerPromise.default)('Pipeline', worker).then(function (_ref) {
-    var webworkerPromise = _ref.webworkerPromise,
-        usedWorker = _ref.worker;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const readPolyDataBlob = (webWorker, blob, fileName, mimeType) => {
+  let worker = webWorker;
+  return (0, _createWebworkerPromise.default)('Pipeline', worker).then(({
+    webworkerPromise,
+    worker: usedWorker
+  }) => {
     worker = usedWorker;
-    return _promiseFileReader.default.readAsArrayBuffer(blob).then(function (arrayBuffer) {
-      var extension = (0, _getFileExtension.default)(fileName);
-      var pipelinePath = null;
+    return _promiseFileReader.default.readAsArrayBuffer(blob).then(arrayBuffer => {
+      const extension = (0, _getFileExtension.default)(fileName);
+      let pipelinePath = null;
 
       if (_MimeToPolyDataIO.default.has(mimeType)) {
         pipelinePath = _MimeToPolyDataIO.default.get(mimeType);
@@ -41,17 +42,17 @@ var readPolyDataBlob = function readPolyDataBlob(webWorker, blob, fileName, mime
         Promise.reject(Error('Could not find IO for: ' + fileName));
       }
 
-      var args = [fileName, fileName + '.output.json'];
-      var outputs = [{
+      const args = [fileName, fileName + '.output.json'];
+      const outputs = [{
         path: args[1],
         type: _IOTypes.default.vtkPolyData
       }];
-      var inputs = [{
+      const inputs = [{
         path: args[0],
         type: _IOTypes.default.Binary,
         data: new Uint8Array(arrayBuffer)
       }];
-      var transferables = [];
+      const transferables = [];
       inputs.forEach(function (input) {
         // Binary data
         if (input.type === _IOTypes.default.Binary) {
@@ -65,14 +66,15 @@ var readPolyDataBlob = function readPolyDataBlob(webWorker, blob, fileName, mime
       return webworkerPromise.postMessage({
         operation: 'runPolyDataIOPipeline',
         config: _itkConfig.default,
-        pipelinePath: pipelinePath,
-        args: args,
-        outputs: outputs,
-        inputs: inputs
-      }, transferables).then(function (_ref2) {
-        var stdout = _ref2.stdout,
-            stderr = _ref2.stderr,
-            outputs = _ref2.outputs;
+        pipelinePath,
+        args,
+        outputs,
+        inputs
+      }, transferables).then(function ({
+        stdout,
+        stderr,
+        outputs
+      }) {
         return Promise.resolve({
           polyData: outputs[0].data,
           webWorker: worker

@@ -1,14 +1,14 @@
 "use strict";
 
-var path = require('path');
+const path = require('path');
 
-var getFileExtension = require('./getFileExtension.js');
+const getFileExtension = require('./getFileExtension.js');
 
-var extensionToMeshIO = require('./extensionToMeshIO.js');
+const extensionToMeshIO = require('./extensionToMeshIO.js');
 
-var writeImageLocalFile = require('./writeImageLocalFile.js');
+const writeImageLocalFile = require('./writeImageLocalFile.js');
 
-var writeMeshLocalFileSync = require('./writeMeshLocalFileSync.js');
+const writeMeshLocalFileSync = require('./writeMeshLocalFileSync.js');
 /**
  * Write an image or mesh to a file on the local filesystem in Node.js.
  *
@@ -20,12 +20,12 @@ var writeMeshLocalFileSync = require('./writeMeshLocalFileSync.js');
  */
 
 
-var writeLocalFile = function writeLocalFile(useCompression, imageOrMesh, filePath) {
-  var absoluteFilePath = path.resolve(filePath);
-  var extension = getFileExtension(absoluteFilePath);
+const writeLocalFile = (useCompression, imageOrMesh, filePath) => {
+  const absoluteFilePath = path.resolve(filePath);
+  const extension = getFileExtension(absoluteFilePath);
   return new Promise(function (resolve, reject) {
     try {
-      var isMesh = extensionToMeshIO.has(extension);
+      const isMesh = extensionToMeshIO.has(extension);
 
       if (isMesh) {
         try {
@@ -33,12 +33,12 @@ var writeLocalFile = function writeLocalFile(useCompression, imageOrMesh, filePa
           resolve(null);
         } catch (err) {
           // Was a .vtk image file? Continue to write as an image.
-          writeImageLocalFile(useCompression, imageOrMesh, filePath).then(function () {
+          writeImageLocalFile(useCompression, imageOrMesh, filePath).then(() => {
             resolve(null);
           });
         }
       } else {
-        writeImageLocalFile(useCompression, imageOrMesh, filePath).then(function () {
+        writeImageLocalFile(useCompression, imageOrMesh, filePath).then(() => {
           resolve(null);
         });
       }

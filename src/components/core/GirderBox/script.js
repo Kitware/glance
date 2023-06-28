@@ -11,7 +11,7 @@ import {
 
 import writeImageArrayBuffer from 'itk/writeImageArrayBuffer';
 
-import ITKHelper from '@kitware/vtk.js/Common/DataModel/ITKHelper';
+import ITKHelper from 'paraview-glance/src/vtk/ITKHelper';
 import vtkXMLPolyDataWriter from '@kitware/vtk.js/IO/XML/XMLPolyDataWriter';
 import vtkXMLWriter from '@kitware/vtk.js/IO/XML/XMLWriter';
 import vtkSTLWriter from '@kitware/vtk.js/IO/Geometry/STLWriter';

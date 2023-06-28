@@ -2,7 +2,7 @@
 import regeneratorRuntime from 'regenerator-runtime';
 
 import macro from '@kitware/vtk.js/macro';
-import ITKHelper from '@kitware/vtk.js/Common/DataModel/ITKHelper';
+import ITKHelper from 'paraview-glance/src/vtk/ITKHelper';
 
 import readImageDICOMFileSeries from 'itk/readImageDICOMFileSeries';
 

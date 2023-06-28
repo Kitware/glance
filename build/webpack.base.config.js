@@ -19,9 +19,12 @@ const paths = {
 };
 
 module.exports = {
-  entry: Object.assign({
-    glance: paths.entry,
-  }, externals.getExternalEntries(paths.externals)),
+  entry: Object.assign(
+    {
+      glance: paths.entry,
+    },
+    externals.getExternalEntries(paths.externals)
+  ),
   output: {
     path: paths.output,
     filename: '[name].[contenthash].js',
@@ -48,7 +51,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|svg|ttf|woff2?|eot|otf)$/,
-        type: 'asset/resource'
+        type: 'asset/resource',
       },
       {
         test: /\.css$/,
@@ -64,15 +67,12 @@ module.exports = {
       },
       {
         test: /\.pug$/,
-        loader: "pug-plain-loader",
+        loader: 'pug-plain-loader',
       },
       {
         test: /\.s[ca]ss$/,
         // prod/dev fills in the last loader
-        use: [
-          'css-loader',
-          'sass-loader',
-        ],
+        use: ['css-loader', 'sass-loader'],
       },
       {
         test: /\.(js|vue)$/,
@@ -97,9 +97,7 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
               postcssOptions: {
-                plugins: [
-                  'postcss-preset-env',
-                ],
+                plugins: ['postcss-preset-env'],
               },
             },
           },
@@ -122,12 +120,11 @@ module.exports = {
         },
         {
           // globs use forward slashes
-          from: `${paths.root.replace(/\\/g,'/')}/itk/web-build/itkfiltering*`,
-          to: path.join('itk', 'Pipelines'),
-          to: '[name][ext]',
+          from: `${paths.root.replace(/\\/g, '/')}/itk/web-build/itkfiltering*`,
+          to: path.join('itk', 'Pipelines', '[name][ext]'),
         },
         { from: 'static/ParaView.png' },
-      ]
+      ],
     }),
     new GenerateSW({
       cacheId: 'paraview-glance-2-',
@@ -149,7 +146,8 @@ module.exports = {
     alias: {
       vue$: 'vue/dist/vue.esm.js',
       'paraview-glance': paths.root,
-      '@kitware/vtk.js/Rendering/Core/ColorTransferFunction/ColorMaps.json': path.join(paths.source, 'config/ColorMaps.json'),
+      '@kitware/vtk.js/Rendering/Core/ColorTransferFunction/ColorMaps.json':
+        path.join(paths.source, 'config/ColorMaps.json'),
     },
   },
   optimization: {

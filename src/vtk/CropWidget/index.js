@@ -1,7 +1,7 @@
 import macro from '@kitware/vtk.js/macro';
 
 import vtkSphereHandleRepresentation from '@kitware/vtk.js/Widgets/Representations/SphereHandleRepresentation';
-import vtkOutlineContextRepresentation from '@kitware/vtk.js/Widgets/Representations/OutlineContextRepresentation';
+import vtkCroppingOutlineRepresentation from '@kitware/vtk.js/Widgets/Representations/CroppingOutlineRepresentation';
 import vtkImageCroppingWidget from '@kitware/vtk.js/Widgets/Widgets3D/ImageCroppingWidget';
 
 import behavior from 'paraview-glance/src/vtk/CropWidget/behavior';
@@ -37,7 +37,7 @@ function vtkCropWidget(publicAPI, model) {
               scaleInPixels: true,
             },
           },
-          { builder: vtkOutlineContextRepresentation, labels: ['corners'] },
+          { builder: vtkCroppingOutlineRepresentation, labels: ['corners'] },
         ];
     }
   };

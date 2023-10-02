@@ -35,8 +35,4 @@ export const DEFAULT_LPS_VIEW_TYPES = {
   [VIEW_TYPE_VALUES.z]: 'Axial',
 };
 
-export const DEFAULT_VIEW_ORIENTATION = [
-  [1, 0, 0],
-  [0, 1, 0],
-  [0, 0, 1],
-];
+export const DEFAULT_VIEW_ORIENTATION = [1, 0, 0, 0, 1, 0, 0, 0, 1];

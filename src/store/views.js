@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import vtkWidgetManager from '@kitware/vtk.js/Widgets/Core/WidgetManager';
 import WidgetManagerConstants from '@kitware/vtk.js/Widgets/Core/WidgetManager/Constants';
+import { getSparseOrthogonalMatrix } from '@kitware/vtk.js/Common/Core/Math';
+
+import { mat3 } from 'gl-matrix';
 
 import {
   DEFAULT_VIEW_TYPE,
@@ -15,7 +18,6 @@ import { DEFAULT_BACKGROUND } from 'paraview-glance/src/components/core/VtkView/
 import {
   remapIdValues,
   wrapMutationAsAction,
-  getLPSDirections,
   updateViewOrientationFromBasisAndAxis,
 } from 'paraview-glance/src/utils';
 
@@ -40,7 +42,7 @@ export default ({ proxyManager }) => ({
     maxTextureLODSize: 50000, // Units are in KiB
     viewOrder: Object.values(VIEW_TYPE_VALUES),
     visibleCount: 1,
-    // a basis in column-major order (list of 3 vectors): number[3][3]
+    // a column-major matrix
     viewOrientation: DEFAULT_VIEW_ORIENTATION,
     // for each view type, the corresponding text to display { viewType: text }
     viewTypes: DEFAULT_VIEW_TYPES,
@@ -225,20 +227,32 @@ export default ({ proxyManager }) => ({
         const masterSource = proxyManager.getProxyById(state.masterSourceId);
         if (masterSource?.getDataset().isA('vtkImageData')) {
           // lps mode with a master volume
+          // directionMatrix is a column major index to world matrix
           const directionMatrix = masterSource.getDataset().getDirection();
-          const lpsDirections = getLPSDirections(directionMatrix);
-          const axisToXYZ = ['x', 'y', 'z'];
+          const sparseDirectionMatrix =
+            getSparseOrthogonalMatrix(directionMatrix);
+
+          const lpsToXyz = {};
+          for (let row = 0; row < 3; ++row) {
+            for (let col = 0; col < 3; ++col) {
+              const index = row + 3 * col;
+              if (sparseDirectionMatrix[index] !== 0) {
+                lpsToXyz['lps'[row]] = 'xyz'[col];
+              }
+            }
+          }
           const viewTypes = {
             [VIEW_TYPE_VALUES.default]: '3D',
-            [VIEW_TYPE_VALUES[axisToXYZ[lpsDirections.l.axis]]]: 'Sagittal',
-            [VIEW_TYPE_VALUES[axisToXYZ[lpsDirections.p.axis]]]: 'Coronal',
-            [VIEW_TYPE_VALUES[axisToXYZ[lpsDirections.s.axis]]]: 'Axial',
+            [VIEW_TYPE_VALUES[lpsToXyz.l]]: 'Sagittal',
+            [VIEW_TYPE_VALUES[lpsToXyz.p]]: 'Coronal',
+            [VIEW_TYPE_VALUES[lpsToXyz.s]]: 'Axial',
           };
-          const viewOrientation = [
-            lpsDirections.l.vector,
-            lpsDirections.p.vector,
-            lpsDirections.s.vector,
-          ];
+
+          // viewOrientation = directionMatrix * transpose(sparseDirectionMatrix)
+          const viewOrientation = Array(3);
+          mat3.transpose(viewOrientation, sparseDirectionMatrix);
+          mat3.mul(viewOrientation, directionMatrix, viewOrientation);
+
           dispatch('setViewTypes', viewTypes);
           dispatch('setViewOrientation', {
             orientation: viewOrientation,

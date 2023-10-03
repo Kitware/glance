@@ -4,7 +4,7 @@
   <url>
     <loc>https://kitware.github.io/glance/index.html</loc>
     
-    <lastmod>2023-10-02</lastmod>
+    <lastmod>2023-10-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13,7 +13,7 @@
   <url>
     <loc>https://kitware.github.io/glance/gallery/index.html</loc>
     
-    <lastmod>2023-10-02</lastmod>
+    <lastmod>2023-10-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -22,7 +22,7 @@
   <url>
     <loc>https://kitware.github.io/glance/doc/index.html</loc>
     
-    <lastmod>2023-10-02</lastmod>
+    <lastmod>2023-10-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -31,7 +31,7 @@
   <url>
     <loc>https://kitware.github.io/glance/doc/keyboard_shortcuts.html</loc>
     
-    <lastmod>2023-10-02</lastmod>
+    <lastmod>2023-10-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -40,7 +40,7 @@
   <url>
     <loc>https://kitware.github.io/glance/doc/loading_files.html</loc>
     
-    <lastmod>2023-10-02</lastmod>
+    <lastmod>2023-10-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -49,7 +49,7 @@
   <url>
     <loc>https://kitware.github.io/glance/doc/readers.html</loc>
     
-    <lastmod>2023-10-02</lastmod>
+    <lastmod>2023-10-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -58,7 +58,7 @@
   <url>
     <loc>https://kitware.github.io/glance/2016/04/29/kw-doc/</loc>
     
-    <lastmod>2023-10-02</lastmod>
+    <lastmod>2023-10-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -67,7 +67,7 @@
 
   <url>
     <loc>https://kitware.github.io/glance</loc>
-    <lastmod>2023-10-02</lastmod>
+    <lastmod>2023-10-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

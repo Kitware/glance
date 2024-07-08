@@ -13,6 +13,7 @@ export default {
     DragAndDrop,
     GirderBox,
   },
+  inject: ['girderRest'],
   props: {
     value: {
       type: Boolean,

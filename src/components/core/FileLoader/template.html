@@ -13,7 +13,7 @@
           <v-container>
             <v-tabs v-model="active_tab">
               <v-tab>Local</v-tab>
-              <v-tab>Girder</v-tab>
+              <v-tab v-if="girderRest">Girder</v-tab>
               <v-tab-item transition="fade-transition">
                 <drag-and-drop
                   enabled
@@ -37,7 +37,7 @@
                   </template>
                 </drag-and-drop>
               </v-tab-item>
-              <v-tab-item transition="fade-transition">
+              <v-tab-item transition="fade-transition" v-if="girderRest">
                 <girder-box />     
               </v-tab-item>
             </v-tabs>

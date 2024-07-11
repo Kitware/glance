@@ -227,12 +227,12 @@
         </v-list>
       </v-flex>
       <v-btn
-        :disabled="!girderRest.user"
+        :disabled="!girderRest || !girderRest.user"
         @click="upload()"
       >
         Upload
       </v-btn>
-      <span v-show="!girderRest.user" class="body-2">Log in to upload</span>
+      <span v-show="!girderRest || !girderRest.user" class="body-2">Log in to upload</span>
     </v-layout>
   </v-container>
 </div>

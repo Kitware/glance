@@ -6,17 +6,19 @@ import vtkURLExtract from '@kitware/vtk.js/Common/Core/URLExtract';
 // Install the Vue plugin that lets us use the components
 Vue.use(Girder);
 
-// This connects to another server if the VUE_APP_API_ROOT
-// environment variable is set at build-time
-const { girderRoute } = vtkURLExtract.extractURLParameters();
-
-const apiRoot = girderRoute || 'https://data.kitware.com/api/v1';
-
+// URL parameters to change Girder API root URL, or to disable it completely
+const { girderRoute, noGirder } = vtkURLExtract.extractURLParameters();
 // Create the axios-based client to be used for all API requests
-const girderRest = new RestClient({
-  apiRoot,
-});
-girderRest.fetchUser();
+const apiRoot = girderRoute || 'https://data.kitware.com/api/v1';
+const girderRest = noGirder
+  ? undefined
+  : new RestClient({
+      apiRoot,
+    });
+
+if (girderRest) {
+  girderRest.fetchUser();
+}
 
 // This is passed to our Vue instance; it will be available in all components
 const GirderProvider = {

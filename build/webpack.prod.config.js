@@ -6,9 +6,6 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 const baseConfig = require('./webpack.base.config');
 
-const HOST = process.env.HOST;
-const PORT = process.env.PORT && Number(process.env.PORT);
-
 const htmlMinifyOptions = {
   collapseWhitespace: false,
   removeComments: true,

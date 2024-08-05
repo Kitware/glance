@@ -81,6 +81,16 @@ $ npx itk-js build itk/
 
 [itk.js]: https://insightsoftwareconsortium.github.io/itk-js/examples/hello_world_node.html
 
+Building as a standalone file
+=============================
+
+ParaView can use Glance for scene exports. To generate a standalone HTML file embedding Glance to use with ParaView, you can run:
+
+```
+$ npm run build:inline
+```
+
+This will generate a self-contained `dist/ParaViewGlance.html` file that you can directly use as a template in ParaView VTKJS scene export.
 
 Reporting Bugs and Making Contributions
 =======================================

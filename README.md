@@ -88,7 +88,6 @@ ParaView can use Glance for scene exports. To generate a standalone HTML file em
 
 ```
 $ npm run build:inline
-$ npm run bundle
 ```
 
 This will generate a self-contained `dist/ParaViewGlance.html` file that you can directly use as a template in ParaView VTKJS scene export.

@@ -21,12 +21,10 @@ jobs:
         run: npm ci
       - name: Validate
         run: npm run validate
-      - name: Build
-        run: npm run build:release
       - name: Write version
         run: npm run version
-      - name: Generate bundle
-        run: npm run bundle
+      - name: Build
+        run: npm run build:release
 
       - name: Set git config
         run: |

@@ -107,7 +107,12 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: ['**/*', '!version.js'],
+      cleanOnceBeforeBuildPatterns: [
+        '**/*',
+        '!version.js',
+        '!ParaViewGlance.html',
+        '!glance-external-*',
+      ],
     }),
     new VueLoaderPlugin(),
     new VuetifyLoaderPlugin(),

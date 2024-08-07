@@ -23,8 +23,9 @@ jobs:
         run: npm run validate
       - name: Write version
         run: npm run version
+      # build the inline version before release version
       - name: Build
-        run: npm run build:release
+        run: npm run build:inline && npm run build:release
 
       - name: Set git config
         run: |

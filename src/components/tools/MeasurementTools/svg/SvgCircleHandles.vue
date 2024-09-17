@@ -42,7 +42,13 @@ export default {
   },
   mounted() {
     this.trackVtkSubscription(this.widgetState.onModified(this.updatePoints));
-    this.updatePoints();
+    this.resizeObserver = new ResizeObserver(() => {
+      this.updatePoints();
+    });
+    this.resizeObserver.observe(this.view.getContainer());
+  },
+  beforeUnmount() {
+    this.resizeObserver.disconnect();
   },
   methods: {
     async updatePoints() {
@@ -52,7 +58,9 @@ export default {
         .filter((state) => state.isVisible())
         .flatMap((state) => state.getOrigin());
 
-      this.points = await this.mapToPixelSpace(handlePoints);
+      const promise = this.mapToPixelSpace(handlePoints);
+      this.view.render();
+      this.points = await promise;
     },
   },
 };

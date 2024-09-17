@@ -51,6 +51,13 @@ export default {
   },
   mounted() {
     this.updatePoints();
+    this.resizeObserver = new ResizeObserver(() => {
+      this.updatePoints();
+    });
+    this.resizeObserver.observe(this.view.getContainer());
+  },
+  beforeUnmount() {
+    this.resizeObserver.disconnect();
   },
   methods: {
     async updatePoints() {

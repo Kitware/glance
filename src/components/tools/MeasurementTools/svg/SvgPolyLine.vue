@@ -56,6 +56,13 @@ export default {
   mounted() {
     this.trackVtkSubscription(this.widgetState.onModified(this.updatePoints));
     this.updatePoints();
+    this.resizeObserver = new ResizeObserver(() => {
+      this.updatePoints();
+    });
+    this.resizeObserver.observe(this.view.getContainer());
+  },
+  beforeUnmount() {
+    this.resizeObserver.disconnect();
   },
   methods: {
     async updatePoints() {
